@@ -176,6 +176,15 @@ Fixed schema, fixed order — thirteen fields. Every field: sources → rule →
 
 **7.14 Bridge and Application-Tier Semantics.** Bridge: New Learning = the selection/discrimination behavior — recognize which atom applies from the first cue, execute that single routine cleanly without blending; Instructional Approach = mixed look-alike practice engineered to trigger the confusion, no new rules or methods modeled; prior atoms appear as discrimination examples. Application-tier: New Learning = executing the mastered routine in the new demand band; boundary and ceiling inherit from the parent atom plus the triggering demand statement's scope.
 
+**7.15 Lesson Naming Convention.** The lesson name is the shortest string that says what the lesson covers and what makes it unique. It is derived from the atom triple: the decision path's observable behavior plus only the boundary parameters that separate this atom from its nearest siblings.
+
+- **Lead with the skill** — verb + object, naming the observable behavior: "Round Multi-Digit Whole Numbers to Any Place."
+- **Carry only the distinguishing constraints.** Include a parameter (number range, multiplier size, representation, method) only when a sibling atom differs on it — the constraint is what tells two lessons apart: "Multiply Up to a Four-Digit Number by a One-Digit Number, Standard Algorithm" vs. its sibling "Multiply Two Two-Digit Numbers, Standard Algorithm." If no sibling differs on a parameter, the name omits it.
+- **Omit everything else.** No grade, no standard code, no cluster language, no difficulty qualifiers, and no pedagogy filler — never "Introduction to," "Understanding," "Exploring," or "Practice with." The card's other fields carry that information; the name does not repeat it.
+- **Type prefixes.** Bridges are named "Bridge: [the discrimination choice]" ("Bridge: One-Digit or Two-Digit Multiplier? Choose and Execute"). Application-tier lessons are named "Application: [the demand band over the mastered skill]" or by the interpretation demand itself ("Interpret the Algorithm: Equations, Arrays, and Area Models").
+- **Uniqueness test.** Within a scope, no two lessons may share a name, and a reader seeing only the sequence's names must be able to tell every lesson apart and predict what each covers. Most names should land in roughly five to ten words; a longer name is acceptable only when a distinguishing constraint requires it.
+- Names are headings and render in Title Case (§11.1).
+
 ## 8. Rerun, Locking, Versioning
 
 Targets: whole scope · unit · lesson. Modes: more granular (split) · less granular (merge) · regenerate (same granularity) · data-informed revision (propose → review → accept).
