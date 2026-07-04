@@ -1,7 +1,6 @@
 # Scope Generation Tool
 
-**Scope Generator — System Specification (v3)**
-Supersedes v2 draft. Amendments in this version come from the product-review session of 2026-07-04; see the Change Log (§13) for the delta.
+**System Specification — v1**
 
 ---
 
@@ -35,15 +34,15 @@ Engine and doctrine sit outside this chain: they are not evidence about the stan
 
 ## 3. Governing Policies
 
-Written as executable rules; each pipeline stage receives its relevant policies verbatim. Policy identifiers (P#, A#, D#) are internal and evidentiary: they appear where they are evidence — Decision records, QC reports, guardrail citations — and never as explanatory chrome in user-facing screens (v3).
+Written as executable rules; each pipeline stage receives its relevant policies verbatim. Rule identifiers (P#, D#, A#) form the citable rule inventory: they appear where they are evidence — Decision records, QC reports, guardrail citations — and never as explanatory chrome in user-facing screens.
 
 **P1 — Evidence Primacy and the Contradiction Rule.** Released items are the primary empirical evidence for inclusion, emphasis, and difficulty, and they govern freely — except that the standard's wording and its stated assessment boundaries trump released-item evidence if and only if a contradiction exists. Contradiction defined: an item's demand requires something the standard's wording or an explicit boundary stated in the standards document excludes at this grade/course, or exceeds an explicit limit stated there. Exceeding a default bound from an interpretive or decomposition document is not a contradiction — it is a permitted override, executed and logged. On contradiction: the standard wins. The item is reclassified out-of-boundary and handled per P2 — its demand profile still calibrates rigor but it cannot expand scope, seed atoms, or earn coverage credit. Every such event is logged in the card's Decision record with both sides cited. Absent a contradiction, the standard's wording is never used to preemptively discount or suppress item evidence: conservative readings do not cap ceilings; observed evidence does.
 
 **P2 — Item Scope Classification (content-based, never code-based).** States revise and re-code standards while reusing numbering, so alignment codes cannot be trusted to carry boundary meaning. At scope-resolution time, each item's vision-derived demand profile is checked against the governing standard's wording and classified: **in-boundary** (attaches to atoms; sets ceilings; serves as assessment exemplars) · **contradiction / rigor-signal-only** (the P1 case: contributes its demand profile to the difficulty ceiling of the nearest in-boundary atom in its skill family, and nothing else) · **adjacent-grade** (officially aligned by its source to a standard from another grade/course of the same set).
 
-**D1 — Absence Policy (resolved).** When item evidence is absent for a component, the component stays in scope and the system performs anticipated-evidence inference: it constructs the assessment evidence that would plausibly exist — extrapolating from how analogous components in the same skill family are tested, from decomposition bounds, from interpretive worked problems, and from the component's developmental placement — and scaffolds the difficulty ramp toward that inferred ceiling under DI ordering. The inference is flagged **inferred** on the card and fully reasoned in the Decision record. The corpus coverage declaration weights the inference: absence in a census corpus argues the component is genuinely untested; absence in a sample corpus favors extrapolation from analogous tested components. The inference culminates concretely: the card's Released Items field carries a generated ceiling exemplar demonstrating the inferred rigor (§7.12).
+**D1 — Absence Policy.** When item evidence is absent for a component, the component stays in scope and the system performs anticipated-evidence inference: it constructs the assessment evidence that would plausibly exist — extrapolating from how analogous components in the same skill family are tested, from decomposition bounds, from interpretive worked problems, and from the component's developmental placement — and scaffolds the difficulty ramp toward that inferred ceiling under DI ordering. The inference is flagged **inferred** on the card and fully reasoned in the Decision record. The corpus coverage declaration weights the inference: absence in a census corpus argues the component is genuinely untested, shifting the inference toward developmentally-appropriate DI reasoning; absence in a sample corpus is weak evidence, favoring extrapolation from analogous tested components. The inference culminates concretely: the card's Released Items field carries a generated ceiling exemplar demonstrating the inferred rigor (§7.12).
 
-**D2 — Adjacent-Grade Handling (resolved — default).** Below-grade items → prerequisite evidence + rigor calibration for the nearest in-boundary standard; above-grade items → citable only in Non-Goals/Progression Placement. Neither generates new-learning atoms in this course.
+**D2 — Adjacent-Grade Handling.** Below-grade items → prerequisite evidence + rigor calibration for the nearest in-boundary standard; above-grade items → citable only in Non-Goals/Progression Placement. Neither generates new-learning atoms in this course.
 
 **P3 — Single Strategy, Algorithm First, Stein Controlling.** Don't give students multiple strategies — give them the single best one; representations and manipulatives come after direct instruction of the algorithm, framed as applications of it, never as parallel computation paths. Every atom's Instructional Approach names exactly one strategy, selected per Stein's DI method. Where a standard, decomposition statement, or item evidence requires an alternative technique or representation, it is scoped as a post-mastery application atom, taught only to the depth the evidence demands, sequenced after algorithmic mastery. QC hook: an Instructional Approach naming two computation strategies fails automatically.
 
@@ -55,18 +54,18 @@ Written as executable rules; each pipeline stage receives its relevant policies 
 
 **P7 — Interpretive Stance Firewall (symmetric).** Interpretive documents are mined for sequencing, placement, prerequisites, boundaries, representation vocabulary, documented misconceptions, and worked problems — never for instructional stance. Pedagogical commentary in an interpretive document is recorded as inadmissible-for-Instructional-Approach, citable as context only, even when it agrees with doctrine. Where an interpretive document's method preference conflicts with doctrine, Stein's DI method prevails (P3) and the conflict is logged in the Decision record.
 
-**P8 — Assessment Evidence Format.** Every card states mastery as observable behavior — "Students are able to: …" — never "students will understand." The scope defines the task; the delivering application defines the thresholds and administration. Task parameters (number ranges, step counts, representation load) stay, because they are scope. Performance thresholds do not: no accuracy percentages, no rates, no problem counts — the adaptive app owns those and applies its own mastery bar (90% at the app level). When fluency is triggered — fluency/automaticity language in the governing standard's wording, a fluency-designated decomposition statement, or usage notes — the field flags the fluency requirement and its doctrinal basis; the rate itself is the app's. (D4 resolved: no percentages in the scope.)
+**P8 — Assessment Evidence Format.** Every card states mastery as observable behavior — "Students are able to: …" — never "students will understand." The scope defines the task; the delivering application defines the thresholds and administration. Task parameters (number ranges, step counts, representation load) stay, because they are scope. Performance thresholds do not: no accuracy percentages, no rates, no problem counts — the adaptive app owns those and applies its own mastery bar (90% at the app level). When fluency is triggered — fluency/automaticity language in the governing standard's wording, a fluency-designated decomposition statement, or usage notes — the field flags the fluency requirement and its doctrinal basis; the rate itself is the app's.
 
 **P9 — Error-Pattern Evidence: Documents at Generation, Reported Data on Revision.** At generation, the engine's error-pattern criterion fires only on documented misconceptions: (a) usage notes, (b) Stein et al., or (c) the corpus itself. After deployment, student data becomes admissible the moment a user reports it through the data-informed revision workflow (§8): the report becomes the cited evidence (a PerformanceReport) and the criterion evaluates it at full strength. In both cases the Editing Splits bar gates: an error pattern justifies a split only when it reveals a new/unstable start cue, a new decision step or rule, or a missing prerequisite — otherwise it intensifies modeling inside the atom, or seeds a bridge where the confusion is between two atoms. There is no automated data integration; the human report is the interface.
 
-**P10 — Trusted Uploads, Strict on Fit (revised in v3).** Users upload high-quality, already-reviewed PDFs; the system treats them as curated evidence. There is **no artifact-level human review step**: no parse-verification screens, no per-artifact approval, no review status. Two safeguards remain, both system-detected:
+**P10 — Trusted Uploads, Strict on Fit.** Users upload high-quality, already-reviewed PDFs; the system treats them as curated evidence. There is **no artifact-level human review step**: no parse-verification screens, no per-artifact approval, no review status. Two safeguards remain, both system-detected:
 
 - **Fit validation (blocking).** Every artifact's detected identity — standard set / coding scheme, grade or course, role — is cross-checked against the set's declaration. Mismatches halt ingestion of that artifact with an explicit error until resolved by re-upload or corrected declaration: codes that don't resolve in the set's scheme; a detected grade/course contradicting the declared one; content that doesn't match its role slot. The validation unit is the artifact, not the item: items officially aligned to an adjacent grade inside a correctly-graded source are legitimate (P2 handles them).
 - **Coverage warnings (required acknowledgment).** Grade levels within the set's span with no item evidence, domain × grade progression gaps, absent structured decomposition. The user must acknowledge each gap before publish; acknowledged gaps drive anticipated-evidence inference downstream (D1) and are surfaced to users whenever a scope request lands inside one.
 
-Format tolerance is unchanged: the system never rejects an upload for format reasons and never discards usable evidence because metadata is incomplete; ingestion extracts maximally, scores completeness per record, and states reliance on degraded or AI-proposed evidence in the Decision record rather than silently omitting it.
+Format tolerance: the system never rejects an upload for format reasons and never discards usable evidence because metadata is incomplete; ingestion extracts maximally, scores completeness per record, and states reliance on degraded or AI-proposed evidence in the Decision record rather than silently omitting it.
 
-**P11 — Content Standards Only (new in v3).** The standards parser analyzes only content standards — standards that teach assessable mathematical knowledge or procedures (number, operations, algebra, geometry, measurement, statistics, probability, and comparable content strands such as personal financial literacy where the set includes them). It excludes, at ingestion, all standards that describe how students should think, communicate, justify, model, persevere, or solve problems: Mathematical Practice (MP) standards, Standards for Mathematical Practice (SMP), Process Standards, Mathematical Processes, Habits of Mind, and similar framework-wide expectations. Excluded standards are not parsed into the tree, cannot seed atoms, and cannot earn coverage credit. Completeness requirement: every most-granular content standard in the document — down to lettered sub-parts — is captured with its exact code and exact verbatim wording; a parser that drops any is defective.
+**P11 — Content Standards Only.** The standards parser analyzes only content standards — standards that teach assessable mathematical knowledge or procedures (number, operations, algebra, geometry, measurement, statistics, probability, and comparable content strands such as personal financial literacy where the set includes them). It excludes, at ingestion, all standards that describe how students should think, communicate, justify, model, persevere, or solve problems: Mathematical Practice (MP) standards, Standards for Mathematical Practice (SMP), Process Standards, Mathematical Processes, Habits of Mind, and similar framework-wide expectations. Excluded standards are not parsed into the tree, cannot seed atoms, and cannot earn coverage credit. Completeness requirement: every most-granular content standard in the document — down to lettered sub-parts — is captured with its exact code and exact verbatim wording; a parser that drops any is defective.
 
 ## 4. Artifact Roles & Ingestion
 
@@ -85,7 +84,7 @@ The boundary authority and structure source. The parser targets, generically:
 
 Dual coding (the join design): ingestion emits a canonical ID per the set's official scheme and a normalized join code per the set's normalization conventions. All other artifacts join on the normalized code; finer alignment (sub-parts/expectations) is preserved where sources carry it.
 
-D11 (resolved — default): v1 handles grade-organized standards (elementary/middle). Course-organized sets are v2.
+This release handles grade-organized standard sets (elementary/middle). Course-organized sets (high-school conceptual categories or course-based sets) need course definitions and are future work.
 
 ### 4.2 Role: Released Items Document (one or more uploads)
 
@@ -96,7 +95,7 @@ Tiered ingestion:
 - **Tier 1 — Known contract.** Sources matching the recommended compilation format (Appendix E) parse deterministically.
 - **Tier 2 — Arbitrary released-item PDFs (the general path).** An AI extraction pipeline: document triage → item segmentation (vision + layout analysis isolates each item as image regions) → metadata extraction (state/test/year, item numbers, per-item alignment from item maps or inline annotations) → alignment resolution (official where supplied; otherwise ai-proposed, queued for user confirmation) → vision characterization (item type, response format, representations and problem types in lexicon terms, demand profile) → opportunistic capture (answer keys, rubrics, scoring guides, point values, when present) → completeness scoring & dedupe.
 
-**D14 — AI-Proposed Alignment Usage (resolved — default).** Items with unconfirmed ai-proposed alignment are usable in generation, flagged in QC and stated in the Decision record of any card that relies on them. The Alignment Queue lists them for one-click confirmation; a set may be configured to require confirmation first.
+**D14 — AI-Proposed Alignment Usage.** Items with unconfirmed ai-proposed alignment are usable in generation, flagged in QC and stated in the Decision record of any card that relies on them. The Alignment Queue lists them for one-click confirmation; a set may be configured to require confirmation first.
 
 Scope classification (P2) is assigned at scope-resolution time against the standard wording, then cached per standard set. Multi-part items are one record with parts noted.
 
@@ -128,7 +127,7 @@ Uploaded and versioned as system artifacts, not per standard set. DOK headings s
 ## 5. Data Model
 
 - **StandardSet** — id, name, hierarchy configuration (level names), coding scheme (canonical + normalization rules), emphasis-source declaration, artifact list, publish status, ingestion QC report.
-- **Artifact** — role (standards | items | unpacking-structured | unpacking-narrative | progression), file, usage notes (user-entered at upload), role-specific metadata (items: source description, window, coverage declaration; progressions: domain × grade-band tags). *(v3: no review status; blocking state only, from fit validation.)*
+- **Artifact** — role (standards | items | unpacking-structured | unpacking-narrative | progression), file, usage notes (user-entered at upload), role-specific metadata (items: source description, window, coverage declaration; progressions: domain × grade-band tags). No review status: the only per-artifact state is a blocking fit-validation error.
 - **StandardRecord** — canonical ID, normalized join code, level path, parent-grouping heading text, full verbatim wording, sub-parts, attached limits (with level), fluency flag, emphasis designation, theme/emphasis-statement links. Content standards only (P11).
 - **DecompositionStatement** — key, type (content | reasoning | modeling | integrative), grouping/emphasis tag, statement text, clarifications[], parent normalized code(s).
 - **ItemRecord** — id, upload ref, source/test/year, item number, exact source alignment code, alignment {code, confidence: official | ai-proposed | confirmed}, completeness score, image(s), characterization {item type, response format, representations[], problem types[], demand profile, number ranges}, key/rubric/points (when captured), cached scope class (P2), provenance.
@@ -139,19 +138,19 @@ Uploaded and versioned as system artifacts, not per standard set. DOK headings s
 - **Unit** — id, title, rationale (strand / theme / stream citations), ordered lessons[].
 - **Lesson** — id, type (new-learning atom | bridge | application-tier), the 13 card fields, per-field provenance (citations: source type, artifact, locator, excerpt), lock status.
 - **Citation** — {source_type, artifact_id, locator, excerpt}. Every card field carries ≥1; compiled-procedure and doctrine rules are citable sources for decisions they force.
-- **DecisionEntry** — {decision type: granularity | strategy | boundary | ceiling | contradiction | override | assumption, rule applied (P#/A#), sides cited, resolution, confidence flags (thin-evidence, ai-proposed reliance)}. Lessons carry an ordered list; field 13 renders it.
+- **DecisionEntry** — {decision type: granularity | strategy | boundary | ceiling | contradiction | override | assumption, rule applied (P#/D#/A#), sides cited, resolution, confidence flags (thin-evidence, ai-proposed reliance)}. Lessons carry an ordered list; field 13 renders it.
 - **PerformanceReport** — {scope/unit/lesson refs, report text, actor, timestamp}. A citable evidence source in Decision records.
 - **Proposal** — {trigger, draft change set, ripple preview, iteration history, status: draft | accepted | abandoned}. Nothing in a proposal mutates the scope until accepted.
 - **RerunEvent** — scope version delta: target, mode, guardrail collisions + overrides, ripple set, timestamp, actor; for data-informed revisions, the attached PerformanceReport and full proposal history.
 
 ## 6. Generation Pipeline
 
-Six stages; outputs checkpointed; stages 3–5 parallelize and checkpoint per unit; failed runs resume. Every stage prompt is assembled from: relevant policies verbatim + compiled engine procedure + doctrine excerpts (Stein-priority noted) + the consuming artifacts' usage notes + resolved evidence + few-shot exemplars (D13).
+Six stages; outputs checkpointed; stages 3–5 parallelize and checkpoint per unit; failed runs resume. Every stage prompt is assembled from: relevant policies verbatim + compiled engine procedure + doctrine excerpts (Stein-priority noted) + the consuming artifacts' usage notes + resolved evidence + few-shot exemplars from the Exemplar Asset Register.
 
-- **Stage 1 — Ingest** (publish time). Parse per §4 roles (content standards only, P11); tiered item ingestion with alignment-confirmation queue; build records and lexicons; completeness checks; batch the vision pass; publish. *(v3: no review screens.)*
+- **Stage 1 — Ingest** (publish time). Parse per §4 roles (content standards only, P11); tiered item ingestion with alignment-confirmation queue; build records and lexicons; completeness checks; batch the vision pass; publish.
 - **Stage 2 — Scope Resolution** (run time). Resolve the request to StandardRecords + governing decomposition keys (or sub-part partition) + the item subset + interpretive chunks. Classify every item per P2 (contradiction detection per P1; cache). Produce the component evidence map: per assessable component — evidence status (observed | inferred), the evidence itself, ceiling inputs, and any contradiction events.
 - **Stage 3 — Atomization.** Run the compiled procedure (Appendix A) over the evidence map: candidate atoms → split/don't-split with cited evidence → tie-breakers → vocabulary micro-lessons and preskill splits → bridge candidates → demand-band handling → modeling-scope pass. Every boundary decision emits DecisionEntries.
-- **Stage 4 — Sequencing & Unit Formation.** Doctrine-sourced ordering: preskills before composites; easier before difficult; algorithm before required representations; confusables separated in time, bridges only after both parents independently mastered; within a concept cluster, the sacrificial first instance. Units are strand-coherent, traceable to the set's theme/emphasis statements or progression streams. (D8 resolved: granularity and count are purely logic-driven; no calendar constraint.)
+- **Stage 4 — Sequencing & Unit Formation.** Doctrine-sourced ordering: preskills before composites; easier before difficult; algorithm before required representations; confusables separated in time, bridges only after both parents independently mastered; within a concept cluster, the sacrificial first instance — easiest sibling first with full modeling, later siblings as reduced-modeling transfer lessons. Units are strand-coherent (strand over spiral), traceable to the set's theme/emphasis statements or progression streams, ordered by progression dependencies with high-weight strands anchoring the sequence. Granularity and count are purely logic-driven; no calendar constraint — students work self-paced, so the scope owes mastery structure, not pacing.
 - **Stage 5 — Card Generation.** Fill the fixed 13-field schema per §7. Evidence-locking mandatory: generation returns {content, citations[]} per field; uncited fields rejected pre-QC. Field 13 assembled from accumulated DecisionEntries. For inferred atoms, Stage 5 also produces the generated ceiling exemplar. Faultless-communication style rule applies to the card itself.
 - **Stage 6 — Auto-QC.** Run §9 checks; attach the QC report; save as version 1.
 
@@ -159,7 +158,7 @@ Rerun re-entry: lesson granularity change → Stage 3 scoped to affected atoms, 
 
 ## 7. Card Field Generation Rules
 
-Fixed schema, fixed order — thirteen fields. Every field: sources → rule → QC, with citations. Bridge and application-tier lessons use the same schema with §7.14 semantics. (Field labels below are the normative display headings; all headings render in Title Case, §11.1.)
+Fixed schema, fixed order — thirteen fields. Every field: sources → rule → QC, with citations. Bridge and application-tier lessons use the same schema with §7.14 semantics. Field labels below are the normative display headings; all headings render in Title Case (§11.1).
 
 1. **Standard(s).** Canonical ID(s) + normalized code(s) of the governing standard(s), plus every governing decomposition key for this atom (or the sub-part partition used). QC: every listed key traces through the coverage matrix.
 2. **Cluster.** The standard's immediate parent grouping in the set's hierarchy, heading text verbatim. Its job is context; no paraphrase.
@@ -173,7 +172,7 @@ Fixed schema, fixed order — thirteen fields. Every field: sources → rule →
 10. **Difficulty Ceiling.** In P1/P4 order: decomposition defaults → in-boundary item demand profiles (override either direction) → standards-document limits (absolute) → secondary evidence and D1 inference where observed evidence is absent → contradiction-class items mapped in per P2. Concrete parameters — number sizes, step counts, representation load, context complexity — in lexicon vocabulary, naming the hardest legitimate case. Inferred ceilings marked, with what they extrapolate from.
 11. **Assessment Evidence.** P8 format — "Students are able to: [observable behavior] [task parameters] [conditions]" — observable verbs only; conditions included (ceiling difficulty, unassisted); fluency flag with trigger basis when applicable, or its absence stated with basis; no percentages, rates, or counts.
 12. **Released Items (If Applicable).** The in-boundary items attached to this atom, rendered as their exact screenshots, each captioned test · year · question number (plus alignment confidence), ordered by closeness to ceiling. Contradiction-class items never appear here (ceiling citations only, in field 10). When no in-boundary item exists, the field carries a **generated ceiling exemplar** instead: one problem written at the rigor the corpus's assessments would demand, at the inferred ceiling, never exceeding the standard's boundary, unmistakably labeled *Generated exemplar — not a released item*, with its inference basis cited and the generation logged in the Decision record. **The field is never empty.**
-13. **Decision Record.** The reasoning for every consequential decision on this card, rendered from the DecisionEntries. Required entry types: (1) granularity — which split/don't-split criteria fired, which tie-breakers arbitrated, with evidence; (2) strategy selection — the single strategy and its Stein basis; (3) boundary & ceiling calls — absence-policy application, every override of a decomposition default, every pin; (4) contradictions & conflicts — every standard-trumps-item event, every doctrine-vs-interpretive stance conflict, each with both sides cited and the rule applied; (5) assumptions under thin evidence — reliance on secondary rigor evidence, unconfirmed AI-proposed alignments, or anticipated-evidence inference, including what the inference extrapolated from. Entries are terse, numbered, tagged with rule IDs (P#/A#), and cited. If a type had nothing to decide, say so in one clause rather than omitting silently. QC: field present and non-empty; every contradiction entry cites both sides.
+13. **Decision Record.** The reasoning for every consequential decision on this card, rendered from the DecisionEntries. Required entry types: (1) granularity — which split/don't-split criteria fired, which tie-breakers arbitrated, with evidence; (2) strategy selection — the single strategy and its Stein basis; (3) boundary & ceiling calls — absence-policy application, every override of a decomposition default, every pin; (4) contradictions & conflicts — every standard-trumps-item event, every doctrine-vs-interpretive stance conflict, each with both sides cited and the rule applied; (5) assumptions under thin evidence — reliance on secondary rigor evidence, unconfirmed AI-proposed alignments, or anticipated-evidence inference, including what the inference extrapolated from. Entries are terse, numbered, tagged with rule IDs, and cited. If a type had nothing to decide, say so in one clause rather than omitting silently. QC: field present and non-empty; every contradiction entry cites both sides.
 
 **7.14 Bridge and Application-Tier Semantics.** Bridge: New Learning = the selection/discrimination behavior — recognize which atom applies from the first cue, execute that single routine cleanly without blending; Instructional Approach = mixed look-alike practice engineered to trigger the confusion, no new rules or methods modeled; prior atoms appear as discrimination examples. Application-tier: New Learning = executing the mastered routine in the new demand band; boundary and ceiling inherit from the parent atom plus the triggering demand statement's scope.
 
@@ -204,7 +203,7 @@ Targets: whole scope · unit · lesson. Modes: more granular (split) · less gra
 9. **Decision-record integrity:** field 13 present and non-empty on every card; every contradiction entry cites both sides; every P4 override and guardrail override logged.
 10. **Released-items integrity:** the field is never empty — observed item screenshots captioned test · year · question number, or a generated ceiling exemplar carrying its label, inference basis, and an in-boundary ceiling.
 
-## 10. Admin Experience (revised in v3)
+## 10. Admin Experience
 
 **Creating a standard set** is a single flow — **New Standard Set** — with five inputs:
 
@@ -231,37 +230,26 @@ Separately: manage engine and doctrine versions (upload → recompile → publis
 
 ## 11. User Experience
 
-Select a published standard set → choose scope: **Course** (a grade, v1) · **Standard** (pick by code from the set's tree — any most-granular content standard, including sub-parts) · **Topic** (any node of the set's hierarchy, or free text mapped to standards with the mapping shown for confirmation) → run (staged progress across Stages 2–6, units stream in, resumable) → review: units → 13-field cards — item screenshots rendered inline — with per-field provenance on demand and the Decision record in full view → lock / rerun (with guardrails) / update from student data (§8) / delete.
+Select a published standard set → choose scope: **Course** (a grade) · **Standard** (pick by code from the set's tree — any most-granular content standard, including sub-parts) · **Topic** (any node of the set's hierarchy, or free text mapped to standards with the mapping shown for confirmation) → run (staged progress across Stages 2–6, units stream in, resumable) → review: units → 13-field cards — item screenshots rendered inline — with per-field provenance on demand and the Decision record in full view → lock / rerun (with guardrails) / update from student data (§8) / delete.
 
 If a request lands inside acknowledged coverage gaps, the run screen says so before generation: affected components will run on anticipated-evidence inference (D1), flagged on their cards.
 
-**D10 (resolved).** Scopes are public view: every user can view every saved scope and its full provenance. Modification rights — rerun, lock, accept proposals, delete — remain with the scope's creator and admins.
+Scopes are public view: every user can view every saved scope and its full provenance. Modification rights — rerun, lock, accept proposals, delete — remain with the scope's creator and admins.
 
-### 11.1 Interface Style Rules (new in v3)
+### 11.1 Interface Style Rules
 
 - **All headings are Title Case** — page titles, section and card-field headings, tab labels, modal titles, pipeline stage names, and unit/lesson titles. Body prose, field descriptions, and button labels are sentence case.
-- **Policy identifiers are not interface copy.** P#/A#/D# rule IDs appear where they are evidence — Decision records, QC report details, guardrail citations — never as explanatory text on admin or upload screens.
+- **Rule identifiers are not interface copy.** P#/D#/A# rule IDs appear where they are evidence — Decision records, QC report details, guardrail citations — never as explanatory text on admin or upload screens.
 - Standard codes, join codes, file names, and item captions render in monospace. Released-item screenshots are visually distinct from generated exemplars; the generated-exemplar label and amber treatment are mandatory (§7.12).
 
 ## 12. Build & Implementation Notes
 
-- v1 scope: grade-organized standard sets (D11); any released-item PDF sources (tiered ingestion); one engine + one doctrine document versioned, plural-ready; Stein-priority encoded in doctrine prompts.
+- Release scope: grade-organized standard sets; any released-item PDF sources (tiered ingestion); one engine + one doctrine document versioned, plural-ready; Stein-priority encoded in doctrine prompts.
 - Jobs: whole-course generation is a long job — queue, per-stage and per-unit checkpoints, resumability, streaming. Vision passes batched at ingestion.
-- Prompt assembly per §6. Few-shot exemplars come from the Exemplar Asset Register (Appendix F), auto-extracted at ingestion; unresolved entries non-blocking (D13).
+- Prompt assembly per §6. Few-shot exemplars come from the Exemplar Asset Register (Appendix F), auto-extracted at ingestion; unresolved entries non-blocking.
 - Evidence-locking implementation: structured output {content, citations[], decision_entries[]} per field; validators reject uncited fields and empty Decision records pre-QC.
-- **Front end (as built):** React 19 + Vite + TypeScript + Tailwind CSS v4, hash routing. The domain store (`src/store.tsx`) is the seam where the pipeline backend slots in: every UI action maps 1:1 to an API call; the staged-generation view maps to the real queued job's checkpoints. Repository: `github.com/mmayrell/ScopeGenerator`.
-- Interoperability seam: card schema kept exportable (near-isomorphic to standards-extension structures such as CASE); no v1 work beyond not foreclosing it.
-
-## 13. Change Log — v2 → v3
-
-1. **Artifact review removed.** Users upload high-quality, already-reviewed PDFs; ingestion is trusted. No parse-verification screens, no per-artifact review status. System-detected fit-validation blocking errors and acknowledgment-gated coverage warnings are retained (P10 revised).
-2. **Standard-set creation flow defined.** One New Standard Set window: name + four required document roles (Official Standard, Progression, Released Items, Unpacking), one or more PDFs each, with an always-visible open-text usage-notes field per slot, written by the user at upload (e.g., "Only use the Grade 5 content."). The set card is created on upload.
-3. **Content-standards-only rule (new P11).** Parse every most-granular content standard with exact code and verbatim wording; exclude Mathematical Practice / SMP / Process / Mathematical Processes / Habits of Mind and similar framework-wide expectations at ingestion.
-4. **Standards Tree presentation.** Complete enumeration, fully expanded by default, limits inline, with the content-standards-only rule stated on the screen.
-5. **Item Bank presentation.** Item screenshots grouped by standard code in collapsible groups, starting collapsed; captions carry test · year · question number, alignment confidence, scope class, and demand profile.
-6. **Configuration simplified.** The configuration screen shows hierarchy level names only; coding scheme and emphasis source are ingestion concerns steerable via usage notes.
-7. **Interface style rules (new §11.1).** Title Case for all headings; policy IDs confined to evidentiary surfaces (Decision records, QC, guardrails); no policy jargon in admin/upload copy.
-8. **Front-end implementation recorded** (§12): React + Vite + TypeScript + Tailwind, client-side domain store as the backend seam.
+- **Front end:** React 19 + Vite + TypeScript + Tailwind CSS v4, hash routing. The domain store (`src/store.tsx`) is the seam where the pipeline backend slots in: every UI action maps 1:1 to an API call; the staged-generation view maps to the real queued job's checkpoints. Repository: `github.com/mmayrell/ScopeGenerator`.
+- Interoperability seam: card schema kept exportable (near-isomorphic to standards-extension structures such as CASE); no work in this release beyond not foreclosing it.
 
 ---
 
@@ -278,7 +266,7 @@ Executed in Stage 3 per component, against the component evidence map. All decis
 
 ## Appendix B — Normative Card Schema
 
-The thirteen fields of §7, fixed order, fixed Title Case labels: Standard(s) · Cluster · Major / Supporting / Additional Work · Progression Placement · Prerequisites · Lesson Boundary · New Learning · Instructional Approach · Non-Goals · Difficulty Ceiling · Assessment Evidence · Released Items (If Applicable) · Decision Record. Every field written under faultless communication — it must read one way only — and every field carries citations. The v2 worked illustration (4.NBT.5, four-digit × one-digit standard algorithm) remains normative for the card's shape and ships as seed/demo content in the reference implementation.
+The thirteen fields of §7, fixed order, fixed Title Case labels: Standard(s) · Cluster · Major / Supporting / Additional Work · Progression Placement · Prerequisites · Lesson Boundary · New Learning · Instructional Approach · Non-Goals · Difficulty Ceiling · Assessment Evidence · Released Items (If Applicable) · Decision Record. Every field written under faultless communication — it must read one way only — and every field carries citations. A worked illustration (CCSS 4.NBT.5, "Multiply Up to a Four-Digit Number by a One-Digit Number, Standard Algorithm") ships as seed content in the reference implementation and is normative for the card's shape, illustrative in its content.
 
 ## Appendix C — Reference Profile: CCSS (informative)
 
@@ -294,4 +282,4 @@ A curated per-grade compilation parses deterministically: page 1 — sources, wi
 
 ## Appendix F — Exemplar Asset Register (living)
 
-The list of all documents linked from engine and doctrine artifacts, auto-extracted at ingestion. Entries resolve when the linked document is uploaded; unresolved entries are flagged but non-blocking (D13). Resolved assets serve as few-shot exemplars in Stage 3 and Stage 5 prompt assembly (§12).
+The list of all documents linked from engine and doctrine artifacts, auto-extracted at ingestion. Entries resolve when the linked document is uploaded; unresolved entries are flagged but non-blocking. Resolved assets serve as few-shot exemplars in Stage 3 and Stage 5 prompt assembly (§12).
