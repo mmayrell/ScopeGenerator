@@ -97,7 +97,7 @@ Tiered ingestion:
 
 **D14 — AI-Proposed Alignment Usage.** Items with unconfirmed ai-proposed alignment are usable in generation, flagged in QC and stated in the Decision record of any card that relies on them. The Alignment Queue lists them for one-click confirmation; a set may be configured to require confirmation first.
 
-Scope classification (P2) is assigned at scope-resolution time against the standard wording, then cached per standard set. Multi-part items are one record with parts noted.
+Scope classification (P2) is assigned at scope-resolution time against the standard wording, then cached per standard set. Multi-part items are one record with parts noted. Items the source aligns to multiple standards are assigned to the latest standard in the instructional sequence — the first point at which students would reasonably possess all prerequisite knowledge and skills the item requires; an item is never assigned to an earlier standard when answering it depends on content taught later.
 
 ### 4.3 Role: Unpacking Document (one or more uploads)
 

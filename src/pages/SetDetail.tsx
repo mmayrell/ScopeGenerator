@@ -193,6 +193,35 @@ function normalizeAlignment(code: string): string {
     .join(', ')
 }
 
+/** Standards-document order of every normalized code — the instructional sequence proxy. */
+function treeOrder(nodes: StandardNode[], map: Map<string, number> = new Map()): Map<string, number> {
+  for (const n of nodes) {
+    if (n.wording && !map.has(n.norm)) map.set(n.norm, map.size)
+    if (n.children) treeOrder(n.children, map)
+  }
+  return map
+}
+
+/**
+ * A multi-aligned item is assigned to the LATEST standard in the instructional
+ * sequence — the first point at which students would reasonably possess every
+ * prerequisite the item requires — never to an earlier standard whose success
+ * depends on content taught later. Tree order decides; unknown codes fall back
+ * to numeric-aware ordering.
+ */
+function governingCode(alignmentCode: string, order: Map<string, number>): string {
+  const codes = normalizeAlignment(alignmentCode)
+    .split(', ')
+    .filter((c) => c.length > 0)
+  if (codes.length <= 1) return codes[0] ?? alignmentCode
+  return codes.reduce((best, c) => {
+    const bi = order.get(best) ?? -1
+    const ci = order.get(c) ?? -1
+    if (ci !== bi) return ci > bi ? c : best
+    return c.localeCompare(best, undefined, { numeric: true }) > 0 ? c : best
+  })
+}
+
 function findWording(nodes: StandardNode[], norm: string): string | undefined {
   for (const n of nodes) {
     if (n.norm === norm && n.wording) return n.wording
@@ -748,17 +777,20 @@ export default function SetDetail() {
               })()
             ) : (
               <div className="space-y-2.5">
-                {[...new Set(set.items.map((it) => normalizeAlignment(it.alignmentCode)))]
-                  .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-                  .map((code) => (
-                    <ItemGroup
-                      key={code}
-                      code={code}
-                      items={set.items.filter((it) => normalizeAlignment(it.alignmentCode) === code)}
-                      wording={findWording(set.tree, code)}
-                      setId={set.id}
-                    />
-                  ))}
+                {(() => {
+                  const order = treeOrder(set.tree)
+                  return [...new Set(set.items.map((it) => governingCode(it.alignmentCode, order)))]
+                    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+                    .map((code) => (
+                      <ItemGroup
+                        key={code}
+                        code={code}
+                        items={set.items.filter((it) => governingCode(it.alignmentCode, order) === code)}
+                        wording={findWording(set.tree, code)}
+                        setId={set.id}
+                      />
+                    ))
+                })()}
               </div>
             )}
           </div>
