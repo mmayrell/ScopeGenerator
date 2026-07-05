@@ -631,7 +631,15 @@ export default function SetDetail() {
         {tab === 'Alignment Queue' && (
           <div className="max-w-4xl space-y-3">
             {aiQueue.length === 0 ? (
-              <p className="py-6 text-[13px] text-ink-3">No AI-proposed alignments awaiting confirmation.</p>
+              jobActive ? (
+                <div className="rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
+                  <p className="py-6 text-center text-[13.5px] text-ink-2">
+                    AI extraction is running — scoping conflicts will populate once it completes.
+                  </p>
+                </div>
+              ) : (
+                <p className="py-6 text-[13px] text-ink-3">No AI-proposed alignments awaiting confirmation.</p>
+              )
             ) : (
               aiQueue.map((it) => (
                 <div key={it.id} className="rounded-xl border border-hairline bg-panel p-4 shadow-(--shadow-lift)">
