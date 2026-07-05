@@ -175,6 +175,24 @@ function TreeNode({ node, depth }: { node: StandardNode; depth: number }) {
   )
 }
 
+/**
+ * Item alignments join on the set's normalized scheme, never source variants:
+ * "NY-4.MD.3" and canonical "4.MD.A.3" both group under "4.MD.3" — state
+ * prefixes stripped, cluster letters merged (applied per code for
+ * multi-aligned items).
+ */
+function normalizeAlignment(code: string): string {
+  return code
+    .split(',')
+    .map((c) =>
+      c
+        .trim()
+        .replace(/^[A-Za-z]{1,4}-(?=\d)/, '')
+        .replace(/^(\d+\.[A-Z]{1,4})\.[A-Z]\.(?=\d)/, '$1.'),
+    )
+    .join(', ')
+}
+
 function findWording(nodes: StandardNode[], norm: string): string | undefined {
   for (const n of nodes) {
     if (n.norm === norm && n.wording) return n.wording
@@ -730,13 +748,13 @@ export default function SetDetail() {
               })()
             ) : (
               <div className="space-y-2.5">
-                {[...new Set(set.items.map((it) => it.alignmentCode))]
+                {[...new Set(set.items.map((it) => normalizeAlignment(it.alignmentCode)))]
                   .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
                   .map((code) => (
                     <ItemGroup
                       key={code}
                       code={code}
-                      items={set.items.filter((it) => it.alignmentCode === code)}
+                      items={set.items.filter((it) => normalizeAlignment(it.alignmentCode) === code)}
                       wording={findWording(set.tree, code)}
                       setId={set.id}
                     />
