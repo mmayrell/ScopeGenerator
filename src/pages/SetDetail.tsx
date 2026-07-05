@@ -13,7 +13,7 @@ const roleLabel: Record<ArtifactRole, string> = {
   progression: 'Progressions / vertical alignment',
 }
 
-const tabs = ['Configuration', 'Artifacts', 'Standards Tree', 'Item Bank', 'Alignment Issues', 'Lexicons'] as const
+const tabs = ['Configuration', 'Artifacts', 'Standards Tree', 'Item Bank', 'Alignment Issues', 'Lexicon'] as const
 
 /**
  * Deterministic default resolution per gap class: the same warning text always
@@ -397,7 +397,7 @@ export default function SetDetail() {
     {
       label: 'Build\nLexicons',
       state: lexActive ? 'active' : lexiconBuilt ? 'done' : job?.status === 'failed' && jobPhase === 'lexicon' ? 'error' : 'pending',
-      tab: 'Lexicons',
+      tab: 'Lexicon',
     },
     { label: 'Publish', state: set.published ? 'done' : 'pending', tab: 'Configuration' },
   ]
@@ -864,7 +864,7 @@ export default function SetDetail() {
           </div>
         )}
 
-        {tab === 'Lexicons' && set.lexicons.representations.length === 0 && set.lexicons.problemTypes.length === 0 && (
+        {tab === 'Lexicon' && set.lexicons.representations.length === 0 && set.lexicons.problemTypes.length === 0 && (
           <div className="max-w-4xl rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
             <div className="py-6 text-center">
               <p className="text-[13.5px] leading-relaxed text-ink-2">
@@ -892,7 +892,7 @@ export default function SetDetail() {
           </div>
         )}
 
-        {tab === 'Lexicons' && (set.lexicons.representations.length > 0 || set.lexicons.problemTypes.length > 0) && (
+        {tab === 'Lexicon' && (set.lexicons.representations.length > 0 || set.lexicons.problemTypes.length > 0) && (
           <div className="grid max-w-4xl grid-cols-2 gap-4">
             {(['representations', 'problemTypes'] as const).map((k) => (
               <div key={k} className="rounded-xl border border-hairline bg-panel p-4 shadow-(--shadow-lift)">
