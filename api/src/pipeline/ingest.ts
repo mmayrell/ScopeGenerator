@@ -41,6 +41,10 @@ import { inspectPdf, partFileName, splitPdfWithin } from './pdf-split'
 // let 24–30MB PDFs burn all three queue attempts on guaranteed 4xx responses.
 const MAX_PDF_BYTES = 23 * 1024 * 1024
 const MAX_PDF_PAGES = 100
+// Items documents split much smaller: 100 pages of released items (~150 items)
+// overflow the 64k output cap ('truncated (max_tokens)'); ~40 pages ≈ 60 items
+// keeps every extraction call comfortably inside it, and faster per attempt.
+const ITEMS_SPLIT_PAGES = 40
 
 export const itemImageBlobPath = (setId: string, itemId: string): string =>
   `sets/${setId}/item-images/${itemId}.png`
@@ -122,13 +126,14 @@ async function splitOversizedUploads(
       out.set(blob.name, blob)
       continue
     }
-    if (inspection.pages <= MAX_PDF_PAGES && buffer.length <= MAX_PDF_BYTES) {
+    const pageCap = blob.role === 'items' ? ITEMS_SPLIT_PAGES : MAX_PDF_PAGES
+    if (inspection.pages <= pageCap && buffer.length <= MAX_PDF_BYTES) {
       out.set(blob.name, blob)
       continue
     }
     let parts
     try {
-      parts = await splitPdfWithin(buffer, MAX_PDF_PAGES, MAX_PDF_BYTES)
+      parts = await splitPdfWithin(buffer, pageCap, MAX_PDF_BYTES)
     } catch (e) {
       ctx.warn(`extract: ${blob.fileName} needs splitting but pdf-lib failed — blocking path applies`, e)
       out.set(blob.name, blob)

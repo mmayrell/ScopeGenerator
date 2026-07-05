@@ -9,7 +9,13 @@ import { rerunRunStep } from '../pipeline/rerun'
 import { today } from '../shared/util'
 
 /** Must match host.json → extensions.queues.maxDequeueCount. */
-const MAX_DEQUEUE_COUNT = 3
+const MAX_DEQUEUE_COUNT = 12 // keep in sync with host.json extensions.queues.maxDequeueCount
+
+/**
+ * Deterministic failures — the same input fails the same way every attempt, so
+ * retrying only burns 10-minute windows and API spend. Fail fast.
+ */
+const TERMINAL_ERROR = /truncated \(max_tokens|declined this request|compiled grammar is too large|is password-protected/i
 
 /**
  * Queue-triggered pipeline worker on `genjobs`, dispatching on
@@ -41,7 +47,7 @@ app.storageQueue('genjobs-worker', {
       context.error(
         `genjobs-worker: job ${msg.jobId} ${msg.kind}/${msg.step} failed (attempt ${dequeueCount}/${MAX_DEQUEUE_COUNT}): ${message}`,
       )
-      if (dequeueCount >= MAX_DEQUEUE_COUNT) {
+      if (dequeueCount >= MAX_DEQUEUE_COUNT || TERMINAL_ERROR.test(message)) {
         await markFailed(msg, message, context)
         return // consume the message — the failure is now recorded
       }
