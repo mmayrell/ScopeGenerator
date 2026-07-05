@@ -573,6 +573,15 @@ export default function SetDetail() {
           <div className="max-w-4xl">
             {set.items.length === 0 ? (
               (() => {
+                if (jobActive) {
+                  return (
+                    <div className="rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
+                      <p className="py-6 text-center text-[13.5px] text-ink-2">
+                        AI extraction is running — the item bank populates when it completes.
+                      </p>
+                    </div>
+                  )
+                }
                 const sources = set.artifacts.filter((a) => a.role === 'items')
                 return sources.length === 0 ? (
                   <p className="py-6 text-[13px] text-ink-3">No released-items document uploaded.</p>
