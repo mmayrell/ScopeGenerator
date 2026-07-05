@@ -316,22 +316,10 @@ export default function SetDetail() {
   const extractionDone = set.tree.length > 0
   const resolveOutstanding = unack.length + aiQueue.length
   type StepState = 'done' | 'active' | 'error' | 'pending'
-  const steps: { label: string; detail: string; state: StepState; tab: (typeof tabs)[number] }[] = [
+  const steps: { label: string; state: StepState; tab: (typeof tabs)[number] }[] = [
+    { label: 'Uploaded\nDocuments', state: 'done', tab: 'Artifacts' },
     {
-      label: 'Uploaded Documents',
-      detail: `${set.artifacts.length} document${set.artifacts.length === 1 ? '' : 's'}`,
-      state: 'done',
-      tab: 'Artifacts',
-    },
-    {
-      label: 'AI Extraction',
-      detail: extractActive
-        ? 'building the tree & item bank…'
-        : extractionDone
-          ? `${set.items.length} items · tree parsed`
-          : job?.status === 'failed' && jobPhase === 'extract'
-            ? 'failed — retry above'
-            : 'starts on upload',
+      label: 'AI\nExtraction',
       state: extractActive
         ? 'active'
         : extractionDone
@@ -342,34 +330,16 @@ export default function SetDetail() {
       tab: 'Standards Tree',
     },
     {
-      label: 'Alignment Issues',
-      detail:
-        !extractionDone || extractActive
-          ? 'after extraction'
-          : resolveOutstanding > 0
-            ? `${unack.length} conflict${unack.length === 1 ? '' : 's'} · ${aiQueue.length} alignment${aiQueue.length === 1 ? '' : 's'} left`
-            : 'all resolved',
+      label: 'Alignment\nIssues',
       state: !extractionDone || extractActive ? 'pending' : resolveOutstanding > 0 ? 'active' : 'done',
       tab: 'Alignment Issues',
     },
     {
-      label: 'Build Lexicons',
-      detail: lexActive
-        ? 'AI is building…'
-        : lexiconBuilt
-          ? `${set.lexicons.representations.length + set.lexicons.problemTypes.length} terms`
-          : job?.status === 'failed' && jobPhase === 'lexicon'
-            ? 'failed — retry above'
-            : 'unlocks after resolutions',
+      label: 'Build\nLexicons',
       state: lexActive ? 'active' : lexiconBuilt ? 'done' : job?.status === 'failed' && jobPhase === 'lexicon' ? 'error' : 'pending',
       tab: 'Lexicons',
     },
-    {
-      label: 'Publish',
-      detail: set.published ? 'live for scope requests' : 'automatic after the lexicons',
-      state: set.published ? 'done' : 'pending',
-      tab: 'Configuration',
-    },
+    { label: 'Publish', state: set.published ? 'done' : 'pending', tab: 'Configuration' },
   ]
 
   return (
@@ -420,13 +390,12 @@ export default function SetDetail() {
                     )}
                   </div>
                   <div
-                    className={`mt-2 text-[12px] leading-snug font-semibold ${
+                    className={`mt-2 text-[12px] leading-snug font-semibold whitespace-pre-line ${
                       s.state === 'pending' ? 'text-ink-3' : s.state === 'error' ? 'text-rust' : 'text-ink'
                     } group-hover:text-accent-deep`}
                   >
                     {s.label}
                   </div>
-                  <div className="mt-0.5 pr-3 text-[11px] leading-snug text-ink-3">{s.detail}</div>
                 </div>
               </button>
             ))}
