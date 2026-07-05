@@ -302,7 +302,75 @@ export default function SetDetail() {
   // for seeded sets and for a held auto-publish (blocked artifact at build time).
   const showPublish = !set.published && !jobActive && lexiconBuilt
   const readyForLexicon =
-    !set.published && !jobActive && set.tree.length > 0 && unack.length === 0 && blocking.length === 0 && !lexiconBuilt
+    !set.published &&
+    !jobActive &&
+    set.tree.length > 0 &&
+    unack.length === 0 &&
+    aiQueue.length === 0 &&
+    blocking.length === 0 &&
+    !lexiconBuilt
+
+  // Lifecycle stepper: where the set is between upload and publish, and what to do next.
+  const extractActive = jobActive && jobPhase === 'extract'
+  const lexActive = jobActive && jobPhase === 'lexicon'
+  const extractionDone = set.tree.length > 0
+  const resolveOutstanding = unack.length + aiQueue.length
+  type StepState = 'done' | 'active' | 'error' | 'pending'
+  const steps: { label: string; detail: string; state: StepState; tab: (typeof tabs)[number] }[] = [
+    {
+      label: 'Upload Documents',
+      detail: `${set.artifacts.length} document${set.artifacts.length === 1 ? '' : 's'}`,
+      state: 'done',
+      tab: 'Artifacts',
+    },
+    {
+      label: 'AI Extraction',
+      detail: extractActive
+        ? 'building the tree & item bank…'
+        : extractionDone
+          ? `${set.items.length} items · tree parsed`
+          : job?.status === 'failed' && jobPhase === 'extract'
+            ? 'failed — retry above'
+            : 'starts on upload',
+      state: extractActive
+        ? 'active'
+        : extractionDone
+          ? 'done'
+          : job?.status === 'failed' && jobPhase === 'extract'
+            ? 'error'
+            : 'pending',
+      tab: 'Standards Tree',
+    },
+    {
+      label: 'Resolve Conflicts & Alignments',
+      detail:
+        !extractionDone || extractActive
+          ? 'after extraction'
+          : resolveOutstanding > 0
+            ? `${unack.length} conflict${unack.length === 1 ? '' : 's'} · ${aiQueue.length} alignment${aiQueue.length === 1 ? '' : 's'} left`
+            : 'all resolved',
+      state: !extractionDone || extractActive ? 'pending' : resolveOutstanding > 0 ? 'active' : 'done',
+      tab: 'Alignment Queue',
+    },
+    {
+      label: 'Build Lexicons',
+      detail: lexActive
+        ? 'AI is building…'
+        : lexiconBuilt
+          ? `${set.lexicons.representations.length + set.lexicons.problemTypes.length} terms`
+          : job?.status === 'failed' && jobPhase === 'lexicon'
+            ? 'failed — retry above'
+            : 'unlocks after resolutions',
+      state: lexActive ? 'active' : lexiconBuilt ? 'done' : job?.status === 'failed' && jobPhase === 'lexicon' ? 'error' : 'pending',
+      tab: 'Lexicons',
+    },
+    {
+      label: 'Publish',
+      detail: set.published ? 'live for scope requests' : 'automatic after the lexicons',
+      state: set.published ? 'done' : 'pending',
+      tab: 'Configuration',
+    },
+  ]
 
   return (
     <div className="mx-auto max-w-6xl px-10 py-10">
@@ -321,6 +389,50 @@ export default function SetDetail() {
           )}
         </div>
       </div>
+
+      {/* lifecycle steps */}
+      {!set.published && (
+        <div className="mt-6 rounded-2xl border border-hairline bg-panel px-5 py-4 shadow-(--shadow-lift)">
+          <div className="flex items-start">
+            {steps.map((s, i) => (
+              <button
+                key={s.label}
+                onClick={() => setTab(s.tab)}
+                className="group flex min-w-0 flex-1 cursor-pointer items-start gap-2.5 text-left"
+              >
+                <div className="flex min-w-0 flex-1 flex-col items-start">
+                  <div className="flex w-full items-center gap-2">
+                    <span
+                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[11px] font-semibold ${
+                        s.state === 'done'
+                          ? 'bg-verdant-wash text-verdant'
+                          : s.state === 'active'
+                            ? 'stage-pulse bg-accent text-white'
+                            : s.state === 'error'
+                              ? 'bg-rust-wash text-rust'
+                              : 'bg-ink/5 text-ink-3'
+                      }`}
+                    >
+                      {s.state === 'done' ? '✓' : s.state === 'error' ? '!' : i + 1}
+                    </span>
+                    {i < steps.length - 1 && (
+                      <span className={`h-px flex-1 ${s.state === 'done' ? 'bg-verdant/30' : 'bg-hairline-2'}`} />
+                    )}
+                  </div>
+                  <div
+                    className={`mt-2 text-[12px] leading-snug font-semibold ${
+                      s.state === 'pending' ? 'text-ink-3' : s.state === 'error' ? 'text-rust' : 'text-ink'
+                    } group-hover:text-accent-deep`}
+                  >
+                    {s.label}
+                  </div>
+                  <div className="mt-0.5 pr-3 text-[11px] leading-snug text-ink-3">{s.detail}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* AI pipeline progress */}
       {jobActive && (
@@ -662,7 +774,35 @@ export default function SetDetail() {
           </div>
         )}
 
-        {tab === 'Lexicons' && (
+        {tab === 'Lexicons' && set.lexicons.representations.length === 0 && set.lexicons.problemTypes.length === 0 && (
+          <div className="max-w-4xl rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
+            <div className="py-6 text-center">
+              <p className="text-[13.5px] leading-relaxed text-ink-2">
+                {extractActive
+                  ? 'AI extraction is running — once it completes, resolve the scope conflicts and confirm the AI-proposed alignments; the lexicons generate after that.'
+                  : lexActive
+                    ? 'AI is building the lexicons now — exhaustive terminology and representations, every term cited to its standard, document, and page.'
+                    : extractionDone && resolveOutstanding > 0
+                      ? `Extraction is complete — resolve the remaining ${[
+                          unack.length > 0 ? `${unack.length} conflict${unack.length === 1 ? '' : 's'}` : '',
+                          aiQueue.length > 0 ? `${aiQueue.length} alignment check${aiQueue.length === 1 ? '' : 's'}` : '',
+                        ]
+                          .filter(Boolean)
+                          .join(' and ')} above to generate the lexicons.`
+                      : readyForLexicon
+                        ? 'All checks are resolved — the lexicons are ready to generate.'
+                        : 'The lexicons generate after extraction and the alignment checks.'}
+              </p>
+              {readyForLexicon && (
+                <div className="mt-4 flex justify-center">
+                  <Btn kind="primary" onClick={() => void startLexicon()}>Build Lexicon</Btn>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {tab === 'Lexicons' && (set.lexicons.representations.length > 0 || set.lexicons.problemTypes.length > 0) && (
           <div className="grid max-w-4xl grid-cols-2 gap-4">
             {(['representations', 'problemTypes'] as const).map((k) => (
               <div key={k} className="rounded-xl border border-hairline bg-panel p-4 shadow-(--shadow-lift)">

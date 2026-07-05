@@ -247,6 +247,8 @@ api({
     }
     const unresolved = set.warnings.filter((w) => !w.acknowledged).length
     if (unresolved > 0) throw new HttpError(409, `resolve the remaining ${unresolved} conflict(s)/gap(s) first`)
+    const unconfirmed = set.items.filter((it) => it.confidence === 'ai-proposed').length
+    if (unconfirmed > 0) throw new HttpError(409, `confirm the remaining ${unconfirmed} AI-proposed alignment(s) first`)
     const jobId = await enqueueIngest(set, 'lexicon', `Lexicon build queued for ${set.name}`)
     set.updated = today()
     await saveSet(set)
