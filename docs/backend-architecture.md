@@ -191,6 +191,13 @@ Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is
 - `apply-proposal` (`run`): Claude rewrites the targeted lesson fields per the accepted change set;
   relational fields of adjacent lessons updated; locked lessons queue suggestions. Unresolvable
   targets fail the job (surfaced per the failure table above).
+- `ingest` is RESUMABLE and STOPPABLE: every completed document is recorded on the job row
+  (`doneBlobs`), so a redelivered attempt (the Consumption plan kills executions at 10 minutes;
+  `maxDequeueCount` 12) skips finished documents and keeps their results — each attempt makes
+  forward progress. POST `/sets/{id}/stop-ingest` sets `cancelRequested`; the worker halts at its
+  next checkpoint and settles the job as `cancelled` (new JobStatus state). `enqueueIngest`
+  supersedes provably-dead jobs (no log entry in 15 minutes, or stop-requested and idle 3+
+  minutes) instead of returning them forever.
 - `ingest` (`extract`, Stage 1a): uploads exceeding the 100-page ingestion limit are first split
   automatically into consecutive ≤100-page part documents (pdf-lib; a 144-page PDF becomes
   "… (pages 1-100).pdf" and "… (pages 101-144).pdf"): parts re-uploaded, original blob removed, the

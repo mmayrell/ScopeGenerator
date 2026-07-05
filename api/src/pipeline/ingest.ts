@@ -244,21 +244,31 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
     pushLog(r, `Extracting ${blobs.length} document(s), standards first`)
   })
 
-  // Re-runnable extraction: a re-run re-processes every upload, so extraction
-  // REPLACES the extraction-derived state — items and extract-generated
-  // warnings are reset (the tree is replaced in the standards branch) instead
-  // of appended. Human-entered state survives: acknowledged flags carry over
-  // to re-emitted warnings with matching text, confirmed alignments carry over
-  // to items with the same source/test/year/itemNumber, and enrichArtifact
-  // keeps the human part of artifact usage notes.
+  // Resumable extraction (the Consumption plan kills any execution at 10
+  // minutes): every completed document is recorded on the job row (doneBlobs),
+  // so a redelivered attempt SKIPS finished documents and keeps their results
+  // instead of restarting from scratch — each attempt makes forward progress.
+  const jobRecord = await getJob(msg.jobId)
+  const doneBlobs = new Set<string>(jobRecord.doneBlobs ? (JSON.parse(jobRecord.doneBlobs) as string[]) : [])
+  const freshStart = doneBlobs.size === 0
+
+  // On a FRESH start, extraction REPLACES the extraction-derived state — items
+  // and extract-generated warnings are reset (the tree is replaced in the
+  // standards branch) instead of appended. Human-entered state survives:
+  // acknowledged flags carry over to re-emitted warnings with matching text,
+  // confirmed alignments carry over to items with the same
+  // source/test/year/itemNumber, and enrichArtifact keeps the human part of
+  // artifact usage notes. On a RESUME, already-extracted state is kept.
   const priorWarnings = new Map(set.warnings.map((w) => [w.text, w]))
   const confirmedItemKeys = new Set(
     set.items.filter((it) => it.confidence === 'confirmed').map((it) => itemKey(it)),
   )
-  set.items = []
-  set.warnings = set.warnings.filter(
-    (w) => !w.id.startsWith(`${set.id}-ingw-`) && !w.id.startsWith(`${set.id}-ingfail-`),
-  )
+  if (freshStart) {
+    set.items = []
+    set.warnings = set.warnings.filter(
+      (w) => !w.id.startsWith(`${set.id}-ingw-`) && !w.id.startsWith(`${set.id}-ingfail-`),
+    )
+  }
 
   const candidateWarnings: string[] = []
   let blocked = 0
@@ -271,6 +281,10 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
       await settleCancelled(msg.jobId, 'extract')
       ctx.log(`ingest/extract ${msg.jobId}: stopped by user after ${stagesDone} document(s)`)
       return
+    }
+    if (doneBlobs.has(blob.name)) {
+      stagesDone++ // finished in an earlier attempt
+      continue
     }
     const artifact = findArtifact(set, blob.role, blob.fileName)
 
@@ -389,9 +403,15 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
     }
     if (artifact) artifact.reviewStatus = 'reviewed'
     stagesDone++
-    // Checkpoint after each document so a mid-run failure keeps its progress.
+    // Checkpoint after each document so a mid-run failure keeps its progress,
+    // then record the document as done so a redelivered attempt skips it.
     set.updated = today()
     await saveSet(set)
+    doneBlobs.add(blob.name)
+    await mutateJob(msg.jobId, (r) => {
+      r.doneBlobs = JSON.stringify([...doneBlobs])
+      r.stagesDone = stagesDone
+    })
   }
 
   if (await stopRequested(msg.jobId)) {
@@ -501,15 +521,19 @@ export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): P
     return
   }
 
-  const representations = await generateStructured<WireIngestLexicon>({
-    ...ingestLexiconPrompt(set, 'representations'),
-    schema: INGEST_LEXICON_SCHEMA,
-    documents,
-    effort: 'high', // exhaustiveness is the requirement
-  })
-  set.lexicons.representations = toTerms(representations)
-  set.updated = today()
-  await saveSet(set)
+  // Resumable: a redelivered attempt skips the representations pass its
+  // predecessor already persisted.
+  if (set.lexicons.representations.length === 0) {
+    const representations = await generateStructured<WireIngestLexicon>({
+      ...ingestLexiconPrompt(set, 'representations'),
+      schema: INGEST_LEXICON_SCHEMA,
+      documents,
+      effort: 'high', // exhaustiveness is the requirement
+    })
+    set.lexicons.representations = toTerms(representations)
+    set.updated = today()
+    await saveSet(set)
+  }
 
   await mutateJob(msg.jobId, (r) => {
     r.stagesDone = 1

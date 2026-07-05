@@ -11,6 +11,8 @@ export interface JobRecord extends JobStatus {
   created: string
   /** comma-separated unit indexes already counted — makes unit increments idempotent */
   unitsMask?: string
+  /** JSON string[] of upload blob names already extracted — resumability across the 10-minute execution cap */
+  doneBlobs?: string
 }
 
 const LOG_CAP = 40
@@ -36,6 +38,7 @@ function toEntity(r: JobRecord): EntityShape {
   if (r.unitsMask !== undefined) e.unitsMask = r.unitsMask
   if (r.error !== undefined) e.error = r.error
   if (r.cancelRequested !== undefined) e.cancelRequested = r.cancelRequested
+  if (r.doneBlobs !== undefined) e.doneBlobs = r.doneBlobs
   return e
 }
 
@@ -58,6 +61,7 @@ function fromEntity(e: TableEntityResult<Record<string, unknown>>): JobRecord {
   }
   if (e.scopeId !== undefined) rec.scopeId = String(e.scopeId)
   if (e.cancelRequested !== undefined) rec.cancelRequested = Boolean(e.cancelRequested)
+  if (e.doneBlobs !== undefined) rec.doneBlobs = String(e.doneBlobs)
   if (e.setId !== undefined) rec.setId = String(e.setId)
   if (e.unitsDone !== undefined) rec.unitsDone = Number(e.unitsDone)
   if (e.totalUnits !== undefined) rec.totalUnits = Number(e.totalUnits)

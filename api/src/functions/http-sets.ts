@@ -16,7 +16,20 @@ import { newId, today } from '../shared/util'
 async function enqueueIngest(set: StandardSet, step: 'extract' | 'lexicon', detail: string): Promise<string> {
   const existing = await latestJobForSet(set.id)
   if (existing && existing.kind === 'ingest' && (existing.status === 'queued' || existing.status === 'running')) {
-    return existing.jobId
+    // A 'running' row does not prove a live execution: the Consumption plan
+    // kills executions at 10 minutes, and a poisoned message leaves the row
+    // running forever. Supersede when the job is provably dead (no log entry
+    // within 15 minutes > functionTimeout) or was stopped and had 3+ minutes
+    // to settle; otherwise reuse it.
+    const lastAt = existing.log.length > 0 ? Date.parse(existing.log[existing.log.length - 1].at) : Date.parse(existing.created)
+    const idleMs = Date.now() - lastAt
+    const dead = idleMs > 15 * 60 * 1000 || (existing.cancelRequested === true && idleMs > 3 * 60 * 1000)
+    if (!dead) return existing.jobId
+    await mutateJob(existing.jobId, (r) => {
+      r.status = 'cancelled'
+      r.stage = r.stage.startsWith('Lexicon') ? 'Lexicon — Stopped' : 'Extraction — Stopped'
+      pushLog(r, existing.cancelRequested ? 'Stopped by user — superseded by a new job' : 'Stalled (no progress in 15 minutes) — superseded by a new job')
+    })
   }
   const jobId = newId('job')
   await createJob({
