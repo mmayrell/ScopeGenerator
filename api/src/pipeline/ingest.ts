@@ -13,12 +13,14 @@ import { getJob, mutateJob, pushLog } from '../data/jobs'
 import { generateStructured } from '../services/claude'
 import {
   ingestConflictsPrompt,
+  ingestItemCountPrompt,
   ingestLexiconPrompt,
   ingestNotesPrompt,
   ingestStandardsPrompt,
 } from '../services/prompts'
 import {
   INGEST_CONFLICTS_SCHEMA,
+  INGEST_ITEM_COUNT_SCHEMA,
   INGEST_LEXICON_SCHEMA,
   INGEST_NOTES_SCHEMA,
   INGEST_STANDARDS_SCHEMA,
@@ -26,6 +28,7 @@ import {
   WireIngestLexicon,
   WireIngestNotes,
   WireIngestStandards,
+  WireItemCount,
   WireStandardNode,
 } from '../services/schemas'
 import { today } from '../shared/util'
@@ -228,11 +231,11 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
   // (items included — the lexicon build attaches them and faces the same caps).
   blobs = await splitOversizedUploads(set, blobs, msg.jobId, ctx)
 
-  // Released-items documents are NOT extracted at ingestion — they are held as
-  // artifacts for scope generation (and mined by the lexicon build). Everything
-  // else processes standards-first: the tree is the boundary authority.
-  blobs = blobs.filter((b) => b.role !== 'items')
-  const rolePriority: Record<string, number> = { standards: 0, unpacking: 1, progression: 2 }
+  // Released-items documents are NOT item-extracted at ingestion — they are
+  // held as artifacts for scope generation (and mined by the lexicon build).
+  // Each gets a cheap counting pass so its card can show how many items it
+  // holds. The standards document still processes first.
+  const rolePriority: Record<string, number> = { standards: 0, unpacking: 1, progression: 2, items: 3 }
   blobs.sort((a, b) => (rolePriority[a.role] ?? 9) - (rolePriority[b.role] ?? 9))
 
   await mutateJob(msg.jobId, (r) => {
@@ -326,6 +329,15 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
       if (out.setMeta.publicationYear.trim()) set.publicationYear = out.setMeta.publicationYear.trim()
       enrichArtifact(artifact, out.usageNotes)
       candidateWarnings.push(...out.coverageWarnings)
+    } else if (blob.role === 'items') {
+      const out = await generateStructured<WireItemCount>({
+        ...ingestItemCountPrompt(set, artifact),
+        schema: INGEST_ITEM_COUNT_SCHEMA,
+        documents: [base64],
+        effort: 'low', // a count, not an extraction
+      })
+      if (artifact) artifact.meta = { ...(artifact.meta ?? {}), itemCount: out.itemCount }
+      await mutateJob(msg.jobId, (r) => pushLog(r, `${blob.fileName}: ${out.itemCount} items counted`))
     } else if (blob.role === 'unpacking' || blob.role === 'progression') {
       const out = await generateStructured<WireIngestNotes>({
         ...ingestNotesPrompt(set, artifact, blob.role),

@@ -433,6 +433,19 @@ Output:
   }
 }
 
+export function ingestItemCountPrompt(set: StandardSet, artifact: Artifact | undefined): Prompt {
+  return {
+    system: ingestSystem('released-items counter'),
+    user: `Count the assessment items in the attached released-items PDF for the set "${set.name}" (${set.gradeSpan}).
+
+An item is one distinct numbered question/task presented to students. Count a multi-part item (parts A/B/C under one number) ONCE. Do not count instructions pages, answer keys, rubrics, or reference sheets as items.
+
+User usage notes for this artifact: ${artifact?.usageNotes || '(none)'}
+
+Output itemCount: the total number of items in this document.`,
+  }
+}
+
 /**
  * Cross-document scope-conflict pass, run once after every upload has been
  * extracted. Consolidates the per-document candidate warnings and hunts for

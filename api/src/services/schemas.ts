@@ -257,6 +257,8 @@ export const INGEST_NOTES_SCHEMA = obj({
   coverageWarnings: arr(STR),
 })
 
+export const INGEST_ITEM_COUNT_SCHEMA = obj({ itemCount: INT })
+
 export const INGEST_CONFLICTS_SCHEMA = obj({
   warnings: arr(
     obj({
@@ -428,6 +430,10 @@ export interface WireIngestItems {
 export interface WireIngestNotes {
   usageNotes: string
   coverageWarnings: string[]
+}
+
+export interface WireItemCount {
+  itemCount: number
 }
 
 export interface WireIngestConflicts {
