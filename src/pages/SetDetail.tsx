@@ -318,7 +318,7 @@ export default function SetDetail() {
   type StepState = 'done' | 'active' | 'error' | 'pending'
   const steps: { label: string; detail: string; state: StepState; tab: (typeof tabs)[number] }[] = [
     {
-      label: 'Upload Documents',
+      label: 'Uploaded Documents',
       detail: `${set.artifacts.length} document${set.artifacts.length === 1 ? '' : 's'}`,
       state: 'done',
       tab: 'Artifacts',
