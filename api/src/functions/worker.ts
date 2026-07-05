@@ -3,7 +3,7 @@ import { JobMessage, Proposal, Scope } from '../domain/types'
 import { getSetOrUndefined, mutateScope, saveSet } from '../data/entities'
 import { mutateJob, pushLog } from '../data/jobs'
 import { generateCardsStep, generateFinalizeStep, generatePlanStep } from '../pipeline/generate'
-import { ingestRunStep } from '../pipeline/ingest'
+import { extractRunStep, lexiconRunStep } from '../pipeline/ingest'
 import { applyProposalRunStep, iterateRunStep, proposalRunStep } from '../pipeline/proposals'
 import { rerunRunStep } from '../pipeline/rerun'
 import { today } from '../shared/util'
@@ -78,8 +78,11 @@ async function dispatch(msg: JobMessage, context: InvocationContext): Promise<vo
       return iterateRunStep(msg, context)
     case 'apply-proposal/run':
       return applyProposalRunStep(msg, context)
-    case 'ingest/run':
-      return ingestRunStep(msg, context)
+    case 'ingest/run': // legacy queued messages route to extraction
+    case 'ingest/extract':
+      return extractRunStep(msg, context)
+    case 'ingest/lexicon':
+      return lexiconRunStep(msg, context)
     default:
       throw new Error(`unknown job route: ${route}`)
   }
@@ -183,7 +186,9 @@ async function markIngestFailed(msg: JobMessage, error: string, context: Invocat
     if (!set) return
     set.warnings.push({
       id: `${set.id}-ingfail-${Date.now()}`,
-      text: `Ingestion failed: ${error}. Fix the uploads or retry publish.`,
+      text: `Ingestion failed: ${error}. Fix the uploads and retry.`,
+      kind: 'gap',
+      suggestion: 'Re-upload the affected document and re-run extraction; the pipeline resumes from the failed step.',
       acknowledged: false,
     })
     set.updated = today()

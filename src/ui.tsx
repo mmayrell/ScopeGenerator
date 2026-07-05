@@ -5,8 +5,10 @@ import type { Citation, ItemRecord } from './types'
 
 // ---------- tiny primitives ----------
 
-export const Mono = ({ children, className = '' }: { children: ReactNode; className?: string }) => (
-  <span className={`font-mono text-[0.92em] tracking-tight ${className}`}>{children}</span>
+export const Mono = ({ children, className = '', title }: { children: ReactNode; className?: string; title?: string }) => (
+  <span className={`font-mono text-[0.92em] tracking-tight ${className}`} title={title}>
+    {children}
+  </span>
 )
 
 export function Pill({
@@ -164,27 +166,41 @@ export function Modal({
 
 // ---------- faux released-item screenshot ----------
 
-export function ItemShot({ item }: { item: ItemRecord }) {
+export function ItemShot({ item, imageUrl }: { item: ItemRecord; imageUrl?: string }) {
+  const [imageFailed, setImageFailed] = useState(false)
+  const showImage = !!imageUrl && !imageFailed
   return (
     <figure className="overflow-hidden rounded-xl border border-hairline bg-panel shadow-(--shadow-lift)">
-      <div className="border-b border-dashed border-hairline-2 bg-[#fdfcfa] px-4 py-3.5">
-        <div className="flex items-start gap-3">
-          <span className="mt-px flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-night font-mono text-[11px] font-semibold text-white">
-            {item.itemNumber}
-          </span>
-          <p className="font-display text-[14px] leading-relaxed text-ink">{item.stem}</p>
+      {showImage ? (
+        <div className="border-b border-dashed border-hairline-2 bg-[#fdfcfa] p-2">
+          <img
+            src={imageUrl}
+            alt={`${item.test} ${item.year} · Q${item.itemNumber}`}
+            className="mx-auto max-h-[480px] w-auto max-w-full rounded-md"
+            loading="lazy"
+            onError={() => setImageFailed(true)}
+          />
         </div>
-        {item.choices && (
-          <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1.5 pl-9">
-            {item.choices.map((ch, i) => (
-              <div key={i} className="flex items-baseline gap-2 text-[13px] text-ink-2">
-                <span className="font-mono text-[11px] font-semibold text-ink-3">{'ABCD'[i]}</span>
-                <span className="font-display">{ch}</span>
-              </div>
-            ))}
+      ) : (
+        <div className="border-b border-dashed border-hairline-2 bg-[#fdfcfa] px-4 py-3.5">
+          <div className="flex items-start gap-3">
+            <span className="mt-px flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-night font-mono text-[11px] font-semibold text-white">
+              {item.itemNumber}
+            </span>
+            <p className="font-display text-[14px] leading-relaxed text-ink">{item.stem}</p>
           </div>
-        )}
-      </div>
+          {item.choices && (
+            <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1.5 pl-9">
+              {item.choices.map((ch, i) => (
+                <div key={i} className="flex items-baseline gap-2 text-[13px] text-ink-2">
+                  <span className="font-mono text-[11px] font-semibold text-ink-3">{'ABCD'[i]}</span>
+                  <span className="font-display">{ch}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
       <figcaption className="flex flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2 text-[11px] text-ink-3">
         <Mono className="font-medium text-ink-2">
           {item.test} · {item.year} · Q{item.itemNumber}

@@ -1,11 +1,44 @@
 import { Artifact, NewSetUploads, StandardSet } from '../domain/types'
-import { uploadsContainer } from '../data/clients'
+import { dataContainer, uploadsContainer } from '../data/clients'
 import { deleteSetDocs, getSet, listScopes, listSets, saveSet } from '../data/entities'
-import { createJob, latestJobForSet, mutateJob, pushLog } from '../data/jobs'
+import { createJob, latestJobForSet, mutateJob, pushLog, toJobStatus } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
+import { itemImageBlobPath } from '../pipeline/ingest'
 import { HttpError } from '../shared/errors'
 import { api, ok, readJson, requireParam } from '../shared/http'
 import { newId, today } from '../shared/util'
+
+/**
+ * Enqueues an ingest job step for a set, reusing an already-active ingest job
+ * (idempotent), and failing the job row if the queue write dies so a 'queued'
+ * row with no message can't wedge the set forever.
+ */
+async function enqueueIngest(set: StandardSet, step: 'extract' | 'lexicon', detail: string): Promise<string> {
+  const existing = await latestJobForSet(set.id)
+  if (existing && existing.kind === 'ingest' && (existing.status === 'queued' || existing.status === 'running')) {
+    return existing.jobId
+  }
+  const jobId = newId('job')
+  await createJob({
+    jobId,
+    kind: 'ingest',
+    setId: set.id,
+    totalStages: 1,
+    stage: 'Queued',
+    detail,
+  })
+  try {
+    await enqueueJob({ jobId, kind: 'ingest', step, setId: set.id })
+  } catch (e) {
+    await mutateJob(jobId, (rec) => {
+      rec.status = 'failed'
+      rec.error = `Failed to enqueue ${step} job`
+      pushLog(rec, 'Enqueue failed; the step can be retried')
+    })
+    throw e
+  }
+  return jobId
+}
 
 // GET /api/bootstrap → { sets, scopes } — initial load
 api({
@@ -178,58 +211,120 @@ api({
   },
 })
 
-// POST /api/sets/{id}/publish → { set, jobId? }
-// If the set has uploaded PDFs in uploads/, enqueue an ingest job (Stage 1) and
-// hold publish pending ingestion; otherwise publish immediately (seeded sets).
+// POST /api/sets/{id}/ingest → { jobId } — extraction phase (standards tree,
+// item bank with screenshots, cross-document conflict pass). Called by the
+// frontend as soon as the uploads finish at creation; also the retry path.
 api({
-  name: 'set-publish',
+  name: 'set-ingest',
   methods: ['POST'],
-  route: 'sets/{id}/publish',
+  route: 'sets/{id}/ingest',
   handler: async (req) => {
     const set = await getSet(requireParam(req, 'id'))
-    // Idempotent: re-publishing an already-published set is a no-op (no job).
-    if (set.published) return ok({ set })
     let hasUploads = false
     for await (const blob of uploadsContainer().listBlobsFlat({ prefix: `${set.id}/` })) {
       void blob
       hasUploads = true
       break
     }
-    if (!hasUploads) {
-      set.published = true
-      set.updated = today()
-      await saveSet(set)
-      return ok({ set })
-    }
-    // Idempotent: an ingest job already queued/running for this set is returned
-    // instead of enqueueing a duplicate.
-    const existing = await latestJobForSet(set.id)
-    if (existing && existing.kind === 'ingest' && (existing.status === 'queued' || existing.status === 'running')) {
-      return ok({ set, jobId: existing.jobId })
-    }
-    const jobId = newId('job')
-    await createJob({
-      jobId,
-      kind: 'ingest',
-      setId: set.id,
-      totalStages: 1,
-      stage: 'Queued',
-      detail: `Ingest queued for ${set.name} — publish pending`,
-    })
-    try {
-      await enqueueJob({ jobId, kind: 'ingest', step: 'run', setId: set.id })
-    } catch (e) {
-      // A 'queued' job row with no queue message would be returned by the
-      // idempotency check above forever, wedging publish for this set.
-      await mutateJob(jobId, (rec) => {
-        rec.status = 'failed'
-        rec.error = 'Failed to enqueue ingest job'
-        pushLog(rec, 'Enqueue failed; publish can be retried')
-      })
-      throw e
-    }
+    if (!hasUploads) throw new HttpError(409, 'no uploaded documents to ingest')
+    const jobId = await enqueueIngest(set, 'extract', `Extraction queued for ${set.name}`)
     set.updated = today()
     await saveSet(set)
-    return ok({ set, jobId })
+    return ok({ jobId }, 202)
+  },
+})
+
+// POST /api/sets/{id}/build-lexicon → { jobId } — runs only after every
+// conflict/gap is resolved; builds the exhaustive cited lexicons and publishes.
+api({
+  name: 'set-build-lexicon',
+  methods: ['POST'],
+  route: 'sets/{id}/build-lexicon',
+  handler: async (req) => {
+    const set = await getSet(requireParam(req, 'id'))
+    if (set.tree.length === 0) throw new HttpError(409, 'extraction has not produced a standards tree yet')
+    if (set.artifacts.some((a) => a.reviewStatus === 'blocked')) {
+      throw new HttpError(409, 'resolve the blocking artifact errors first')
+    }
+    const unresolved = set.warnings.filter((w) => !w.acknowledged).length
+    if (unresolved > 0) throw new HttpError(409, `resolve the remaining ${unresolved} conflict(s)/gap(s) first`)
+    const jobId = await enqueueIngest(set, 'lexicon', `Lexicon build queued for ${set.name}`)
+    set.updated = today()
+    await saveSet(set)
+    return ok({ jobId }, 202)
+  },
+})
+
+// GET /api/sets/{id}/job → JobStatus — polled during extraction/lexicon builds
+api({
+  name: 'set-job',
+  methods: ['GET'],
+  route: 'sets/{id}/job',
+  handler: async (req) => {
+    const id = requireParam(req, 'id')
+    const job = await latestJobForSet(id)
+    if (!job) throw new HttpError(404, `no job found for set ${id}`)
+    return ok(toJobStatus(job))
+  },
+})
+
+// GET /api/item-image/{setId}/{itemId} → PNG — question screenshots for <img>
+// tags. Browsers can't attach the x-access-code header to an image request, so
+// this endpoint also accepts ?code= (checked manually; auth:false skips the
+// header middleware).
+api({
+  name: 'item-image',
+  methods: ['GET'],
+  route: 'item-image/{setId}/{itemId}',
+  auth: false,
+  handler: async (req) => {
+    const expected = process.env.APP_ACCESS_CODE
+    const supplied = req.headers.get('x-access-code') ?? req.query.get('code')
+    if (!expected || supplied !== expected) {
+      return { status: 401, jsonBody: { error: 'unauthorized' } }
+    }
+    const setId = requireParam(req, 'setId')
+    const itemId = requireParam(req, 'itemId')
+    const blob = dataContainer().getBlobClient(itemImageBlobPath(setId, itemId))
+    if (!(await blob.exists())) throw new HttpError(404, 'no screenshot for this item')
+    const bytes = await blob.downloadToBuffer()
+    return {
+      status: 200,
+      body: new Uint8Array(bytes),
+      headers: { 'content-type': 'image/png', 'cache-control': 'private, max-age=3600' },
+    }
+  },
+})
+
+// POST /api/sets/{id}/publish → { set } — final gate. Uploaded sets publish
+// automatically when the lexicon build lands; this endpoint publishes seeded
+// sets (no uploads) and fully-ingested sets whose auto-publish was held.
+api({
+  name: 'set-publish',
+  methods: ['POST'],
+  route: 'sets/{id}/publish',
+  handler: async (req) => {
+    const set = await getSet(requireParam(req, 'id'))
+    // Idempotent: re-publishing an already-published set is a no-op.
+    if (set.published) return ok({ set })
+    if (set.artifacts.some((a) => a.reviewStatus === 'blocked')) {
+      throw new HttpError(409, 'resolve the blocking artifact errors first')
+    }
+    let hasUploads = false
+    for await (const blob of uploadsContainer().listBlobsFlat({ prefix: `${set.id}/` })) {
+      void blob
+      hasUploads = true
+      break
+    }
+    if (hasUploads) {
+      const unresolved = set.warnings.filter((w) => !w.acknowledged).length
+      if (set.tree.length === 0 || unresolved > 0 || set.lexicons.representations.length === 0) {
+        throw new HttpError(409, 'complete the ingest flow first: extraction → resolve conflicts → build lexicon')
+      }
+    }
+    set.published = true
+    set.updated = today()
+    await saveSet(set)
+    return ok({ set })
   },
 })

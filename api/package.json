@@ -15,7 +15,9 @@
     "@azure/data-tables": "^13.2.2",
     "@azure/functions": "^4.5.0",
     "@azure/storage-blob": "^12.24.0",
-    "@azure/storage-queue": "^12.23.0"
+    "@azure/storage-queue": "^12.23.0",
+    "@napi-rs/canvas": "^1.0.2",
+    "pdf-to-png-converter": "^4.1.1"
   },
   "devDependencies": {
     "@types/node": "^24.13.2",

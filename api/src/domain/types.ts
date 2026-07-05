@@ -38,7 +38,11 @@ export interface CoverageWarning {
   id: string
   text: string
   acknowledged: boolean
-  /** How the user chose to resolve the gap; recorded and injected into the stages that consume it. */
+  /** 'conflict' = cross-document scope conflict found at extraction; 'gap' = coverage gap. */
+  kind?: 'gap' | 'conflict'
+  /** The AI's suggested default resolution, determined while investigating the issue. */
+  suggestion?: string
+  /** How the user chose to resolve it; recorded and injected into the stages that consume it. */
   resolution?: string
   resolvedBy?: 'default' | 'custom'
 }
@@ -58,6 +62,11 @@ export interface LexiconTerm {
   term: string
   aliases: string[]
   source: string
+  /** Governing standard code shown as the term's citation (grey, right-aligned). */
+  standard?: string
+  /** Cited artifact file name + PDF page, revealed on hover. */
+  artifact?: string
+  page?: number
 }
 
 export interface ItemRecord {
@@ -76,8 +85,12 @@ export interface ItemRecord {
   demandProfile: string
   scopeClass: 'in-boundary' | 'rigor-signal-only' | 'adjacent-grade'
   hasKey: boolean
-  stem: string // rendered stand-in for the item screenshot
+  stem: string // text stand-in, used when no screenshot was extracted
   choices?: string[]
+  /** Blob path of the extracted question screenshot (served via /api/item-image). */
+  imagePath?: string
+  /** 1-based PDF page the item was found on. */
+  page?: number
 }
 
 export interface StandardSet {
@@ -312,7 +325,7 @@ export interface JobStatus {
 export interface JobMessage {
   jobId: string
   kind: JobKind
-  step: 'plan' | 'cards' | 'finalize' | 'run' // 'run' for single-step kinds
+  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'lexicon' // 'run' for single-step kinds; ingest uses extract → lexicon
   scopeId?: string
   setId?: string
   unitIndex?: number // for step 'cards'

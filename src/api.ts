@@ -136,6 +136,13 @@ export const api = {
   publishSet: (setId: string) =>
     request<{ set: StandardSet; jobId?: string }>('POST', `/sets/${encodeURIComponent(setId)}/publish`),
 
+  ingestSet: (setId: string) => request<{ jobId: string }>('POST', `/sets/${encodeURIComponent(setId)}/ingest`),
+
+  buildLexicon: (setId: string) =>
+    request<{ jobId: string }>('POST', `/sets/${encodeURIComponent(setId)}/build-lexicon`),
+
+  getSetJob: (setId: string) => request<JobStatus>('GET', `/sets/${encodeURIComponent(setId)}/job`),
+
   createScope: (setId: string, mode: 'course' | 'standard' | 'topic', params: string) =>
     request<{ id: string; jobId: string }>('POST', '/scopes', { setId, mode, params }),
 
@@ -173,6 +180,10 @@ export const api = {
   getFramework: () => request<FrameworkDoc>('GET', '/framework'),
 
   saveFramework: (doc: FrameworkDoc) => request<FrameworkDoc>('PUT', '/framework', doc),
+
+  /** URL for an item's question screenshot — <img> can't send headers, so the access code rides as a query param. */
+  itemImageUrl: (setId: string, itemId: string): string =>
+    `${API_BASE}/item-image/${encodeURIComponent(setId)}/${encodeURIComponent(itemId)}?code=${encodeURIComponent(getAccessCode() ?? '')}`,
 
   adminSeed: (force?: boolean) =>
     request<{ seeded: boolean; sets: number; scopes: number }>(

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import { api, type JobStatus } from '../api'
 import { useStore } from '../store'
-import { Btn, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
+import { Btn, ItemShot, Modal, Mono, Pill, Progress, SectionLabel } from '../ui'
 import type { ArtifactRole, ItemRecord, StandardNode } from '../types'
 
 const roleLabel: Record<ArtifactRole, string> = {
@@ -38,13 +39,24 @@ function WarningRow({
   warning,
   onResolve,
 }: {
-  warning: { id: string; text: string; acknowledged: boolean; resolution?: string; resolvedBy?: 'default' | 'custom' }
+  warning: {
+    id: string
+    text: string
+    acknowledged: boolean
+    kind?: 'gap' | 'conflict'
+    suggestion?: string
+    resolution?: string
+    resolvedBy?: 'default' | 'custom'
+  }
   onResolve: (resolution: string, resolvedBy: 'default' | 'custom') => Promise<void>
 }) {
   const [open, setOpen] = useState(false)
   const [custom, setCustom] = useState('')
   const [busy, setBusy] = useState(false)
-  const suggested = defaultResolution(warning.text)
+  // The AI's investigated suggestion when extraction produced one; the
+  // deterministic per-class fallback otherwise.
+  const suggested = warning.suggestion?.trim() || defaultResolution(warning.text)
+  const label = warning.kind === 'conflict' ? 'scope conflict' : 'coverage gap'
 
   const apply = (resolution: string, resolvedBy: 'default' | 'custom') => {
     setBusy(true)
@@ -70,20 +82,30 @@ function WarningRow({
   }
 
   return (
-    <div className="rounded-xl border border-amber-ink/25 bg-amber-wash px-4 py-2.5">
+    <div
+      className={`rounded-xl border px-4 py-2.5 ${
+        warning.kind === 'conflict' ? 'border-rust/25 bg-rust-wash' : 'border-amber-ink/25 bg-amber-wash'
+      }`}
+    >
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2.5 text-[12.5px]">
-          <span className="font-mono text-[10px] font-semibold text-amber-ink uppercase">coverage gap</span>
-          <span className="text-amber-ink">{warning.text}</span>
+          <span
+            className={`font-mono text-[10px] font-semibold uppercase ${
+              warning.kind === 'conflict' ? 'text-rust' : 'text-amber-ink'
+            }`}
+          >
+            {label}
+          </span>
+          <span className={warning.kind === 'conflict' ? 'text-rust' : 'text-amber-ink'}>{warning.text}</span>
         </div>
         {!open && <Btn onClick={() => setOpen(true)}>Resolve</Btn>}
       </div>
       {open && (
-        <div className="animate-rise mt-3 space-y-2.5 border-t border-amber-ink/15 pt-3">
+        <div className="animate-rise mt-3 space-y-2.5 border-t border-ink/10 pt-3">
           <div className="rounded-lg border border-hairline bg-panel p-3">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <SectionLabel>Default Resolution</SectionLabel>
+                <SectionLabel>{warning.suggestion ? 'Suggested Resolution' : 'Default Resolution'}</SectionLabel>
                 <p className="mt-1 text-[12.5px] leading-relaxed text-ink-2">{suggested}</p>
               </div>
               <Btn kind="primary" disabled={busy} onClick={() => apply(suggested, 'default')} className="shrink-0">
@@ -159,7 +181,7 @@ function findWording(nodes: StandardNode[], norm: string): string | undefined {
   return undefined
 }
 
-function ItemGroup({ code, items, wording }: { code: string; items: ItemRecord[]; wording?: string }) {
+function ItemGroup({ code, items, wording, setId }: { code: string; items: ItemRecord[]; wording?: string; setId: string }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="overflow-hidden rounded-xl border border-hairline bg-panel shadow-(--shadow-lift)">
@@ -187,7 +209,7 @@ function ItemGroup({ code, items, wording }: { code: string; items: ItemRecord[]
       {open && (
         <div className="animate-rise space-y-3 border-t border-hairline bg-paper/50 p-4">
           {items.map((it) => (
-            <ItemShot key={it.id} item={it} />
+            <ItemShot key={it.id} item={it} imageUrl={it.imagePath ? api.itemImageUrl(setId, it.id) : undefined} />
           ))}
         </div>
       )}
@@ -199,43 +221,84 @@ export default function SetDetail() {
   const { id } = useParams()
   const { sets, scopes, acknowledgeWarning, confirmAlignment, resolveArtifact, publishSet, refreshSet, deleteSet } = useStore()
   const [tab, setTab] = useState<(typeof tabs)[number]>('Configuration')
-  const [ingesting, setIngesting] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [job, setJob] = useState<JobStatus | null>(null)
+  const [flowError, setFlowError] = useState<string | null>(null)
   const nav = useNavigate()
   const set = sets.find((s) => s.id === id)
   const setId = set?.id
-  const published = set?.published
-  // Terminal ingest failure: a blocked artifact, or the 'Ingestion failed' warning the
-  // backend writes when the job dies.
-  const ingestFailed =
-    set?.artifacts.some((a) => a.blockingError) || set?.warnings.some((w) => w.text.startsWith('Ingestion failed'))
-  const ingestSettled = Boolean(published || ingestFailed)
+  const jobActive = !!job && job.kind === 'ingest' && (job.status === 'queued' || job.status === 'running')
+  const jobPhase: 'extract' | 'lexicon' = job?.stage.startsWith('Lexicon') ? 'lexicon' : 'extract'
 
-  // Publish with uploaded PDFs enqueues an ingest job — poll the set every 2s until it
-  // publishes or fails terminally, then reset the flag so the Publish button returns
-  // and the user can retry after fixing the surfaced problem.
+  // Latest ingest job for this set — one fetch on mount, so a running
+  // extraction/lexicon build is picked up after navigation or reload.
   useEffect(() => {
-    if (!ingesting || !setId) return
-    if (ingestSettled) {
-      setIngesting(false)
-      return
+    if (!setId) return
+    let cancelled = false
+    api.getSetJob(setId).then(
+      (j) => {
+        if (!cancelled) setJob(j)
+      },
+      () => {
+        if (!cancelled) setJob(null)
+      },
+    )
+    return () => {
+      cancelled = true
     }
-    const t = setInterval(() => void refreshSet(setId), 2000)
-    return () => clearInterval(t)
-  }, [ingesting, setId, ingestSettled, refreshSet])
+  }, [setId])
+
+  // While a job runs, poll job + set every 2s; one final set refresh on settle.
+  useEffect(() => {
+    if (!setId || !jobActive) return
+    const t = setInterval(() => {
+      api.getSetJob(setId).then(setJob, () => {})
+      void refreshSet(setId)
+    }, 2000)
+    return () => {
+      clearInterval(t)
+      void refreshSet(setId)
+    }
+  }, [setId, jobActive, refreshSet])
 
   if (!set) return <div className="p-10 text-ink-3">Standard set not found.</div>
 
+  const startLexicon = async () => {
+    setFlowError(null)
+    try {
+      await api.buildLexicon(set.id)
+      setJob(await api.getSetJob(set.id))
+    } catch (e) {
+      setFlowError(e instanceof Error ? e.message : 'Could not start the lexicon build.')
+    }
+  }
+
+  const retryJob = async () => {
+    setFlowError(null)
+    try {
+      if (jobPhase === 'lexicon') await api.buildLexicon(set.id)
+      else await api.ingestSet(set.id)
+      setJob(await api.getSetJob(set.id))
+    } catch (e) {
+      setFlowError(e instanceof Error ? e.message : 'Could not restart the job.')
+    }
+  }
+
   const publish = async () => {
-    const { jobId } = await publishSet(set.id)
-    if (jobId) setIngesting(true)
+    await publishSet(set.id)
   }
 
   const blocking = set.artifacts.filter((a) => a.reviewStatus === 'blocked')
   const unack = set.warnings.filter((w) => !w.acknowledged)
   const aiQueue = set.items.filter((it) => it.confidence === 'ai-proposed')
+  const lexiconBuilt = set.lexicons.representations.length > 0 || set.lexicons.problemTypes.length > 0
   const canPublish = blocking.length === 0 && unack.length === 0
+  // Uploaded sets publish automatically when the lexicon lands; the button is
+  // for seeded sets and for a held auto-publish (blocked artifact at build time).
+  const showPublish = !set.published && !jobActive && lexiconBuilt
+  const readyForLexicon =
+    !set.published && !jobActive && set.tree.length > 0 && unack.length === 0 && blocking.length === 0 && !lexiconBuilt
 
   return (
     <div className="mx-auto max-w-6xl px-10 py-10">
@@ -248,17 +311,68 @@ export default function SetDetail() {
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <Btn kind="danger" disabled={ingesting} onClick={() => setConfirmDelete(true)}>Delete</Btn>
-          {!set.published &&
-            (ingesting ? (
-              <Pill tone="amber">
-                <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-amber-ink" /> publishing — Stage 1 ingestion running
-              </Pill>
-            ) : (
-              <Btn kind="primary" disabled={!canPublish} onClick={() => void publish()}>Publish set</Btn>
-            ))}
+          <Btn kind="danger" disabled={jobActive} onClick={() => setConfirmDelete(true)}>Delete</Btn>
+          {showPublish && (
+            <Btn kind="primary" disabled={!canPublish} onClick={() => void publish()}>Publish set</Btn>
+          )}
         </div>
       </div>
+
+      {/* AI pipeline progress */}
+      {jobActive && (
+        <div className="animate-rise mt-6 rounded-2xl border border-accent/25 bg-accent-wash/40 p-5 shadow-(--shadow-lift)">
+          <div className="flex items-center justify-between gap-4">
+            <SectionLabel>
+              {jobPhase === 'lexicon' ? 'AI Lexicon Build' : 'AI Extraction — Standards Tree, Item Bank & Conflict Check'}
+            </SectionLabel>
+            <Mono className="text-[11px] text-ink-3">
+              {job.stagesDone}/{job.totalStages}
+            </Mono>
+          </div>
+          <div className="mt-3">
+            <Progress pct={(job.stagesDone / Math.max(1, job.totalStages)) * 100} />
+          </div>
+          <div className="mt-2.5 flex items-center gap-2 text-[12.5px] text-ink-2">
+            <span className="stage-pulse h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+            <span className="font-medium">{job.stage}</span>
+            {job.log.length > 0 && <span className="truncate text-ink-3">— {job.log[job.log.length - 1].detail}</span>}
+          </div>
+        </div>
+      )}
+
+      {job?.status === 'failed' && !set.published && !jobActive && (
+        <div className="animate-rise mt-6 flex items-center justify-between gap-4 rounded-xl border border-rust/25 bg-rust-wash px-4 py-3">
+          <div className="text-[12.5px] leading-relaxed text-rust">
+            <span className="font-mono text-[10px] font-semibold uppercase">
+              {jobPhase === 'lexicon' ? 'lexicon build failed' : 'extraction failed'}
+            </span>{' '}
+            — {job.error ?? 'the job died before completing.'}
+          </div>
+          <Btn onClick={() => void retryJob()}>Retry</Btn>
+        </div>
+      )}
+
+      {readyForLexicon && (
+        <div className="animate-rise mt-6 flex items-center justify-between gap-4 rounded-2xl border border-verdant/25 bg-verdant-wash/60 p-5">
+          <div>
+            <SectionLabel>Conflicts Resolved — Build the Lexicons</SectionLabel>
+            <p className="mt-1 max-w-xl text-[12.5px] leading-relaxed text-ink-2">
+              AI reads every uploaded document under your recorded resolutions and builds exhaustive representation and
+              problem-type vocabularies — every term cited to its governing standard, source document, and page. The
+              set publishes when the build lands.
+            </p>
+          </div>
+          <Btn kind="primary" onClick={() => void startLexicon()} className="shrink-0">
+            Build Lexicon
+          </Btn>
+        </div>
+      )}
+
+      {flowError && (
+        <div className="animate-rise mt-4 rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] text-rust">
+          {flowError}
+        </div>
+      )}
 
       <Modal open={confirmDelete} onClose={() => setConfirmDelete(false)} title="Delete Standard Set?">
         <p className="text-[13px] leading-relaxed text-ink-2">
@@ -388,7 +502,9 @@ export default function SetDetail() {
         {tab === 'Standards Tree' && (
           <div className="max-w-4xl rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
             {set.tree.length === 0 ? (
-              <p className="py-6 text-center text-[13.5px] text-ink-2">Resolve the Coverage Gaps to populate.</p>
+              <p className="py-6 text-center text-[13.5px] text-ink-2">
+                {jobActive ? 'AI extraction is running — the tree populates when it completes.' : 'Resolve the Coverage Gaps to populate.'}
+              </p>
             ) : (
               <>
                 <div className="mb-1 flex items-center justify-between">
@@ -442,6 +558,7 @@ export default function SetDetail() {
                       code={code}
                       items={set.items.filter((it) => it.alignmentCode === code)}
                       wording={findWording(set.tree, code)}
+                      setId={set.id}
                     />
                   ))}
               </div>
@@ -491,7 +608,16 @@ export default function SetDetail() {
                         <Mono className="text-[12.5px] font-medium text-ink">{t.term}</Mono>
                         {t.aliases.length > 0 && <span className="ml-2 text-[11.5px] text-ink-3">aka {t.aliases.join(', ')}</span>}
                       </div>
-                      <span className="shrink-0 text-[10.5px] text-ink-3">{t.source}</span>
+                      {t.standard ? (
+                        <Mono
+                          className="shrink-0 cursor-help text-[10.5px] text-ink-3"
+                          title={`${t.artifact ?? t.source}${t.page ? ` · p. ${t.page}` : ''}`}
+                        >
+                          {t.standard}
+                        </Mono>
+                      ) : (
+                        <span className="shrink-0 text-[10.5px] text-ink-3">{t.source}</span>
+                      )}
                     </div>
                   ))}
                 </div>

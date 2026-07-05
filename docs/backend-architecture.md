@@ -55,6 +55,8 @@ Default when unset: `http://localhost:7071/api` in dev, same-origin `/api` other
 Every endpoint **except** `GET /api/health` requires header `x-access-code: <APP_ACCESS_CODE>`.
 Wrong/missing → `401 {"error":"unauthorized"}`. The SPA prompts once, stores the code in
 `localStorage['scopegen-access-code']`, sends it on every call, and re-prompts on any 401.
+Exception: `GET /api/item-image/{setId}/{itemId}` also accepts the code as `?code=` — browsers
+cannot attach headers to `<img>` requests.
 
 ## Shared types
 
@@ -73,11 +75,15 @@ Wrong/missing → `401 {"error":"unauthorized"}`. The SPA prompts once, stores t
 | `GET /bootstrap` | → `{ sets: StandardSet[], scopes: Scope[] }` | initial load |
 | `GET /sets/{id}` | → `StandardSet` | |
 | `POST /sets` | `{ name, uploads: NewSetUploads }` → `{ id }` | mirrors `createSet`; `NewSetUploads` as in current `store.tsx` |
-| `PUT /uploads/{setId}/{role}/{fileName}` | raw bytes (`application/pdf`) → `{ blobPath }` | stores to `uploads` container; frontend calls it per selected file **after** `POST /sets` returns the id (the path needs the server-generated setId); publish then triggers ingest |
-| `POST /sets/{id}/acknowledge-warning` | `{ warningId }` → `StandardSet` | |
+| `PUT /uploads/{setId}/{role}/{fileName}` | raw bytes (`application/pdf`) → `{ blobPath }` | stores to `uploads` container; frontend calls it per selected file **after** `POST /sets` returns the id (the path needs the server-generated setId); the frontend then calls `POST /sets/{id}/ingest` to start extraction |
+| `POST /sets/{id}/acknowledge-warning` | `{ warningId, resolution?, resolvedBy? }` → `StandardSet` | records how the user resolved the conflict/gap (AI-suggested default or custom) |
 | `POST /sets/{id}/confirm-alignment` | `{ itemId }` → `StandardSet` | |
 | `POST /sets/{id}/resolve-artifact` | `{ artifactId }` → `StandardSet` | |
-| `POST /sets/{id}/publish` | → `{ set: StandardSet, jobId?: string }` | if the set has uploaded PDFs in `uploads/`, enqueue an `ingest` job (Stage 1) and mark publish pending; otherwise publish immediately (seeded sets). Idempotent: already-published sets and in-flight ingest jobs are returned, not duplicated |
+| `POST /sets/{id}/ingest` | → `{ jobId }` (202) | extraction phase: standards tree + item bank (with question screenshots) + cross-document scope-conflict pass. Called automatically after the uploads land at creation; also the retry path. Idempotent with in-flight ingest jobs |
+| `POST /sets/{id}/build-lexicon` | → `{ jobId }` (202) | 409 until the tree exists, no artifact is blocked, and every warning is resolved. Builds the exhaustive cited lexicons; **publishes the set on success** |
+| `GET /sets/{id}/job` | → `JobStatus` | polled during extraction/lexicon builds |
+| `GET /item-image/{setId}/{itemId}` | → `image/png` | question screenshot; auth via header or `?code=` |
+| `POST /sets/{id}/publish` | → `{ set: StandardSet }` | seeded sets (no uploads) publish immediately; uploaded sets 409 unless the full ingest flow completed (they normally auto-publish at lexicon build). Idempotent |
 | `POST /scopes` | `{ setId, mode, params }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job |
 | `GET /scopes/{id}` | → `Scope` | |
 | `GET /scopes/{id}/job` | → `JobStatus` (below) | polled by the generation screen |
@@ -185,7 +191,16 @@ Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is
 - `apply-proposal` (`run`): Claude rewrites the targeted lesson fields per the accepted change set;
   relational fields of adjacent lessons updated; locked lessons queue suggestions. Unresolvable
   targets fail the job (surfaced per the failure table above).
-- `ingest` (`run`, Stage 1): for each uploaded PDF (from `uploads/`), Claude document call
+- `ingest` (`extract`, Stage 1a): for each uploaded PDF (from `uploads/`), Claude document call
+  extracts standards → tree, items → ItemRecord[] with page + bounding box (rendered via
+  pdf-to-png-converter and cropped to `data/sets/<id>/item-images/<itemId>.png`), notes docs →
+  usage-notes enrichment; then one cross-document conflict pass consolidates warnings, each with an
+  AI-suggested resolution (strict canonical Common Core is always the suggestion for CC-variant
+  conflicts). Does NOT publish.
+- `ingest` (`lexicon`, Stage 1b): gated on all warnings resolved; two exhaustive Claude passes build
+  the representations and problem-types lexicons, every term cited to standard + artifact + page;
+  publishes the set on success. Legacy `run` messages route to `extract`.
+- previous single-step `ingest` (`run`) description, for history: for each uploaded PDF, Claude document call
   (base64 PDF content block) extracts: standards → `StandardNode` tree with limits + lexicon seeds;
   items → `ItemRecord[]` (text stand-in stems, `ai-proposed` alignments); unpacking/progression →
   usage notes enrichment. Extraction REPLACES extraction-derived state on re-runs (idempotent),

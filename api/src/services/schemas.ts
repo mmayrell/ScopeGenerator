@@ -243,6 +243,8 @@ export const INGEST_ITEMS_SCHEMA = obj({
       hasKey: BOOL,
       stem: STR,
       choices: arr(STR),
+      page: INT,
+      box: obj({ x: NUM, y: NUM, w: NUM, h: NUM }),
     }),
   ),
   coverageWarnings: arr(STR),
@@ -252,6 +254,29 @@ export const INGEST_ITEMS_SCHEMA = obj({
 export const INGEST_NOTES_SCHEMA = obj({
   usageNotes: STR,
   coverageWarnings: arr(STR),
+})
+
+export const INGEST_CONFLICTS_SCHEMA = obj({
+  warnings: arr(
+    obj({
+      text: STR,
+      kind: enums(['gap', 'conflict']),
+      suggestion: STR,
+    }),
+  ),
+})
+
+export const INGEST_LEXICON_SCHEMA = obj({
+  terms: arr(
+    obj({
+      term: STR,
+      aliases: arr(STR),
+      standard: STR,
+      artifact: STR,
+      page: INT,
+      source: STR,
+    }),
+  ),
 })
 
 // ---------------------------------------------------------------------------
@@ -388,6 +413,8 @@ export interface WireIngestItem {
   hasKey: boolean
   stem: string
   choices: string[]
+  page: number
+  box: { x: number; y: number; w: number; h: number }
 }
 
 export interface WireIngestItems {
@@ -399,6 +426,14 @@ export interface WireIngestItems {
 export interface WireIngestNotes {
   usageNotes: string
   coverageWarnings: string[]
+}
+
+export interface WireIngestConflicts {
+  warnings: { text: string; kind: 'gap' | 'conflict'; suggestion: string }[]
+}
+
+export interface WireIngestLexicon {
+  terms: { term: string; aliases: string[]; standard: string; artifact: string; page: number; source: string }[]
 }
 
 function toCardField(w: WireCardField) {

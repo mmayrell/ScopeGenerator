@@ -393,7 +393,8 @@ export function ingestItemsPrompt(set: StandardSet, artifact: Artifact | undefin
 Tier-2 pipeline (spec §4.2): document triage → item segmentation → metadata extraction (state/test/year, item numbers, per-item alignment from item maps or inline annotations) → alignment resolution (official where the document supplies it; otherwise ai-proposed) → characterization (item type, response format, representations and problem types in lexicon terms, demand profile) → opportunistic capture (answer keys, rubrics) → completeness scoring.
 
 Rules:
-- stem: a faithful TEXT STAND-IN for the item (v1 does not extract screenshots); include choices for selected-response items.
+- page: the 1-based PDF page the item appears on. box: the item's bounding region on that page as PERCENTAGES of page width/height ({ x, y, w, h }, origin top-left) — cover the full question including its art and answer choices, nothing from neighboring items. These drive the screenshot crop; when you cannot localize an item confidently, set box to { x: 0, y: 0, w: 100, h: 100 } (full page) rather than guessing tightly.
+- stem: a faithful TEXT STAND-IN for the item (search fallback when the screenshot fails); include choices for selected-response items.
 - alignmentCode: the exact source alignment code; confidence "official" only when the document itself supplies the alignment, else "ai-proposed" (D14: usable in generation, flagged, queued for confirmation).
 - scopeClass per P2 (content-based, never code-based) against the set's standards wording: in-boundary | rigor-signal-only (P1 contradiction) | adjacent-grade (officially aligned to another grade of the same set).
 - completeness: 0–1 score per record.
@@ -428,4 +429,84 @@ Output:
 - usageNotes: an enriched usage-notes paragraph for this artifact — what the document contains, which standards/domains/grades it covers, which harvests it supports (decomposition keys / demand bands / misconceptions / worked problems / representation vocabulary), and any P6/P7 firewall cautions. This text steers the stages that consume the artifact.
 - coverageWarnings: ONLY the important, granular gaps where the right handling is genuinely unclear — each one sentence naming the specific domain × grade span this document fails to cover and why it matters downstream. Do NOT emit boilerplate or obviously-handled gaps (sub-part fallback and inference cover routine absences silently). At most 3; [] when nothing rises to that bar.`,
   }
+}
+
+/**
+ * Cross-document scope-conflict pass, run once after every upload has been
+ * extracted. Consolidates the per-document candidate warnings and hunts for
+ * conflicts BETWEEN the documents about scope. Every emitted warning carries
+ * the AI's suggested default resolution, decided after weighing the issue.
+ */
+export function ingestConflictsPrompt(set: StandardSet, candidateWarnings: string[]): Prompt {
+  const treeDigest = flattenTreeDigest(set.tree).slice(0, 400)
+  const itemDigest = set.items.map((it) => `${it.test} ${it.year} Q${it.itemNumber} → ${it.alignmentCode} (${it.scopeClass})`)
+  return {
+    system: ingestSystem(
+      'cross-document scope-conflict detector. You investigate each potential issue and determine the best way forward before suggesting it.',
+    ),
+    user: `All documents for the set "${set.name}" (${set.gradeSpan}) have been extracted. Find the conflicts BETWEEN the documents regarding scope, and consolidate the candidate coverage gaps below into a final, concise list.
+
+${PRECEDENCE}
+
+What counts as a scope conflict (kind "conflict"):
+- The standards document is a STATE-ADJUSTED variant of a canonical framework while other documents (items, unpacking, progressions) assume the canonical framework — or vice versa: codes that resolve differently, standards added/removed/re-worded by the state, limits that differ.
+- Item alignments that reference standards the parsed tree does not contain, or a different grade/course of the same framework.
+- Unpacking/progression documents that partition or bound standards in ways the standards document's own wording contradicts.
+- Documents disagreeing about grade placement, included sub-parts, or in-document limits.
+
+What counts as a gap (kind "gap"): an important, granular coverage hole whose handling is genuinely unclear — never boilerplate, never absences the system already covers by inference or sub-part fallback.
+
+For every warning, set suggestion to YOUR recommended default resolution — one or two sentences, concrete and executable, decided after weighing the evidence on both sides. BINDING RULE: when the issue is strict/canonical Common Core versus a state-adjusted variant of Common Core, the suggestion is ALWAYS to follow strict canonical Common Core (the canonical wording, codes, and limits govern; state adjustments are recorded as citable context only).
+
+Candidate warnings from per-document extraction (dedupe, drop the unimportant, keep at most 6 total):${jsonBlock('candidates', candidateWarnings)}
+Parsed standards tree (digest):${jsonBlock('tree', treeDigest)}
+Extracted item alignments:${jsonBlock('items', itemDigest)}
+Artifacts and their usage notes:${jsonBlock('artifacts', set.artifacts.map((a) => ({ role: a.role, file: a.fileName, notes: a.usageNotes })))}
+
+Output warnings: [{ text, kind, suggestion }] — text is one sentence naming the specific documents/standards affected; ordered most consequential first; [] if the documents genuinely agree.`,
+  }
+}
+
+/**
+ * Lexicon build (runs only after every conflict/gap is resolved). Exhaustive
+ * per vocabulary, every term cited to its governing standard + artifact + page.
+ */
+export function ingestLexiconPrompt(set: StandardSet, kind: 'representations' | 'problemTypes'): Prompt {
+  const resolutions = set.warnings
+    .filter((w) => w.acknowledged && w.resolution)
+    .map((w) => `${w.text} → RESOLVED: ${w.resolution}`)
+  const kindText =
+    kind === 'representations'
+      ? `REPRESENTATIONS — every visual, physical, and symbolic representation appropriate to this set's standards: models, diagrams, number lines, charts, arrays, area models, manipulatives, notation forms, graph types. Include every representation named or implied by the standards wording, appearing in the released items, and used by the unpacking/progression documents.`
+      : `PROBLEM TYPES — every problem structure and task format appropriate to this set's standards: computation formats, word-problem situation types, comparison structures, multi-step patterns, response formats. Include every type named or implied by the standards wording, appearing in the released items, and used by the unpacking/progression documents.`
+  return {
+    system: ingestSystem(
+      'lexicon builder. The lexicons are the controlled vocabularies every later stage speaks — a vision pass term and a progression term must resolve to the same normalized entry or the split logic misfires.',
+    ),
+    user: `Build the ${kind} lexicon for the set "${set.name}" (${set.gradeSpan}). The attached PDFs are the set's uploaded documents, in artifact-list order.
+
+Build an EXHAUSTIVE list of ${kindText}
+
+Rules:
+- Exhaustive means exhaustive: a term used anywhere in the corpus that a lesson author could reach for must appear, normalized, with its aliases collected onto one entry. Aim for completeness over brevity — a thin lexicon misfires the split logic downstream.
+- term: the normalized form. aliases: every variant/synonym the documents use.
+- standard: the single most-governing standard code for the term (normalized join code, e.g. "4.NF.3") — shown as the term's citation.
+- artifact: the file name of the uploaded document that best evidences the term. page: the 1-based PDF page in that document where it appears. These are revealed on hover — they must be real locations, not guesses.
+- source: one short phrase of context (e.g. "standards glossary", "item stems 2022–2024", "progression worked examples").
+- Respect the user's recorded gap/conflict resolutions below — terms from scope the resolutions excluded do not belong in the lexicon.
+
+Recorded resolutions:${jsonBlock('resolutions', resolutions)}
+Parsed standards tree (digest):${jsonBlock('tree', flattenTreeDigest(set.tree).slice(0, 400))}
+Artifact list (index order matches the attached documents):${jsonBlock('artifacts', set.artifacts.map((a) => a.fileName))}
+
+Output terms: [{ term, aliases, standard, artifact, page, source }], normalized, deduplicated, ordered by the standards sequence.`,
+  }
+}
+
+function flattenTreeDigest(nodes: StandardSet['tree'], out: string[] = []): string[] {
+  for (const n of nodes) {
+    if (n.wording) out.push(`${n.norm}: ${n.wording.slice(0, 120)}`)
+    if (n.children) flattenTreeDigest(n.children, out)
+  }
+  return out
 }

@@ -46,9 +46,10 @@ export async function listSets(): Promise<StandardSet[]> {
   return listDocs<StandardSet>('set', getSetOrUndefined)
 }
 
-/** Removes the set document, its uploaded PDFs, and its index row. Scopes generated from the set are untouched. */
+/** Removes the set document, its uploaded PDFs, its item screenshots, and its index row. Scopes generated from the set are untouched. */
 export async function deleteSetDocs(id: string): Promise<void> {
   await dataContainer().getBlockBlobClient(setBlobPath(id)).deleteIfExists()
+  await deleteBlobsWithPrefix(dataContainer(), `sets/${id}/`)
   await deleteBlobsWithPrefix(uploadsContainer(), `${id}/`)
   try {
     await entitiesTable().deleteEntity('set', id)

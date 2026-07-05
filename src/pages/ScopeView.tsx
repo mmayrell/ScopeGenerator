@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { api } from '../api'
 import { fieldMeta } from '../data/meta'
 import { scopeUnsettled, useScopePolling, useStore, type RerunResult } from '../store'
 import type { DecisionEntry, Lesson, Proposal, Scope } from '../types'
@@ -389,7 +390,13 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
                   <div className="mt-4 space-y-3">
                     {lesson.itemRefs.map((rid) => {
                       const it = itemsById.get(rid)
-                      return it ? <ItemShot key={rid} item={it} /> : null
+                      return it ? (
+                        <ItemShot
+                          key={rid}
+                          item={it}
+                          imageUrl={it.imagePath ? api.itemImageUrl(scope.setId, it.id) : undefined}
+                        />
+                      ) : null
                     })}
                     {lesson.generatedExemplar && (
                       <GeneratedShot

@@ -243,7 +243,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     async (name: string, uploads: NewSetUploads, files?: NewSetFile[]): Promise<string> => {
       const { id } = await guard(() => api.createSet(name, uploads))
       if (files?.length) {
-        // Upload the real PDF bytes; ingestion reads them from the uploads container at publish time.
+        // Upload the real PDF bytes, then kick off extraction immediately — the
+        // standards tree, item bank (with screenshots), and cross-document
+        // conflict pass run as soon as the uploads land.
         const failed: string[] = []
         await Promise.all(
           files.map((f) =>
@@ -254,8 +256,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         )
         if (failed.length > 0) {
           setActionError(
-            `Upload failed for ${failed.join(', ')} — publish/ingestion will fail until they are re-uploaded (recreate the set with those files).`,
+            `Upload failed for ${failed.join(', ')} — extraction will fail until they are re-uploaded (recreate the set with those files).`,
           )
+        } else {
+          await guard(() => api.ingestSet(id)).catch((e) => {
+            if (!(e instanceof UnauthorizedError)) setActionError(errMessage(e))
+          })
         }
       }
       await refreshSet(id)
