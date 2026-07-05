@@ -662,7 +662,9 @@ export default function SetDetail() {
           <div className="max-w-4xl rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
             {set.tree.length === 0 ? (
               <p className="py-6 text-center text-[13.5px] text-ink-2">
-                {jobActive ? 'AI extraction is running — the tree populates when it completes.' : 'Resolve the Coverage Gaps to populate.'}
+                {jobActive
+                  ? 'AI extraction is running — the tree populates when it completes.'
+                  : 'The standards tree extracts directly from the official standards document — run extraction to populate it.'}
               </p>
             ) : (
               <>
