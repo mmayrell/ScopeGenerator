@@ -587,7 +587,11 @@ export default function SetDetail() {
                     <Pill tone={row.pill}>{row.value}</Pill>
                   ) : (
                     <span className={`text-right text-[13.5px] font-medium ${row.value && row.value !== 'To be configured' ? 'text-ink' : 'text-ink-3'}`}>
-                      {row.value && row.value !== 'To be configured' ? row.value : 'extracted from the standards document'}
+                      {row.value && row.value !== 'To be configured'
+                        ? row.value
+                        : extractActive
+                          ? 'extracting from the standards document…'
+                          : 'extracted from the standards document'}
                     </span>
                   )}
                 </div>
