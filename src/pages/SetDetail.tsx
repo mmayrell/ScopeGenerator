@@ -342,7 +342,7 @@ export default function SetDetail() {
       tab: 'Standards Tree',
     },
     {
-      label: 'Resolve Alignment Issues',
+      label: 'Alignment Issues',
       detail:
         !extractionDone || extractActive
           ? 'after extraction'
