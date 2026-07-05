@@ -1,65 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
-import { Btn, ItemShot, Modal, Mono, Pill, Progress, SectionLabel } from '../ui'
+import { Btn, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
 import type { ArtifactRole, ItemRecord, StandardNode } from '../types'
-
-const ingestSteps = [
-  { name: 'Parse Standards Document', detail: 'Hierarchy, verbatim wording down to sub-parts, in-document limits, dual coding. Content standards only — practice and process standards are excluded.' },
-  { name: 'Segment Released Items', detail: 'Document triage, item regions isolated via vision + layout analysis, metadata and item maps extracted…' },
-  { name: 'Characterize Items', detail: 'Item type, response format, representations, problem types, demand profiles; alignment resolved — unmatched items queued as ai-proposed…' },
-  { name: 'Parse Unpacking & Progressions', detail: 'Decomposition keys, default bounds, misconception and worked-problem harvest, grade-span tagging…' },
-  { name: 'Build Lexicons & Validate Fit', detail: 'Controlled vocabularies seeded; detected identity cross-checked against the declaration; coverage gaps raised as warnings…' },
-]
-
-function IngestionRun({ setId }: { setId: string }) {
-  const { finishIngestion } = useStore()
-  const [step, setStep] = useState(0)
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
-  useEffect(() => {
-    const advance = (i: number) => {
-      if (i >= ingestSteps.length) {
-        finishIngestion(setId)
-        return
-      }
-      setStep(i)
-      timer.current = setTimeout(() => advance(i + 1), 900 + Math.random() * 600)
-    }
-    advance(0)
-    return () => clearTimeout(timer.current)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setId])
-  return (
-    <div className="mt-10 max-w-2xl">
-      <SectionLabel>Ingestion Running</SectionLabel>
-      <div className="mt-3">
-        <Progress pct={((step + 1) / ingestSteps.length) * 100} />
-      </div>
-      <div className="mt-5 space-y-2.5">
-        {ingestSteps.map((s, i) => (
-          <div
-            key={s.name}
-            className={`flex items-start gap-3.5 rounded-xl border p-4 transition-all ${
-              i < step ? 'border-hairline bg-panel opacity-70' : i === step ? 'animate-rise border-accent/25 bg-accent-wash/40 shadow-(--shadow-lift)' : 'border-hairline bg-panel opacity-40'
-            }`}
-          >
-            <span
-              className={`mt-px flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[11px] font-semibold ${
-                i < step ? 'bg-verdant-wash text-verdant' : i === step ? 'stage-pulse bg-accent text-white' : 'bg-ink/5 text-ink-3'
-              }`}
-            >
-              {i < step ? '✓' : i + 1}
-            </span>
-            <div>
-              <div className="text-[13.5px] font-semibold text-ink">{s.name}</div>
-              {i === step && <p className="mt-1 text-[12.5px] leading-relaxed text-ink-2">{s.detail}</p>}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
 
 const roleLabel: Record<ArtifactRole, string> = {
   standards: 'Official standards document',
@@ -157,13 +100,40 @@ function ItemGroup({ code, items, wording }: { code: string; items: ItemRecord[]
 
 export default function SetDetail() {
   const { id } = useParams()
-  const { sets, scopes, acknowledgeWarning, confirmAlignment, resolveArtifact, publishSet, deleteSet } = useStore()
+  const { sets, scopes, acknowledgeWarning, confirmAlignment, resolveArtifact, publishSet, refreshSet, deleteSet } = useStore()
   const [tab, setTab] = useState<(typeof tabs)[number]>('Configuration')
+  const [ingesting, setIngesting] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const nav = useNavigate()
   const set = sets.find((s) => s.id === id)
+  const setId = set?.id
+  const published = set?.published
+  // Terminal ingest failure: a blocked artifact, or the 'Ingestion failed' warning the
+  // backend writes when the job dies.
+  const ingestFailed =
+    set?.artifacts.some((a) => a.blockingError) || set?.warnings.some((w) => w.text.startsWith('Ingestion failed'))
+  const ingestSettled = Boolean(published || ingestFailed)
+
+  // Publish with uploaded PDFs enqueues an ingest job — poll the set every 2s until it
+  // publishes or fails terminally, then reset the flag so the Publish button returns
+  // and the user can retry after fixing the surfaced problem.
+  useEffect(() => {
+    if (!ingesting || !setId) return
+    if (ingestSettled) {
+      setIngesting(false)
+      return
+    }
+    const t = setInterval(() => void refreshSet(setId), 2000)
+    return () => clearInterval(t)
+  }, [ingesting, setId, ingestSettled, refreshSet])
+
   if (!set) return <div className="p-10 text-ink-3">Standard set not found.</div>
-  const dependentScopes = scopes.filter((sc) => sc.setId === set.id).length
+
+  const publish = async () => {
+    const { jobId } = await publishSet(set.id)
+    if (jobId) setIngesting(true)
+  }
 
   const blocking = set.artifacts.filter((a) => a.reviewStatus === 'blocked')
   const unack = set.warnings.filter((w) => !w.acknowledged)
@@ -180,27 +150,46 @@ export default function SetDetail() {
             {set.published ? <Pill tone="green">published</Pill> : <Pill tone="amber">draft</Pill>}
           </div>
         </div>
-        <div className="flex shrink-0 gap-2">
-          <Btn kind="danger" onClick={() => setConfirmDelete(true)}>Delete</Btn>
-          {!set.published && !set.ingesting && (
-            <Btn kind="primary" disabled={!canPublish} onClick={() => publishSet(set.id)}>Publish set</Btn>
-          )}
+        <div className="flex shrink-0 items-center gap-2">
+          <Btn kind="danger" disabled={ingesting} onClick={() => setConfirmDelete(true)}>Delete</Btn>
+          {!set.published &&
+            (ingesting ? (
+              <Pill tone="amber">
+                <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-amber-ink" /> publishing — Stage 1 ingestion running
+              </Pill>
+            ) : (
+              <Btn kind="primary" disabled={!canPublish} onClick={() => void publish()}>Publish set</Btn>
+            ))}
         </div>
       </div>
 
-      {set.ingesting && <IngestionRun setId={set.id} />}
-
       <Modal open={confirmDelete} onClose={() => setConfirmDelete(false)} title="Delete Standard Set?">
         <p className="text-[13px] leading-relaxed text-ink-2">
-          This removes <span className="font-semibold text-ink">{set.name}</span> and its {set.artifacts.length} uploaded
+          This removes <span className="font-semibold text-ink">{set.name}</span>, its {set.artifacts.length} uploaded
           artifacts, parsed standards, and item bank.{' '}
-          {dependentScopes > 0
-            ? `${dependentScopes} scope${dependentScopes > 1 ? 's' : ''} generated from this set will remain viewable but the set can no longer serve new scope requests.`
-            : 'No scopes have been generated from this set.'}
+          {(() => {
+            const n = scopes.filter((sc) => sc.setId === set.id).length
+            return n > 0
+              ? `${n} scope${n > 1 ? 's' : ''} generated from this set will remain viewable, but the set can no longer serve new scope requests.`
+              : 'No scopes have been generated from this set.'
+          })()}
         </p>
         <div className="mt-5 flex justify-end gap-2">
           <Btn onClick={() => setConfirmDelete(false)}>Cancel</Btn>
-          <Btn kind="danger" onClick={() => { deleteSet(set.id); nav('/sets') }}>Delete set</Btn>
+          <Btn
+            kind="danger"
+            disabled={deleting}
+            onClick={() => {
+              setDeleting(true)
+              void deleteSet(set.id).then((okd) => {
+                setDeleting(false)
+                if (okd) nav('/sets')
+                else setConfirmDelete(false)
+              })
+            }}
+          >
+            {deleting ? 'Deleting…' : 'Delete set'}
+          </Btn>
         </div>
       </Modal>
 
@@ -234,8 +223,6 @@ export default function SetDetail() {
       )}
 
       {/* tabs */}
-      {!set.ingesting && (
-      <>
       <div className="mt-8 flex gap-1 border-b border-hairline">
         {tabs.map((t) => (
           <button
@@ -402,8 +389,6 @@ export default function SetDetail() {
           </div>
         )}
       </div>
-      </>
-      )}
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { exemplarRegister, systemArtifacts } from '../data/seed'
+import { exemplarRegister, systemArtifacts } from '../data/meta'
 import { Mono, Pill, SectionLabel } from '../ui'
 
 export default function System() {

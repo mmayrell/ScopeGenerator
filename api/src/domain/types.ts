@@ -1,4 +1,11 @@
-// Data model per spec §5
+// Data model per spec §5 — verbatim copy of src/types.ts with the contract edits
+// (docs/backend-architecture.md → "Shared types"):
+//   1. Scope.status gains 'failed'
+//   2. Proposal.status gains 'drafting'
+//   3. Proposal gains optional working?: boolean
+//   4. Scope gains optional error?: string
+// plus the contract-only backend types appended at the end (JobStatus, JobMessage,
+// NewSetUploads, Scope.protectedBoundaries).
 
 export type ArtifactRole =
   | 'standards'
@@ -80,7 +87,6 @@ export interface StandardSet {
   codingNotes: string
   emphasisSource: string
   published: boolean
-  ingesting?: boolean
   artifacts: Artifact[]
   warnings: CoverageWarning[]
   tree: StandardNode[]
@@ -210,7 +216,7 @@ export interface Proposal {
   changes: ProposalChange[]
   ripple: string[]
   status: 'drafting' | 'draft' | 'accepted' | 'abandoned'
-  working?: boolean // true while Claude is drafting/iterating
+  working?: boolean // true while Claude is drafting/iterating/applying
   rounds: { feedback: string; response: string }[]
 }
 
@@ -228,9 +234,9 @@ export interface Scope {
   qc: QCCheck[]
   history: ScopeVersion[]
   proposals: Proposal[]
-  protectedBoundaries?: string[][] // lesson-id pairs protected by a hard split criterion
   creator: string
   updated: string
+  protectedBoundaries?: string[][] // lesson-id pairs protected by a hard split criterion
 }
 
 export interface SystemArtifact {
@@ -248,4 +254,47 @@ export interface ExemplarAsset {
   linkedFrom: string
   role: string
   status: 'resolved' | 'pending'
+}
+
+// ---------------------------------------------------------------------------
+// Backend contract types (docs/backend-architecture.md)
+// ---------------------------------------------------------------------------
+
+export interface UploadSlotValue {
+  files: string[]
+  notes: string
+}
+
+/** Mirrors the shape assembled by the New Standard Set flow (src/store.tsx). */
+export interface NewSetUploads {
+  standards: UploadSlotValue
+  items: UploadSlotValue
+  unpacking: UploadSlotValue
+  progression: UploadSlotValue
+}
+
+export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest'
+
+export interface JobStatus {
+  jobId: string
+  kind: JobKind
+  status: 'queued' | 'running' | 'complete' | 'failed'
+  stage: string // human-readable current stage, e.g. "Stage 3–4 — Atomization & sequencing"
+  stagesDone: number // 0..totalStages
+  totalStages: number
+  unitsDone?: number // during card generation
+  totalUnits?: number
+  error?: string
+  log: { at: string; stage: string; detail: string }[]
+}
+
+/** Queue message on `genjobs` (JSON, base64-encoded on the wire). */
+export interface JobMessage {
+  jobId: string
+  kind: JobKind
+  step: 'plan' | 'cards' | 'finalize' | 'run' // 'run' for single-step kinds
+  scopeId?: string
+  setId?: string
+  unitIndex?: number // for step 'cards'
+  payload?: Record<string, unknown> // kind-specific (rerun target/mode, report text, feedback, proposalId…)
 }

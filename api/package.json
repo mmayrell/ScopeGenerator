@@ -1,0 +1,25 @@
+{
+  "name": "scopegen-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ScopeGenerator backend - Azure Functions v4 programming model (Node, TypeScript, CommonJS output)",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "prebuild": "tsx scripts/export-seed.mjs",
+    "build": "tsc && node scripts/copy-assets.mjs",
+    "watch": "tsc -w",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest",
+    "@azure/data-tables": "^13.2.2",
+    "@azure/functions": "^4.5.0",
+    "@azure/storage-blob": "^12.24.0",
+    "@azure/storage-queue": "^12.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.2"
+  }
+}

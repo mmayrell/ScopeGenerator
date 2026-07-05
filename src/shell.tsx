@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useStore } from './store'
-import { systemArtifacts } from './data/seed'
+import { systemArtifacts } from './data/meta'
+import { Btn } from './ui'
 
 const Icon = ({ d, box = 20 }: { d: string; box?: number }) => (
   <svg width="15" height="15" viewBox={`0 0 ${box} ${box}`} fill="none" className="shrink-0">
@@ -15,7 +16,7 @@ const nav = [
 ]
 
 export default function Shell() {
-  const { scopes } = useStore()
+  const { scopes, loading, error, refresh, actionError, clearActionError } = useStore()
   const generating = scopes.some((s) => s.status === 'generating')
   return (
     <div className="flex h-screen overflow-hidden">
@@ -74,7 +75,42 @@ export default function Shell() {
         </div>
       </aside>
       <main className="flex-1 overflow-y-auto">
-        <Outlet />
+        {actionError && (
+          <div className="animate-rise flex items-center justify-between gap-4 border-b border-rust/25 bg-rust-wash px-6 py-2.5">
+            <span className="text-[12.5px] leading-relaxed text-rust">
+              <span className="font-mono text-[10px] font-semibold uppercase">action failed</span> — {actionError}
+            </span>
+            <button
+              onClick={clearActionError}
+              className="shrink-0 cursor-pointer rounded-md p-1 text-rust transition-colors hover:bg-rust/10"
+              title="Dismiss"
+            >
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
+        )}
+        {loading ? (
+          <div className="flex h-full items-center justify-center">
+            <div className="text-center">
+              <div className="stage-pulse mx-auto h-2.5 w-2.5 rounded-full bg-accent" />
+              <p className="mt-3 text-[13px] text-ink-2">Loading workspace…</p>
+            </div>
+          </div>
+        ) : error ? (
+          <div className="flex h-full items-center justify-center px-10">
+            <div className="w-full max-w-md rounded-2xl border border-rust/25 bg-panel p-6 text-center shadow-(--shadow-lift)">
+              <div className="font-mono text-[10px] font-semibold tracking-wide text-rust uppercase">Couldn’t load workspace</div>
+              <p className="mt-2 text-[13px] leading-relaxed text-ink-2">{error}</p>
+              <div className="mt-4 flex justify-center">
+                <Btn kind="primary" onClick={() => void refresh()}>Retry</Btn>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <Outlet />
+        )}
       </main>
     </div>
   )
