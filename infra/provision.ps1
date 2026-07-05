@@ -45,6 +45,10 @@ if (-not $created) {
   Write-Host "   Node 22 rejected; retrying with Node 20"
   az functionapp create -g $rg -n $funcApp --storage-account $storage --consumption-plan-location $location --runtime node --runtime-version 20 --functions-version 4 --os-type Windows -o none
 }
+# 64-bit worker is REQUIRED: the backend uses native x64 npm modules
+# (@napi-rs/canvas); the Windows default 32-bit worker cannot load them and
+# the app then registers zero functions (404 on every route).
+az functionapp config set -g $rg -n $funcApp --use-32bit-worker-process false -o none
 
 Write-Host "== Static Web App $swaName (Free)"
 az staticwebapp create -n $swaName -g $rg -l $location --sku Free -o none

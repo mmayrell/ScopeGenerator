@@ -13,7 +13,12 @@ concurrency:
 jobs:
   api:
     name: Deploy Function App
-    runs-on: ubuntu-latest
+    # MUST be a Windows runner: the target Function App runs Windows, and the
+    # backend depends on native modules (@napi-rs/canvas via pdf-to-png-converter)
+    # whose binaries are platform-specific. Staging `npm ci` on ubuntu ships Linux
+    # binaries, the worker crashes on module load, zero functions register, and
+    # every route 404s — exactly the prod outage of 2026-07-05.
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,46 +28,69 @@ jobs:
           cache-dependency-path: api/package-lock.json
       - name: Build
         working-directory: api
+        shell: pwsh
         run: |
           npm ci
+          if ($LASTEXITCODE -ne 0) { exit 1 }
           npm run build
+          if ($LASTEXITCODE -ne 0) { exit 1 }
       - name: Stage deployment package (dist + prod dependencies only)
+        shell: pwsh
         run: |
-          mkdir staging
-          cp api/host.json api/package.json api/package-lock.json staging/
-          cp -r api/dist staging/dist
-          cp -r api/assets staging/assets
-          cd staging && npm ci --omit=dev
+          New-Item -ItemType Directory staging | Out-Null
+          Copy-Item api/host.json, api/package.json, api/package-lock.json staging/
+          Copy-Item -Recurse api/dist staging/dist
+          Copy-Item -Recurse api/assets staging/assets
+          Set-Location staging
+          npm ci --omit=dev
+          if ($LASTEXITCODE -ne 0) { exit 1 }
       # Direct Kudu zipdeploy — the same mechanism as `az functionapp deployment
-      # source config-zip`, which is proven against this app. Azure/functions-action
+      # source config-zip`, which is proven against this app. (Azure/functions-action
       # with a publish profile mishandles WEBSITE_RUN_FROM_PACKAGE on Windows
-      # Consumption apps (it cannot manage app settings without ARM access) and
-      # left the site serving Kudu's "Site Under Construction" page (503s).
+      # Consumption apps and previously left the site serving 503s.)
       - name: Deploy (Kudu zipdeploy)
         env:
           PUBLISH_PROFILE: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          (cd staging && zip -qr ../package.zip .)
-          creds=$(python3 -c 'import os,xml.etree.ElementTree as ET;r=ET.fromstring(os.environ["PUBLISH_PROFILE"]);p=next(x for x in r if x.get("publishMethod")=="ZipDeploy");print(p.get("userName")+":"+p.get("userPWD"))')
-          echo "::add-mask::$creds"
-          scm="https://scopegen-api-apvgm.scm.azurewebsites.net"
-          loc=$(curl -sSf -X POST -u "$creds" --data-binary @package.zip -D - -o /dev/null \
-                "$scm/api/zipdeploy?isAsync=true&Deployer=GitHubActions" \
-                | grep -i '^location:' | tr -d '\r' | cut -d' ' -f2)
-          echo "Deployment accepted; polling status"
-          for i in $(seq 1 90); do
-            body=$(curl -sSf -u "$creds" "$loc")
-            complete=$(echo "$body" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("complete"))')
-            if [ "$complete" = "True" ]; then
-              status=$(echo "$body" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("status"))')
-              if [ "$status" = "4" ]; then echo "Deployment succeeded"; exit 0; fi
-              echo "Deployment finished with status $status (expected 4)"; echo "$body"; exit 1
-            fi
-            sleep 10
-          done
-          echo "Timed out waiting for deployment to complete"; exit 1
+          7z a -bso0 package.zip ".\staging\*"
+          $xml = [xml]$env:PUBLISH_PROFILE
+          $prof = $xml.publishData.publishProfile | Where-Object { $_.publishMethod -eq 'ZipDeploy' }
+          $pair = "$($prof.userName):$($prof.userPWD)"
+          Write-Output "::add-mask::$pair"
+          $hdr = @{ Authorization = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes($pair)) }
+          $scm = 'https://scopegen-api-apvgm.scm.azurewebsites.net'
+          $resp = Invoke-WebRequest -Method Post -Uri "$scm/api/zipdeploy?isAsync=true&Deployer=GitHubActions" -Headers $hdr -InFile package.zip -ContentType 'application/zip'
+          $loc = $resp.Headers.Location
+          if ($loc -is [array]) { $loc = $loc[0] }
+          Write-Host "Deployment accepted; polling status"
+          for ($i = 0; $i -lt 90; $i++) {
+            $d = Invoke-RestMethod -Uri $loc -Headers $hdr
+            if ($d.complete) {
+              if ($d.status -eq 4) { Write-Host 'Deployment succeeded'; exit 0 }
+              Write-Host "Deployment finished with status $($d.status) (expected 4)"
+              $d | ConvertTo-Json -Depth 4
+              exit 1
+            }
+            Start-Sleep -Seconds 10
+          }
+          Write-Host 'Timed out waiting for deployment to complete'
+          exit 1
+      # A deploy that uploads fine but leaves the app unable to serve (bad native
+      # binaries, module-load crash, stripped run-from-package) must FAIL the run.
+      - name: Post-deploy health gate
+        shell: pwsh
+        run: |
+          $uri = 'https://scopegen-api-apvgm.azurewebsites.net/api/health'
+          for ($i = 0; $i -lt 30; $i++) {
+            try {
+              $h = Invoke-RestMethod -Uri $uri -TimeoutSec 30
+              if ($h.ok) { Write-Host "Health check passed (attempt $($i + 1))"; exit 0 }
+            } catch { }
+            Start-Sleep -Seconds 10
+          }
+          Write-Host 'HEALTH CHECK FAILED - the deployed app is not serving /api/health'
+          exit 1
 
   web:
     name: Deploy Static Web App

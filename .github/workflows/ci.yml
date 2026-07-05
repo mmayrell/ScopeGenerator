@@ -24,8 +24,11 @@ jobs:
       - run: npm run build
 
   backend:
-    name: Backend (build)
-    runs-on: ubuntu-latest
+    name: Backend (build + load check)
+    # Windows runner to match the production Function App OS — native npm
+    # dependencies (e.g. @napi-rs/canvas) are platform-specific, and the
+    # module-load check below is only meaningful on the OS that runs in prod.
+    runs-on: windows-latest
     defaults:
       run:
         working-directory: api
@@ -39,3 +42,15 @@ jobs:
       - run: npm ci
       # prebuild exports src/data/seed.ts -> assets/seed.json (needs the repo root, hence full checkout)
       - run: npm run build
+      # A compile-clean build can still crash the Functions worker at module load
+      # (bad native binary, import-time side effect) — which registers zero
+      # functions and 404s every route in prod. Prove the entry actually loads.
+      - name: Module-load check
+        shell: pwsh
+        env:
+          AzureWebJobsStorage: UseDevelopmentStorage=true
+          ANTHROPIC_API_KEY: ci-load-check-dummy
+          APP_ACCESS_CODE: ci-load-check-dummy
+        run: |
+          node -e "require('./dist/src/index.js'); console.log('entry loaded OK')"
+          if ($LASTEXITCODE -ne 0) { exit 1 }
