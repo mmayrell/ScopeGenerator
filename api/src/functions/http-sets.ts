@@ -114,16 +114,30 @@ api({
   },
 })
 
-// POST /api/sets/{id}/acknowledge-warning  { warningId } → StandardSet
+// POST /api/sets/{id}/acknowledge-warning  { warningId, resolution?, resolvedBy? } → StandardSet
+// The user decides how each coverage gap is resolved: the deterministic default
+// suggestion, or their own instruction. The resolution is recorded on the warning
+// and injected into the stages that consume the gap.
 api({
   name: 'set-acknowledge-warning',
   methods: ['POST'],
   route: 'sets/{id}/acknowledge-warning',
   handler: async (req) => {
     const set = await getSet(requireParam(req, 'id'))
-    const { warningId } = await readJson<{ warningId?: string }>(req)
+    const { warningId, resolution, resolvedBy } = await readJson<{
+      warningId?: string
+      resolution?: string
+      resolvedBy?: 'default' | 'custom'
+    }>(req)
     if (!warningId) throw new HttpError(400, 'warningId is required')
-    set.warnings = set.warnings.map((w) => (w.id === warningId ? { ...w, acknowledged: true } : w))
+    if (resolvedBy && resolvedBy !== 'default' && resolvedBy !== 'custom') {
+      throw new HttpError(400, 'resolvedBy must be "default" or "custom"')
+    }
+    set.warnings = set.warnings.map((w) =>
+      w.id === warningId
+        ? { ...w, acknowledged: true, resolution: resolution?.trim() || w.resolution, resolvedBy: resolvedBy ?? w.resolvedBy }
+        : w,
+    )
     await saveSet(set)
     return ok(set)
   },

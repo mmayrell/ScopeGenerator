@@ -1,5 +1,5 @@
 ﻿// Typed HTTP client for the ScopeGenerator backend (docs/backend-architecture.md).
-import type { Proposal, Scope, StandardSet } from './types'
+import type { FrameworkDoc, Proposal, Scope, StandardSet } from './types'
 
 // ---------- config ----------
 
@@ -120,8 +120,12 @@ export const api = {
       file,
     ),
 
-  acknowledgeWarning: (setId: string, warningId: string) =>
-    request<StandardSet>('POST', `/sets/${encodeURIComponent(setId)}/acknowledge-warning`, { warningId }),
+  acknowledgeWarning: (setId: string, warningId: string, resolution?: string, resolvedBy?: 'default' | 'custom') =>
+    request<StandardSet>('POST', `/sets/${encodeURIComponent(setId)}/acknowledge-warning`, {
+      warningId,
+      resolution,
+      resolvedBy,
+    }),
 
   confirmAlignment: (setId: string, itemId: string) =>
     request<StandardSet>('POST', `/sets/${encodeURIComponent(setId)}/confirm-alignment`, { itemId }),
@@ -165,6 +169,10 @@ export const api = {
   deleteScope: (id: string) => request<{ ok: true }>('DELETE', `/scopes/${encodeURIComponent(id)}`),
 
   deleteSet: (id: string) => request<{ ok: true }>('DELETE', `/sets/${encodeURIComponent(id)}`),
+
+  getFramework: () => request<FrameworkDoc>('GET', '/framework'),
+
+  saveFramework: (doc: FrameworkDoc) => request<FrameworkDoc>('PUT', '/framework', doc),
 
   adminSeed: (force?: boolean) =>
     request<{ seeded: boolean; sets: number; scopes: number }>(

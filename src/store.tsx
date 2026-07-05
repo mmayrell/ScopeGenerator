@@ -34,7 +34,12 @@ interface Store {
   refreshSet: (id: string) => Promise<StandardSet | undefined>
   fetchJob: (scopeId: string) => Promise<JobStatus>
   createSet: (name: string, uploads: NewSetUploads, files?: NewSetFile[]) => Promise<string>
-  acknowledgeWarning: (setId: string, warningId: string) => Promise<void>
+  acknowledgeWarning: (
+    setId: string,
+    warningId: string,
+    resolution?: string,
+    resolvedBy?: 'default' | 'custom',
+  ) => Promise<void>
   confirmAlignment: (setId: string, itemId: string) => Promise<void>
   resolveArtifact: (setId: string, artifactId: string) => Promise<void>
   publishSet: (setId: string) => Promise<{ jobId?: string }>
@@ -260,7 +265,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   )
 
   const acknowledgeWarning = useCallback(
-    (setId: string, warningId: string) => mutate(async () => upsertSet(await api.acknowledgeWarning(setId, warningId))),
+    (setId: string, warningId: string, resolution?: string, resolvedBy?: 'default' | 'custom') =>
+      mutate(async () => upsertSet(await api.acknowledgeWarning(setId, warningId, resolution, resolvedBy))),
     [mutate, upsertSet],
   )
 

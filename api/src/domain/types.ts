@@ -38,6 +38,9 @@ export interface CoverageWarning {
   id: string
   text: string
   acknowledged: boolean
+  /** How the user chose to resolve the gap; recorded and injected into the stages that consume it. */
+  resolution?: string
+  resolvedBy?: 'default' | 'custom'
 }
 
 export interface StandardNode {
@@ -254,6 +257,23 @@ export interface ExemplarAsset {
   linkedFrom: string
   role: string
   status: 'resolved' | 'pending'
+  uploadedFile?: string
+}
+
+/** One governing framework document (engine or doctrine BrainLift). Locked as-is until the user edits. */
+export interface FrameworkSection {
+  kind: 'engine' | 'doctrine'
+  name: string
+  version: string
+  updated: string
+  content: string // rendered as lightweight markdown: '## ' headings, '- ' bullets, blank-line paragraphs
+}
+
+/** The full governing framework the tool runs under, persisted as one document. */
+export interface FrameworkDoc {
+  engine: FrameworkSection
+  doctrine: FrameworkSection
+  register: ExemplarAsset[]
 }
 
 // ---------------------------------------------------------------------------

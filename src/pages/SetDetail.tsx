@@ -14,6 +14,103 @@ const roleLabel: Record<ArtifactRole, string> = {
 
 const tabs = ['Configuration', 'Artifacts', 'Standards Tree', 'Item Bank', 'Alignment Queue', 'Lexicons'] as const
 
+/**
+ * Deterministic default resolution per gap class: the same warning text always
+ * maps to the same suggested action, keyed on what kind of gap it names.
+ */
+function defaultResolution(text: string): string {
+  if (/item evidence|no items?|release window/i.test(text)) {
+    return 'Proceed under anticipated-evidence inference (D1): construct the plausible assessment evidence from analogous tested components in the same skill family, decomposition bounds, and interpretive worked problems; set inferred ceilings and flag every affected card inferred.'
+  }
+  if (/progression/i.test(text)) {
+    return 'Place affected topics using the standards document’s own sequence and decomposition dependencies; cross-grade Progression Placement cites the standards wording only, and prerequisites come from in-course sequencing until a progression document is added.'
+  }
+  if (/structured decomposition|unpacking/i.test(text)) {
+    return 'Fall back to standard sub-parts as the candidate-atom partition; every affected card cites the sub-part partition it used.'
+  }
+  if (/ingestion failed/i.test(text)) {
+    return 'Re-upload the failed document and re-run publish; generation stays blocked for the affected components until ingestion completes.'
+  }
+  return 'Proceed under anticipated-evidence inference (D1) and flag every affected component inferred, with the inference basis stated in each Decision record.'
+}
+
+function WarningRow({
+  warning,
+  onResolve,
+}: {
+  warning: { id: string; text: string; acknowledged: boolean; resolution?: string; resolvedBy?: 'default' | 'custom' }
+  onResolve: (resolution: string, resolvedBy: 'default' | 'custom') => Promise<void>
+}) {
+  const [open, setOpen] = useState(false)
+  const [custom, setCustom] = useState('')
+  const [busy, setBusy] = useState(false)
+  const suggested = defaultResolution(warning.text)
+
+  const apply = (resolution: string, resolvedBy: 'default' | 'custom') => {
+    setBusy(true)
+    void onResolve(resolution, resolvedBy).finally(() => setBusy(false))
+  }
+
+  if (warning.acknowledged) {
+    return (
+      <div className="rounded-xl border border-hairline bg-panel px-4 py-2.5">
+        <div className="flex items-center gap-2.5 text-[12.5px]">
+          <span className="font-mono text-[10px] font-semibold text-verdant uppercase">
+            resolved{warning.resolvedBy ? ` — ${warning.resolvedBy}` : ''}
+          </span>
+          <span className="text-ink-3">{warning.text}</span>
+        </div>
+        {warning.resolution && (
+          <p className="mt-1.5 border-l-2 border-verdant/30 pl-2.5 text-[12px] leading-relaxed text-ink-2">
+            {warning.resolution}
+          </p>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="rounded-xl border border-amber-ink/25 bg-amber-wash px-4 py-2.5">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2.5 text-[12.5px]">
+          <span className="font-mono text-[10px] font-semibold text-amber-ink uppercase">coverage gap</span>
+          <span className="text-amber-ink">{warning.text}</span>
+        </div>
+        {!open && <Btn onClick={() => setOpen(true)}>Resolve</Btn>}
+      </div>
+      {open && (
+        <div className="animate-rise mt-3 space-y-2.5 border-t border-amber-ink/15 pt-3">
+          <div className="rounded-lg border border-hairline bg-panel p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <SectionLabel>Default Resolution</SectionLabel>
+                <p className="mt-1 text-[12.5px] leading-relaxed text-ink-2">{suggested}</p>
+              </div>
+              <Btn kind="primary" disabled={busy} onClick={() => apply(suggested, 'default')} className="shrink-0">
+                Use Default
+              </Btn>
+            </div>
+          </div>
+          <div className="rounded-lg border border-hairline bg-panel p-3">
+            <SectionLabel>Or Resolve Your Own Way</SectionLabel>
+            <div className="mt-1.5 flex gap-2">
+              <input
+                value={custom}
+                onChange={(e) => setCustom(e.target.value)}
+                placeholder="Describe how the system should handle this gap…"
+                className="flex-1 rounded-lg border border-hairline bg-panel px-3 py-2 text-[12.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
+              />
+              <Btn disabled={busy || custom.trim().length < 10} onClick={() => apply(custom.trim(), 'custom')}>
+                Apply
+              </Btn>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function TreeNode({ node, depth }: { node: StandardNode; depth: number }) {
   const [open, setOpen] = useState(true)
   const hasKids = !!node.children?.length
@@ -197,26 +294,16 @@ export default function SetDetail() {
       {set.warnings.length > 0 && (
         <div className="mt-6 space-y-2">
           {set.warnings.map((w) => (
-            <div
+            <WarningRow
               key={w.id}
-              className={`flex items-center justify-between gap-4 rounded-xl border px-4 py-2.5 ${
-                w.acknowledged ? 'border-hairline bg-panel' : 'border-amber-ink/25 bg-amber-wash'
-              }`}
-            >
-              <div className="flex items-center gap-2.5 text-[12.5px]">
-                <span className={`font-mono text-[10px] font-semibold uppercase ${w.acknowledged ? 'text-ink-3' : 'text-amber-ink'}`}>
-                  {w.acknowledged ? 'acknowledged' : 'coverage gap'}
-                </span>
-                <span className={w.acknowledged ? 'text-ink-3' : 'text-amber-ink'}>{w.text}</span>
-              </div>
-              {!w.acknowledged && (
-                <Btn onClick={() => acknowledgeWarning(set.id, w.id)}>Acknowledge</Btn>
-              )}
-            </div>
+              warning={w}
+              onResolve={(resolution, resolvedBy) => acknowledgeWarning(set.id, w.id, resolution, resolvedBy)}
+            />
           ))}
           {set.warnings.some((w) => w.acknowledged) && (
             <p className="px-1 text-[11.5px] text-ink-3">
-              Acknowledged gaps drive anticipated-evidence inference downstream (D1) and are surfaced to users whenever a scope request lands inside one.
+              Recorded resolutions steer the stages that consume each gap and are surfaced to users whenever a scope
+              request lands inside one.
             </p>
           )}
         </div>
