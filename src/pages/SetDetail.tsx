@@ -374,7 +374,7 @@ export default function SetDetail() {
         <div className="animate-rise mt-6 rounded-2xl border border-accent/25 bg-accent-wash/40 p-5 shadow-(--shadow-lift)">
           <div className="flex items-center justify-between gap-4">
             <SectionLabel>
-              {jobPhase === 'lexicon' ? 'AI Lexicon Build' : 'AI Extraction — Standards Tree & Conflict Check'}
+              {jobPhase === 'lexicon' ? 'AI Lexicon Build' : 'Extracting standards and checking for alignment conflicts.'}
             </SectionLabel>
             <div className="flex items-center gap-3">
               <Mono className="text-[11px] text-ink-3">
