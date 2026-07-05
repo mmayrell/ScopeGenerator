@@ -504,20 +504,27 @@ export default function SetDetail() {
                     </span>
                   )}
                 </div>
-                {a.meta?.sourceDescription && (
-                  <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-ink-2">
-                    <span>{a.meta.sourceDescription}</span>
-                    {a.meta.window && <span>window {a.meta.window}</span>}
-                    {a.meta.coverage && (
-                      <span>
-                        coverage: <Mono className={a.meta.coverage === 'census' ? 'text-verdant' : 'text-amber-ink'}>{a.meta.coverage}</Mono>{' '}
-                        <span className="text-ink-3">(weights D1 inference)</span>
-                      </span>
-                    )}
-                    {a.meta.itemCount && <span>{a.meta.itemCount} items</span>}
-                    {a.meta.domainGradeTags && <span>tags: {a.meta.domainGradeTags.join(', ')}</span>}
-                  </div>
-                )}
+                {(() => {
+                  // Placeholder values from older set-create versions are hidden;
+                  // only real, declared metadata is worth a line.
+                  const src = a.meta?.sourceDescription !== 'Uploaded release PDF' ? a.meta?.sourceDescription : undefined
+                  const window = a.meta?.window !== 'declared at review' ? a.meta?.window : undefined
+                  const coverage = a.meta?.coverage !== 'unknown' ? a.meta?.coverage : undefined
+                  const hasAny = src || window || coverage || a.meta?.itemCount || a.meta?.domainGradeTags
+                  return hasAny ? (
+                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-ink-2">
+                      {src && <span>{src}</span>}
+                      {window && <span>window {window}</span>}
+                      {coverage && (
+                        <span>
+                          coverage: <Mono className={coverage === 'census' ? 'text-verdant' : 'text-amber-ink'}>{coverage}</Mono>
+                        </span>
+                      )}
+                      {a.meta?.itemCount ? <span>{a.meta.itemCount} items</span> : null}
+                      {a.meta?.domainGradeTags && <span>tags: {a.meta.domainGradeTags.join(', ')}</span>}
+                    </div>
+                  ) : null
+                })()}
                 {a.usageNotes && (
                   <div className="mt-2.5 rounded-lg border border-cite/20 bg-cite-wash px-3 py-2 text-[12px] leading-relaxed text-cite">
                     <span className="font-mono text-[10px] font-semibold uppercase">usage notes · precedence 5</span> — {a.usageNotes}

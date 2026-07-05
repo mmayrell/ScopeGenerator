@@ -86,10 +86,9 @@ api({
       fileName,
       usageNotes: notes.trim(),
       reviewStatus: 'reviewed',
-      meta:
-        role === 'items'
-          ? { sourceDescription: 'Uploaded release PDF', window: 'declared at review', coverage: 'unknown' }
-          : {},
+      // No placeholder metadata — real values (item counts, declared windows)
+      // arrive from extraction or usage notes.
+      meta: {},
     })
     const artifacts: Artifact[] = [
       ...(uploads.standards?.files ?? []).map((f) => mk('standards', f, uploads.standards?.notes ?? '')),
