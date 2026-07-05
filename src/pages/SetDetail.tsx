@@ -661,11 +661,18 @@ export default function SetDetail() {
                     </div>
                   ) : null
                 })()}
-                {a.usageNotes && (
-                  <div className="mt-2.5 rounded-lg border border-cite/20 bg-cite-wash px-3 py-2 text-[12px] leading-relaxed text-cite">
-                    <span className="font-mono text-[10px] font-semibold uppercase">usage notes · precedence 5</span> — {a.usageNotes}
-                  </div>
-                )}
+                {(() => {
+                  // Show only the user's own notes — the AI's appended
+                  // 'Ingestion notes: …' stay in the data (they steer
+                  // generation) but are not display copy.
+                  const marker = a.usageNotes.indexOf('Ingestion notes: ')
+                  const human = (marker >= 0 ? a.usageNotes.slice(0, marker) : a.usageNotes).trim()
+                  return human ? (
+                    <div className="mt-2.5 rounded-lg border border-cite/20 bg-cite-wash px-3 py-2 text-[12px] leading-relaxed text-cite">
+                      <span className="font-mono text-[10px] font-semibold uppercase">usage notes</span> — {human}
+                    </div>
+                  ) : null
+                })()}
                 {a.blockingError && (
                   <div className="mt-2.5 flex items-start justify-between gap-4 rounded-lg border border-rust/25 bg-rust-wash px-3 py-2.5">
                     <div className="text-[12.5px] leading-relaxed text-rust">
