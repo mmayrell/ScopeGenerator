@@ -207,10 +207,16 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
   // Documents over the 100-page limit are split into ≤100-page parts here.
   blobs = await splitOversizedUploads(set, blobs, msg.jobId, ctx)
 
+  // The standards tree is built FIRST: it is the boundary authority, and the
+  // item extraction that follows classifies every item against it (P2). Items
+  // come next, then the interpretive documents.
+  const rolePriority: Record<string, number> = { standards: 0, items: 1, unpacking: 2, progression: 3 }
+  blobs.sort((a, b) => (rolePriority[a.role] ?? 9) - (rolePriority[b.role] ?? 9))
+
   await mutateJob(msg.jobId, (r) => {
     r.totalStages = blobs.length + 1 // one per document + the conflict pass
     r.stage = 'Extraction — Standards Tree & Item Bank'
-    pushLog(r, `Extracting ${blobs.length} document(s)`)
+    pushLog(r, `Extracting ${blobs.length} document(s), standards first`)
   })
 
   // Re-runnable extraction: a re-run re-processes every upload, so extraction
