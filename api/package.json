@@ -17,6 +17,7 @@
     "@azure/storage-blob": "^12.24.0",
     "@azure/storage-queue": "^12.23.0",
     "@napi-rs/canvas": "^1.0.2",
+    "pdf-lib": "^1.17.1",
     "pdf-to-png-converter": "^4.1.1"
   },
   "devDependencies": {

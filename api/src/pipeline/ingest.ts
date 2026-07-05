@@ -34,6 +34,7 @@ import {
 } from '../services/schemas'
 import { today } from '../shared/util'
 import { cropRegion, renderPages } from './pdf-images'
+import { inspectPdf, partFileName, splitPdfWithin } from './pdf-split'
 
 // 23MB raw: base64 expands the body ~4/3x and the Claude API request cap is
 // 32MB, so anything above ~24MB raw is doomed — a higher guard (the old 30MB)
@@ -67,6 +68,119 @@ async function listUploads(setId: string): Promise<UploadBlob[]> {
   return blobs
 }
 
+// Splitting is pointless above this size — even halved chunks would blow the
+// Claude request cap many times over; such uploads get the blocking error path.
+const MAX_SPLITTABLE_BYTES = 200 * 1024 * 1024
+
+/**
+ * Uploads exceeding the 100-page ingestion limit (or the 23 MB request cap)
+ * are split automatically into consecutive part documents — a 144-page PDF
+ * becomes pages 1-100 and pages 101-144; as many parts as needed, halving
+ * further by pages while a part's bytes still exceed the cap. Parts are
+ * re-uploaded, the artifact entry is replaced by one entry per part (usage
+ * notes carried over, meta copied per part) and PERSISTED, and only then is
+ * the original blob removed — so a crash anywhere in the window re-runs
+ * safely. The returned list is deduped by blob name, which makes a
+ * crash-retry (original and parts both present) process each part exactly
+ * once. Encrypted PDFs are blocked with an explicit message instead of being
+ * "split" into corrupt parts. Unreadable PDFs fall through untouched — the
+ * caller's per-blob guards handle them.
+ */
+async function splitOversizedUploads(
+  set: StandardSet,
+  blobs: UploadBlob[],
+  jobId: string,
+  ctx: InvocationContext,
+): Promise<UploadBlob[]> {
+  const container = uploadsContainer()
+  const out = new Map<string, UploadBlob>()
+  let changed = false
+  for (const blob of blobs) {
+    if (blob.size > MAX_SPLITTABLE_BYTES) {
+      out.set(blob.name, blob)
+      continue
+    }
+    let buffer: Buffer
+    try {
+      buffer = await container.getBlobClient(blob.name).downloadToBuffer()
+    } catch (e) {
+      ctx.warn(`extract: could not download ${blob.name} during split check — leaving as-is`, e)
+      out.set(blob.name, blob)
+      continue
+    }
+    const inspection = await inspectPdf(buffer)
+    if (inspection.kind === 'encrypted') {
+      blockArtifact(
+        findArtifact(set, blob.role, blob.fileName),
+        'The PDF is password-protected — pdf processing cannot read it. Remove the password and re-upload (P10 fit validation).',
+      )
+      changed = true
+      continue // excluded from processing entirely
+    }
+    if (inspection.kind === 'unreadable') {
+      ctx.warn(`extract: ${blob.fileName} could not be parsed by pdf-lib — leaving as-is`, inspection.error)
+      out.set(blob.name, blob)
+      continue
+    }
+    if (inspection.pages <= MAX_PDF_PAGES && buffer.length <= MAX_PDF_BYTES) {
+      out.set(blob.name, blob)
+      continue
+    }
+    let parts
+    try {
+      parts = await splitPdfWithin(buffer, MAX_PDF_PAGES, MAX_PDF_BYTES)
+    } catch (e) {
+      ctx.warn(`extract: ${blob.fileName} needs splitting but pdf-lib failed — blocking path applies`, e)
+      out.set(blob.name, blob)
+      continue
+    }
+    if (parts.length <= 1) {
+      out.set(blob.name, blob)
+      continue
+    }
+    await mutateJob(jobId, (r) =>
+      pushLog(
+        r,
+        `${blob.fileName}: ${inspection.pages} pages — splitting into ${parts.length} documents (${parts.map((p) => `pages ${p.from}-${p.to}`).join(', ')})`,
+      ),
+    )
+    // 1. Upload every part (idempotent: same names overwrite on retry).
+    const partBlobs: UploadBlob[] = []
+    for (const part of parts) {
+      const fileName = partFileName(blob.fileName, part.from, part.to)
+      const name = `${blob.name.split('/').slice(0, 2).join('/')}/${fileName}`
+      await container
+        .getBlockBlobClient(name)
+        .uploadData(part.data, { blobHTTPHeaders: { blobContentType: 'application/pdf' } })
+      partBlobs.push({ name, size: part.data.length, role: blob.role, fileName })
+    }
+    // 2. Replace the artifact and PERSIST before deleting the original, so no
+    //    crash window can leave a phantom artifact pointing at a deleted blob.
+    const original = findArtifact(set, blob.role, blob.fileName)
+    if (original) {
+      const partArtifacts: Artifact[] = parts.map((p, i) => ({
+        ...original,
+        ...(original.meta ? { meta: { ...original.meta } } : {}), // no shared meta reference between parts
+        id: `${original.id}-p${i + 1}`,
+        fileName: partFileName(blob.fileName, p.from, p.to),
+      }))
+      set.artifacts = set.artifacts.flatMap((a) => (a.id === original.id ? partArtifacts : [a]))
+      set.updated = today()
+      await saveSet(set)
+    }
+    // 3. Remove the original last.
+    await container.getBlobClient(blob.name).deleteIfExists()
+
+    for (const pb of partBlobs) out.set(pb.name, pb)
+    changed = true
+  }
+  if (changed) {
+    set.updated = today()
+    await saveSet(set)
+  }
+  return [...out.values()]
+}
+
 /**
  * Kind `ingest`, step `extract` (runs automatically once the uploads land):
  * per uploaded PDF, a Claude document call extracts standards → StandardNode
@@ -81,14 +195,22 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
   if (!msg.setId) throw new Error('ingest message missing setId')
   const set = await getSet(msg.setId)
 
-  const blobs = await listUploads(msg.setId)
+  let blobs = await listUploads(msg.setId)
   if (blobs.length === 0) throw new Error(`no uploads found for set ${msg.setId}`)
 
   await mutateJob(msg.jobId, (r) => {
     r.status = 'running'
+    r.stage = 'Extraction — Checking Document Sizes'
+    pushLog(r, `Preparing ${blobs.length} uploaded document(s) for ${set.name}`)
+  })
+
+  // Documents over the 100-page limit are split into ≤100-page parts here.
+  blobs = await splitOversizedUploads(set, blobs, msg.jobId, ctx)
+
+  await mutateJob(msg.jobId, (r) => {
     r.totalStages = blobs.length + 1 // one per document + the conflict pass
     r.stage = 'Extraction — Standards Tree & Item Bank'
-    pushLog(r, `Extracting ${blobs.length} uploaded document(s) for ${set.name}`)
+    pushLog(r, `Extracting ${blobs.length} document(s)`)
   })
 
   // Re-runnable extraction: a re-run re-processes every upload, so extraction
@@ -126,9 +248,17 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
       continue
     }
     const buffer = await uploadsContainer().getBlobClient(blob.name).downloadToBuffer()
-    const pages = countPdfPages(buffer)
+    const inspection = await inspectPdf(buffer)
+    if (inspection.kind === 'encrypted') {
+      blockArtifact(artifact, 'The PDF is password-protected — pdf processing cannot read it. Remove the password and re-upload (P10 fit validation).')
+      blocked++
+      stagesDone++
+      continue
+    }
+    const pages = inspection.kind === 'ok' ? inspection.pages : countPdfPages(buffer)
     if (pages > MAX_PDF_PAGES) {
-      blockArtifact(artifact, `Document parses as ${pages} pages — exceeds the 100-page ingestion limit. Split the document and re-upload (P10 fit validation).`)
+      // Only reachable when automatic splitting failed (unparseable PDF).
+      blockArtifact(artifact, `Document parses as ${pages} pages — exceeds the 100-page ingestion limit, and automatic splitting could not read it. Split the document manually and re-upload (P10 fit validation).`)
       blocked++
       stagesDone++
       continue
@@ -281,7 +411,10 @@ export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): P
   for (const blob of blobs) {
     if (blob.size > MAX_PDF_BYTES) continue
     const buffer = await uploadsContainer().getBlobClient(blob.name).downloadToBuffer()
-    if (countPdfPages(buffer) > MAX_PDF_PAGES) continue
+    const inspection = await inspectPdf(buffer)
+    if (inspection.kind === 'encrypted') continue
+    const pages = inspection.kind === 'ok' ? inspection.pages : countPdfPages(buffer)
+    if (pages > MAX_PDF_PAGES) continue
     documents.push(buffer.toString('base64'))
     documentNames.push(blob.fileName)
   }

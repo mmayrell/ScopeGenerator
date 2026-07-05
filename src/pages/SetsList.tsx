@@ -162,9 +162,10 @@ function NewSetModal({ onClose }: { onClose: () => void }) {
 
         <div className="flex items-center justify-between border-t border-hairline pt-4">
           <span className="max-w-80 text-[11.5px] leading-snug text-ink-3">
-            One or more PDFs per role, each with your notes on how the documents should be used. The PDFs upload when
-            you create the set; ingestion runs at publish — configuration, standards tree, item bank, alignment queue,
-            and lexicons are extracted from these documents.
+            One or more PDFs per role, each with your notes on how the documents should be used. AI extraction starts
+            as soon as you create the set. PDFs must not exceed 100 pages — a document over the 100-page ingestion
+            limit is split and re-uploaded automatically as multiple parts (pages 1–100, 101–200, …), using as many
+            documents as it needs.
           </span>
           <Btn kind="primary" disabled={!complete || creating} onClick={() => void create()}>
             {creating ? 'Creating…' : 'Create Standard Set'}

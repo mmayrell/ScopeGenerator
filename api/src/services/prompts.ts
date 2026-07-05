@@ -380,7 +380,7 @@ User usage notes for this artifact (precedence level 5 — steering below the bo
 Output:
 - nodes: a FLAT array of every hierarchy node (grouping levels and standards), each with { code, norm, parentCode ('' for top-level nodes), label (heading text for grouping levels, '' otherwise), wording (verbatim standard text, '' for pure grouping nodes), limits (attached in-document limits, [] if none), fluency, emphasis ('not designated' unless the document states designations) }. Do NOT nest — the tree is rebuilt from parentCode.
 - representations / problemTypes: lexicon seed terms harvested from glossaries and taxonomy tables ({ term, aliases, source }).
-- coverageWarnings: ONLY the important, granular gaps where the right handling is genuinely unclear — each one sentence naming the specific domain/grade/standard range affected and what is ambiguous (e.g. "Grade ${set.gradeSpan.replace(/\D/g, '') || 'N'} Geometry standards reference figures the PDF renders as images — wording may be incomplete for 3 standards"). Do NOT emit boilerplate, generic, or obviously-handled gaps (routine absences the system covers by inference, formatting notes, metadata quibbles). At most 3; [] when nothing rises to that bar.
+- coverageWarnings: ONLY contradictions or genuinely unreadable content inside THIS document — e.g. the document identifies as a different framework/grade than the set declares, or standards whose wording could not be captured. One sentence each, naming the specific standards affected. Do NOT flag partial coverage or absences (other documents cover their own subsets by design), boilerplate, formatting notes, or metadata quibbles. At most 3; [] when nothing rises to that bar.
 - usageNotes: a one-paragraph description of how the document parsed (hierarchy detected, coding scheme, where limits live).`,
   }
 }
@@ -405,7 +405,7 @@ Set standards tree (for P2 classification):${jsonBlock('tree', set.tree)}
 User usage notes for this artifact (declares source description, window, coverage): ${artifact?.usageNotes || '(none)'}
 
 Output also:
-- coverageWarnings: ONLY the important, granular gaps where the right handling is genuinely unclear — each one sentence naming the specific domain/grade/standard range with no or contradictory item evidence and why it matters (e.g. "No items for the Fractions domain (4.NF) in this window — 40% of the set's Major work has no observed ceiling"). Do NOT emit boilerplate or obviously-handled gaps (isolated missing standards are covered by anticipated-evidence inference). At most 3; [] when nothing rises to that bar.
+- coverageWarnings: ONLY apparent contradictions between this document and the declared set — items aligned to codes that do not resolve in the set's scheme, to a different grade/course, or to a different framework variant. It is EXPECTED that items cover only a subset of the standards; absence of items for a standard or domain is NOT a warning (a later cross-document pass checks what nothing covers). One sentence each, naming the specific items/standards. At most 3; [] when nothing rises to that bar.
 - usageNotes: a one-paragraph corpus description (source, window covered, census|sample|unknown declaration and why).`,
   }
 }
@@ -427,7 +427,7 @@ Existing usage notes from the uploader: ${artifact?.usageNotes || '(none)'}
 
 Output:
 - usageNotes: an enriched usage-notes paragraph for this artifact — what the document contains, which standards/domains/grades it covers, which harvests it supports (decomposition keys / demand bands / misconceptions / worked problems / representation vocabulary), and any P6/P7 firewall cautions. This text steers the stages that consume the artifact.
-- coverageWarnings: ONLY the important, granular gaps where the right handling is genuinely unclear — each one sentence naming the specific domain × grade span this document fails to cover and why it matters downstream. Do NOT emit boilerplate or obviously-handled gaps (sub-part fallback and inference cover routine absences silently). At most 3; [] when nothing rises to that bar.`,
+- coverageWarnings: ONLY apparent contradictions between this document and the declared set — it partitions/bounds/places standards in ways that conflict with the set's declared framework, grade, or coding scheme. It is EXPECTED that this document covers only a subset of the standards; absences are NOT warnings (a later cross-document pass checks what nothing covers). One sentence each. At most 3; [] when nothing rises to that bar.`,
   }
 }
 
@@ -448,13 +448,17 @@ export function ingestConflictsPrompt(set: StandardSet, candidateWarnings: strin
 
 ${PRECEDENCE}
 
-What counts as a scope conflict (kind "conflict"):
+Flag EXACTLY two things and nothing else:
+
+1. Contradictions among the documents (kind "conflict"):
 - The standards document is a STATE-ADJUSTED variant of a canonical framework while other documents (items, unpacking, progressions) assume the canonical framework — or vice versa: codes that resolve differently, standards added/removed/re-worded by the state, limits that differ.
 - Item alignments that reference standards the parsed tree does not contain, or a different grade/course of the same framework.
 - Unpacking/progression documents that partition or bound standards in ways the standards document's own wording contradicts.
 - Documents disagreeing about grade placement, included sub-parts, or in-document limits.
 
-What counts as a gap (kind "gap"): an important, granular coverage hole whose handling is genuinely unclear — never boilerplate, never absences the system already covers by inference or sub-part fallback.
+2. Gaps that NO document covers (kind "gap"): a standard or domain in the parsed tree that none of the uploaded documents — items, unpacking, or progressions — touches at all, when that leaves its handling genuinely unclear.
+
+SUBSET COVERAGE IS NEVER A GAP. Every artifact is expected to cover only part of the standards — an items document with items for some standards, a progression covering some domains, an unpacking that partitions a subset: all normal, none flaggable. The standards document defines the universe; the other documents are subsets of it by design. Flag an absence only when it is absent from EVERY document. Never flag boilerplate, formatting, metadata, or anything the system already handles by inference or sub-part fallback.
 
 For every warning, set suggestion to YOUR recommended default resolution — one or two sentences, concrete and executable, decided after weighing the evidence on both sides. BINDING RULE: when the issue is strict/canonical Common Core versus a state-adjusted variant of Common Core, the suggestion is ALWAYS to follow strict canonical Common Core (the canonical wording, codes, and limits govern; state adjustments are recorded as citable context only).
 

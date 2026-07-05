@@ -38,6 +38,7 @@ function defaultResolution(text: string): string {
 function WarningRow({
   warning,
   onResolve,
+  disabled = false,
 }: {
   warning: {
     id: string
@@ -49,18 +50,20 @@ function WarningRow({
     resolvedBy?: 'default' | 'custom'
   }
   onResolve: (resolution: string, resolvedBy: 'default' | 'custom') => Promise<void>
+  disabled?: boolean
 }) {
   const [open, setOpen] = useState(false)
   const [custom, setCustom] = useState('')
-  const [busy, setBusy] = useState(false)
+  const [localBusy, setLocalBusy] = useState(false)
+  const busy = localBusy || disabled
   // The AI's investigated suggestion when extraction produced one; the
   // deterministic per-class fallback otherwise.
   const suggested = warning.suggestion?.trim() || defaultResolution(warning.text)
   const label = warning.kind === 'conflict' ? 'scope conflict' : 'coverage gap'
 
   const apply = (resolution: string, resolvedBy: 'default' | 'custom') => {
-    setBusy(true)
-    void onResolve(resolution, resolvedBy).finally(() => setBusy(false))
+    setLocalBusy(true)
+    void onResolve(resolution, resolvedBy).finally(() => setLocalBusy(false))
   }
 
   if (warning.acknowledged) {
@@ -225,6 +228,7 @@ export default function SetDetail() {
   const [deleting, setDeleting] = useState(false)
   const [job, setJob] = useState<JobStatus | null>(null)
   const [flowError, setFlowError] = useState<string | null>(null)
+  const [resolvingAll, setResolvingAll] = useState(false)
   const nav = useNavigate()
   const set = sets.find((s) => s.id === id)
   const setId = set?.id
@@ -407,10 +411,46 @@ export default function SetDetail() {
       {/* coverage warnings */}
       {set.warnings.length > 0 && (
         <div className="mt-6 space-y-2">
+          {unack.length > 1 && (
+            <div className="flex items-center justify-end gap-3">
+              <span className="text-[11.5px] text-ink-3">
+                {unack.length} to resolve — or apply every suggested default at once
+              </span>
+              <Btn
+                disabled={resolvingAll}
+                onClick={() => {
+                  setResolvingAll(true)
+                  void (async () => {
+                    for (const w of set.warnings.filter((x) => !x.acknowledged)) {
+                      // Re-check against the server so a resolution applied
+                      // concurrently (or by a prior loop iteration's refresh)
+                      // is never overwritten with the default.
+                      try {
+                        const fresh = await api.getSet(set.id)
+                        const current = fresh.warnings.find((x) => x.id === w.id)
+                        if (!current || current.acknowledged) continue
+                      } catch {
+                        /* on read failure, fall through and resolve */
+                      }
+                      await acknowledgeWarning(
+                        set.id,
+                        w.id,
+                        w.suggestion?.trim() || defaultResolution(w.text),
+                        'default',
+                      )
+                    }
+                  })().finally(() => setResolvingAll(false))
+                }}
+              >
+                {resolvingAll ? 'Resolving…' : 'Use Default for All'}
+              </Btn>
+            </div>
+          )}
           {set.warnings.map((w) => (
             <WarningRow
               key={w.id}
               warning={w}
+              disabled={resolvingAll}
               onResolve={(resolution, resolvedBy) => acknowledgeWarning(set.id, w.id, resolution, resolvedBy)}
             />
           ))}

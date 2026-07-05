@@ -191,7 +191,11 @@ Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is
 - `apply-proposal` (`run`): Claude rewrites the targeted lesson fields per the accepted change set;
   relational fields of adjacent lessons updated; locked lessons queue suggestions. Unresolvable
   targets fail the job (surfaced per the failure table above).
-- `ingest` (`extract`, Stage 1a): for each uploaded PDF (from `uploads/`), Claude document call
+- `ingest` (`extract`, Stage 1a): uploads exceeding the 100-page ingestion limit are first split
+  automatically into consecutive ≤100-page part documents (pdf-lib; a 144-page PDF becomes
+  "… (pages 1-100).pdf" and "… (pages 101-144).pdf"): parts re-uploaded, original blob removed, the
+  artifact entry replaced by one entry per part with usage notes carried over. Then, for each
+  uploaded PDF (from `uploads/`), Claude document call
   extracts standards → tree, items → ItemRecord[] with page + bounding box (rendered via
   pdf-to-png-converter and cropped to `data/sets/<id>/item-images/<itemId>.png`), notes docs →
   usage-notes enrichment; then one cross-document conflict pass consolidates warnings, each with an
