@@ -54,8 +54,17 @@ jobs:
         shell: pwsh
         run: |
           7z a -bso0 package.zip ".\staging\*"
-          $xml = [xml]$env:PUBLISH_PROFILE
+          # Parse defensively and NEVER echo the profile: a naive `[xml]$env:...`
+          # cast that fails prints the entire secret (passwords included) into the
+          # public Actions log. Also strip the UTF-8 BOM az sometimes emits, which
+          # .NET's XML parser rejects.
+          $raw = "$env:PUBLISH_PROFILE".TrimStart([char]0xFEFF).Trim()
+          try { $xml = [xml]$raw } catch {
+            Write-Host 'ERROR: the AZURE_FUNCTIONAPP_PUBLISH_PROFILE secret is not parseable XML (content not shown). Re-export it with: az functionapp deployment list-publishing-profiles --xml'
+            exit 1
+          }
           $prof = $xml.publishData.publishProfile | Where-Object { $_.publishMethod -eq 'ZipDeploy' }
+          if (-not $prof) { Write-Host 'ERROR: no ZipDeploy profile found in the publish-profile secret'; exit 1 }
           $pair = "$($prof.userName):$($prof.userPWD)"
           Write-Output "::add-mask::$pair"
           $hdr = @{ Authorization = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes($pair)) }
