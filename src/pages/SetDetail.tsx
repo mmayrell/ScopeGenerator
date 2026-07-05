@@ -596,10 +596,34 @@ export default function SetDetail() {
 
       <div className="py-7">
         {tab === 'Configuration' && (
-          <div className="max-w-xl rounded-xl border border-hairline bg-panel p-4 shadow-(--shadow-lift)">
-            <SectionLabel>Hierarchy Level Names</SectionLabel>
-            <div className="mt-1.5 text-[13.5px] font-medium text-ink">{set.hierarchyLevels.join(' → ')}</div>
-            <div className="mt-1 text-[12px] leading-relaxed text-ink-3">The UI and card fields use the set’s own vocabulary.</div>
+          <div className="max-w-xl rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
+            <div className="space-y-3">
+              {(
+                [
+                  { label: 'Standard Set Name', value: set.name },
+                  {
+                    label: 'Status',
+                    value: set.archived ? 'Archived' : set.published ? 'Active' : 'Draft',
+                    pill: set.archived ? 'neutral' : set.published ? 'green' : 'amber',
+                  },
+                  { label: 'Subject', value: set.subject },
+                  { label: 'Grade', value: set.gradeSpan },
+                  { label: 'Source Organization', value: set.sourceOrganization },
+                  { label: 'Publication Year', value: set.publicationYear },
+                ] as { label: string; value?: string; pill?: 'green' | 'amber' | 'neutral' }[]
+              ).map((row) => (
+                <div key={row.label} className="flex items-baseline justify-between gap-6 border-b border-hairline pb-2.5 last:border-0 last:pb-0">
+                  <SectionLabel>{row.label}</SectionLabel>
+                  {row.pill ? (
+                    <Pill tone={row.pill}>{row.value}</Pill>
+                  ) : (
+                    <span className={`text-right text-[13.5px] font-medium ${row.value && row.value !== 'To be configured' ? 'text-ink' : 'text-ink-3'}`}>
+                      {row.value && row.value !== 'To be configured' ? row.value : 'extracted from the standards document'}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

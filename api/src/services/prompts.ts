@@ -379,6 +379,7 @@ User usage notes for this artifact (precedence level 5 — steering below the bo
 
 Output:
 - nodes: a FLAT array of every hierarchy node (grouping levels and standards), each with { code, norm, parentCode ('' for top-level nodes), label (heading text for grouping levels, '' otherwise), wording (verbatim standard text, '' for pure grouping nodes), limits (attached in-document limits, [] if none), fluency, emphasis ('not designated' unless the document states designations) }. Do NOT nest — the tree is rebuilt from parentCode.
+- setMeta: the document's own identity — { subject (e.g. "Mathematics"), grade (e.g. "Grade 4"), sourceOrganization (the publishing body as the document names it, e.g. "Common Core State Standards Initiative" or a state education agency), publicationYear (e.g. "2010", '' if the document does not state one) }.
 - representations / problemTypes: lexicon seed terms harvested from glossaries and taxonomy tables ({ term, aliases, source }).
 - coverageWarnings: ONLY contradictions or genuinely unreadable content inside THIS document — e.g. the document identifies as a different framework/grade than the set declares, or standards whose wording could not be captured. One sentence each, naming the specific standards affected. Do NOT flag partial coverage or absences (other documents cover their own subsets by design), boilerplate, formatting notes, or metadata quibbles. At most 3; [] when nothing rises to that bar.
 - usageNotes: a one-paragraph description of how the document parsed (hierarchy detected, coding scheme, where limits live).`,

@@ -273,6 +273,11 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
         effort: 'medium',
       })
       if (out.nodes.length > 0) set.tree = rebuildTree(out.nodes)
+      // The standards document is the identity source for configuration.
+      if (out.setMeta.subject.trim()) set.subject = out.setMeta.subject.trim()
+      if (out.setMeta.grade.trim()) set.gradeSpan = out.setMeta.grade.trim()
+      if (out.setMeta.sourceOrganization.trim()) set.sourceOrganization = out.setMeta.sourceOrganization.trim()
+      if (out.setMeta.publicationYear.trim()) set.publicationYear = out.setMeta.publicationYear.trim()
       enrichArtifact(artifact, out.usageNotes)
       candidateWarnings.push(...out.coverageWarnings)
     } else if (blob.role === 'items') {
