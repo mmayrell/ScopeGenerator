@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { fieldMeta } from '../data/seed'
-import { useStore } from '../store'
+import { fieldMeta } from '../data/meta'
+import { scopeUnsettled, useScopePolling, useStore, type RerunResult } from '../store'
 import type { DecisionEntry, Lesson, Proposal, Scope } from '../types'
 import { Btn, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
 
@@ -36,12 +36,29 @@ function LockIcon({ locked }: { locked: boolean }) {
 // ---------- rerun dialog ----------
 
 function RerunDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Lesson; onClose: () => void }) {
-  const { rerun } = useStore()
+  const { rerun, refreshScope } = useStore()
   const [target, setTarget] = useState(lesson.id)
   const [mode, setMode] = useState('split')
-  const [result, setResult] = useState<ReturnType<typeof rerun> | null>(null)
+  const [result, setResult] = useState<RerunResult | null>(null)
+  const [busy, setBusy] = useState(false)
 
-  const submit = (override = false) => setResult(rerun(scope.id, target, mode, override))
+  const submit = async (override = false) => {
+    setBusy(true)
+    try {
+      setResult(await rerun(scope.id, target, mode, override))
+    } catch (e) {
+      setResult({ ok: false, message: e instanceof Error ? e.message : 'Rerun failed.' })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  // An accepted rerun flipped the scope to 'generating' server-side; pick that up when
+  // the dialog closes so the page starts polling until the rerun settles.
+  const close = () => {
+    if (result?.ok) void refreshScope(scope.id)
+    onClose()
+  }
 
   const reentry: Record<string, string> = {
     split: 'Stage 3 scoped to the affected atoms, then Stages 4–6 locally.',
@@ -50,7 +67,7 @@ function RerunDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Lesson;
   }
 
   return (
-    <Modal open onClose={onClose} title="Rerun — A Negotiation with the Framework">
+    <Modal open onClose={close} title="Rerun — A Negotiation with the Framework">
       {result ? (
         <div className="space-y-4">
           {result.ok ? (
@@ -58,23 +75,31 @@ function RerunDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Lesson;
           ) : (
             <>
               <div className="rounded-xl border border-rust/25 bg-rust-wash px-4 py-3 text-[13px] leading-relaxed text-rust">{result.message}</div>
-              {result.guardrail && (
-                <div className="rounded-xl border border-hairline bg-paper p-4">
-                  <SectionLabel>Cited criterion</SectionLabel>
-                  <Mono className="mt-1 block text-[12.5px] font-semibold text-ink">{result.guardrail.criterion}</Mono>
-                  <p className="mt-2 border-l-2 border-hairline-2 pl-3 font-display text-[13px] leading-relaxed text-ink-2 italic">{result.guardrail.evidence}</p>
+              {result.guardrail ? (
+                // Only a guardrail decline earns the override affordance — a plain failure
+                // (transport/server error) must never invite a guardrail bypass.
+                <>
+                  <div className="rounded-xl border border-hairline bg-paper p-4">
+                    <SectionLabel>Cited criterion</SectionLabel>
+                    <Mono className="mt-1 block text-[12.5px] font-semibold text-ink">{result.guardrail.criterion}</Mono>
+                    <p className="mt-2 border-l-2 border-hairline-2 pl-3 font-display text-[13px] leading-relaxed text-ink-2 italic">{result.guardrail.evidence}</p>
+                  </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-[11.5px] leading-snug text-ink-3">
+                      Explicit override is allowed — logged in the RerunEvent, recorded in the affected Decision records, flagged in QC.
+                    </p>
+                    <Btn kind="danger" disabled={busy} onClick={() => void submit(true)}>{busy ? 'Running…' : 'Override & execute'}</Btn>
+                  </div>
+                </>
+              ) : (
+                <div className="flex justify-end">
+                  <Btn disabled={busy} onClick={() => void submit()}>{busy ? 'Running…' : 'Try again'}</Btn>
                 </div>
               )}
-              <div className="flex items-center justify-between gap-4">
-                <p className="text-[11.5px] leading-snug text-ink-3">
-                  Explicit override is allowed — logged in the RerunEvent, recorded in the affected Decision records, flagged in QC.
-                </p>
-                <Btn kind="danger" onClick={() => submit(true)}>Override & execute</Btn>
-              </div>
             </>
           )}
           <div className="flex justify-end border-t border-hairline pt-4">
-            <Btn onClick={onClose}>Close</Btn>
+            <Btn onClick={close}>Close</Btn>
           </div>
         </div>
       ) : (
@@ -113,7 +138,7 @@ function RerunDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Lesson;
           </div>
           <div className="flex items-center justify-between border-t border-hairline pt-4">
             <span className="max-w-72 text-[11.5px] leading-snug text-ink-3">Re-entry: {reentry[mode]} Every rerun produces a new immutable version.</span>
-            <Btn kind="primary" onClick={() => submit()}>Run</Btn>
+            <Btn kind="primary" disabled={busy} onClick={() => void submit()}>{busy ? 'Running…' : 'Run'}</Btn>
           </div>
         </div>
       )}
@@ -128,8 +153,23 @@ function RevisionDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Less
   const [text, setText] = useState('')
   const [proposalId, setProposalId] = useState<string | null>(null)
   const [feedback, setFeedback] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const live = scopes.find((s) => s.id === scope.id)
   const proposal = live?.proposals.find((p) => p.id === proposalId)
+
+  const submit = async () => {
+    setSubmitting(true)
+    setSubmitError(null)
+    try {
+      const p = await submitReport(scope.id, lesson.id, text)
+      setProposalId(p.id)
+    } catch (e) {
+      setSubmitError(e instanceof Error ? e.message : 'Could not submit the report.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <Modal open onClose={onClose} title={`Update from Student Data — ${lesson.id}`} wide>
@@ -147,9 +187,12 @@ function RevisionDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Less
             placeholder="e.g. About a third of students stall at the start of these problems — they can’t identify which routine to begin with; the errors look like a missing prerequisite, not slips…"
             className="w-full rounded-xl border border-hairline bg-panel px-3.5 py-3 text-[13px] leading-relaxed outline-none placeholder:text-ink-3 focus:border-accent/40"
           />
+          {submitError && (
+            <div className="rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] leading-relaxed text-rust">{submitError}</div>
+          )}
           <div className="flex justify-end">
-            <Btn kind="primary" disabled={text.trim().length < 20} onClick={() => setProposalId(submitReport(scope.id, lesson.id, text).id)}>
-              Submit report
+            <Btn kind="primary" disabled={text.trim().length < 20 || submitting} onClick={() => void submit()}>
+              {submitting ? 'Submitting…' : 'Submit report'}
             </Btn>
           </div>
         </div>
@@ -159,11 +202,11 @@ function RevisionDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Less
           feedback={feedback}
           setFeedback={setFeedback}
           onIterate={() => {
-            iterateProposal(scope.id, proposal.id, feedback)
+            void iterateProposal(scope.id, proposal.id, feedback)
             setFeedback('')
           }}
           onResolve={(accept) => {
-            resolveProposal(scope.id, proposal.id, accept)
+            void resolveProposal(scope.id, proposal.id, accept)
             onClose()
           }}
         />
@@ -185,6 +228,7 @@ function ProposalView({
   onIterate: () => void
   onResolve: (accept: boolean) => void
 }) {
+  const working = proposal.working || proposal.status === 'drafting'
   return (
     <div className="space-y-5">
       <div className="rounded-xl border border-rust/20 bg-rust-wash/60 p-3.5">
@@ -195,6 +239,18 @@ function ProposalView({
         <p className="mt-2 font-display text-[13px] leading-relaxed text-ink-2 italic">“{proposal.report.text}”</p>
       </div>
 
+      {working && (
+        <div className="animate-rise flex items-center gap-3 rounded-xl border border-accent/25 bg-accent-wash/40 px-4 py-3">
+          <span className="stage-pulse h-2 w-2 shrink-0 rounded-full bg-accent" />
+          <p className="text-[12.5px] leading-relaxed text-accent-deep">
+            {proposal.status === 'drafting'
+              ? 'Drafting the change set — mapping the report onto the engine’s Editing-Splits logic. Nothing mutates until you accept.'
+              : 'Revising the draft per your feedback — the round is appended when it completes.'}
+          </p>
+        </div>
+      )}
+
+      {proposal.changes.length > 0 && (
       <div>
         <SectionLabel>Draft change set — rendered as a diff, nothing mutated</SectionLabel>
         <div className="mt-2 space-y-3">
@@ -222,7 +278,9 @@ function ProposalView({
           ))}
         </div>
       </div>
+      )}
 
+      {proposal.ripple.length > 0 && (
       <div>
         <SectionLabel>Ripple preview</SectionLabel>
         <ul className="mt-1.5 space-y-1">
@@ -233,6 +291,7 @@ function ProposalView({
           ))}
         </ul>
       </div>
+      )}
 
       {proposal.rounds.length > 0 && (
         <div>
@@ -256,13 +315,13 @@ function ProposalView({
             placeholder="Reply with feedback to iterate…"
             className="flex-1 rounded-xl border border-hairline bg-panel px-3.5 py-2 text-[13px] outline-none placeholder:text-ink-3 focus:border-accent/40"
           />
-          <Btn disabled={feedback.trim().length < 4} onClick={onIterate}>Iterate</Btn>
+          <Btn disabled={working || feedback.trim().length < 4} onClick={onIterate}>Iterate</Btn>
         </div>
         <div className="flex items-center justify-between">
-          <Btn kind="danger" onClick={() => onResolve(false)}>Abandon</Btn>
+          <Btn kind="danger" disabled={working} onClick={() => onResolve(false)}>Abandon</Btn>
           <div className="flex items-center gap-3">
             <span className="text-[11.5px] text-ink-3">Acceptance creates a new immutable version with the report attached.</span>
-            <Btn kind="primary" onClick={() => onResolve(true)}>Accept proposal</Btn>
+            <Btn kind="primary" disabled={working} onClick={() => onResolve(true)}>Accept proposal</Btn>
           </div>
         </div>
       </div>
@@ -298,7 +357,7 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
           <h2 className="mt-2.5 max-w-2xl font-display text-[24px] leading-snug font-semibold tracking-tight text-ink">{lesson.title}</h2>
         </div>
         <div className="flex shrink-0 gap-2 pt-1">
-          <Btn onClick={() => toggleLock(scope.id, lesson.id)}>
+          <Btn onClick={() => void toggleLock(scope.id, lesson.id)}>
             <LockIcon locked={!lesson.locked} />
             {lesson.locked ? 'Unlock' : 'Lock'}
           </Btn>
@@ -395,15 +454,42 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
 
 export default function ScopeView() {
   const { id } = useParams()
-  const { scopes, sets, deleteScope } = useStore()
+  const { scopes, sets, deleteScope, createScope, refreshScope } = useStore()
   const nav = useNavigate()
   const scope = scopes.find((s) => s.id === id)
   const [sel, setSel] = useState<string | null>(null)
   const [qcOpen, setQcOpen] = useState(false)
   const [histOpen, setHistOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [retrying, setRetrying] = useState(false)
+  const [lookedUp, setLookedUp] = useState(false)
 
-  if (!scope) return <div className="p-10 text-ink-3">Scope not found.</div>
+  // While the scope is generating (initial run, rerun, apply-proposal) or a proposal is
+  // drafting/iterating, poll its document every 2s until it settles.
+  useScopePolling(scope && scopeUnsettled(scope) ? [scope.id] : [])
+
+  // A missing scope may just be a failed refresh at navigation time — try one fetch
+  // before declaring it not found.
+  const missing = !scope
+  useEffect(() => {
+    if (!missing || !id) return
+    let cancelled = false
+    setLookedUp(false)
+    void refreshScope(id).finally(() => {
+      if (!cancelled) setLookedUp(true)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [missing, id, refreshScope])
+
+  if (!scope) {
+    return lookedUp ? (
+      <div className="p-10 text-ink-3">Scope not found.</div>
+    ) : (
+      <div className="p-10 text-ink-3">Loading scope…</div>
+    )
+  }
   const set = sets.find((s) => s.id === scope.setId)
 
   if (scope.status === 'generating') {
@@ -417,7 +503,53 @@ export default function ScopeView() {
     )
   }
 
+  if (scope.status === 'failed') {
+    const retry = async () => {
+      setRetrying(true)
+      try {
+        const newId = await createScope(scope.setId, scope.request.mode, scope.request.params)
+        nav(`/scopes/${newId}`)
+      } catch {
+        setRetrying(false) // failure already surfaced via the store's action-error strip
+      }
+    }
+    return (
+      <div className="flex h-full items-center justify-center px-10">
+        <div className="animate-rise w-full max-w-lg rounded-2xl border border-hairline bg-panel p-6 shadow-(--shadow-lift)">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Pill tone="red">generation failed</Pill>
+            <h1 className="font-display text-[18px] font-semibold text-ink">{scope.title}</h1>
+          </div>
+          <div className="mt-4 rounded-xl border border-rust/25 bg-rust-wash px-4 py-3">
+            <div className="font-mono text-[10px] font-semibold tracking-wide text-rust uppercase">error</div>
+            <p className="mt-1 text-[12.5px] leading-relaxed text-rust">{scope.error ?? 'The generation job failed.'}</p>
+          </div>
+          <p className="mt-3 text-[11.5px] leading-relaxed text-ink-3">
+            The run is checkpointed server-side; retry starts a fresh generation with the same request. Delete removes this failed scope.
+          </p>
+          <div className="mt-4 flex items-center justify-between border-t border-hairline pt-4">
+            <Link to="/" className="text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Scopes</Link>
+            <div className="flex gap-2">
+              <Btn kind="danger" onClick={() => { void deleteScope(scope.id).then((ok) => { if (ok) nav('/') }) }}>Delete scope</Btn>
+              <Btn kind="primary" disabled={retrying} onClick={() => void retry()}>{retrying ? 'Starting…' : 'Retry generation'}</Btn>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const allLessons = scope.units.flatMap((u) => u.lessons)
+  if (allLessons.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center px-10">
+        <div className="text-center">
+          <p className="text-[13px] text-ink-3">This scope has no lessons.</p>
+          <Link to="/" className="mt-3 inline-block text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Scopes</Link>
+        </div>
+      </div>
+    )
+  }
   const lesson = allLessons.find((l) => l.id === sel) ?? allLessons[0]
   const qcFlags = scope.qc.filter((q) => q.status !== 'pass')
 
@@ -430,9 +562,14 @@ export default function ScopeView() {
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5 px-2">
           <Pill tone="neutral">v{scope.version}</Pill>
           <Pill tone={qcFlags.length ? 'amber' : 'green'}>{qcFlags.length ? `QC: ${qcFlags.length} flagged` : 'QC clean'}</Pill>
+          {scope.proposals.some((p) => p.working || p.status === 'drafting') && (
+            <Pill tone="accent">
+              <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-accent" /> proposal drafting
+            </Pill>
+          )}
         </div>
         <div className="mt-1.5 px-2 font-mono text-[10px] leading-relaxed text-ink-3">
-          {scope.engineVersion.split(' (')[0]} · {scope.doctrineVersions[0].split(' (')[0]}
+          {scope.engineVersion.split(' (')[0]} · {(scope.doctrineVersions[0] ?? '—').split(' (')[0]}
         </div>
         <div className="mt-3 flex gap-1.5 px-2">
           <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setQcOpen(true)}>QC report</Btn>
@@ -535,7 +672,7 @@ export default function ScopeView() {
         </p>
         <div className="mt-5 flex justify-end gap-2">
           <Btn onClick={() => setConfirmDelete(false)}>Cancel</Btn>
-          <Btn kind="danger" onClick={() => { deleteScope(scope.id); nav('/') }}>Delete</Btn>
+          <Btn kind="danger" onClick={() => { void deleteScope(scope.id).then((ok) => { if (ok) nav('/') }) }}>Delete</Btn>
         </div>
       </Modal>
     </div>

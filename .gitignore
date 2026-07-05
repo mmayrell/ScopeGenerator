@@ -12,6 +12,14 @@ dist
 dist-ssr
 *.local
 
+# Secrets & environment-specific outputs (never commit)
+.secrets/
+AnthropicKey.txt
+.claude/settings.local.json
+infra/azure-resources.json
+api/local.settings.json
+api/assets/seed.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

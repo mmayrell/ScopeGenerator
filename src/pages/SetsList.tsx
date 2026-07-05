@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useStore, type NewSetUploads, type UploadSlotValue } from '../store'
+import { useStore, type NewSetFile, type NewSetUploads, type UploadSlotValue } from '../store'
 import { Btn, Modal, Mono, Pill, SectionLabel } from '../ui'
 
 const slots: { key: keyof NewSetUploads; label: string; note: string }[] = [
@@ -24,7 +24,7 @@ function UploadSlot({
   label: string
   note: string
   value: UploadSlotValue
-  onAdd: (names: string[]) => void
+  onAdd: (files: File[]) => void
   onRemove: (name: string) => void
   onNotes: (notes: string) => void
 }) {
@@ -51,8 +51,8 @@ function UploadSlot({
         multiple
         className="hidden"
         onChange={(e) => {
-          const names = [...(e.target.files ?? [])].map((f) => f.name)
-          if (names.length) onAdd(names)
+          const files = [...(e.target.files ?? [])]
+          if (files.length) onAdd(files)
           e.target.value = ''
         }}
       />
@@ -94,13 +94,36 @@ function NewSetModal({ onClose }: { onClose: () => void }) {
   const nav = useNavigate()
   const [name, setName] = useState('')
   const [uploads, setUploads] = useState<NewSetUploads>(empty)
+  const [realFiles, setRealFiles] = useState<NewSetFile[]>([])
+  const [creating, setCreating] = useState(false)
+  const [createError, setCreateError] = useState<string | null>(null)
 
-  const add = (key: keyof NewSetUploads, names: string[]) =>
-    setUploads((u) => ({ ...u, [key]: { ...u[key], files: [...new Set([...u[key].files, ...names])] } }))
-  const remove = (key: keyof NewSetUploads, name: string) =>
+  const add = (key: keyof NewSetUploads, files: File[]) => {
+    setUploads((u) => ({ ...u, [key]: { ...u[key], files: [...new Set([...u[key].files, ...files.map((f) => f.name)])] } }))
+    setRealFiles((prev) => [
+      ...prev.filter((x) => !(x.role === key && files.some((f) => f.name === x.file.name))),
+      ...files.map((file) => ({ role: key, file })),
+    ])
+  }
+  const remove = (key: keyof NewSetUploads, name: string) => {
     setUploads((u) => ({ ...u, [key]: { ...u[key], files: u[key].files.filter((f) => f !== name) } }))
+    setRealFiles((prev) => prev.filter((x) => !(x.role === key && x.file.name === name)))
+  }
   const setNotes = (key: keyof NewSetUploads, notes: string) =>
     setUploads((u) => ({ ...u, [key]: { ...u[key], notes } }))
+
+  const create = async () => {
+    setCreating(true)
+    setCreateError(null)
+    try {
+      const id = await createSet(name.trim(), uploads, realFiles)
+      onClose()
+      nav(`/sets/${id}`)
+    } catch (e) {
+      setCreateError(e instanceof Error ? e.message : 'Could not create the standard set.')
+      setCreating(false)
+    }
+  }
 
   const complete = name.trim().length > 1 && slots.every((s) => uploads[s.key].files.length > 0)
 
@@ -124,28 +147,26 @@ function NewSetModal({ onClose }: { onClose: () => void }) {
               label={s.label}
               note={s.note}
               value={uploads[s.key]}
-              onAdd={(names) => add(s.key, names)}
+              onAdd={(files) => add(s.key, files)}
               onRemove={(f) => remove(s.key, f)}
               onNotes={(notes) => setNotes(s.key, notes)}
             />
           ))}
         </div>
 
+        {createError && (
+          <div className="animate-rise rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] leading-relaxed text-rust">
+            {createError}
+          </div>
+        )}
+
         <div className="flex items-center justify-between border-t border-hairline pt-4">
           <span className="max-w-80 text-[11.5px] leading-snug text-ink-3">
             One or more PDFs per role, each with your notes on how the documents should be used. Ingestion runs at
             publish time.
           </span>
-          <Btn
-            kind="primary"
-            disabled={!complete}
-            onClick={() => {
-              const id = createSet(name.trim(), uploads)
-              onClose()
-              nav(`/sets/${id}`)
-            }}
-          >
-            Create Standard Set
+          <Btn kind="primary" disabled={!complete || creating} onClick={() => void create()}>
+            {creating ? 'Creating…' : 'Create Standard Set'}
           </Btn>
         </div>
       </div>

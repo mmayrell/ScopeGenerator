@@ -1,10 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useStore } from '../store'
+import { scopeUnsettled, useScopePolling, useStore } from '../store'
 import { Mono, Pill, Btn } from '../ui'
 
 export default function Dashboard() {
   const { scopes, sets } = useStore()
   const nav = useNavigate()
+  // Keep in-flight scopes fresh while they're on screen.
+  useScopePolling(scopes.filter(scopeUnsettled).map((s) => s.id))
   return (
     <div className="mx-auto max-w-5xl px-10 py-10">
       <div className="flex items-end justify-between">
@@ -44,10 +46,17 @@ export default function Dashboard() {
                       <Pill tone="accent">
                         <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-accent" /> generating
                       </Pill>
+                    ) : s.status === 'failed' ? (
+                      <Pill tone="red">failed</Pill>
                     ) : qcFlags > 0 ? (
                       <Pill tone="amber">QC: {qcFlags} flagged</Pill>
                     ) : (
                       <Pill tone="green">QC clean</Pill>
+                    )}
+                    {s.proposals.some((p) => p.working || p.status === 'drafting') && (
+                      <Pill tone="accent">
+                        <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-accent" /> proposal drafting
+                      </Pill>
                     )}
                   </div>
                   <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-ink-3">
@@ -68,6 +77,11 @@ export default function Dashboard() {
             </Link>
           )
         })}
+        {scopes.length === 0 && (
+          <p className="rounded-2xl border border-hairline bg-panel p-5 text-[13px] text-ink-3">
+            No scopes yet — run one from New scope.
+          </p>
+        )}
       </div>
 
       <div className="mt-12 flex items-end justify-between">

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useStore } from '../store'
 import { Btn, ItemShot, Mono, Pill, SectionLabel } from '../ui'
@@ -100,10 +100,37 @@ function ItemGroup({ code, items, wording }: { code: string; items: ItemRecord[]
 
 export default function SetDetail() {
   const { id } = useParams()
-  const { sets, acknowledgeWarning, confirmAlignment, resolveArtifact, publishSet } = useStore()
+  const { sets, acknowledgeWarning, confirmAlignment, resolveArtifact, publishSet, refreshSet } = useStore()
   const [tab, setTab] = useState<(typeof tabs)[number]>('Configuration')
+  const [ingesting, setIngesting] = useState(false)
   const set = sets.find((s) => s.id === id)
+  const setId = set?.id
+  const published = set?.published
+  // Terminal ingest failure: a blocked artifact, or the 'Ingestion failed' warning the
+  // backend writes when the job dies.
+  const ingestFailed =
+    set?.artifacts.some((a) => a.blockingError) || set?.warnings.some((w) => w.text.startsWith('Ingestion failed'))
+  const ingestSettled = Boolean(published || ingestFailed)
+
+  // Publish with uploaded PDFs enqueues an ingest job — poll the set every 2s until it
+  // publishes or fails terminally, then reset the flag so the Publish button returns
+  // and the user can retry after fixing the surfaced problem.
+  useEffect(() => {
+    if (!ingesting || !setId) return
+    if (ingestSettled) {
+      setIngesting(false)
+      return
+    }
+    const t = setInterval(() => void refreshSet(setId), 2000)
+    return () => clearInterval(t)
+  }, [ingesting, setId, ingestSettled, refreshSet])
+
   if (!set) return <div className="p-10 text-ink-3">Standard set not found.</div>
+
+  const publish = async () => {
+    const { jobId } = await publishSet(set.id)
+    if (jobId) setIngesting(true)
+  }
 
   const blocking = set.artifacts.filter((a) => a.reviewStatus === 'blocked')
   const unack = set.warnings.filter((w) => !w.acknowledged)
@@ -120,9 +147,14 @@ export default function SetDetail() {
             {set.published ? <Pill tone="green">published</Pill> : <Pill tone="amber">draft</Pill>}
           </div>
         </div>
-        {!set.published && (
-          <Btn kind="primary" disabled={!canPublish} onClick={() => publishSet(set.id)}>Publish set</Btn>
-        )}
+        {!set.published &&
+          (ingesting ? (
+            <Pill tone="amber">
+              <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-amber-ink" /> publishing — Stage 1 ingestion running
+            </Pill>
+          ) : (
+            <Btn kind="primary" disabled={!canPublish} onClick={() => void publish()}>Publish set</Btn>
+          ))}
       </div>
 
       {/* coverage warnings */}

@@ -1,0 +1,154 @@
+import { odata } from '@azure/data-tables'
+import { Scope, StandardSet } from '../domain/types'
+import { HttpError } from '../shared/errors'
+import { sleep } from '../shared/util'
+import { dataContainer, entitiesTable } from './clients'
+import { deleteBlobsWithPrefix, getJsonOrUndefined, getJsonWithEtag, putJson, putJsonIfMatch } from './blobs'
+
+// Blob layout (contract §Storage layout):
+//   sets/<setId>.json                current StandardSet
+//   scopes/<scopeId>.json            current Scope
+//   scopes/<scopeId>/v<version>.json immutable snapshot per version
+const setBlobPath = (id: string) => `sets/${id}.json`
+const scopeBlobPath = (id: string) => `scopes/${id}.json`
+const scopeSnapshotPath = (id: string, version: number) => `scopes/${id}/v${version}.json`
+
+// ---------------------------------------------------------------------------
+// Sets
+// ---------------------------------------------------------------------------
+
+export async function saveSet(set: StandardSet): Promise<void> {
+  await putJson(dataContainer(), setBlobPath(set.id), set)
+  await entitiesTable().upsertEntity(
+    {
+      partitionKey: 'set',
+      rowKey: set.id,
+      name: set.name,
+      published: set.published,
+      updated: set.updated,
+      blobPath: setBlobPath(set.id),
+    },
+    'Replace',
+  )
+}
+
+export async function getSetOrUndefined(id: string): Promise<StandardSet | undefined> {
+  return getJsonOrUndefined<StandardSet>(dataContainer(), setBlobPath(id))
+}
+
+export async function getSet(id: string): Promise<StandardSet> {
+  const set = await getSetOrUndefined(id)
+  if (!set) throw new HttpError(404, `standard set ${id} not found`)
+  return set
+}
+
+export async function listSets(): Promise<StandardSet[]> {
+  return listDocs<StandardSet>('set', getSetOrUndefined)
+}
+
+// ---------------------------------------------------------------------------
+// Scopes
+// ---------------------------------------------------------------------------
+
+export async function saveScope(scope: Scope): Promise<void> {
+  await putJson(dataContainer(), scopeBlobPath(scope.id), scope)
+  await upsertScopeRow(scope)
+}
+
+async function upsertScopeRow(scope: Scope): Promise<void> {
+  await entitiesTable().upsertEntity(
+    {
+      partitionKey: 'scope',
+      rowKey: scope.id,
+      title: scope.title,
+      setId: scope.setId,
+      status: scope.status,
+      version: scope.version,
+      updated: scope.updated,
+      blobPath: scopeBlobPath(scope.id),
+    },
+    'Replace',
+  )
+}
+
+/**
+ * Read–modify–write for an existing scope with ETag optimistic concurrency:
+ * parallel workers (host.json batchSize 4) and HTTP mutations race on the same
+ * blob, so every mutation downloads the doc capturing its ETag, applies `fn`,
+ * and uploads with If-Match on that ETag; a 412 re-reads and retries (up to 10,
+ * small backoff). Unconditional last-writer-wins saves would silently lose
+ * updates. The entities-table index row (title/status/version/updated) is
+ * re-synced after a successful write.
+ */
+export async function mutateScope(id: string, fn: (scope: Scope) => void): Promise<Scope> {
+  let lastError: unknown
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const found = await getJsonWithEtag<Scope>(dataContainer(), scopeBlobPath(id))
+    if (!found) throw new HttpError(404, `scope ${id} not found`)
+    const scope = found.doc
+    fn(scope)
+    try {
+      await putJsonIfMatch(dataContainer(), scopeBlobPath(id), scope, found.etag)
+    } catch (err) {
+      const status = (err as { statusCode?: number }).statusCode
+      if (status !== 412) throw err
+      lastError = err
+      await sleep(50 + attempt * 50 + Math.floor(Math.random() * 100))
+      continue
+    }
+    await upsertScopeRow(scope)
+    return scope
+  }
+  throw new Error(`scope ${id}: gave up after 10 optimistic-concurrency retries: ${String(lastError)}`)
+}
+
+/** Writes the immutable `scopes/<id>/v<version>.json` snapshot for the scope's current version. */
+export async function snapshotScope(scope: Scope): Promise<void> {
+  await putJson(dataContainer(), scopeSnapshotPath(scope.id, scope.version), scope)
+}
+
+export async function getScopeOrUndefined(id: string): Promise<Scope | undefined> {
+  return getJsonOrUndefined<Scope>(dataContainer(), scopeBlobPath(id))
+}
+
+export async function getScope(id: string): Promise<Scope> {
+  const scope = await getScopeOrUndefined(id)
+  if (!scope) throw new HttpError(404, `scope ${id} not found`)
+  return scope
+}
+
+export async function listScopes(): Promise<Scope[]> {
+  return listDocs<Scope>('scope', getScopeOrUndefined)
+}
+
+export async function deleteScopeDocs(id: string): Promise<void> {
+  await dataContainer().getBlockBlobClient(scopeBlobPath(id)).deleteIfExists()
+  await deleteBlobsWithPrefix(dataContainer(), `scopes/${id}/`)
+  try {
+    await entitiesTable().deleteEntity('scope', id)
+  } catch (e) {
+    const status = (e as { statusCode?: number }).statusCode
+    if (status !== 404) throw e
+  }
+}
+
+export async function entitiesTableHasRows(): Promise<boolean> {
+  const iterator = entitiesTable().listEntities()[Symbol.asyncIterator]()
+  const first = await iterator.next()
+  return !first.done
+}
+
+// ---------------------------------------------------------------------------
+
+async function listDocs<T>(
+  partition: 'set' | 'scope',
+  fetch: (id: string) => Promise<T | undefined>,
+): Promise<T[]> {
+  const ids: string[] = []
+  const filter = odata`PartitionKey eq ${partition}`
+  for await (const entity of entitiesTable().listEntities({ queryOptions: { filter } })) {
+    if (entity.rowKey) ids.push(String(entity.rowKey))
+  }
+  const docs = await Promise.all(ids.map((id) => fetch(id)))
+  return docs.filter((d): d is Awaited<T> => d !== undefined)
+}

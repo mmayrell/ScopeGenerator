@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useStore } from '../store'
+import { useStore, type JobStatus } from '../store'
 import { Btn, Mono, Pill, Progress, SectionLabel } from '../ui'
 import type { StandardNode } from '../types'
 
@@ -12,6 +12,29 @@ const stages = [
   { n: 6, name: 'Auto-QC', detail: 'Coverage matrix, prerequisite chains, atom-triple format, single-strategy check, ceiling legality, citation completeness, Decision-record integrity…' },
 ]
 
+// Map the job's human-readable stage label (e.g. "Stage 3–4 — Atomization & sequencing")
+// onto the static stage list: [lo, hi] of the active spec-stage numbers.
+function activeStageRange(job: JobStatus | null): [number, number] {
+  if (!job) return [stages[0].n, stages[0].n]
+  const m = /stages?\s*(\d+)\s*(?:[-–—]\s*(\d+))?/i.exec(job.stage)
+  if (m) {
+    const lo = Number(m[1])
+    const hi = m[2] ? Number(m[2]) : lo
+    return [lo, hi]
+  }
+  // No stage number in the label — fall back to fractional progress across the list.
+  const frac = job.totalStages > 0 ? job.stagesDone / job.totalStages : 0
+  const idx = Math.min(stages.length - 1, Math.floor(frac * stages.length))
+  return [stages[idx].n, stages[idx].n]
+}
+
+function jobPct(job: JobStatus | null): number {
+  if (!job || job.totalStages <= 0) return 3
+  const unitFrac = job.totalUnits ? Math.min(1, (job.unitsDone ?? 0) / job.totalUnits) : 0
+  const done = Math.min(job.totalStages, job.stagesDone + (job.status === 'complete' ? 0 : unitFrac))
+  return Math.max(3, Math.min(100, (done / job.totalStages) * 100))
+}
+
 function flattenStandards(nodes: StandardNode[], out: { code: string; wording: string }[] = []) {
   for (const n of nodes) {
     if (n.wording) out.push({ code: n.norm, wording: n.wording })
@@ -21,7 +44,7 @@ function flattenStandards(nodes: StandardNode[], out: { code: string; wording: s
 }
 
 export default function NewScope() {
-  const { sets, createScope, finishGeneration } = useStore()
+  const { sets, createScope, fetchJob, refreshScope } = useStore()
   const nav = useNavigate()
   const published = sets.filter((s) => s.published)
   const [setId, setSetId] = useState(published[0]?.id ?? '')
@@ -30,33 +53,71 @@ export default function NewScope() {
   const [topic, setTopic] = useState('')
   const [topicMapped, setTopicMapped] = useState(false)
   const [running, setRunning] = useState<string | null>(null)
-  const [stageIdx, setStageIdx] = useState(0)
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const [job, setJob] = useState<JobStatus | null>(null)
+  const [failure, setFailure] = useState<string | null>(null)
+  const [launchError, setLaunchError] = useState<string | null>(null)
+  const [launching, setLaunching] = useState(false)
+  const navTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   const set = sets.find((s) => s.id === setId)
   const standards = useMemo(() => (set ? flattenStandards(set.tree) : []), [set])
   const gapHit = set?.warnings.some((w) => w.acknowledged) && mode === 'course'
 
-  useEffect(() => () => clearTimeout(timer.current), [])
+  useEffect(() => () => clearTimeout(navTimer.current), [])
 
-  const run = () => {
-    const params = mode === 'course' ? `${set?.gradeSpan} (all published domains)` : mode === 'standard' ? standard : topic
-    const id = createScope(setId, mode, params)
-    setRunning(id)
-    setStageIdx(0)
-    const step = (i: number) => {
-      if (i >= stages.length) {
-        finishGeneration(id)
-        timer.current = setTimeout(() => nav(`/scopes/${id}`), 600)
-        return
+  // Poll the generation job every 2s while a run is active.
+  useEffect(() => {
+    if (!running || failure) return
+    let cancelled = false
+    let done = false
+    const tick = async () => {
+      if (done) return
+      try {
+        const j = await fetchJob(running)
+        if (cancelled || done) return
+        setJob(j)
+        if (j.status === 'complete') {
+          done = true
+          clearInterval(t)
+          await refreshScope(running)
+          if (!cancelled) navTimer.current = setTimeout(() => nav(`/scopes/${running}`), 600)
+        } else if (j.status === 'failed') {
+          done = true
+          clearInterval(t)
+          setFailure(j.error ?? 'Generation failed.')
+          void refreshScope(running) // the scope stays visible, marked failed
+        }
+      } catch {
+        // transient poll failure — keep polling; a 401 re-opens the access gate via the store
       }
-      setStageIdx(i)
-      timer.current = setTimeout(() => step(i + 1), 1100 + Math.random() * 700)
     }
-    step(0)
+    const t = setInterval(() => void tick(), 2000)
+    void tick()
+    return () => {
+      cancelled = true
+      clearInterval(t)
+    }
+  }, [running, failure, fetchJob, refreshScope, nav])
+
+  const run = async () => {
+    const params = mode === 'course' ? `${set?.gradeSpan} (all published domains)` : mode === 'standard' ? standard : topic
+    setLaunching(true)
+    setLaunchError(null)
+    try {
+      const id = await createScope(setId, mode, params)
+      setJob(null)
+      setFailure(null)
+      setRunning(id)
+    } catch (e) {
+      setLaunchError(e instanceof Error ? e.message : 'Could not start the generation job.')
+    } finally {
+      setLaunching(false)
+    }
   }
 
   if (running) {
+    const [lo, hi] = activeStageRange(job)
+    const complete = job?.status === 'complete'
     return (
       <div className="mx-auto max-w-2xl px-10 py-16">
         <SectionLabel>Generating scope</SectionLabel>
@@ -67,30 +128,93 @@ export default function NewScope() {
           {set?.name} · Engine v2.3 · DI BrainLift v1.8 — the run is checkpointed and resumable; units stream in as stages 3–5 complete.
         </p>
         <div className="mt-8">
-          <Progress pct={((stageIdx + 1) / stages.length) * 100} />
+          <Progress pct={complete ? 100 : jobPct(job)} />
         </div>
+        {job && (
+          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-ink-3">
+            <Mono className="text-ink-2">{job.stage}</Mono>
+            {job.status === 'queued' && <Pill tone="neutral">queued</Pill>}
+            {typeof job.totalUnits === 'number' && job.totalUnits > 0 && (
+              <Pill tone="accent">
+                units {job.unitsDone ?? 0} / {job.totalUnits}
+              </Pill>
+            )}
+          </div>
+        )}
         <div className="mt-6 space-y-2.5">
-          {stages.map((s, i) => (
-            <div
-              key={s.n}
-              className={`flex items-start gap-3.5 rounded-xl border p-4 transition-all ${
-                i < stageIdx ? 'border-hairline bg-panel opacity-70' : i === stageIdx ? 'animate-rise border-accent/25 bg-accent-wash/40 shadow-(--shadow-lift)' : 'border-hairline bg-panel opacity-40'
-              }`}
-            >
-              <span
-                className={`mt-px flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[11px] font-semibold ${
-                  i < stageIdx ? 'bg-verdant-wash text-verdant' : i === stageIdx ? 'stage-pulse bg-accent text-white' : 'bg-ink/5 text-ink-3'
+          {stages.map((s) => {
+            const state = failure
+              ? s.n < lo
+                ? 'done'
+                : s.n <= hi
+                  ? 'failed'
+                  : 'pending'
+              : complete || s.n < lo
+                ? 'done'
+                : s.n <= hi
+                  ? 'active'
+                  : 'pending'
+            return (
+              <div
+                key={s.n}
+                className={`flex items-start gap-3.5 rounded-xl border p-4 transition-all ${
+                  state === 'done'
+                    ? 'border-hairline bg-panel opacity-70'
+                    : state === 'active'
+                      ? 'animate-rise border-accent/25 bg-accent-wash/40 shadow-(--shadow-lift)'
+                      : state === 'failed'
+                        ? 'border-rust/25 bg-rust-wash/40'
+                        : 'border-hairline bg-panel opacity-40'
                 }`}
               >
-                {i < stageIdx ? '✓' : s.n}
-              </span>
-              <div>
-                <div className="text-[13.5px] font-semibold text-ink">Stage {s.n} — {s.name}</div>
-                {i === stageIdx && <p className="mt-1 text-[12.5px] leading-relaxed text-ink-2">{s.detail}</p>}
+                <span
+                  className={`mt-px flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[11px] font-semibold ${
+                    state === 'done'
+                      ? 'bg-verdant-wash text-verdant'
+                      : state === 'active'
+                        ? 'stage-pulse bg-accent text-white'
+                        : state === 'failed'
+                          ? 'bg-rust text-white'
+                          : 'bg-ink/5 text-ink-3'
+                  }`}
+                >
+                  {state === 'done' ? '✓' : state === 'failed' ? '✕' : s.n}
+                </span>
+                <div className="min-w-0">
+                  <div className="text-[13.5px] font-semibold text-ink">Stage {s.n} — {s.name}</div>
+                  {state === 'active' && (
+                    <>
+                      <p className="mt-1 text-[12.5px] leading-relaxed text-ink-2">{s.detail}</p>
+                      {typeof job?.totalUnits === 'number' && job.totalUnits > 0 && (
+                        <p className="mt-1 font-mono text-[11px] text-ink-3">
+                          units completed: {job.unitsDone ?? 0} / {job.totalUnits}
+                        </p>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
+        {failure && (
+          <div className="animate-rise mt-6 rounded-xl border border-rust/25 bg-rust-wash px-4 py-3.5">
+            <div className="font-mono text-[10px] font-semibold tracking-wide text-rust uppercase">generation failed</div>
+            <p className="mt-1.5 text-[12.5px] leading-relaxed text-rust">{failure}</p>
+            <div className="mt-3 flex items-center gap-2">
+              <Btn onClick={() => nav(`/scopes/${running}`)}>View failed scope</Btn>
+              <Btn
+                onClick={() => {
+                  setRunning(null)
+                  setJob(null)
+                  setFailure(null)
+                }}
+              >
+                Back to request
+              </Btn>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -190,16 +314,22 @@ export default function NewScope() {
           </div>
         )}
 
+        {launchError && (
+          <div className="animate-rise rounded-xl border border-rust/25 bg-rust-wash px-4 py-3 text-[12.5px] leading-relaxed text-rust">
+            <span className="font-mono text-[10px] font-semibold uppercase">could not start</span> — {launchError}
+          </div>
+        )}
+
         <div className="flex items-center justify-between border-t border-hairline pt-5">
           <div className="text-[11.5px] text-ink-3">
             Records engine + doctrine versions on the scope. Whole-course generation is a long job — checkpointed, resumable.
           </div>
           <Btn
             kind="primary"
-            disabled={!setId || (mode === 'standard' && !standard) || (mode === 'topic' && !topicMapped)}
-            onClick={run}
+            disabled={launching || !setId || (mode === 'standard' && !standard) || (mode === 'topic' && !topicMapped)}
+            onClick={() => void run()}
           >
-            Run generation
+            {launching ? 'Starting…' : 'Run generation'}
           </Btn>
         </div>
       </div>
