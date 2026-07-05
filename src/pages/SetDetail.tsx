@@ -584,7 +584,13 @@ export default function SetDetail() {
                           <Pill tone="night">Released items</Pill>
                           <Mono className="text-[12.5px] font-medium text-ink">{a.fileName}</Mono>
                           <span className="ml-auto">
-                            <Pill tone="accent">uploaded — items extract at publish</Pill>
+                            {jobActive ? (
+                              <Pill tone="accent">
+                                <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-accent" /> extracting items now
+                              </Pill>
+                            ) : (
+                              <Pill tone="amber">uploaded — extraction pending</Pill>
+                            )}
                           </span>
                         </div>
                         {a.usageNotes && (
