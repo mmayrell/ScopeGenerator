@@ -220,26 +220,6 @@ export default function SetsList() {
                 {blocking > 0 && <Pill tone="red">{blocking} blocking error</Pill>}
                 {unack > 0 && <Pill tone="amber">{unack} warnings to acknowledge</Pill>}
               </div>
-              <div className="mt-2 grid grid-cols-4 gap-4 text-[12.5px]">
-                <div>
-                  <div className="text-ink-3">Hierarchy</div>
-                  <div className="mt-0.5 text-ink-2">{st.hierarchyLevels.join(' → ')}</div>
-                </div>
-                <div>
-                  <div className="text-ink-3">Coding</div>
-                  <Mono className="mt-0.5 block truncate text-ink-2">{st.codingScheme.split(' · ')[0]}</Mono>
-                </div>
-                <div>
-                  <div className="text-ink-3">Artifacts</div>
-                  <div className="mt-0.5 text-ink-2">
-                    {st.artifacts.length} uploaded · {st.items.length} items
-                  </div>
-                </div>
-                <div>
-                  <div className="text-ink-3">Updated</div>
-                  <div className="mt-0.5 text-ink-2">{st.updated}</div>
-                </div>
-              </div>
             </Link>
           )
         })}
