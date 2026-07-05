@@ -594,11 +594,12 @@ export default function SetDetail() {
                 <div className="flex items-center gap-2.5">
                   <Pill tone="night">{roleLabel[a.role]}</Pill>
                   <Mono className="text-[12.5px] font-medium text-ink">{a.fileName}</Mono>
-                  {a.reviewStatus === 'blocked' && (
-                    <span className="ml-auto">
-                      <Pill tone="red">ingestion halted</Pill>
-                    </span>
-                  )}
+                  <span className="ml-auto flex shrink-0 items-center gap-2">
+                    {(a.meta?.itemCount ?? 0) > 0 && (
+                      <span className="text-[12px] text-ink-3">{a.meta?.itemCount} items</span>
+                    )}
+                    {a.reviewStatus === 'blocked' && <Pill tone="red">ingestion halted</Pill>}
+                  </span>
                 </div>
                 {(() => {
                   // Placeholder values from older set-create versions are hidden;
@@ -606,7 +607,7 @@ export default function SetDetail() {
                   const src = a.meta?.sourceDescription !== 'Uploaded release PDF' ? a.meta?.sourceDescription : undefined
                   const window = a.meta?.window !== 'declared at review' ? a.meta?.window : undefined
                   const coverage = a.meta?.coverage !== 'unknown' ? a.meta?.coverage : undefined
-                  const hasAny = src || window || coverage || a.meta?.itemCount || a.meta?.domainGradeTags
+                  const hasAny = src || window || coverage || a.meta?.domainGradeTags
                   return hasAny ? (
                     <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-ink-2">
                       {src && <span>{src}</span>}
@@ -616,7 +617,6 @@ export default function SetDetail() {
                           coverage: <Mono className={coverage === 'census' ? 'text-verdant' : 'text-amber-ink'}>{coverage}</Mono>
                         </span>
                       )}
-                      {a.meta?.itemCount ? <span>{a.meta.itemCount} items</span> : null}
                       {a.meta?.domainGradeTags && <span>tags: {a.meta.domainGradeTags.join(', ')}</span>}
                     </div>
                   ) : null
