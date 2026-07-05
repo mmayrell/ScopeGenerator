@@ -75,13 +75,9 @@ api({
       emphasisSource: 'not declared',
       published: false,
       artifacts,
-      warnings: [
-        {
-          id: `${id}-w1`,
-          text: 'Ingestion queued: parsing and indexing run next — the Standards Tree and Item Bank populate when they finish.',
-          acknowledged: false,
-        },
-      ],
+      // No warnings at creation — coverage gaps are flagged by ingestion, and only
+      // the important granular ones whose handling is genuinely unclear.
+      warnings: [],
       tree: [],
       items: [],
       lexicons: { representations: [], problemTypes: [] },

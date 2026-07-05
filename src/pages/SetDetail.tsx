@@ -387,19 +387,21 @@ export default function SetDetail() {
 
         {tab === 'Standards Tree' && (
           <div className="max-w-4xl rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
-            <div className="mb-1 flex items-center justify-between">
-              <SectionLabel>Parsed Standards — Limits Visible, Wording Verbatim</SectionLabel>
-              <span className="text-[11.5px] text-ink-3">Dual coding: canonical ID + normalized join code</span>
-            </div>
-            <p className="mb-3 text-[11.5px] leading-relaxed text-ink-3">
-              Content standards only — every most-granular standard is listed with its exact text. Practice, process,
-              and implementation standards (Mathematical Practices, TEKS process standards, and similar framework-wide
-              expectations) are excluded at ingestion.
-            </p>
             {set.tree.length === 0 ? (
-              <p className="py-6 text-center text-[13px] text-ink-3">No standards parsed yet.</p>
+              <p className="py-6 text-center text-[13.5px] text-ink-2">Resolve the Coverage Gaps to populate.</p>
             ) : (
-              set.tree.map((n) => <TreeNode key={n.code} node={n} depth={0} />)
+              <>
+                <div className="mb-1 flex items-center justify-between">
+                  <SectionLabel>Parsed Standards — Limits Visible, Wording Verbatim</SectionLabel>
+                  <span className="text-[11.5px] text-ink-3">Dual coding: canonical ID + normalized join code</span>
+                </div>
+                <p className="mb-3 text-[11.5px] leading-relaxed text-ink-3">
+                  Content standards only — every most-granular standard is listed with its exact text. Practice,
+                  process, and implementation standards (Mathematical Practices, TEKS process standards, and similar
+                  framework-wide expectations) are excluded at ingestion.
+                </p>
+                {set.tree.map((n) => <TreeNode key={n.code} node={n} depth={0} />)}
+              </>
             )}
           </div>
         )}
@@ -407,7 +409,29 @@ export default function SetDetail() {
         {tab === 'Item Bank' && (
           <div className="max-w-4xl">
             {set.items.length === 0 ? (
-              <p className="py-6 text-[13px] text-ink-3">No items ingested.</p>
+              (() => {
+                const sources = set.artifacts.filter((a) => a.role === 'items')
+                return sources.length === 0 ? (
+                  <p className="py-6 text-[13px] text-ink-3">No released-items document uploaded.</p>
+                ) : (
+                  <div className="space-y-2.5">
+                    {sources.map((a) => (
+                      <div key={a.id} className="rounded-xl border border-hairline bg-panel p-4 shadow-(--shadow-lift)">
+                        <div className="flex items-center gap-2.5">
+                          <Pill tone="night">Released items</Pill>
+                          <Mono className="text-[12.5px] font-medium text-ink">{a.fileName}</Mono>
+                          <span className="ml-auto">
+                            <Pill tone="accent">uploaded — items extract at publish</Pill>
+                          </span>
+                        </div>
+                        {a.usageNotes && (
+                          <p className="mt-2 text-[12px] leading-relaxed text-ink-3">{a.usageNotes}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )
+              })()
             ) : (
               <div className="space-y-2.5">
                 {[...new Set(set.items.map((it) => it.alignmentCode))]

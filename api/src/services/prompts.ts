@@ -380,7 +380,7 @@ User usage notes for this artifact (precedence level 5 — steering below the bo
 Output:
 - nodes: a FLAT array of every hierarchy node (grouping levels and standards), each with { code, norm, parentCode ('' for top-level nodes), label (heading text for grouping levels, '' otherwise), wording (verbatim standard text, '' for pure grouping nodes), limits (attached in-document limits, [] if none), fluency, emphasis ('not designated' unless the document states designations) }. Do NOT nest — the tree is rebuilt from parentCode.
 - representations / problemTypes: lexicon seed terms harvested from glossaries and taxonomy tables ({ term, aliases, source }).
-- coverageWarnings: gaps a reviewer must acknowledge (e.g. missing grade levels vs the declared span).
+- coverageWarnings: ONLY the important, granular gaps where the right handling is genuinely unclear — each one sentence naming the specific domain/grade/standard range affected and what is ambiguous (e.g. "Grade ${set.gradeSpan.replace(/\D/g, '') || 'N'} Geometry standards reference figures the PDF renders as images — wording may be incomplete for 3 standards"). Do NOT emit boilerplate, generic, or obviously-handled gaps (routine absences the system covers by inference, formatting notes, metadata quibbles). At most 3; [] when nothing rises to that bar.
 - usageNotes: a one-paragraph description of how the document parsed (hierarchy detected, coding scheme, where limits live).`,
   }
 }
@@ -404,7 +404,7 @@ Set standards tree (for P2 classification):${jsonBlock('tree', set.tree)}
 User usage notes for this artifact (declares source description, window, coverage): ${artifact?.usageNotes || '(none)'}
 
 Output also:
-- coverageWarnings: e.g. grade levels or domains within the set's span with no item evidence in this document.
+- coverageWarnings: ONLY the important, granular gaps where the right handling is genuinely unclear — each one sentence naming the specific domain/grade/standard range with no or contradictory item evidence and why it matters (e.g. "No items for the Fractions domain (4.NF) in this window — 40% of the set's Major work has no observed ceiling"). Do NOT emit boilerplate or obviously-handled gaps (isolated missing standards are covered by anticipated-evidence inference). At most 3; [] when nothing rises to that bar.
 - usageNotes: a one-paragraph corpus description (source, window covered, census|sample|unknown declaration and why).`,
   }
 }
@@ -426,6 +426,6 @@ Existing usage notes from the uploader: ${artifact?.usageNotes || '(none)'}
 
 Output:
 - usageNotes: an enriched usage-notes paragraph for this artifact — what the document contains, which standards/domains/grades it covers, which harvests it supports (decomposition keys / demand bands / misconceptions / worked problems / representation vocabulary), and any P6/P7 firewall cautions. This text steers the stages that consume the artifact.
-- coverageWarnings: domain × grade gaps or absent-decomposition warnings this document reveals (P10 required-acknowledgment warnings), [] if none.`,
+- coverageWarnings: ONLY the important, granular gaps where the right handling is genuinely unclear — each one sentence naming the specific domain × grade span this document fails to cover and why it matters downstream. Do NOT emit boilerplate or obviously-handled gaps (sub-part fallback and inference cover routine absences silently). At most 3; [] when nothing rises to that bar.`,
   }
 }
