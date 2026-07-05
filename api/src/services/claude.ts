@@ -59,7 +59,11 @@ function extractJson(text: string): string {
 export async function generateStructured<T>(opts: GenerateStructuredOptions): Promise<T> {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not configured')
-  const client = new Anthropic({ apiKey })
+  // 6 retries with the SDK's exponential backoff (~0.5s -> 30s+) rides out
+  // transient 429/529 capacity windows that the default 2 quick retries burn
+  // straight through (extraction died on exactly that: 'Overloaded' on every
+  // attempt within one window).
+  const client = new Anthropic({ apiKey, maxRetries: 6 })
   const model = process.env.CLAUDE_MODEL ?? 'claude-fable-5'
 
   let constrained = true

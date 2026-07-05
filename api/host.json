@@ -12,7 +12,8 @@
   "extensions": {
     "queues": {
       "maxDequeueCount": 3,
-      "batchSize": 4
+      "batchSize": 4,
+      "visibilityTimeout": "00:03:00"
     }
   },
   "extensionBundle": {
