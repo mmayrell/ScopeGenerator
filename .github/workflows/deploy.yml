@@ -33,12 +33,36 @@ jobs:
           cp -r api/dist staging/dist
           cp -r api/assets staging/assets
           cd staging && npm ci --omit=dev
-      - name: Deploy
-        uses: Azure/functions-action@v1
-        with:
-          app-name: scopegen-api-apvgm
-          package: staging
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+      # Direct Kudu zipdeploy — the same mechanism as `az functionapp deployment
+      # source config-zip`, which is proven against this app. Azure/functions-action
+      # with a publish profile mishandles WEBSITE_RUN_FROM_PACKAGE on Windows
+      # Consumption apps (it cannot manage app settings without ARM access) and
+      # left the site serving Kudu's "Site Under Construction" page (503s).
+      - name: Deploy (Kudu zipdeploy)
+        env:
+          PUBLISH_PROFILE: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd staging && zip -qr ../package.zip .)
+          creds=$(python3 -c 'import os,xml.etree.ElementTree as ET;r=ET.fromstring(os.environ["PUBLISH_PROFILE"]);p=next(x for x in r if x.get("publishMethod")=="ZipDeploy");print(p.get("userName")+":"+p.get("userPWD"))')
+          echo "::add-mask::$creds"
+          scm="https://scopegen-api-apvgm.scm.azurewebsites.net"
+          loc=$(curl -sSf -X POST -u "$creds" --data-binary @package.zip -D - -o /dev/null \
+                "$scm/api/zipdeploy?isAsync=true&Deployer=GitHubActions" \
+                | grep -i '^location:' | tr -d '\r' | cut -d' ' -f2)
+          echo "Deployment accepted; polling status"
+          for i in $(seq 1 90); do
+            body=$(curl -sSf -u "$creds" "$loc")
+            complete=$(echo "$body" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("complete"))')
+            if [ "$complete" = "True" ]; then
+              status=$(echo "$body" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("status"))')
+              if [ "$status" = "4" ]; then echo "Deployment succeeded"; exit 0; fi
+              echo "Deployment finished with status $status (expected 4)"; echo "$body"; exit 1
+            fi
+            sleep 10
+          done
+          echo "Timed out waiting for deployment to complete"; exit 1
 
   web:
     name: Deploy Static Web App
