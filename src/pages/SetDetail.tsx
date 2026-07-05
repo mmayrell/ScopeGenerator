@@ -13,7 +13,7 @@ const roleLabel: Record<ArtifactRole, string> = {
   progression: 'Progressions / vertical alignment',
 }
 
-const tabs = ['Configuration', 'Artifacts', 'Standards Tree', 'Item Bank', 'Alignment Queue', 'Lexicons'] as const
+const tabs = ['Configuration', 'Artifacts', 'Standards Tree', 'Item Bank', 'Alignment Issues', 'Lexicons'] as const
 
 /**
  * Deterministic default resolution per gap class: the same warning text always
@@ -342,7 +342,7 @@ export default function SetDetail() {
       tab: 'Standards Tree',
     },
     {
-      label: 'Resolve Conflicts & Alignments',
+      label: 'Resolve Alignment Issues',
       detail:
         !extractionDone || extractActive
           ? 'after extraction'
@@ -350,7 +350,7 @@ export default function SetDetail() {
             ? `${unack.length} conflict${unack.length === 1 ? '' : 's'} · ${aiQueue.length} alignment${aiQueue.length === 1 ? '' : 's'} left`
             : 'all resolved',
       state: !extractionDone || extractActive ? 'pending' : resolveOutstanding > 0 ? 'active' : 'done',
-      tab: 'Alignment Queue',
+      tab: 'Alignment Issues',
     },
     {
       label: 'Build Lexicons',
@@ -586,7 +586,7 @@ export default function SetDetail() {
             }`}
           >
             {t}
-            {t === 'Alignment Queue' && aiQueue.length > 0 && (
+            {t === 'Alignment Issues' && aiQueue.length > 0 && (
               <span className="ml-1.5 rounded-full bg-amber-wash px-1.5 py-px font-mono text-[10px] text-amber-ink">{aiQueue.length}</span>
             )}
             {tab === t && <span className="absolute inset-x-1 -bottom-px h-[2px] rounded-full bg-accent" />}
@@ -766,7 +766,7 @@ export default function SetDetail() {
           </div>
         )}
 
-        {tab === 'Alignment Queue' && (
+        {tab === 'Alignment Issues' && (
           <div className="max-w-4xl space-y-3">
             {aiQueue.length === 0 ? (
               jobActive ? (
