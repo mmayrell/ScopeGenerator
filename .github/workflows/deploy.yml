@@ -113,7 +113,9 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: Build
         env:
-          VITE_API_BASE: ${{ vars.VITE_API_BASE }}
+          # Falls back to the provisioned Function App so the SPA never ships
+          # pointing at same-origin /api (which the SWA does not serve).
+          VITE_API_BASE: ${{ vars.VITE_API_BASE || 'https://scopegen-api-apvgm.azurewebsites.net/api' }}
         run: |
           npm ci
           npm run build

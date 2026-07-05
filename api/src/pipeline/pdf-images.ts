@@ -1,5 +1,10 @@
-import { createCanvas, loadImage } from '@napi-rs/canvas'
-import { pdfToPng } from 'pdf-to-png-converter'
+// The canvas/pdf-rendering stack is NATIVE (@napi-rs/canvas prebuilt binaries)
+// and platform-specific. It is loaded lazily inside the functions below so a
+// missing/mismatched binary degrades screenshots (already best-effort in the
+// extract step) instead of throwing at module load — which would prevent the
+// Functions host from registering ANY endpoint.
+const canvasStack = () => import('@napi-rs/canvas')
+const pdfRenderer = () => import('pdf-to-png-converter')
 
 /** Percentage-based box (0–100 of page width/height) as reported by extraction. */
 export interface PctBox {
@@ -21,6 +26,7 @@ export async function renderPages(pdf: Buffer, pages: number[]): Promise<Map<num
   const wanted = [...new Set(pages.filter((p) => Number.isInteger(p) && p >= 1))].sort((a, b) => a - b)
   const out = new Map<number, Buffer>()
   if (wanted.length === 0) return out
+  const { pdfToPng } = await pdfRenderer()
   // Pages above the document page count are silently ignored by the converter.
   const rendered = await pdfToPng(new Uint8Array(pdf), {
     viewportScale: RENDER_SCALE,
@@ -38,6 +44,7 @@ export async function renderPages(pdf: Buffer, pages: number[]): Promise<Map<num
  * is never empty. Returns PNG bytes.
  */
 export async function cropRegion(pagePng: Buffer, box: PctBox | undefined): Promise<Buffer> {
+  const { createCanvas, loadImage } = await canvasStack()
   const img = await loadImage(pagePng)
   const pw = img.width
   const ph = img.height
