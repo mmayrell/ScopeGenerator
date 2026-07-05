@@ -232,7 +232,7 @@ function RegisterCard({
           <SectionLabel>Exemplar Asset Register</SectionLabel>
           <p className="mt-1 max-w-2xl text-[12.5px] text-ink-2">
             Every document linked from the engine and doctrine BrainLifts. Resolved assets serve as few-shot exemplars
-            in atomization and card generation; unresolved entries are flagged, non-blocking.
+            in atomization and card generation.
           </p>
         </div>
         <Btn onClick={() => { setDraft(register); setEditing(true) }}>
