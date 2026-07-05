@@ -467,7 +467,6 @@ export default function SetDetail() {
           <div className="mt-2.5 flex items-center gap-2 text-[12.5px] text-ink-2">
             <span className="stage-pulse h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
             <span className="font-medium">{job.stage}</span>
-            {job.log.length > 0 && <span className="truncate text-ink-3">— {job.log[job.log.length - 1].detail}</span>}
           </div>
         </div>
       )}
