@@ -164,7 +164,7 @@ function TreeNode({ node, depth }: { node: StandardNode; depth: number }) {
           {node.limits?.map((lim, i) => (
             <div key={i} className="mt-1.5 flex max-w-3xl items-start gap-1.5 rounded-lg border border-rust/20 bg-rust-wash px-2.5 py-1.5">
               <span className="mt-px font-mono text-[10px] font-semibold text-rust uppercase">limit</span>
-              <span className="text-[12px] leading-relaxed text-rust">{lim} <span className="opacity-70">Carries full P1 force.</span></span>
+              <span className="text-[12px] leading-relaxed text-rust">{lim}</span>
             </div>
           ))}
         </div>
