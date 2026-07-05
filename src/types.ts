@@ -80,6 +80,7 @@ export interface StandardSet {
   codingNotes: string
   emphasisSource: string
   published: boolean
+  ingesting?: boolean
   artifacts: Artifact[]
   warnings: CoverageWarning[]
   tree: StandardNode[]

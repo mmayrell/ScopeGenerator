@@ -25,6 +25,8 @@ interface Store {
   sets: StandardSet[]
   scopes: Scope[]
   createSet: (name: string, uploads: NewSetUploads) => string
+  finishIngestion: (setId: string) => void
+  deleteSet: (setId: string) => void
   acknowledgeWarning: (setId: string, warningId: string) => void
   confirmAlignment: (setId: string, itemId: string) => void
   resolveArtifact: (setId: string, artifactId: string) => void
@@ -91,21 +93,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         {
           id,
           name,
-          subject: 'To be configured',
-          gradeSpan: 'To be configured',
-          hierarchyLevels: ['Grade', 'Domain', 'Cluster', 'Standard'],
-          codingScheme: 'Declared in set configuration at review',
+          subject: 'Mathematics',
+          gradeSpan: 'Detecting…',
+          hierarchyLevels: [],
+          codingScheme: 'Detected at ingestion',
           codingNotes: '',
-          emphasisSource: 'not declared',
+          emphasisSource: 'detected at ingestion',
           published: false,
+          ingesting: true,
           artifacts,
-          warnings: [
-            {
-              id: `${id}-w1`,
-              text: 'Ingestion queued: parsing and indexing run next — the Standards Tree and Item Bank populate when they finish.',
-              acknowledged: false,
-            },
-          ],
+          warnings: [],
           tree: [],
           items: [],
           lexicons: { representations: [], problemTypes: [] },
@@ -114,6 +111,76 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       ])
       return id
     },
+
+    finishIngestion: (setId) =>
+      patchSet(setId, (s) => {
+        if (!s.ingesting) return s
+        const template = seedSets[0]
+        const isTeks = /teks|staar|texas/i.test(s.name + s.artifacts.map((a) => a.fileName).join(' '))
+        const gradeMatch = /grade\s*(\d+)/i.exec(s.name)
+        if (isTeks) {
+          return {
+            ...s,
+            ingesting: false,
+            gradeSpan: gradeMatch ? `Grade ${gradeMatch[1]}` : 'Grade 6',
+            hierarchyLevels: ['Grade', 'Strand', 'Knowledge & Skills', 'Expectation'],
+            codingScheme: 'Canonical: 6.3(C) · Normalized join: 6.3C',
+            codingNotes: 'Codes like 6.3(C) normalize to 6.3C. Limits live in the wording’s including/excluding clauses.',
+            emphasisSource: 'Readiness / Supporting designations (assessed-curriculum documents)',
+            tree: seedSets[1].tree,
+            items: [],
+            lexicons: {
+              representations: [
+                { term: 'strip diagram', aliases: ['bar model'], source: 'vertical alignment documents' },
+                { term: 'number line', aliases: [], source: 'standards wording, 6.2C' },
+                { term: 'percent bar', aliases: ['10 by 10 grid'], source: 'standards wording, 6.4F' },
+              ],
+              problemTypes: [
+                { term: 'bare computation', aliases: [], source: 'released-form triage' },
+                { term: 'real-world context', aliases: ['contextual'], source: 'standards wording' },
+              ],
+            },
+            warnings: [
+              {
+                id: `${s.id}-w1`,
+                text: 'No item evidence extracted from the uploaded release for this grade — components will run on anticipated-evidence inference until items are added.',
+                acknowledged: false,
+              },
+            ],
+            updated: today(),
+          }
+        }
+        return {
+          ...s,
+          ingesting: false,
+          gradeSpan: gradeMatch ? `Grade ${gradeMatch[1]}` : template.gradeSpan,
+          hierarchyLevels: template.hierarchyLevels,
+          codingScheme: template.codingScheme,
+          codingNotes: template.codingNotes,
+          emphasisSource: template.emphasisSource,
+          tree: template.tree,
+          items: template.items.map((it) => ({ ...it })),
+          lexicons: {
+            representations: [...template.lexicons.representations],
+            problemTypes: [...template.lexicons.problemTypes],
+          },
+          warnings: [
+            {
+              id: `${s.id}-w1`,
+              text: 'Domain × grade progression gap: MD (Measurement & Data) has no progression coverage in the uploaded corpus.',
+              acknowledged: false,
+            },
+            {
+              id: `${s.id}-w2`,
+              text: 'No item evidence for the Geometry domain in the uploaded release windows.',
+              acknowledged: false,
+            },
+          ],
+          updated: today(),
+        }
+      }),
+
+    deleteSet: (setId) => setSets((prev) => prev.filter((s) => s.id !== setId)),
 
     acknowledgeWarning: (setId, warningId) =>
       patchSet(setId, (s) => ({

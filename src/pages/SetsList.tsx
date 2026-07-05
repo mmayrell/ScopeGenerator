@@ -133,8 +133,9 @@ function NewSetModal({ onClose }: { onClose: () => void }) {
 
         <div className="flex items-center justify-between border-t border-hairline pt-4">
           <span className="max-w-80 text-[11.5px] leading-snug text-ink-3">
-            One or more PDFs per role, each with your notes on how the documents should be used. Ingestion runs at
-            publish time.
+            One or more PDFs per role, each with your notes on how the documents should be used. Ingestion runs as soon
+            as you create the set — configuration, standards tree, item bank, alignment queue, and lexicons are
+            extracted from these documents.
           </span>
           <Btn
             kind="primary"
@@ -185,7 +186,15 @@ export default function SetsList() {
             >
               <div className="flex items-center gap-3">
                 <h2 className="font-display text-[17px] font-semibold text-ink group-hover:text-accent-deep">{st.name}</h2>
-                {st.published ? <Pill tone="green">published</Pill> : <Pill tone="amber">draft</Pill>}
+                {st.ingesting ? (
+                  <Pill tone="accent">
+                    <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-accent" /> ingesting
+                  </Pill>
+                ) : st.published ? (
+                  <Pill tone="green">published</Pill>
+                ) : (
+                  <Pill tone="amber">draft</Pill>
+                )}
                 {blocking > 0 && <Pill tone="red">{blocking} blocking error</Pill>}
                 {unack > 0 && <Pill tone="amber">{unack} warnings to acknowledge</Pill>}
               </div>
