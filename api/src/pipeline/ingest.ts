@@ -2,38 +2,33 @@ import { InvocationContext } from '@azure/functions'
 import {
   Artifact,
   CoverageWarning,
-  ItemRecord,
   JobMessage,
   LexiconTerm,
   StandardNode,
   StandardSet,
 } from '../domain/types'
-import { dataContainer, uploadsContainer } from '../data/clients'
+import { uploadsContainer } from '../data/clients'
 import { getSet, saveSet } from '../data/entities'
 import { getJob, mutateJob, pushLog } from '../data/jobs'
 import { generateStructured } from '../services/claude'
 import {
   ingestConflictsPrompt,
-  ingestItemsPrompt,
   ingestLexiconPrompt,
   ingestNotesPrompt,
   ingestStandardsPrompt,
 } from '../services/prompts'
 import {
   INGEST_CONFLICTS_SCHEMA,
-  INGEST_ITEMS_SCHEMA,
   INGEST_LEXICON_SCHEMA,
   INGEST_NOTES_SCHEMA,
   INGEST_STANDARDS_SCHEMA,
   WireIngestConflicts,
-  WireIngestItems,
   WireIngestLexicon,
   WireIngestNotes,
   WireIngestStandards,
   WireStandardNode,
 } from '../services/schemas'
 import { today } from '../shared/util'
-import { cropRegion, renderPages } from './pdf-images'
 import { inspectPdf, partFileName, splitPdfWithin } from './pdf-split'
 
 // 23MB raw: base64 expands the body ~4/3x and the Claude API request cap is
@@ -41,10 +36,6 @@ import { inspectPdf, partFileName, splitPdfWithin } from './pdf-split'
 // let 24–30MB PDFs burn all three queue attempts on guaranteed 4xx responses.
 const MAX_PDF_BYTES = 23 * 1024 * 1024
 const MAX_PDF_PAGES = 100
-// Items documents split much smaller: 100 pages of released items (~150 items)
-// overflow the 64k output cap ('truncated (max_tokens)'); ~40 pages ≈ 60 items
-// keeps every extraction call comfortably inside it, and faster per attempt.
-const ITEMS_SPLIT_PAGES = 40
 
 export const itemImageBlobPath = (setId: string, itemId: string): string =>
   `sets/${setId}/item-images/${itemId}.png`
@@ -126,14 +117,13 @@ async function splitOversizedUploads(
       out.set(blob.name, blob)
       continue
     }
-    const pageCap = blob.role === 'items' ? ITEMS_SPLIT_PAGES : MAX_PDF_PAGES
-    if (inspection.pages <= pageCap && buffer.length <= MAX_PDF_BYTES) {
+    if (inspection.pages <= MAX_PDF_PAGES && buffer.length <= MAX_PDF_BYTES) {
       out.set(blob.name, blob)
       continue
     }
     let parts
     try {
-      parts = await splitPdfWithin(buffer, pageCap, MAX_PDF_BYTES)
+      parts = await splitPdfWithin(buffer, MAX_PDF_PAGES, MAX_PDF_BYTES)
     } catch (e) {
       ctx.warn(`extract: ${blob.fileName} needs splitting but pdf-lib failed — blocking path applies`, e)
       out.set(blob.name, blob)
@@ -213,10 +203,10 @@ async function settleCancelled(jobId: string, phase: 'extract' | 'lexicon'): Pro
 
 /**
  * Kind `ingest`, step `extract` (runs automatically once the uploads land):
- * per uploaded PDF, a Claude document call extracts standards → StandardNode
- * tree with limits; items → ItemRecord[] WITH question screenshots (page +
- * bounding box → rendered + cropped PNGs in blob storage);
- * unpacking/progression → usage-notes enrichment. A final cross-document pass
+ * the standards document is parsed into the StandardNode tree with limits,
+ * and unpacking/progression documents enrich usage notes. Released-items
+ * documents are NOT extracted here — they are held as artifacts for scope
+ * generation. A final cross-document pass
  * finds scope conflicts between the documents and consolidates coverage gaps —
  * each warning carrying the AI's suggested default resolution. The set is NOT
  * published: the user resolves the warnings, then the lexicon step runs.
@@ -234,19 +224,21 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
     pushLog(r, `Preparing ${blobs.length} uploaded document(s) for ${set.name}`)
   })
 
-  // Documents over the 100-page limit are split into ≤100-page parts here.
+  // Documents over the 100-page limit are split into ≤100-page parts here
+  // (items included — the lexicon build attaches them and faces the same caps).
   blobs = await splitOversizedUploads(set, blobs, msg.jobId, ctx)
 
-  // The standards tree is built FIRST: it is the boundary authority, and the
-  // item extraction that follows classifies every item against it (P2). Items
-  // come next, then the interpretive documents.
-  const rolePriority: Record<string, number> = { standards: 0, items: 1, unpacking: 2, progression: 3 }
+  // Released-items documents are NOT extracted at ingestion — they are held as
+  // artifacts for scope generation (and mined by the lexicon build). Everything
+  // else processes standards-first: the tree is the boundary authority.
+  blobs = blobs.filter((b) => b.role !== 'items')
+  const rolePriority: Record<string, number> = { standards: 0, unpacking: 1, progression: 2 }
   blobs.sort((a, b) => (rolePriority[a.role] ?? 9) - (rolePriority[b.role] ?? 9))
 
   await mutateJob(msg.jobId, (r) => {
     r.totalStages = blobs.length + 1 // one per document + the conflict pass
-    r.stage = 'Extraction — Standards Tree & Item Bank'
-    pushLog(r, `Extracting ${blobs.length} document(s), standards first`)
+    r.stage = 'Extraction — Standards Tree'
+    pushLog(r, `Extracting ${blobs.length} document(s), standards first; released items held for scope generation`)
   })
 
   // Resumable extraction (the Consumption plan kills any execution at 10
@@ -265,11 +257,8 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
   // source/test/year/itemNumber, and enrichArtifact keeps the human part of
   // artifact usage notes. On a RESUME, already-extracted state is kept.
   const priorWarnings = new Map(set.warnings.map((w) => [w.text, w]))
-  const confirmedItemKeys = new Set(
-    set.items.filter((it) => it.confidence === 'confirmed').map((it) => itemKey(it)),
-  )
   if (freshStart) {
-    set.items = []
+    set.items = [] // the item bank is no longer built at ingestion
     set.warnings = set.warnings.filter(
       (w) => !w.id.startsWith(`${set.id}-ingw-`) && !w.id.startsWith(`${set.id}-ingfail-`),
     )
@@ -335,61 +324,6 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
       if (out.setMeta.grade.trim()) set.gradeSpan = out.setMeta.grade.trim()
       if (out.setMeta.sourceOrganization.trim()) set.sourceOrganization = out.setMeta.sourceOrganization.trim()
       if (out.setMeta.publicationYear.trim()) set.publicationYear = out.setMeta.publicationYear.trim()
-      enrichArtifact(artifact, out.usageNotes)
-      candidateWarnings.push(...out.coverageWarnings)
-    } else if (blob.role === 'items') {
-      const out = await generateStructured<WireIngestItems>({
-        ...ingestItemsPrompt(set, artifact),
-        schema: INGEST_ITEMS_SCHEMA,
-        documents: [base64],
-        effort: 'medium',
-      })
-      const startIndex = set.items.length
-      const items: ItemRecord[] = out.items.map((it, i) => ({
-        id: `it-${set.id}-${startIndex + i + 1}`,
-        source: it.source,
-        test: it.test,
-        year: it.year,
-        itemNumber: it.itemNumber,
-        alignmentCode: it.alignmentCode,
-        // A human-confirmed alignment survives re-ingestion of the same item.
-        confidence: confirmedItemKeys.has(itemKey(it)) ? 'confirmed' : it.confidence,
-        completeness: it.completeness,
-        itemType: it.itemType,
-        responseFormat: it.responseFormat,
-        representations: it.representations,
-        problemTypes: it.problemTypes,
-        demandProfile: it.demandProfile,
-        scopeClass: it.scopeClass,
-        hasKey: it.hasKey,
-        stem: it.stem,
-        ...(it.choices.length > 0 ? { choices: it.choices } : {}),
-        ...(it.page >= 1 ? { page: it.page } : {}),
-      }))
-
-      // Question screenshots: render only the pages items landed on, crop each
-      // item's reported region (full-page fallback), store PNGs in blob storage.
-      await mutateJob(msg.jobId, (r) => pushLog(r, `Capturing ${items.length} question screenshot(s) from ${blob.fileName}`))
-      try {
-        const pageMap = await renderPages(buffer, out.items.map((it) => it.page))
-        for (let i = 0; i < items.length; i++) {
-          const pagePng = pageMap.get(out.items[i].page)
-          if (!pagePng) continue
-          const png = await cropRegion(pagePng, out.items[i].box)
-          const path = itemImageBlobPath(set.id, items[i].id)
-          await dataContainer()
-            .getBlockBlobClient(path)
-            .uploadData(png, { blobHTTPHeaders: { blobContentType: 'image/png' } })
-          items[i].imagePath = path
-        }
-      } catch (e) {
-        // Screenshots are best-effort (P10 format tolerance): text stand-ins
-        // keep the item bank usable when rendering fails.
-        ctx.warn(`extract: screenshot capture failed for ${blob.fileName} — text stand-ins only`, e)
-      }
-
-      set.items.push(...items)
-      if (artifact?.meta) artifact.meta.itemCount = items.length
       enrichArtifact(artifact, out.usageNotes)
       candidateWarnings.push(...out.coverageWarnings)
     } else if (blob.role === 'unpacking' || blob.role === 'progression') {
@@ -464,11 +398,11 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
     pushLog(
       r,
       blocked === 0
-        ? `Extraction complete: tree ${set.tree.length > 0 ? 'parsed' : 'empty'}, ${set.items.length} item(s) banked, ${set.warnings.length} conflict(s)/gap(s) to resolve`
+        ? `Extraction complete: tree ${set.tree.length > 0 ? 'parsed' : 'empty'}, ${set.warnings.length} conflict(s)/gap(s) to resolve`
         : `Extraction finished with ${blocked} blocking artifact error(s) — resolve them and re-run`,
     )
   })
-  ctx.log(`ingest/extract ${msg.jobId}: ${blobs.length} blobs, ${set.items.length} items, ${set.warnings.length} warnings, ${blocked} blocked`)
+  ctx.log(`ingest/extract ${msg.jobId}: ${blobs.length} blobs, ${set.warnings.length} warnings, ${blocked} blocked`)
 }
 
 /**
@@ -594,11 +528,6 @@ function findArtifact(set: StandardSet, role: string, fileName: string): Artifac
     set.artifacts.find((a) => a.fileName === fileName && wanted.includes(a.role)) ??
     set.artifacts.find((a) => a.fileName === fileName)
   )
-}
-
-/** Natural key that identifies the same released item across ingestion runs. */
-function itemKey(it: { source: string; test: string; year: number; itemNumber: number }): string {
-  return `${it.source}|${it.test}|${it.year}|${it.itemNumber}`
 }
 
 function blockArtifact(artifact: Artifact | undefined, error: string): void {

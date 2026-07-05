@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { api, type JobStatus } from '../api'
 import { useStore } from '../store'
-import { Btn, ItemShot, Modal, Mono, Pill, Progress, SectionLabel } from '../ui'
-import type { ArtifactRole, ItemRecord, StandardNode } from '../types'
+import { Btn, Modal, Mono, Pill, Progress, SectionLabel } from '../ui'
+import type { ArtifactRole, StandardNode } from '../types'
 
 const roleLabel: Record<ArtifactRole, string> = {
   standards: 'Official standards document',
@@ -13,7 +13,7 @@ const roleLabel: Record<ArtifactRole, string> = {
   progression: 'Progressions / vertical alignment',
 }
 
-const tabs = ['Configuration', 'Artifacts', 'Standards Tree', 'Item Bank', 'Alignment Issues', 'Lexicon'] as const
+const tabs = ['Configuration', 'Artifacts', 'Standards Tree', 'Alignment Issues', 'Lexicon'] as const
 
 /**
  * Deterministic default resolution per gap class: the same warning text always
@@ -169,98 +169,6 @@ function TreeNode({ node, depth }: { node: StandardNode; depth: number }) {
         </div>
       </div>
       {open && node.children?.map((c) => <TreeNode key={c.code} node={c} depth={depth + 1} />)}
-    </div>
-  )
-}
-
-/**
- * Item alignments join on the set's normalized scheme, never source variants:
- * "NY-4.MD.3" and canonical "4.MD.A.3" both group under "4.MD.3" — state
- * prefixes stripped, cluster letters merged (applied per code for
- * multi-aligned items).
- */
-function normalizeAlignment(code: string): string {
-  return code
-    .split(',')
-    .map((c) =>
-      c
-        .trim()
-        .replace(/^[A-Za-z]{1,4}-(?=\d)/, '')
-        .replace(/^(\d+\.[A-Z]{1,4})\.[A-Z]\.(?=\d)/, '$1.'),
-    )
-    .join(', ')
-}
-
-/** Standards-document order of every normalized code — the instructional sequence proxy. */
-function treeOrder(nodes: StandardNode[], map: Map<string, number> = new Map()): Map<string, number> {
-  for (const n of nodes) {
-    if (n.wording && !map.has(n.norm)) map.set(n.norm, map.size)
-    if (n.children) treeOrder(n.children, map)
-  }
-  return map
-}
-
-/**
- * A multi-aligned item is assigned to the LATEST standard in the instructional
- * sequence — the first point at which students would reasonably possess every
- * prerequisite the item requires — never to an earlier standard whose success
- * depends on content taught later. Tree order decides; unknown codes fall back
- * to numeric-aware ordering.
- */
-function governingCode(alignmentCode: string, order: Map<string, number>): string {
-  const codes = normalizeAlignment(alignmentCode)
-    .split(', ')
-    .filter((c) => c.length > 0)
-  if (codes.length <= 1) return codes[0] ?? alignmentCode
-  return codes.reduce((best, c) => {
-    const bi = order.get(best) ?? -1
-    const ci = order.get(c) ?? -1
-    if (ci !== bi) return ci > bi ? c : best
-    return c.localeCompare(best, undefined, { numeric: true }) > 0 ? c : best
-  })
-}
-
-function findWording(nodes: StandardNode[], norm: string): string | undefined {
-  for (const n of nodes) {
-    if (n.norm === norm && n.wording) return n.wording
-    const hit = n.children && findWording(n.children, norm)
-    if (hit) return hit
-  }
-  return undefined
-}
-
-function ItemGroup({ code, items, wording, setId }: { code: string; items: ItemRecord[]; wording?: string; setId: string }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="overflow-hidden rounded-xl border border-hairline bg-panel shadow-(--shadow-lift)">
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-ink/[0.02]"
-      >
-        <svg
-          width="10"
-          height="10"
-          viewBox="0 0 10 10"
-          fill="none"
-          className={`shrink-0 text-ink-3 transition-transform ${open ? 'rotate-90' : ''}`}
-        >
-          <path d="M3 1.5L7 5 3 8.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        <Mono className="shrink-0 text-[13px] font-semibold text-accent-deep">{code}</Mono>
-        {wording && <span className="min-w-0 truncate text-[12px] text-ink-3">{wording}</span>}
-        <span className="ml-auto shrink-0">
-          <Pill tone="neutral">
-            {items.length} item{items.length === 1 ? '' : 's'}
-          </Pill>
-        </span>
-      </button>
-      {open && (
-        <div className="animate-rise space-y-3 border-t border-hairline bg-paper/50 p-4">
-          {items.map((it) => (
-            <ItemShot key={it.id} item={it} imageUrl={it.imagePath ? api.itemImageUrl(setId, it.id) : undefined} />
-          ))}
-        </div>
-      )}
     </div>
   )
 }
@@ -466,7 +374,7 @@ export default function SetDetail() {
         <div className="animate-rise mt-6 rounded-2xl border border-accent/25 bg-accent-wash/40 p-5 shadow-(--shadow-lift)">
           <div className="flex items-center justify-between gap-4">
             <SectionLabel>
-              {jobPhase === 'lexicon' ? 'AI Lexicon Build' : 'AI Extraction — Standards Tree, Item Bank & Conflict Check'}
+              {jobPhase === 'lexicon' ? 'AI Lexicon Build' : 'AI Extraction — Standards Tree & Conflict Check'}
             </SectionLabel>
             <div className="flex items-center gap-3">
               <Mono className="text-[11px] text-ink-3">
@@ -761,68 +669,6 @@ export default function SetDetail() {
                 </p>
                 {set.tree.map((n) => <TreeNode key={n.code} node={n} depth={0} />)}
               </>
-            )}
-          </div>
-        )}
-
-        {tab === 'Item Bank' && (
-          <div className="max-w-4xl">
-            {set.items.length === 0 ? (
-              (() => {
-                if (jobActive) {
-                  return (
-                    <div className="rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
-                      <p className="py-6 text-center text-[13.5px] text-ink-2">
-                        AI extraction is running — the item bank populates when it completes.
-                      </p>
-                    </div>
-                  )
-                }
-                const sources = set.artifacts.filter((a) => a.role === 'items')
-                return sources.length === 0 ? (
-                  <p className="py-6 text-[13px] text-ink-3">No released-items document uploaded.</p>
-                ) : (
-                  <div className="space-y-2.5">
-                    {sources.map((a) => (
-                      <div key={a.id} className="rounded-xl border border-hairline bg-panel p-4 shadow-(--shadow-lift)">
-                        <div className="flex items-center gap-2.5">
-                          <Pill tone="night">Released items</Pill>
-                          <Mono className="text-[12.5px] font-medium text-ink">{a.fileName}</Mono>
-                          <span className="ml-auto">
-                            {jobActive ? (
-                              <Pill tone="accent">
-                                <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-accent" /> extracting items now
-                              </Pill>
-                            ) : (
-                              <Pill tone="amber">uploaded — extraction pending</Pill>
-                            )}
-                          </span>
-                        </div>
-                        {a.usageNotes && (
-                          <p className="mt-2 text-[12px] leading-relaxed text-ink-3">{a.usageNotes}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )
-              })()
-            ) : (
-              <div className="space-y-2.5">
-                {(() => {
-                  const order = treeOrder(set.tree)
-                  return [...new Set(set.items.map((it) => governingCode(it.alignmentCode, order)))]
-                    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-                    .map((code) => (
-                      <ItemGroup
-                        key={code}
-                        code={code}
-                        items={set.items.filter((it) => governingCode(it.alignmentCode, order) === code)}
-                        wording={findWording(set.tree, code)}
-                        setId={set.id}
-                      />
-                    ))
-                })()}
-              </div>
             )}
           </div>
         )}

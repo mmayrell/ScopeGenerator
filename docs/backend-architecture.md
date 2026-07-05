@@ -198,6 +198,10 @@ Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is
   next checkpoint and settles the job as `cancelled` (new JobStatus state). `enqueueIngest`
   supersedes provably-dead jobs (no log entry in 15 minutes, or stop-requested and idle 3+
   minutes) instead of returning them forever.
+- Released-items documents are NOT extracted at ingestion: they are held as artifacts for scope
+  generation (the lexicon build still attaches them for vocabulary mining). The item bank, item
+  screenshots, and alignment confirmations populate later, from scope generation; the
+  `/item-image` endpoint and screenshot pipeline are retained for that stage.
 - `ingest` (`extract`, Stage 1a): uploads exceeding the 100-page ingestion limit are first split
   automatically into consecutive ≤100-page part documents (pdf-lib; a 144-page PDF becomes
   "… (pages 1-100).pdf" and "… (pages 101-144).pdf"): parts re-uploaded, original blob removed, the
