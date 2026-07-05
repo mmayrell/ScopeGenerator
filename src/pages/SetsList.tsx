@@ -82,7 +82,7 @@ function UploadSlot({
         value={value.notes}
         onChange={(e) => onNotes(e.target.value)}
         rows={2}
-        placeholder="Notes on how to use this document — e.g. “Only use the Grade 5 content.”"
+        placeholder="Notes on how to use this document"
         className="mt-3 w-full rounded-lg border border-hairline bg-paper px-3 py-2 text-[12.5px] leading-relaxed outline-none placeholder:text-ink-3 focus:border-accent/40"
       />
     </div>
