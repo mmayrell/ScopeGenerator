@@ -157,7 +157,6 @@ function TreeNode({ node, depth }: { node: StandardNode; depth: number }) {
           <div className="flex flex-wrap items-center gap-2">
             <Mono className="text-[12px] font-semibold text-accent-deep">{node.code}</Mono>
             {node.emphasis && node.emphasis !== 'not designated' && <Pill tone="accent">{node.emphasis}</Pill>}
-            {node.fluency && <Pill tone="amber">fluency — P8</Pill>}
             {node.label && <span className="text-[13px] font-medium text-ink">{node.label}</span>}
           </div>
           {node.wording && <p className="mt-0.5 max-w-3xl font-display text-[13px] leading-relaxed text-ink-2">{node.wording}</p>}
