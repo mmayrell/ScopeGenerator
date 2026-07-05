@@ -33,7 +33,8 @@ export class NotFoundError extends Error {
 export interface JobStatus {
   jobId: string
   kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest'
-  status: 'queued' | 'running' | 'complete' | 'failed'
+  status: 'queued' | 'running' | 'complete' | 'failed' | 'cancelled'
+  cancelRequested?: boolean
   stage: string // human-readable current stage, e.g. "Stage 3-4 - Atomization & sequencing"
   stagesDone: number
   totalStages: number
@@ -142,6 +143,8 @@ export const api = {
     request<{ jobId: string }>('POST', `/sets/${encodeURIComponent(setId)}/build-lexicon`),
 
   getSetJob: (setId: string) => request<JobStatus>('GET', `/sets/${encodeURIComponent(setId)}/job`),
+
+  stopIngest: (setId: string) => request<{ jobId: string }>('POST', `/sets/${encodeURIComponent(setId)}/stop-ingest`),
 
   createScope: (setId: string, mode: 'course' | 'standard' | 'topic', params: string) =>
     request<{ id: string; jobId: string }>('POST', '/scopes', { setId, mode, params }),

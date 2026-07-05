@@ -315,7 +315,9 @@ export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-pro
 export interface JobStatus {
   jobId: string
   kind: JobKind
-  status: 'queued' | 'running' | 'complete' | 'failed'
+  status: 'queued' | 'running' | 'complete' | 'failed' | 'cancelled'
+  /** Set by POST /sets/{id}/stop-ingest; the worker halts at its next checkpoint. */
+  cancelRequested?: boolean
   stage: string // human-readable current stage, e.g. "Stage 3–4 — Atomization & sequencing"
   stagesDone: number // 0..totalStages
   totalStages: number

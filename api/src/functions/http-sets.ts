@@ -256,6 +256,27 @@ api({
   },
 })
 
+// POST /api/sets/{id}/stop-ingest → { jobId } (202) — flags the active ingest
+// job; the worker halts at its next checkpoint (an in-flight AI call finishes
+// first) and settles the job as 'cancelled'.
+api({
+  name: 'set-stop-ingest',
+  methods: ['POST'],
+  route: 'sets/{id}/stop-ingest',
+  handler: async (req) => {
+    const id = requireParam(req, 'id')
+    const job = await latestJobForSet(id)
+    if (!job || job.kind !== 'ingest' || (job.status !== 'queued' && job.status !== 'running')) {
+      throw new HttpError(409, 'no active ingest job to stop')
+    }
+    await mutateJob(job.jobId, (r) => {
+      r.cancelRequested = true
+      pushLog(r, 'Stop requested — halting at the next checkpoint')
+    })
+    return ok({ jobId: job.jobId }, 202)
+  },
+})
+
 // GET /api/sets/{id}/job → JobStatus — polled during extraction/lexicon builds
 api({
   name: 'set-job',

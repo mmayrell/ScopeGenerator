@@ -276,6 +276,7 @@ export default function SetDetail() {
   const [job, setJob] = useState<JobStatus | null>(null)
   const [flowError, setFlowError] = useState<string | null>(null)
   const [resolvingAll, setResolvingAll] = useState(false)
+  const [stopping, setStopping] = useState(false)
   const nav = useNavigate()
   const set = sets.find((s) => s.id === id)
   const setId = set?.id
@@ -327,12 +328,24 @@ export default function SetDetail() {
 
   const retryJob = async () => {
     setFlowError(null)
+    setStopping(false)
     try {
       if (jobPhase === 'lexicon') await api.buildLexicon(set.id)
       else await api.ingestSet(set.id)
       setJob(await api.getSetJob(set.id))
     } catch (e) {
       setFlowError(e instanceof Error ? e.message : 'Could not restart the job.')
+    }
+  }
+
+  const stopExtraction = async () => {
+    setFlowError(null)
+    setStopping(true)
+    try {
+      await api.stopIngest(set.id)
+    } catch (e) {
+      setStopping(false)
+      setFlowError(e instanceof Error ? e.message : 'Could not stop the job.')
     }
   }
 
@@ -457,9 +470,19 @@ export default function SetDetail() {
             <SectionLabel>
               {jobPhase === 'lexicon' ? 'AI Lexicon Build' : 'AI Extraction — Standards Tree, Item Bank & Conflict Check'}
             </SectionLabel>
-            <Mono className="text-[11px] text-ink-3">
-              {job.stagesDone}/{job.totalStages}
-            </Mono>
+            <div className="flex items-center gap-3">
+              <Mono className="text-[11px] text-ink-3">
+                {job.stagesDone}/{job.totalStages}
+              </Mono>
+              <Btn
+                kind="danger"
+                className="!px-2.5 !py-1 !text-[11.5px]"
+                disabled={stopping || job.cancelRequested === true}
+                onClick={() => void stopExtraction()}
+              >
+                {stopping || job.cancelRequested ? 'Stopping…' : 'Stop'}
+              </Btn>
+            </div>
           </div>
           <div className="mt-3">
             <Progress pct={(job.stagesDone / Math.max(1, job.totalStages)) * 100} />
@@ -480,6 +503,18 @@ export default function SetDetail() {
             — {job.error ?? 'the job died before completing.'}
           </div>
           <Btn onClick={() => void retryJob()}>Retry</Btn>
+        </div>
+      )}
+
+      {job?.status === 'cancelled' && !set.published && !jobActive && (
+        <div className="animate-rise mt-6 flex items-center justify-between gap-4 rounded-xl border border-amber-ink/25 bg-amber-wash px-4 py-3">
+          <div className="text-[12.5px] leading-relaxed text-amber-ink">
+            <span className="font-mono text-[10px] font-semibold uppercase">
+              {jobPhase === 'lexicon' ? 'lexicon build stopped' : 'extraction stopped'}
+            </span>{' '}
+            — halted by user; already-extracted results are kept.
+          </div>
+          <Btn onClick={() => void retryJob()}>Resume</Btn>
         </div>
       )}
 

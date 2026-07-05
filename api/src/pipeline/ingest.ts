@@ -10,7 +10,7 @@ import {
 } from '../domain/types'
 import { dataContainer, uploadsContainer } from '../data/clients'
 import { getSet, saveSet } from '../data/entities'
-import { mutateJob, pushLog } from '../data/jobs'
+import { getJob, mutateJob, pushLog } from '../data/jobs'
 import { generateStructured } from '../services/claude'
 import {
   ingestConflictsPrompt,
@@ -181,6 +181,31 @@ async function splitOversizedUploads(
   return [...out.values()]
 }
 
+
+/**
+ * Cooperative stop: the stop-ingest endpoint flags the job, the worker checks
+ * the flag at every checkpoint (an in-flight Claude call finishes first) and
+ * settles the job as 'cancelled' — a clean return, so the queue message
+ * completes instead of redelivering. Returns true when the step should abort.
+ */
+async function stopRequested(jobId: string): Promise<boolean> {
+  try {
+    return (await getJob(jobId)).cancelRequested === true
+  } catch {
+    return false
+  }
+}
+
+async function settleCancelled(jobId: string, phase: 'extract' | 'lexicon'): Promise<void> {
+  await mutateJob(jobId, (r) => {
+    r.status = 'cancelled'
+    // The stage prefix keeps the frontend's phase detection working, so
+    // Resume re-runs the right step.
+    r.stage = phase === 'lexicon' ? 'Lexicon — Stopped' : 'Extraction — Stopped'
+    pushLog(r, 'Stopped by user')
+  })
+}
+
 /**
  * Kind `ingest`, step `extract` (runs automatically once the uploads land):
  * per uploaded PDF, a Claude document call extracts standards → StandardNode
@@ -240,6 +265,13 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
   let stagesDone = 0
 
   for (const blob of blobs) {
+    if (await stopRequested(msg.jobId)) {
+      set.updated = today()
+      await saveSet(set)
+      await settleCancelled(msg.jobId, 'extract')
+      ctx.log(`ingest/extract ${msg.jobId}: stopped by user after ${stagesDone} document(s)`)
+      return
+    }
     const artifact = findArtifact(set, blob.role, blob.fileName)
 
     await mutateJob(msg.jobId, (r) => {
@@ -362,6 +394,14 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
     await saveSet(set)
   }
 
+  if (await stopRequested(msg.jobId)) {
+    set.updated = today()
+    await saveSet(set)
+    await settleCancelled(msg.jobId, 'extract')
+    ctx.log(`ingest/extract ${msg.jobId}: stopped by user before the conflict pass`)
+    return
+  }
+
   // Cross-document scope-conflict pass — consolidates candidate gaps and hunts
   // for conflicts between the documents, each with an AI-suggested resolution
   // (strict canonical Common Core always the default for CC-variant conflicts).
@@ -456,6 +496,11 @@ export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): P
     return terms
   }
 
+  if (await stopRequested(msg.jobId)) {
+    await settleCancelled(msg.jobId, 'lexicon')
+    return
+  }
+
   const representations = await generateStructured<WireIngestLexicon>({
     ...ingestLexiconPrompt(set, 'representations'),
     schema: INGEST_LEXICON_SCHEMA,
@@ -471,6 +516,11 @@ export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): P
     r.stage = 'Lexicon — Problem Types'
     pushLog(r, `${set.lexicons.representations.length} representation term(s) built`)
   })
+
+  if (await stopRequested(msg.jobId)) {
+    await settleCancelled(msg.jobId, 'lexicon')
+    return
+  }
 
   const problemTypes = await generateStructured<WireIngestLexicon>({
     ...ingestLexiconPrompt(set, 'problemTypes'),

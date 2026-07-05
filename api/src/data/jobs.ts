@@ -35,6 +35,7 @@ function toEntity(r: JobRecord): EntityShape {
   if (r.totalUnits !== undefined) e.totalUnits = r.totalUnits
   if (r.unitsMask !== undefined) e.unitsMask = r.unitsMask
   if (r.error !== undefined) e.error = r.error
+  if (r.cancelRequested !== undefined) e.cancelRequested = r.cancelRequested
   return e
 }
 
@@ -56,6 +57,7 @@ function fromEntity(e: TableEntityResult<Record<string, unknown>>): JobRecord {
     log,
   }
   if (e.scopeId !== undefined) rec.scopeId = String(e.scopeId)
+  if (e.cancelRequested !== undefined) rec.cancelRequested = Boolean(e.cancelRequested)
   if (e.setId !== undefined) rec.setId = String(e.setId)
   if (e.unitsDone !== undefined) rec.unitsDone = Number(e.unitsDone)
   if (e.totalUnits !== undefined) rec.totalUnits = Number(e.totalUnits)
@@ -196,5 +198,6 @@ export function toJobStatus(rec: JobRecord): JobStatus {
   if (rec.unitsDone !== undefined) status.unitsDone = rec.unitsDone
   if (rec.totalUnits !== undefined) status.totalUnits = rec.totalUnits
   if (rec.error !== undefined) status.error = rec.error
+  if (rec.cancelRequested !== undefined) status.cancelRequested = rec.cancelRequested
   return status
 }
