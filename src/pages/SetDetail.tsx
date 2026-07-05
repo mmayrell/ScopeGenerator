@@ -156,7 +156,6 @@ function TreeNode({ node, depth }: { node: StandardNode; depth: number }) {
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <Mono className="text-[12px] font-semibold text-accent-deep">{node.code}</Mono>
-            {node.norm !== node.code && <Mono className="text-[11px] text-ink-3">→ {node.norm}</Mono>}
             {node.emphasis && node.emphasis !== 'not designated' && <Pill tone="accent">{node.emphasis}</Pill>}
             {node.fluency && <Pill tone="amber">fluency — P8</Pill>}
             {node.label && <span className="text-[13px] font-medium text-ink">{node.label}</span>}
@@ -753,9 +752,8 @@ export default function SetDetail() {
               </p>
             ) : (
               <>
-                <div className="mb-1 flex items-center justify-between">
+                <div className="mb-1">
                   <SectionLabel>Parsed Standards — Limits Visible, Wording Verbatim</SectionLabel>
-                  <span className="text-[11.5px] text-ink-3">Dual coding: canonical ID + normalized join code</span>
                 </div>
                 <p className="mb-3 text-[11.5px] leading-relaxed text-ink-3">
                   Content standards only — every most-granular standard is listed with its exact text. Practice,
