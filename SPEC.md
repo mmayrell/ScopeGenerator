@@ -253,6 +253,32 @@ Scopes are public view: every user can view every saved scope and its full prove
 - **Rule identifiers are not interface copy.** P#/D#/A# rule IDs appear where they are evidence — Decision records, QC report details, guardrail citations — never as explanatory text on admin or upload screens.
 - Standard codes, join codes, file names, and item captions render in monospace. Released-item screenshots are visually distinct from generated exemplars; the generated-exemplar label and amber treatment are mandatory (§7.13).
 
+## 11.2 Released Item Repository Generator (Standalone Tool)
+
+A separate tool in the sidebar (internally "packets"), **not connected** to standard sets, scopes,
+or the generation pipeline. It answers one question: *what do genuine released assessment items
+look like for these standards?*
+
+- **Selection** comes from a built-in catalog (grades 3–8 mathematics, official wording): Pure
+  Common Core (CCSS-M), Texas (TEKS), Virginia (SOL, 2023 standards), Florida B.E.S.T. Framework →
+  grade level(s) → domains → standards → preferred administration years → title. Domains, standards,
+  and years each carry Select All / Clear controls. The year choices are AI-researched per framework
+  from the official sources and never offer years before 2017 (at most the past ten years); the hunt
+  enforces the same floor.
+- **The hunt.** Launching a packet dispatches a backend research agent that searches the public web
+  (state education agencies, released tests, official sample items) with the Claude server-side
+  web-search tool. Items are transcribed faithfully — exact stem, choices in order, the published
+  answer only when the source publishes a key — each with a link to its source. The agent never
+  invents an item; a standard with no findable released evidence is reported as a documentation gap.
+- **Alignment honesty.** `official` only when the source itself maps the item to the standard code;
+  otherwise `ai-inferred`, flagged in the packet and its appendix, never official.
+- **Progress.** The packet fills in per search batch, survives interruption (checkpointed on the
+  packet document), can be stopped (found items kept) and retried/resumed past finished batches.
+- **Output.** On-page packet (cover stats, coverage summary, per-standard text facsimiles with
+  lettered choices and source links, gaps, inferred-alignment appendix) and a clean Word download
+  that converts to a Google Doc. Facsimiles are text reconstructions transcribed from the linked
+  sources — the packet says so, and users are told to verify against the source before classroom use.
+
 ## 12. Build & Implementation Notes
 
 - Release scope: grade-organized standard sets; any released-item PDF sources (tiered ingestion); one engine + one doctrine document versioned, plural-ready; Stein-priority encoded in doctrine prompts.

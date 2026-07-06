@@ -278,3 +278,87 @@ export interface FrameworkDoc {
   engine: FrameworkSection
   doctrine: FrameworkSection
 }
+
+// ---------------------------------------------------------------------------
+// Evidence packets — a standalone web-hunting tool. Packets are NOT connected
+// to standard sets or scopes: they carry their own built-in standards catalog
+// selection and are filled by a backend agent that searches the public web for
+// genuine released assessment items. Mirrors api/src/domain/types.ts.
+// ---------------------------------------------------------------------------
+
+export type PacketFramework = 'ccss' | 'teks' | 'sol' | 'best'
+
+/** One standard chosen from the built-in packet catalog (official wording). */
+export interface PacketStandard {
+  code: string
+  grade: number // 3..8
+  domain: string // short domain code within the framework, e.g. 'NBT', 'PFA'
+  domainName: string
+  text: string
+}
+
+/** A released/sample assessment item the web-hunting agent found online. */
+export interface HuntedItem {
+  id: string
+  standardCode: string
+  program: string // assessment program, e.g. 'STAAR Grade 4 Mathematics'
+  year: number // administration/publication year; 0 when the source does not say
+  itemNumber: string // question number or label in the source; '' when unknown
+  itemType: 'selected-response' | 'constructed-response' | 'multi-part'
+  stem: string
+  choices: string[] // empty for constructed response
+  answer: string // correct answer as published; '' when the source publishes no key
+  sourceUrl: string
+  sourceName: string // title of the document or page the item came from
+  alignment: 'official' | 'ai-inferred' // 'official' only when the source maps the item to the code
+  notes: string
+}
+
+export interface EvidencePacket {
+  id: string
+  title: string
+  framework: PacketFramework
+  frameworkLabel: string
+  grades: number[]
+  years: number[] // preferred administration years; [] = any
+  standards: PacketStandard[]
+  status: 'hunting' | 'complete' | 'failed' | 'cancelled'
+  error?: string
+  items: HuntedItem[]
+  doneBatches: string[] // hunt-batch keys already searched (backend checkpointing)
+  created: string
+  updated: string
+}
+
+/** Slim row for the packet list view (items can be large; the list stays light). */
+export interface PacketSummary {
+  id: string
+  title: string
+  framework: PacketFramework
+  frameworkLabel: string
+  grades: number[]
+  years: number[]
+  status: EvidencePacket['status']
+  error?: string
+  standardCount: number
+  itemCount: number
+  created: string
+  updated: string
+}
+
+// ---------------------------------------------------------------------------
+// Reference Library — the document repository behind the tool. The four
+// document sets a standard set is built from, filed per framework and grade
+// (3–8). Mirrors api/src/domain/types.ts.
+// ---------------------------------------------------------------------------
+
+export type LibraryRole = 'standards' | 'progression' | 'items' | 'unpacking'
+
+export interface LibraryFile {
+  framework: PacketFramework
+  grade: number // 3..8
+  role: LibraryRole
+  fileName: string
+  size: number // bytes
+  updated: string // ISO timestamp
+}

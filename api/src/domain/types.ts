@@ -302,7 +302,100 @@ export interface NewSetUploads {
   progression: UploadSlotValue
 }
 
-export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest'
+// ---------------------------------------------------------------------------
+// Evidence packets — a standalone web-hunting tool. Packets are NOT connected
+// to standard sets or scopes: they carry their own built-in standards catalog
+// selection and are filled by a backend agent that searches the public web for
+// genuine released assessment items.
+// ---------------------------------------------------------------------------
+
+export type PacketFramework = 'ccss' | 'teks' | 'sol' | 'best'
+
+/** One standard chosen from the built-in packet catalog (official wording). */
+export interface PacketStandard {
+  code: string
+  grade: number // 3..8
+  domain: string // short domain code within the framework, e.g. 'NBT', 'PFA'
+  domainName: string
+  text: string
+}
+
+/** A released/sample assessment item the web-hunting agent found online. */
+export interface HuntedItem {
+  id: string
+  standardCode: string
+  /** Assessment program, e.g. 'STAAR Grade 4 Mathematics'. */
+  program: string
+  /** Administration or publication year; 0 when the source does not say. */
+  year: number
+  /** Question number or label in the source document; '' when unknown. */
+  itemNumber: string
+  itemType: 'selected-response' | 'constructed-response' | 'multi-part'
+  stem: string
+  choices: string[] // empty for constructed response
+  /** Correct answer as published; '' when the source publishes no key. */
+  answer: string
+  sourceUrl: string
+  /** Title of the document or page the item came from. */
+  sourceName: string
+  /** 'official' only when the source itself maps the item to the standard code. */
+  alignment: 'official' | 'ai-inferred'
+  notes: string
+}
+
+export interface EvidencePacket {
+  id: string
+  title: string
+  framework: PacketFramework
+  frameworkLabel: string
+  grades: number[]
+  /** Preferred administration years; [] = any year. */
+  years: number[]
+  standards: PacketStandard[]
+  status: 'hunting' | 'complete' | 'failed' | 'cancelled'
+  error?: string
+  items: HuntedItem[]
+  /** Hunt-batch keys already searched — checkpointing across 10-minute executions. */
+  doneBatches: string[]
+  created: string
+  updated: string
+}
+
+/** Slim row for the packet list view (items can be large; the list stays light). */
+export interface PacketSummary {
+  id: string
+  title: string
+  framework: PacketFramework
+  frameworkLabel: string
+  grades: number[]
+  years: number[]
+  status: EvidencePacket['status']
+  error?: string
+  standardCount: number
+  itemCount: number
+  created: string
+  updated: string
+}
+
+// ---------------------------------------------------------------------------
+// Reference Library — the document repository behind the tool. The four
+// document sets a standard set is built from, filed per framework and grade
+// (3–8), living as blobs under uploads/library/... . Listing is derived from
+// storage (no index document).
+// ---------------------------------------------------------------------------
+
+export type LibraryRole = 'standards' | 'progression' | 'items' | 'unpacking'
+
+export interface LibraryFile {
+  framework: PacketFramework
+  grade: number // 3..8
+  role: LibraryRole
+  fileName: string
+  size: number // bytes
+  updated: string // ISO timestamp
+}
+
+export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet'
 
 export interface JobStatus {
   jobId: string
@@ -323,9 +416,10 @@ export interface JobStatus {
 export interface JobMessage {
   jobId: string
   kind: JobKind
-  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'lexicon' // 'run' for single-step kinds; 'lexicon' only for legacy queued messages
+  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'lexicon' | 'hunt' // 'run' for single-step kinds; 'lexicon' only for legacy queued messages; 'hunt' for kind 'packet'
   scopeId?: string
   setId?: string
+  packetId?: string
   unitIndex?: number // for step 'cards'
   payload?: Record<string, unknown> // kind-specific (rerun target/mode, report text, feedback, proposalId…)
 }

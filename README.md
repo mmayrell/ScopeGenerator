@@ -25,6 +25,7 @@ The complete product surface from the spec, as a React app running on a client-s
 | §9 Auto-QC | QC report modal — ten programmatic checks (incl. objective integrity and released-item coverage), flags surfaced not buried |
 | §10 Admin experience | Set configuration, review screens (standards tree with limits, item bank with characterizations, alignment-confirmation queue), warning acknowledgment, gated publish |
 | §11 User experience | Scope request (course / standard / topic with mapping confirmation), streaming generation, public-view scopes |
+| §11.2 Released Item Repository Generator | Standalone web-hunting tool: built-in CCSS/TEKS/SOL/B.E.S.T. catalog (grades 3–8, researched years 2017+) → backend research agent finds genuine released items online via web search → sourced text facsimiles, coverage summary, gaps, Word export |
 | §12 / Appendix F | Engine & doctrine page — fixed documents with versions and descriptions |
 
 ## Architecture
@@ -32,11 +33,9 @@ The complete product surface from the spec, as a React app running on a client-s
 - **`src/types.ts`** — the §5 data model, UI-agnostic.
 - **`src/data/seed.ts`** — demo corpus: standards trees with in-document limits, item records with vision characterizations and P2 scope classes, lexicons, the full-course scope with 12 demo cards (the flagship card carries the full 14-field shape; the rest predate the Objectives field).
 - **`src/store.tsx`** — a context store exposing the domain actions (publish gating, alignment confirmation, lock, guardrailed rerun, proposal lifecycle). This is the seam where a real backend slots in: every action maps 1:1 to an API call, and the generation simulation in `NewScope` maps to the real queued pipeline job with per-stage checkpoints.
-- **`src/pages/`** — Dashboard, SetsList, SetDetail (admin), NewScope (request + staged run), ScopeView (units → 14-field cards), System (engine/doctrine).
+- **`src/pages/`** — Dashboard, SetsList, SetDetail (admin), NewScope (request + staged run), ScopeView (units → 14-field cards), EvidencePackets (standalone web-hunting tool), System (engine/doctrine).
 - **`src/ui.tsx`** — primitives: citation chips + provenance popover, released-item renderer, generated-exemplar renderer (with the mandatory *Generated exemplar — not a released item* label), modals.
+- **`api/`** — the Azure Functions backend (Node/TypeScript, queue-checkpointed generation, ingestion, and packet-hunt pipelines; Claude integration). The binding contract is `docs/backend-architecture.md`.
+- **`infra/`** — provisioning and deploy scripts. Every push to `main` deploys to production (see `CLAUDE.md`).
 
-Stack: Vite · React 19 · TypeScript · Tailwind v4 · React Router. No backend required; all state is in-memory.
-
-## What a real deployment adds
-
-The heavy lifting the spec assigns to AI stages — Tier-2 item extraction, vision characterization, Stage 2–5 generation with evidence-locking validators — is stubbed behind the store's action seam. The card schema, precedence chain, guardrail logic, Editing-Splits mapping for performance reports, and QC taxonomy are all implemented as specified and would be driven by the pipeline's real outputs.
+Stack: Vite · React 19 · TypeScript · Tailwind v4 · React Router; Azure Functions + Storage; Claude (`claude-fable-5`) for extraction, generation, and the evidence-packet web hunts.

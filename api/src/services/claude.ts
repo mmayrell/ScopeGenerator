@@ -18,6 +18,8 @@ import Anthropic from '@anthropic-ai/sdk'
  *   else concatenate text blocks and JSON.parse (one retry with the parse error
  *   appended to the user message)
  * - PDFs as base64 document blocks placed BEFORE the text block
+ * - webSearch: server-side web_search tool; always unconstrained (server tools
+ *   and constrained decoding do not compose) with pause_turn resumption
  */
 export interface GenerateStructuredOptions {
   system: string
@@ -27,6 +29,15 @@ export interface GenerateStructuredOptions {
   effort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max'
   /** base64-encoded PDFs (no newlines), placed before the text block */
   documents?: string[]
+  /**
+   * Give the model the server-side web_search tool. Web-search calls always
+   * run UNCONSTRAINED (schema embedded in the prompt, JSON extracted from the
+   * text) — server tools and constrained decoding do not compose — and handle
+   * `pause_turn` by resuming the turn.
+   */
+  webSearch?: boolean
+  /** Max server-side searches per call (webSearch only; default 8). */
+  maxSearches?: number
 }
 
 const EFFORT_LEVELS = ['low', 'medium', 'high', 'xhigh', 'max'] as const
@@ -56,6 +67,18 @@ function extractJson(text: string): string {
   return start >= 0 && end > start ? text.slice(start, end + 1) : text
 }
 
+// Current web-search variant first (web_search_20260209, dynamic filtering —
+// GA on Opus 4.8/4.7/4.6 and Sonnet 5/4.6, undocumented for Fable); if the
+// model 400s on it, drop to the basic web_search_20250305 and remember.
+const WEB_SEARCH_VARIANTS = ['web_search_20260209', 'web_search_20250305'] as const
+let webSearchVariant = 0
+
+function isUnsupportedWebSearchVariant(e: unknown): boolean {
+  const msg = e instanceof Error ? e.message : String(e)
+  const status = (e as { status?: number }).status
+  return status === 400 && /web_search/i.test(msg)
+}
+
 export async function generateStructured<T>(opts: GenerateStructuredOptions): Promise<T> {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not configured')
@@ -66,17 +89,26 @@ export async function generateStructured<T>(opts: GenerateStructuredOptions): Pr
   const client = new Anthropic({ apiKey, maxRetries: 6 })
   const model = process.env.CLAUDE_MODEL ?? 'claude-fable-5'
 
-  let constrained = true
+  let constrained = !opts.webSearch
+  // Per-call variant ladder starting at the shared hint: the guard must judge
+  // THIS call's variant, not the shared counter — with N concurrent first
+  // calls all 400ing, a shared-counter guard lets only one of them retry.
+  let variant = webSearchVariant
   let parseError: string | undefined
   for (let attempt = 0; attempt < 3; attempt++) {
     let text: string
     try {
-      text = await callOnce(client, model, opts, parseError, constrained)
+      text = await callOnce(client, model, opts, parseError, constrained, variant)
     } catch (e) {
       if (constrained && isGrammarTooLarge(e)) {
         // Fall back to an unconstrained call with the schema embedded in the
         // prompt; the parse below still validates the shape structurally.
         constrained = false
+        continue
+      }
+      if (opts.webSearch && variant < WEB_SEARCH_VARIANTS.length - 1 && isUnsupportedWebSearchVariant(e)) {
+        variant++
+        webSearchVariant = Math.max(webSearchVariant, variant)
         continue
       }
       throw e
@@ -96,6 +128,7 @@ async function callOnce(
   opts: GenerateStructuredOptions,
   parseError: string | undefined,
   constrained: boolean,
+  webSearchVariantIndex = webSearchVariant,
 ): Promise<string> {
   let userText = parseError
     ? `${opts.user}\n\nIMPORTANT: your previous reply failed JSON.parse with the error: ${parseError}. Respond again with a single valid JSON object matching the schema exactly — no prose, no code fences.`
@@ -113,12 +146,14 @@ async function callOnce(
   }
   content.push({ type: 'text', text: userText })
 
+  const messages: { role: 'user' | 'assistant'; content: unknown }[] = [{ role: 'user', content }]
+
   // Never set temperature/top_p/top_k here — current models reject them with a 400.
   const request: Record<string, unknown> = {
     model,
     max_tokens: opts.maxTokens ?? 64000,
     system: opts.system,
-    messages: [{ role: 'user', content }],
+    messages,
     output_config: constrained
       ? {
           format: { type: 'json_schema', schema: opts.schema },
@@ -126,26 +161,37 @@ async function callOnce(
         }
       : { effort: resolveEffort(opts.effort) },
   }
+  if (opts.webSearch) {
+    request.tools = [
+      { type: WEB_SEARCH_VARIANTS[webSearchVariantIndex], name: 'web_search', max_uses: opts.maxSearches ?? 8 },
+    ]
+  }
 
   // The SDK's parameter types evolve with the API (output_config, fallbacks,
   // betas); the wire shapes below follow the current API reference, so the
   // request objects are cast at the call site.
+  // Long server-tool turns (web search) can stop with `pause_turn`; the turn
+  // resumes by sending the paused assistant content back verbatim.
   let message: MinimalMessage
-  if (model.startsWith('claude-fable')) {
-    // Fable: thinking is always on — the `thinking` parameter is OMITTED entirely
-    // (an explicit disabled/enabled config returns a 400).
-    const stream = client.beta.messages.stream({
-      ...request,
-      betas: ['server-side-fallback-2026-06-01'],
-      fallbacks: [{ model: 'claude-opus-4-8' }],
-    } as never)
-    message = (await stream.finalMessage()) as unknown as MinimalMessage
-  } else {
-    const stream = client.messages.stream({
-      ...request,
-      thinking: { type: 'adaptive' },
-    } as never)
-    message = (await stream.finalMessage()) as unknown as MinimalMessage
+  for (let resume = 0; ; resume++) {
+    if (model.startsWith('claude-fable')) {
+      // Fable: thinking is always on — the `thinking` parameter is OMITTED entirely
+      // (an explicit disabled/enabled config returns a 400).
+      const stream = client.beta.messages.stream({
+        ...request,
+        betas: ['server-side-fallback-2026-06-01'],
+        fallbacks: [{ model: 'claude-opus-4-8' }],
+      } as never)
+      message = (await stream.finalMessage()) as unknown as MinimalMessage
+    } else {
+      const stream = client.messages.stream({
+        ...request,
+        thinking: { type: 'adaptive' },
+      } as never)
+      message = (await stream.finalMessage()) as unknown as MinimalMessage
+    }
+    if (message.stop_reason !== 'pause_turn' || resume >= 3) break
+    messages.push({ role: 'assistant', content: message.content })
   }
 
   if (message.stop_reason === 'refusal') {

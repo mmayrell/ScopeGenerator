@@ -8,6 +8,7 @@ import { jobsTable } from './clients'
 export interface JobRecord extends JobStatus {
   scopeId?: string
   setId?: string
+  packetId?: string
   created: string
   /** comma-separated unit indexes already counted — makes unit increments idempotent */
   unitsMask?: string
@@ -33,6 +34,7 @@ function toEntity(r: JobRecord): EntityShape {
   }
   if (r.scopeId !== undefined) e.scopeId = r.scopeId
   if (r.setId !== undefined) e.setId = r.setId
+  if (r.packetId !== undefined) e.packetId = r.packetId
   if (r.unitsDone !== undefined) e.unitsDone = r.unitsDone
   if (r.totalUnits !== undefined) e.totalUnits = r.totalUnits
   if (r.unitsMask !== undefined) e.unitsMask = r.unitsMask
@@ -63,6 +65,7 @@ function fromEntity(e: TableEntityResult<Record<string, unknown>>): JobRecord {
   if (e.cancelRequested !== undefined) rec.cancelRequested = Boolean(e.cancelRequested)
   if (e.doneBlobs !== undefined) rec.doneBlobs = String(e.doneBlobs)
   if (e.setId !== undefined) rec.setId = String(e.setId)
+  if (e.packetId !== undefined) rec.packetId = String(e.packetId)
   if (e.unitsDone !== undefined) rec.unitsDone = Number(e.unitsDone)
   if (e.totalUnits !== undefined) rec.totalUnits = Number(e.totalUnits)
   if (e.unitsMask !== undefined) rec.unitsMask = String(e.unitsMask)
@@ -80,6 +83,7 @@ export async function createJob(init: {
   kind: JobKind
   scopeId?: string
   setId?: string
+  packetId?: string
   totalStages: number
   stage: string
   detail: string
@@ -96,6 +100,7 @@ export async function createJob(init: {
   }
   if (init.scopeId !== undefined) rec.scopeId = init.scopeId
   if (init.setId !== undefined) rec.setId = init.setId
+  if (init.packetId !== undefined) rec.packetId = init.packetId
   pushLog(rec, init.detail)
   await jobsTable().createEntity(toEntity(rec))
   return rec
@@ -181,6 +186,17 @@ export async function latestJobForScope(scopeId: string): Promise<JobRecord | un
 /** Mirrors latestJobForScope for set-bound jobs (ingest) — used to make publish idempotent. */
 export async function latestJobForSet(setId: string): Promise<JobRecord | undefined> {
   const filter = odata`PartitionKey eq ${'job'} and setId eq ${setId}`
+  let latest: JobRecord | undefined
+  for await (const e of jobsTable().listEntities({ queryOptions: { filter } })) {
+    const rec = fromEntity(e as TableEntityResult<Record<string, unknown>>)
+    if (!latest || rec.created > latest.created) latest = rec
+  }
+  return latest
+}
+
+/** Mirrors latestJobForScope for packet-bound jobs (the web-hunting agent). */
+export async function latestJobForPacket(packetId: string): Promise<JobRecord | undefined> {
+  const filter = odata`PartitionKey eq ${'job'} and packetId eq ${packetId}`
   let latest: JobRecord | undefined
   for await (const e of jobsTable().listEntities({ queryOptions: { filter } })) {
     const rec = fromEntity(e as TableEntityResult<Record<string, unknown>>)

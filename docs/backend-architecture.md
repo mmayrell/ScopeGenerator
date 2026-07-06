@@ -95,13 +95,24 @@ cannot attach headers to `<img>` requests.
 | `POST /scopes/{id}/proposals/{pid}/iterate` | `{ feedback }` → `Proposal` (`working: true`) | enqueues `iterate` job; the round is appended when done |
 | `POST /scopes/{id}/proposals/{pid}/resolve` | `{ accept: boolean }` → `Scope` | accept: bump version, snapshot, history entry, enqueue `apply-proposal` job (Claude rewrites targeted lesson fields); abandon: mark abandoned |
 | `DELETE /scopes/{id}` | → `{ ok: true }` | |
+| `POST /packets` | `{ title, framework, frameworkLabel, grades, years, standards: PacketStandard[] }` → `{ packet: EvidencePacket, jobId }` (201) | Evidence Packets (standalone web-hunting tool — no coupling to sets/scopes). Creates the packet doc (status `hunting`) and enqueues a `packet` job; ≤120 standards per packet; enqueue failure settles both the job and the packet `failed` |
+| `GET /packets` | → `PacketSummary[]` | slim rows (no items), newest first |
+| `GET /packets/{id}` | → `EvidencePacket` | full doc including hunted items — poll this while `hunting` (the doc fills in per finished batch) |
+| `GET /packets/{id}/job` | → `JobStatus` | hunt progress (stages = search batches) |
+| `POST /packets/{id}/stop` | → `{ jobId }` | sets `cancelRequested`; the hunt halts at its next checkpoint, packet → `cancelled`, found items kept. 409 with no active hunt |
+| `POST /packets/{id}/retry` | → `{ jobId }` (202) | resumes a failed/stopped/stalled hunt: packet → `hunting`, re-dispatch; `doneBatches` on the doc make finished batches skip. Reuses a provably-live active job (log progress < 15 min, no stop flag) |
+| `DELETE /packets/{id}` | → `{ ok: true }` | flags any active hunt job to stop, then removes the doc and index row |
+| `GET /library` | → `{ files: LibraryFile[] }` | Reference Library — the four document sets (standards/progression/items/unpacking) filed per framework (`ccss`/`teks`/`sol`/`best`) and grade (3–8). Listing derives from a blob prefix walk (no index doc) |
+| `PUT /library/{framework}/{grade}/{role}/{fileName}` | raw bytes (`application/pdf`) → `{ file: LibraryFile }` (201) | stores to `uploads` container under `library/...`; same name replaces the document. Every path segment is validated |
+| `DELETE /library/{framework}/{grade}/{role}/{fileName}` | → `{ ok: true }` | |
+| `GET /library-file/{framework}/{grade}/{role}/{fileName}` | → the PDF | opened in a browser tab, so auth also accepts `?code=` (mirrors `item-image`) |
 | `POST /ops/seed` | `?force=true` optional → `{ seeded: boolean, sets: number, scopes: number }` | loads bundled `seed.json` into tables/blobs when empty (or force). NOTE: the route is `ops/seed` because Azure Functions reserves custom routes starting with `admin` |
 
 `JobStatus`:
 ```ts
 interface JobStatus {
   jobId: string
-  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest'
+  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet'
   status: 'queued' | 'running' | 'complete' | 'failed'
   stage: string            // human-readable current stage, e.g. "Stage 3-4 - Atomization & sequencing" (always singular 'Stage', parsed by the frontend)
   stagesDone: number       // 0..totalStages
@@ -122,8 +133,9 @@ Endpoints that persist state and then enqueue a job revert the persisted state i
 **Table `entities`** — one row per document, for cheap listing:
 - Sets: PartitionKey `set`, RowKey `<setId>`, props: `name`, `published` (bool), `updated`, `blobPath`
 - Scopes: PartitionKey `scope`, RowKey `<scopeId>`, props: `title`, `setId`, `status`, `version`, `updated`, `blobPath`
+- Packets: PartitionKey `packet`, RowKey `<packetId>`, props: `title`, `status`, `updated`, `blobPath`
 
-**Table `jobs`** — PartitionKey `job`, RowKey `<jobId>`, props: `scopeId`/`setId`, `kind`, `status`,
+**Table `jobs`** — PartitionKey `job`, RowKey `<jobId>`, props: `scopeId`/`setId`/`packetId`, `kind`, `status`,
 `stage`, `stagesDone`, `totalStages`, `unitsDone`, `totalUnits`, `error`, `logJson` (stringified log
 array, capped at ~40 entries). Unit-completion increments use **ETag optimistic concurrency with
 retry** (parallel unit workers race); the finalize signal is at-least-once (any completion observing
@@ -135,19 +147,25 @@ all units done reports it; finalize itself is idempotent).
   `mutateScope` (blob ETag If-Match + retry) — plain overwrites are only allowed where no concurrent
   writer can exist (initial create, generate-finalize, seeding)
 - `scopes/<scopeId>/v<version>.json` — immutable snapshot written whenever a new version is created
+- `packets/<packetId>.json` — current `EvidencePacket` (standalone web-hunting tool). Mutations go
+  through `mutatePacket` (blob ETag If-Match + retry); the hunt checkpoints into the doc itself
+  (`items` merged per batch, `doneBatches` keys)
 - `jobs/<jobId>/plan.json`, `jobs/<jobId>/unit-<i>.json` — pipeline checkpoints
 
-**Blob container `uploads`**: `<setId>/<role>/<fileName>` — uploaded PDFs.
+**Blob container `uploads`**: `<setId>/<role>/<fileName>` — uploaded PDFs;
+`library/<framework>/<grade>/<role>/<fileName>` — Reference Library documents (no index — the
+`GET /library` listing is a prefix walk, so the library can never drift from storage).
 
 **Queue `genjobs`** — message JSON, **explicitly base64-encoded on send** (the Functions host expects
 base64; `@azure/storage-queue` does not encode by default):
 ```ts
 interface JobMessage {
   jobId: string
-  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest'
-  step: 'plan' | 'cards' | 'finalize' | 'run'   // 'run' for single-step kinds
+  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet'
+  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'hunt'   // 'run' for single-step kinds; 'hunt' for kind 'packet'
   scopeId?: string
   setId?: string
+  packetId?: string
   unitIndex?: number      // for step 'cards'
   payload?: Record<string, unknown>   // kind-specific (rerun target/mode, report text, feedback, proposalId…)
 }
@@ -223,6 +241,29 @@ Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is
   (heuristic: max of `/Type /Page` tokens and `/Count N`): blocking artifact error instead of a
   Claude call. Publishes on success unless blocking errors remain (P10).
 
+## Evidence-packet hunt pipeline (kind `packet`, step `hunt`)
+
+The Released Item Repository Generator (internally "packets") is **standalone**: it never reads standard sets, scopes, or uploaded
+artifacts. The frontend ships a built-in catalog (`src/data/packet-catalog.ts` — grades 3–8 math
+standards for CCSS / TEKS / Virginia 2023 SOL / Florida B.E.S.T., official wording, lazily loaded)
+and `POST /packets` carries the selected standards verbatim; the backend hunts the public web.
+
+- **Batching** (`api/src/pipeline/packets.ts`): standards group by (grade, domain), chunked to ≤4
+  per batch. One batch = one Claude call with the **server-side `web_search` tool** (≤8 searches).
+- **Checkpointing**: after each batch, items merge into the packet doc via `mutatePacket` (dedup key
+  `standardCode|sourceUrl|itemNumber|stem-prefix`) and the batch key lands in `doneBatches`. A
+  3.5-minute launch budget re-enqueues the same message before the 10-minute cap; redelivered or
+  retried messages skip finished batches, so no paid search re-runs.
+- **Honesty rules in the hunt prompt**: never invent an item — only transcribe items actually found
+  in sources located through this call's searches; a standard with nothing findable is reported as a
+  **gap** (documentation gap, not failure); `alignment: 'official'` only when the source itself maps
+  the item to the code, else `'ai-inferred'`; source URL must come from search results. Replies are
+  additionally sanitized in code (off-batch codes dropped, URLs must be http(s), ≤4 items/standard).
+- **Settlement**: all batches done → packet `complete` (job log summarizes items/coverage/gaps).
+  Stop (`cancelRequested`) → packet `cancelled` at the next checkpoint, found items kept. Terminal
+  worker failure → packet `failed` via `markPacketFailed`, found items kept. `POST /packets/{id}/retry`
+  resumes any non-complete packet past its `doneBatches`.
+
 ## Guardrails (synchronous, data-driven)
 
 A scope carries an optional `protectedBoundaries: string[][]` list — derived at finalize time from
@@ -250,6 +291,11 @@ proceeds and logs (RerunEvent detail + QC flag), per spec §8.
     truncation error; else parse the JSON text content (one retry re-prompting with the parse error).
 - **PDF input**: `{ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data } }`
   placed before the text block (no beta header needed). Base64 without newlines.
+- **Web search** (`webSearch: true`, packet hunts only): adds the server-side web_search tool
+  (`web_search_20260209`, falling back to `web_search_20250305` on a 400) with `max_uses`.
+  Web-search calls always run **unconstrained** (schema embedded in the prompt, JSON extracted from
+  the text — server tools and constrained decoding do not compose) and resume `pause_turn` stops by
+  sending the paused assistant content back (≤3 resumes).
 - JSON schemas: no recursion, `additionalProperties: false` + `required` everywhere, no
   min/max constraints. The recursive `StandardNode` tree is represented in schemas as a **flat array
   with `parentCode`** and rebuilt into a tree in code.

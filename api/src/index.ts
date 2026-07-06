@@ -3,6 +3,8 @@
 // HTTP endpoint and the genjobs queue worker with the host.
 import './functions/http-admin'
 import './functions/http-framework'
+import './functions/http-library'
+import './functions/http-packets'
 import './functions/http-sets'
 import './functions/http-scopes'
 import './functions/worker'

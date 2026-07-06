@@ -1,12 +1,14 @@
 import { app, InvocationContext } from '@azure/functions'
 import { JobMessage, Proposal, Scope } from '../domain/types'
 import { getSetOrUndefined, mutateScope, mutateSet, snapshotScope } from '../data/entities'
+import { getPacketOrUndefined, mutatePacket } from '../data/packets'
 import { mutateJob, pushLog } from '../data/jobs'
 import { generateCardsStep, generateFinalizeStep, generatePlanStep } from '../pipeline/generate'
 import { extractRunStep } from '../pipeline/ingest'
+import { huntPacketStep } from '../pipeline/packets'
 import { applyProposalRunStep, iterateRunStep, proposalRunStep } from '../pipeline/proposals'
 import { rerunRunStep } from '../pipeline/rerun'
-import { today } from '../shared/util'
+import { nowIso, today } from '../shared/util'
 
 /** Must match host.json → extensions.queues.maxDequeueCount. */
 const MAX_DEQUEUE_COUNT = 12 // keep in sync with host.json extensions.queues.maxDequeueCount
@@ -87,6 +89,8 @@ async function dispatch(msg: JobMessage, context: InvocationContext): Promise<vo
     case 'ingest/run': // legacy queued messages route to extraction
     case 'ingest/extract':
       return extractRunStep(msg, context)
+    case 'packet/hunt':
+      return huntPacketStep(msg, context)
     case 'ingest/lexicon':
       // The lexicon step was removed from the pipeline; settle legacy queued
       // messages cleanly instead of poisoning them.
@@ -122,6 +126,10 @@ async function markFailed(msg: JobMessage, error: string, context: InvocationCon
 
   if (msg.kind === 'ingest') {
     await markIngestFailed(msg, error, context)
+    return
+  }
+  if (msg.kind === 'packet') {
+    await markPacketFailed(msg, error, context)
     return
   }
   if (!msg.scopeId) return
@@ -191,6 +199,27 @@ function settleFailedScope(scope: Scope, msg: JobMessage, error: string): void {
       break
   }
   scope.updated = today()
+}
+
+/**
+ * Terminal packet-hunt failure: items found by completed batches are kept —
+ * only the status flips, so the packet view can show partial evidence plus
+ * the error instead of losing everything.
+ */
+async function markPacketFailed(msg: JobMessage, error: string, context: InvocationContext): Promise<void> {
+  if (!msg.packetId) return
+  try {
+    if (!(await getPacketOrUndefined(msg.packetId))) return
+    await mutatePacket(msg.packetId, (packet) => {
+      if (packet.status === 'hunting') {
+        packet.status = 'failed'
+        packet.error = error
+      }
+      packet.updated = nowIso()
+    })
+  } catch (e) {
+    context.error(`genjobs-worker: could not record hunt failure on packet ${msg.packetId}`, e)
+  }
 }
 
 /**

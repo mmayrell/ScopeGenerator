@@ -1,5 +1,16 @@
 ﻿// Typed HTTP client for the ScopeGenerator backend (docs/backend-architecture.md).
-import type { FrameworkDoc, Proposal, Scope, StandardSet } from './types'
+import type {
+  EvidencePacket,
+  FrameworkDoc,
+  LibraryFile,
+  LibraryRole,
+  PacketFramework,
+  PacketStandard,
+  PacketSummary,
+  Proposal,
+  Scope,
+  StandardSet,
+} from './types'
 
 // ---------- config ----------
 
@@ -32,7 +43,7 @@ export class NotFoundError extends Error {
 
 export interface JobStatus {
   jobId: string
-  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest'
+  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet'
   status: 'queued' | 'running' | 'complete' | 'failed' | 'cancelled'
   cancelRequested?: boolean
   stage: string // human-readable current stage, e.g. "Stage 3-4 - Atomization & sequencing"
@@ -185,6 +196,48 @@ export const api = {
   deleteSet: (id: string) => request<{ ok: true }>('DELETE', `/sets/${encodeURIComponent(id)}`),
 
   getFramework: () => request<FrameworkDoc>('GET', '/framework'),
+
+  // ---- Evidence Packets (standalone web-hunting tool) ----
+
+  createPacket: (body: {
+    title: string
+    framework: PacketFramework
+    frameworkLabel: string
+    grades: number[]
+    years: number[]
+    standards: PacketStandard[]
+  }) => request<{ packet: EvidencePacket; jobId: string }>('POST', '/packets', body),
+
+  listPackets: () => request<PacketSummary[]>('GET', '/packets'),
+
+  getPacket: (id: string) => request<EvidencePacket>('GET', `/packets/${encodeURIComponent(id)}`),
+
+  getPacketJob: (id: string) => request<JobStatus>('GET', `/packets/${encodeURIComponent(id)}/job`),
+
+  stopPacket: (id: string) => request<{ jobId: string }>('POST', `/packets/${encodeURIComponent(id)}/stop`),
+
+  retryPacket: (id: string) => request<{ jobId: string }>('POST', `/packets/${encodeURIComponent(id)}/retry`),
+
+  deletePacket: (id: string) => request<{ ok: true }>('DELETE', `/packets/${encodeURIComponent(id)}`),
+
+  // ---- Reference Library (framework → grade → four document slots) ----
+
+  listLibrary: () => request<{ files: LibraryFile[] }>('GET', '/library'),
+
+  uploadLibraryFile: (framework: PacketFramework, grade: number, role: LibraryRole, fileName: string, file: Blob) =>
+    request<{ file: LibraryFile }>(
+      'PUT',
+      `/library/${framework}/${grade}/${role}/${encodeURIComponent(fileName)}`,
+      undefined,
+      file,
+    ),
+
+  deleteLibraryFile: (framework: PacketFramework, grade: number, role: LibraryRole, fileName: string) =>
+    request<{ ok: true }>('DELETE', `/library/${framework}/${grade}/${role}/${encodeURIComponent(fileName)}`),
+
+  /** URL that opens a library PDF in a browser tab — the access code rides as a query param (no headers on navigations). */
+  libraryFileUrl: (framework: PacketFramework, grade: number, role: LibraryRole, fileName: string): string =>
+    `${API_BASE}/library-file/${framework}/${grade}/${role}/${encodeURIComponent(fileName)}?code=${encodeURIComponent(getAccessCode() ?? '')}`,
 
   /** URL for an item's question screenshot — <img> can't send headers, so the access code rides as a query param. */
   itemImageUrl: (setId: string, itemId: string): string =>

@@ -6,6 +6,7 @@ import SetDetail from './pages/SetDetail'
 import NewScope from './pages/NewScope'
 import ScopeView from './pages/ScopeView'
 import EvidencePackets from './pages/EvidencePackets'
+import ReferenceLibrary from './pages/ReferenceLibrary'
 import System from './pages/System'
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/sets/:id" element={<SetDetail />} />
         <Route path="/scopes/new" element={<NewScope />} />
         <Route path="/scopes/:id" element={<ScopeView />} />
+        <Route path="/library" element={<ReferenceLibrary />} />
         <Route path="/packets" element={<EvidencePackets />} />
         <Route path="/system" element={<System />} />
       </Route>
