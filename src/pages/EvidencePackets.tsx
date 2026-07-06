@@ -16,16 +16,25 @@ import { Btn, capsStandardCodes, ItemShot, Mono, Pill, SectionLabel } from '../u
 // years → title) over the evidence corpus, an on-page packet preview, and a
 // Word download that converts cleanly to a Google Doc.
 
-const Chip = ({ on, children, onClick }: { on: boolean; children: React.ReactNode; onClick: () => void }) => (
+const Chip = ({ on, disabled, title, children, onClick }: { on: boolean; disabled?: boolean; title?: string; children: React.ReactNode; onClick: () => void }) => (
   <button
-    onClick={onClick}
-    className={`cursor-pointer rounded-lg border px-2.5 py-1.5 text-[12px] font-medium transition-colors ${
-      on ? 'border-accent/40 bg-accent-wash text-accent-deep' : 'border-hairline bg-panel text-ink-2 hover:border-hairline-2'
+    onClick={disabled ? undefined : onClick}
+    disabled={disabled}
+    title={title}
+    className={`rounded-lg border px-2.5 py-1.5 text-[12px] font-medium transition-colors ${
+      disabled
+        ? 'cursor-not-allowed border-hairline bg-panel/50 text-ink-3 opacity-60'
+        : on
+          ? 'cursor-pointer border-accent/40 bg-accent-wash text-accent-deep'
+          : 'cursor-pointer border-hairline bg-panel text-ink-2 hover:border-hairline-2'
     }`}
   >
     {children}
   </button>
 )
+
+/** The repository's target band. Grades without a published set render disabled until one exists. */
+const GRADE_RANGE = [3, 4, 5, 6, 7, 8]
 
 // The four frameworks the repository organizes around. A published set files
 // under one of them by its declared identity (scheme, source organization,
@@ -66,22 +75,22 @@ export default function EvidencePackets() {
 
   const frameworkSets = useMemo(() => published.filter((s) => frameworkOf(s) === framework), [published, framework])
   const availableGrades = useMemo(
-    () => [...new Set(frameworkSets.map((s) => s.gradeSpan))].sort((a, b) => gradeOrder(a) - gradeOrder(b)),
+    () => new Set(frameworkSets.map((s) => gradeOrder(s.gradeSpan)).filter((n) => GRADE_RANGE.includes(n))),
     [frameworkSets],
   )
   // Default to the first grade the framework offers; prune grades whose sets
   // disappeared (unpublish) so they can't linger as invisible filters.
   useEffect(() => {
     setGrades((prev) => {
-      const visible = new Set(availableGrades)
-      const pruned = prev.filter((g) => visible.has(g))
+      const pruned = prev.filter((g) => availableGrades.has(gradeOrder(g)))
       if (pruned.length > 0) return pruned.length === prev.length ? prev : pruned
-      return availableGrades.length > 0 ? [availableGrades[0]] : []
+      const first = GRADE_RANGE.find((n) => availableGrades.has(n))
+      return first !== undefined ? [`Grade ${first}`] : []
     })
   }, [availableGrades])
 
   const setIds = useMemo(
-    () => frameworkSets.filter((s) => grades.includes(s.gradeSpan)).map((s) => s.id),
+    () => frameworkSets.filter((s) => grades.some((g) => gradeOrder(g) === gradeOrder(s.gradeSpan))).map((s) => s.id),
     [frameworkSets, grades],
   )
   const chosenSets = useMemo(() => published.filter((s) => setIds.includes(s.id)), [published, setIds])
@@ -320,18 +329,28 @@ export default function EvidencePackets() {
         <div>
           <SectionLabel>Grade Level</SectionLabel>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            {availableGrades.map((g) => (
-              <Chip key={g} on={grades.includes(g)} onClick={() => { setGrades((p) => toggle(p, g)); setDomainCodes([]); setStandardKeys([]); setYears([]) }}>
-                {g}
-              </Chip>
-            ))}
-            {availableGrades.length === 0 && (
-              <p className="text-[12.5px] text-ink-3">
-                No published sets for {FRAMEWORKS.find((f) => f.id === framework)?.label} yet — create and publish a
-                standard set with this framework's documents to enable it.
-              </p>
-            )}
+            {GRADE_RANGE.map((n) => {
+              const label = `Grade ${n}`
+              const enabled = availableGrades.has(n)
+              return (
+                <Chip
+                  key={n}
+                  on={grades.some((g) => gradeOrder(g) === n)}
+                  disabled={!enabled}
+                  title={enabled ? undefined : `No published ${FRAMEWORKS.find((f) => f.id === framework)?.label} set for ${label} yet`}
+                  onClick={() => { setGrades((p) => toggle(p, label)); setDomainCodes([]); setStandardKeys([]); setYears([]) }}
+                >
+                  {label}
+                </Chip>
+              )
+            })}
           </div>
+          {availableGrades.size === 0 && (
+            <p className="mt-2 text-[12.5px] text-ink-3">
+              No published sets for {FRAMEWORKS.find((f) => f.id === framework)?.label} yet — create and publish a
+              standard set with this framework's documents to enable its grades.
+            </p>
+          )}
         </div>
 
         <div>
