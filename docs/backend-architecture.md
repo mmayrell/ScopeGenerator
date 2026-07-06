@@ -80,10 +80,9 @@ cannot attach headers to `<img>` requests.
 | `POST /sets/{id}/confirm-alignment` | `{ itemId }` → `StandardSet` | |
 | `POST /sets/{id}/resolve-artifact` | `{ artifactId }` → `StandardSet` | |
 | `POST /sets/{id}/ingest` | → `{ jobId }` (202) | extraction phase: standards tree + item bank (with question screenshots) + cross-document scope-conflict pass. Called automatically after the uploads land at creation; also the retry path. Idempotent with in-flight ingest jobs |
-| `POST /sets/{id}/build-lexicon` | → `{ jobId }` (202) | 409 until the tree exists, no artifact is blocked, every warning is resolved, and every AI-proposed alignment is confirmed. Builds the exhaustive cited glossary (re-posting on a built set rebuilds it); **publishes the set on success** |
-| `GET /sets/{id}/job` | → `JobStatus` | polled during extraction/lexicon builds |
+| `GET /sets/{id}/job` | → `JobStatus` | polled during extraction |
 | `GET /item-image/{setId}/{itemId}` | → `image/png` | question screenshot; auth via header or `?code=` |
-| `POST /sets/{id}/publish` | → `{ set: StandardSet }` | seeded sets (no uploads) publish immediately; uploaded sets 409 unless the full ingest flow completed (they normally auto-publish at lexicon build). Idempotent |
+| `POST /sets/{id}/publish` | → `{ set: StandardSet }` | seeded sets (no uploads) publish immediately; uploaded sets 409 unless extraction completed and every warning is resolved. Idempotent |
 | `POST /scopes` | `{ setId, mode, params }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job |
 | `GET /scopes/{id}` | → `Scope` | |
 | `GET /scopes/{id}/job` | → `JobStatus` (below) | polled by the generation screen |
@@ -157,7 +156,7 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
 (`host.json`: `functionTimeout: "00:10:00"`):
 
 1. **`plan`** (Stages 2–4): one Claude call (effort `high`). Input: the published set's tree (with
-   limits), items (with scope classes/demand profiles), the vocabulary glossary (`lexicon`), artifact usage notes, and the
+   limits), items (with scope classes/demand profiles), artifact usage notes, and the
    request (course/standard/topic). Output (structured): ordered units with lesson skeletons.
    Checkpoint to `jobs/<jobId>/plan.json`; set `totalUnits`; enqueue one `cards` message per unit.
 2. **`cards`** (Stage 5, parallel per unit): one Claude call per unit (effort `medium`,
@@ -199,7 +198,7 @@ Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is
   supersedes provably-dead jobs (no log entry in 15 minutes, or stop-requested and idle 3+
   minutes) instead of returning them forever.
 - Released-items documents are NOT extracted at ingestion: they are held as artifacts for scope
-  generation (the lexicon build still attaches them for vocabulary mining). The item bank, item
+  generation. The item bank, item
   screenshots, and alignment confirmations populate later, from scope generation; the
   `/item-image` endpoint and screenshot pipeline are retained for that stage.
 - `ingest` (`extract`, Stage 1a): uploads exceeding the 100-page ingestion limit are first split
@@ -212,11 +211,8 @@ Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is
   usage-notes enrichment; then one cross-document conflict pass consolidates warnings, each with an
   AI-suggested resolution (strict canonical Common Core is always the suggestion for CC-variant
   conflicts). Does NOT publish.
-- `ingest` (`lexicon`, Stage 1b): gated on all warnings resolved; one exhaustive Claude pass builds
-  the student-facing vocabulary glossary, every term cited to standard + artifact + page;
-  publishes the set on success. Legacy `run` messages route to `extract`.
 - previous single-step `ingest` (`run`) description, for history: for each uploaded PDF, Claude document call
-  (base64 PDF content block) extracts: standards → `StandardNode` tree with limits + lexicon seeds;
+  (base64 PDF content block) extracts: standards → `StandardNode` tree with limits;
   items → `ItemRecord[]` (text stand-in stems, `ai-proposed` alignments); unpacking/progression →
   usage notes enrichment. Extraction REPLACES extraction-derived state on re-runs (idempotent),
   preserving human-entered state (usage notes, acknowledged warnings, confirmed alignments by

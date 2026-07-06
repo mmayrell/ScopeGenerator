@@ -368,19 +368,6 @@ export const seedSets: StandardSet[] = [
     ],
     tree: ccssG4Tree,
     items,
-    lexicon: [
-      { term: 'area model', definition: 'A rectangle drawing that shows multiplication by splitting the rectangle into parts.', aliases: ['rectangular area model', 'open array'], source: 'UA Progressions NBT p.15' },
-      { term: 'base-ten blocks', definition: 'Blocks that show ones, tens, and hundreds to model numbers.', aliases: ['place-value blocks'], source: 'item vision pass, NY 2022' },
-      { term: 'comparison', definition: 'Telling how two amounts are alike or different, such as which is larger.', aliases: ['compare problem'], source: 'CCSS glossary situation tables' },
-      { term: 'equal groups', definition: 'Groups that each have the same number of objects.', aliases: [], source: 'CCSS glossary situation tables' },
-      { term: 'equation', definition: 'A math sentence with an equals sign showing two amounts are the same.', aliases: ['number sentence'], source: 'CCSS glossary' },
-      { term: 'fraction strip', definition: 'A strip of paper divided into equal parts to show fractions.', aliases: ['fraction bar'], source: 'UA Progressions NF p.3' },
-      { term: 'multi-step word problem', definition: 'A word problem that takes more than one step to solve.', aliases: ['multistep contextual'], source: 'CCSS glossary situation tables' },
-      { term: 'number line', definition: 'A line with numbers marked in order at equal distances.', aliases: ['number line diagram'], source: 'CCSS glossary' },
-      { term: 'place-value chart', definition: 'A chart that shows the value of each digit in a number.', aliases: [], source: 'UA Progressions NBT p.6' },
-      { term: 'rectangular array', definition: 'Objects arranged in equal rows and columns.', aliases: ['array'], source: 'CCSS glossary' },
-      { term: 'tape diagram', definition: 'A drawing of rectangles used to show the parts of a problem.', aliases: ['bar model', 'strip diagram'], source: 'CCSS glossary' },
-    ],
   },
   {
     id: 'set-teks-g6',
@@ -449,7 +436,6 @@ export const seedSets: StandardSet[] = [
     ],
     tree: teksG6Tree,
     items: [],
-    lexicon: [],
   },
 ]
 

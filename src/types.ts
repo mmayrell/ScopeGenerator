@@ -51,19 +51,6 @@ export interface StandardNode {
   children?: StandardNode[]
 }
 
-export interface LexiconTerm {
-  term: string
-  aliases: string[]
-  source: string
-  /** Student-appropriate definition shown next to the term. */
-  definition?: string
-  /** Standard code where the term is first introduced, shown as the citation. */
-  standard?: string
-  /** Cited artifact file name + PDF page. */
-  artifact?: string
-  page?: number
-}
-
 export interface ItemRecord {
   id: string
   source: string
@@ -106,7 +93,6 @@ export interface StandardSet {
   warnings: CoverageWarning[]
   tree: StandardNode[]
   items: ItemRecord[]
-  lexicon: LexiconTerm[]
   updated: string
 }
 

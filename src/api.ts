@@ -139,9 +139,6 @@ export const api = {
 
   ingestSet: (setId: string) => request<{ jobId: string }>('POST', `/sets/${encodeURIComponent(setId)}/ingest`),
 
-  buildLexicon: (setId: string) =>
-    request<{ jobId: string }>('POST', `/sets/${encodeURIComponent(setId)}/build-lexicon`),
-
   getSetJob: (setId: string) => request<JobStatus>('GET', `/sets/${encodeURIComponent(setId)}/job`),
 
   stopIngest: (setId: string) => request<{ jobId: string }>('POST', `/sets/${encodeURIComponent(setId)}/stop-ingest`),

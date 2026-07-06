@@ -13,7 +13,7 @@ import { newId, today } from '../shared/util'
  * (idempotent), and failing the job row if the queue write dies so a 'queued'
  * row with no message can't wedge the set forever.
  */
-async function enqueueIngest(set: StandardSet, step: 'extract' | 'lexicon', detail: string): Promise<string> {
+async function enqueueIngest(set: StandardSet, step: 'extract', detail: string): Promise<string> {
   const existing = await latestJobForSet(set.id)
   if (existing && existing.kind === 'ingest' && (existing.status === 'queued' || existing.status === 'running')) {
     // A 'running' row does not prove a live execution: the Consumption plan
@@ -27,7 +27,7 @@ async function enqueueIngest(set: StandardSet, step: 'extract' | 'lexicon', deta
     if (!dead) return existing.jobId
     await mutateJob(existing.jobId, (r) => {
       r.status = 'cancelled'
-      r.stage = r.stage.startsWith('Lexicon') ? 'Lexicon — Stopped' : 'Extraction — Stopped'
+      r.stage = 'Extraction — Stopped'
       pushLog(r, existing.cancelRequested ? 'Stopped by user — superseded by a new job' : 'Stalled (no progress in 15 minutes) — superseded by a new job')
     })
   }
@@ -37,9 +37,7 @@ async function enqueueIngest(set: StandardSet, step: 'extract' | 'lexicon', deta
     kind: 'ingest',
     setId: set.id,
     totalStages: 1,
-    // The 'Lexicon' prefix is how the frontend detects the job phase (banner
-    // copy and the retry route), so it must be present from creation.
-    stage: step === 'lexicon' ? 'Lexicon — Queued' : 'Queued',
+    stage: 'Queued',
     detail,
   })
   try {
@@ -127,7 +125,6 @@ api({
       warnings: [],
       tree: [],
       items: [],
-      lexicon: [],
       updated: today(),
     }
     await saveSet(set)
@@ -248,39 +245,6 @@ api({
   },
 })
 
-// POST /api/sets/{id}/build-lexicon → { jobId } — runs only after every
-// conflict/gap is resolved; builds the exhaustive cited glossary and publishes.
-// Re-posting on a built set rebuilds the glossary from scratch.
-api({
-  name: 'set-build-lexicon',
-  methods: ['POST'],
-  route: 'sets/{id}/build-lexicon',
-  handler: async (req) => {
-    const set = await getSet(requireParam(req, 'id'))
-    if (set.tree.length === 0) throw new HttpError(409, 'extraction has not produced a standards tree yet')
-    if (set.artifacts.some((a) => a.reviewStatus === 'blocked')) {
-      throw new HttpError(409, 'resolve the blocking artifact errors first')
-    }
-    const unresolved = set.warnings.filter((w) => !w.acknowledged).length
-    if (unresolved > 0) throw new HttpError(409, `resolve the remaining ${unresolved} conflict(s)/gap(s) first`)
-    const unconfirmed = set.items.filter((it) => it.confidence === 'ai-proposed').length
-    if (unconfirmed > 0) throw new HttpError(409, `confirm the remaining ${unconfirmed} AI-proposed alignment(s) first`)
-    // Seeded sets have no uploaded blobs — a rebuild there would overwrite the
-    // curated glossary with a zero-document pass.
-    let hasUploads = false
-    for await (const blob of uploadsContainer().listBlobsFlat({ prefix: `${set.id}/` })) {
-      void blob
-      hasUploads = true
-      break
-    }
-    if (!hasUploads) throw new HttpError(409, 'no uploaded documents to build the glossary from')
-    const jobId = await enqueueIngest(set, 'lexicon', `Lexicon build queued for ${set.name}`)
-    set.updated = today()
-    await saveSet(set)
-    return ok({ jobId }, 202)
-  },
-})
-
 // POST /api/sets/{id}/stop-ingest → { jobId } (202) — flags the active ingest
 // job; the worker halts at its next checkpoint (an in-flight AI call finishes
 // first) and settles the job as 'cancelled'.
@@ -302,7 +266,7 @@ api({
   },
 })
 
-// GET /api/sets/{id}/job → JobStatus — polled during extraction/lexicon builds
+// GET /api/sets/{id}/job → JobStatus — polled during extraction
 api({
   name: 'set-job',
   methods: ['GET'],
@@ -343,9 +307,9 @@ api({
   },
 })
 
-// POST /api/sets/{id}/publish → { set } — final gate. Uploaded sets publish
-// automatically when the lexicon build lands; this endpoint publishes seeded
-// sets (no uploads) and fully-ingested sets whose auto-publish was held.
+// POST /api/sets/{id}/publish → { set } — final gate. Seeded sets (no
+// uploads) publish immediately; uploaded sets publish once extraction is done
+// and every alignment issue is resolved.
 api({
   name: 'set-publish',
   methods: ['POST'],
@@ -365,8 +329,8 @@ api({
     }
     if (hasUploads) {
       const unresolved = set.warnings.filter((w) => !w.acknowledged).length
-      if (set.tree.length === 0 || unresolved > 0 || set.lexicon.length === 0) {
-        throw new HttpError(409, 'complete the ingest flow first: extraction → resolve conflicts → build lexicon')
+      if (set.tree.length === 0 || unresolved > 0) {
+        throw new HttpError(409, 'complete the ingest flow first: extraction → resolve alignment issues')
       }
     }
     set.published = true

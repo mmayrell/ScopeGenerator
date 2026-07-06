@@ -1,5 +1,5 @@
 import { odata } from '@azure/data-tables'
-import { LexiconTerm, Scope, StandardSet } from '../domain/types'
+import { Scope, StandardSet } from '../domain/types'
 import { HttpError } from '../shared/errors'
 import { sleep } from '../shared/util'
 import { dataContainer, entitiesTable, uploadsContainer } from './clients'
@@ -33,33 +33,7 @@ export async function saveSet(set: StandardSet): Promise<void> {
 }
 
 export async function getSetOrUndefined(id: string): Promise<StandardSet | undefined> {
-  const set = await getJsonOrUndefined<StandardSet>(dataContainer(), setBlobPath(id))
-  return set ? normalizeSet(set) : undefined
-}
-
-/**
- * Legacy set docs stored split lexicons ({ representations, problemTypes });
- * merge them (deduped by normalized term, first occurrence wins — the same
- * rule the pipeline's toTerms applies) into the single glossary on read so
- * pre-migration sets stay readable. The glossary is also mirrored back onto
- * `lexicons` because SPA bundles from before the glossary migration read
- * `set.lexicons.representations` unguarded — without the mirror, every
- * browser tab still on the old bundle white-screens the moment the new API
- * answers. Remove the mirror once every client is on the new bundle.
- */
-function normalizeSet(set: StandardSet): StandardSet {
-  const legacy = set as unknown as { lexicons?: { representations?: LexiconTerm[]; problemTypes?: LexiconTerm[] } }
-  if (!Array.isArray(set.lexicon)) {
-    const seen = new Set<string>()
-    set.lexicon = [...(legacy.lexicons?.representations ?? []), ...(legacy.lexicons?.problemTypes ?? [])].filter((t) => {
-      const key = t.term.trim().toLowerCase()
-      if (!key || seen.has(key)) return false
-      seen.add(key)
-      return true
-    })
-  }
-  legacy.lexicons = { representations: set.lexicon, problemTypes: [] }
-  return set
+  return getJsonOrUndefined<StandardSet>(dataContainer(), setBlobPath(id))
 }
 
 export async function getSet(id: string): Promise<StandardSet> {

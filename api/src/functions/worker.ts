@@ -3,7 +3,7 @@ import { JobMessage, Proposal, Scope } from '../domain/types'
 import { getSetOrUndefined, mutateScope, saveSet } from '../data/entities'
 import { mutateJob, pushLog } from '../data/jobs'
 import { generateCardsStep, generateFinalizeStep, generatePlanStep } from '../pipeline/generate'
-import { extractRunStep, lexiconRunStep } from '../pipeline/ingest'
+import { extractRunStep } from '../pipeline/ingest'
 import { applyProposalRunStep, iterateRunStep, proposalRunStep } from '../pipeline/proposals'
 import { rerunRunStep } from '../pipeline/rerun'
 import { today } from '../shared/util'
@@ -88,7 +88,15 @@ async function dispatch(msg: JobMessage, context: InvocationContext): Promise<vo
     case 'ingest/extract':
       return extractRunStep(msg, context)
     case 'ingest/lexicon':
-      return lexiconRunStep(msg, context)
+      // The lexicon step was removed from the pipeline; settle legacy queued
+      // messages cleanly instead of poisoning them.
+      await mutateJob(msg.jobId, (r) => {
+        r.status = 'complete'
+        r.stagesDone = r.totalStages
+        r.stage = 'Complete'
+        pushLog(r, 'Lexicon step removed from the pipeline — nothing to do')
+      })
+      return
     default:
       throw new Error(`unknown job route: ${route}`)
   }
@@ -104,8 +112,7 @@ async function markFailed(msg: JobMessage, error: string, context: InvocationCon
   try {
     await mutateJob(msg.jobId, (r) => {
       r.status = 'failed'
-      // Keep the 'Lexicon' prefix — the frontend routes retry by it.
-      r.stage = r.stage.startsWith('Lexicon') ? 'Lexicon — Failed' : 'Failed'
+      r.stage = 'Failed'
       r.error = error
       pushLog(r, `Failed after ${MAX_DEQUEUE_COUNT} attempts: ${error}`)
     })

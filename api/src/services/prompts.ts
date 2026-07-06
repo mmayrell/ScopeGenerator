@@ -50,8 +50,8 @@ const POLICIES = `Governing policies (spec §3, key excerpts verbatim):
 - P9/A3 (Editing Splits bar): "an error pattern justifies a split only when it reveals a new/unstable start cue, a new decision step or rule, or a missing prerequisite — otherwise it intensifies modeling inside the atom, or seeds a bridge where the confusion is between two atoms."`
 
 const APPENDIX_A = `Compiled granularity procedure (spec Appendix A — run per component; all decisions emit DecisionEntries):
-- A1 Decompose: candidate atoms from decomposition keys (fallback: standard sub-parts), informed by clarifications, the set glossary, and the problem-type vocabulary on the item records.
-- A2 Split Test (criteria verbatim): "new rule/strategy not previously taught · new vocabulary/concept label needing stabilization · new/hidden decision step changing the routine · unmastered representation/notation (first encounter of a normalized lexicon form) · high confusability with a look-alike skill · foundational preskill missing/weak · demand-band jump · documented error pattern (per P9)". Don't-split criteria: "same strategy steps · quantitative-only or context-only change · already-mastered representations · cumulative choose-among-mastered-routines goal."
+- A1 Decompose: candidate atoms from decomposition keys (fallback: standard sub-parts), informed by clarifications and the problem-type vocabulary on the item records.
+- A2 Split Test (criteria verbatim): "new rule/strategy not previously taught · new vocabulary/concept label needing stabilization · new/hidden decision step changing the routine · unmastered representation/notation (first encounter of a normalized representation form) · high confusability with a look-alike skill · foundational preskill missing/weak · demand-band jump · documented error pattern (per P9)". Don't-split criteria: "same strategy steps · quantitative-only or context-only change · already-mastered representations · cumulative choose-among-mastered-routines goal."
 - A3 Precedence & Tie-Breakers: "When split and don't-split criteria both genuinely fire, split criteria win." Tie-breakers in order: (1) new decision cues never before encountered → split; (2) can be rewritten with friendlier numbers/shorter text with the routine identical → don't split; (3) prerequisite gap that can't be refreshed quickly → split. The Editing Splits constraint caps error-pattern splits.
 - A4 Bridges: "discrimination/selection/switching only, no new rules"; seeded also by integrative keys; placed after both parents independently mastered; confusables separated in time.
 - A5 Modeling Scope: explicit modeling for new rules/misinterpretation risk, unmastered representations, high load/hidden steps, shaky preskills, look-alike confusion, fossilization-prone errors, demand jumps; extension for same-strategy/no-new-steps variation.
@@ -65,11 +65,11 @@ const CARD_RULES = `The fixed 13-field card (spec §7). EVERY field must be fill
 3 emphasis — the designation under the set's emphasis source, "not designated where none exists — never guessed."
 4 progression — two required layers: cross-grade (from interpretive documents) and within-course (the atoms immediately before and after in this skill's chain, by lesson reference).
 5 prerequisites — each prerequisite tagged taught-in-course (lesson ref) or prior-grade.
-6 boundary — "Explicit Included/Excluded lists in lexicon vocabulary with concrete parameters; excluded content points to where it lives instead when known; components running on inference marked inferred."
+6 boundary — "Explicit Included/Excluded lists in consistent set vocabulary with concrete parameters; excluded content points to where it lives instead when known; components running on inference marked inferred."
 7 newLearning — REQUIRED FORMAT, the atom triple: "start cue (what the student sees that signals this routine) + single decision path/strategy (named) + one observable response form. One of each, written so a stranger could build the lesson from it." Two routines or two response forms fails QC automatically. Write it as "Start cue: … Decision path: … Response form: …".
 8 approach — "Exactly one named strategy, selected per Stein (P3); then the modeling scope — cases explicitly modeled (the I Do → We Do set …) versus cases going straight to practice/extension." Begin new-learning approach fields with "Single strategy: <name>".
 9 nonGoals — forward-looking "do not teach yet" exclusions with citations, each pointing to where the content will be taught when known.
-10 ceiling — "Concrete parameters — number sizes, step counts, representation load, context complexity — in lexicon vocabulary, naming the hardest legitimate case. Inferred ceilings marked, with what they extrapolate from."
+10 ceiling — "Concrete parameters — number sizes, step counts, representation load, context complexity — in consistent set vocabulary, naming the hardest legitimate case. Inferred ceilings marked, with what they extrapolate from."
 11 assessment — P8 format: "Students are able to: [observable behavior] [task parameters] [conditions]" — observable verbs only; fluency flag with trigger basis when applicable, or its absence stated with basis; no percentages, rates, or counts.
 12 releasedItems — put the in-boundary item ids for this atom in itemRefs, ordered by closeness to ceiling; the field's content describes what is shown. "Contradiction-class items never appear here (ceiling citations only, in field 10). When no in-boundary item exists, the field carries a generated ceiling exemplar instead: one problem written at the rigor the corpus's assessments would demand, at the inferred ceiling, never exceeding the standard's boundary, unmistakably labeled 'Generated exemplar — not a released item', with its inference basis cited and the generation logged in the Decision record. The field is never empty." For such lessons: itemRefs is [], generatedExemplar is filled, and the releasedItems content must include the exact label text "Generated exemplar — not a released item".
 13 decisions — numbered DecisionEntries, "terse, numbered, tagged with rule IDs (P#/A#), and cited", covering the required entry types: (1) granularity, (2) strategy selection with its Stein basis, (3) boundary & ceiling calls (overrides/pins logged), (4) contradictions & conflicts with both sides cited, (5) assumptions under thin evidence. "If a type had nothing to decide, say so in one clause rather than omitting silently."
@@ -113,7 +113,6 @@ function setEvidence(set: StandardSet): Record<string, unknown> {
     codingNotes: set.codingNotes,
     emphasisSource: set.emphasisSource,
     tree: set.tree,
-    lexicon: set.lexicon,
     artifactUsageNotes: set.artifacts.map((a) => ({
       role: a.role,
       fileName: a.fileName,
@@ -305,8 +304,7 @@ Rules:
 ${jsonBlock('performance_report', report)}
 ${jsonBlock('protected_boundaries', scope.protectedBoundaries ?? [])}
 ${jsonBlock('targeted_unit', unit ?? scope.units)}
-${jsonBlock('scope_summary', { title: scope.title, request: scope.request, version: scope.version, units: scope.units.map((u) => ({ id: u.id, title: u.title, lessons: u.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type, locked: l.locked })) })) })}
-${jsonBlock('set_lexicon', set.lexicon)}`,
+${jsonBlock('scope_summary', { title: scope.title, request: scope.request, version: scope.version, units: scope.units.map((u) => ({ id: u.id, title: u.title, lessons: u.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type, locked: l.locked })) })) })}`,
   }
 }
 
@@ -350,7 +348,6 @@ ${CARD_RULES}
 
 ${jsonBlock('accepted_proposal', proposal)}
 ${jsonBlock('targeted_unit', unit)}
-${jsonBlock('set_lexicon', set.lexicon)}
 ${jsonBlock('item_bank_subset', itemsForCodes(set, [], unit.lessons.flatMap((l) => l.itemRefs)))}`,
   }
 }
@@ -380,7 +377,6 @@ User usage notes for this artifact (precedence level 5 — steering below the bo
 Output:
 - nodes: a FLAT array of every hierarchy node (grouping levels and standards), each with { code, norm, parentCode ('' for top-level nodes), label (heading text for grouping levels, '' otherwise), wording (verbatim standard text, '' for pure grouping nodes), limits (attached in-document limits, [] if none), fluency, emphasis ('not designated' unless the document states designations) }. Do NOT nest — the tree is rebuilt from parentCode.
 - setMeta: the document's own identity — { subject (e.g. "Mathematics"), grade (e.g. "Grade 4"), sourceOrganization (the publishing body as the document names it, e.g. "Common Core State Standards Initiative" or a state education agency) }.
-- representations / problemTypes: lexicon seed terms harvested from glossaries and taxonomy tables ({ term, aliases, source }).
 - coverageWarnings: ONLY contradictions or genuinely unreadable content inside THIS document — e.g. the document identifies as a different framework/grade than the set declares, or standards whose wording could not be captured. One sentence each, naming the specific standards affected. Do NOT flag partial coverage or absences (other documents cover their own subsets by design), boilerplate, formatting notes, or metadata quibbles. At most 3; [] when nothing rises to that bar.
 - usageNotes: a one-paragraph description of how the document parsed (hierarchy detected, coding scheme, where limits live).`,
   }
@@ -391,7 +387,7 @@ export function ingestItemsPrompt(set: StandardSet, artifact: Artifact | undefin
     system: ingestSystem('released-items extraction pipeline (Tier 2 — arbitrary released-item PDFs)'),
     user: `Extract every assessment item from the attached released-items PDF for the set "${set.name}" (${set.gradeSpan}).
 
-Tier-2 pipeline (spec §4.2): document triage → item segmentation → metadata extraction (state/test/year, item numbers, per-item alignment from item maps or inline annotations) → alignment resolution (official where the document supplies it; otherwise ai-proposed) → characterization (item type, response format, representations and problem types in lexicon terms, demand profile) → opportunistic capture (answer keys, rubrics) → completeness scoring.
+Tier-2 pipeline (spec §4.2): document triage → item segmentation → metadata extraction (state/test/year, item numbers, per-item alignment from item maps or inline annotations) → alignment resolution (official where the document supplies it; otherwise ai-proposed) → characterization (item type, response format, representations and problem types in consistent vocabulary terms, demand profile) → opportunistic capture (answer keys, rubrics) → completeness scoring.
 
 Rules:
 - page: the 1-based PDF page the item appears on. box: the item's bounding region on that page as PERCENTAGES of page width/height ({ x, y, w, h }, origin top-left) — cover the full question including its art and answer choices, nothing from neighboring items. These drive the screenshot crop; when you cannot localize an item confidently, set box to { x: 0, y: 0, w: 100, h: 100 } (full page) rather than guessing tightly.
@@ -402,7 +398,6 @@ Rules:
 - completeness: 0–1 score per record.
 - demandProfile: concrete difficulty parameters (number sizes, step counts, representation load, context complexity).
 
-Known glossary vocabulary to reuse for representations/problemTypes terms:${jsonBlock('lexicon', set.lexicon)}
 Set standards tree (for P2 classification):${jsonBlock('tree', set.tree)}
 User usage notes for this artifact (declares source description, window, coverage): ${artifact?.usageNotes || '(none)'}
 
@@ -420,7 +415,7 @@ export function ingestNotesPrompt(
   const roleText =
     role === 'unpacking'
       ? `an unpacking document (spec §4.3). Type it at ingestion: structured decomposition (keyed statements partitioning standards into assessable components, with clarifications/limits, type designations, emphasis groupings) or narrative interpretation (prose, indexed for retrieval; genuine cognitive-demand tags admissible per P6; documented misconceptions admissible per P9; subject to the P7 stance firewall).`
-      : `a progression document (spec §4.4). Chunk by grade + heading anchored on inline standard codes. Three harvests: the representation lexicon; documented misconceptions (P9 evidence); worked problems as secondary rigor evidence when item evidence is thin — always cited as secondary, never scope-expanding. Stance firewall per P7: mine for sequencing, placement, prerequisites, boundaries, representation vocabulary, misconceptions, and worked problems — never for instructional stance.`
+      : `a progression document (spec §4.4). Chunk by grade + heading anchored on inline standard codes. Three harvests: representation vocabulary; documented misconceptions (P9 evidence); worked problems as secondary rigor evidence when item evidence is thin — always cited as secondary, never scope-expanding. Stance firewall per P7: mine for sequencing, placement, prerequisites, boundaries, representation vocabulary, misconceptions, and worked problems — never for instructional stance.`
   return {
     system: ingestSystem(`${role} document indexer`),
     user: `Index the attached PDF for the set "${set.name}" (${set.gradeSpan}). It fills the role of ${roleText}
@@ -483,62 +478,6 @@ Extracted item alignments:${jsonBlock('items', itemDigest)}
 Artifacts and their usage notes:${jsonBlock('artifacts', set.artifacts.map((a) => ({ role: a.role, file: a.fileName, notes: a.usageNotes })))}
 
 Output warnings: [{ text, kind, suggestion }] — text is one sentence naming the specific documents/standards affected; ordered most consequential first; [] if the documents genuinely agree.`,
-  }
-}
-
-/**
- * Lexicon build (runs only after every conflict/gap is resolved). One
- * comprehensive glossary of student-facing, grade-appropriate vocabulary,
- * every term cited to its governing standard + artifact + page.
- */
-export function ingestLexiconPrompt(set: StandardSet): Prompt {
-  const resolutions = set.warnings
-    .filter((w) => w.acknowledged && w.resolution)
-    .map((w) => `${w.text} → RESOLVED: ${w.resolution}`)
-  return {
-    system: ingestSystem(
-      'glossary builder. The glossary is the controlled vocabulary every later stage speaks — a vision pass term and a progression term must resolve to the same normalized entry or the split logic misfires.',
-    ),
-    user: `Build the vocabulary glossary for the set "${set.name}" (${set.gradeSpan}). The attached PDFs are the set's uploaded documents, in artifact-list order.
-
-Build ONE comprehensive glossary of the EXPECTED STUDENT-FACING vocabulary for this set — every term official documentation shows a ${set.gradeSpan} student is expected to recognize, interpret, or produce, within the scope of these standards.
-
-Vocabulary consists ONLY of lexical items — words or fixed mathematical terms — that students are expected to recognize, understand, or use ("perimeter", "equivalent fractions", "line of symmetry"). Vocabulary is NOT concepts, procedures, explanations, rules, strategies, success criteria, learning objectives, or descriptive phrases — "compare two fractions with different numerators", "use the four operations to solve problems", and "round to the nearest ten" are not glossary entries, however student-facing the activity is.
-
-Be EXTREMELY CONSERVATIVE when extracting vocabulary. Include only established mathematical terms that students are expected to recognize, define, or use. Do NOT invent labels for concepts, patterns, diagrams, relationships, or instructional ideas simply because they can be described with a phrase. If a term is not an established piece of mathematical terminology used consistently in official student-facing materials or assessments, exclude it. Prefer omitting a borderline term over introducing unnecessary vocabulary.
-
-The determination you are making for every candidate term: is it expected STUDENT-FACING vocabulary — not merely a term that appears in educator documentation. A term is supported only when official documentation provides evidence that students are expected to recognize, interpret, or produce it.
-
-Strong evidence (highest confidence):
-- The term appears in released assessment items presented directly to students (stems, answer choices, directions).
-- The term appears in official student glossaries, reference sheets, or vocabulary lists.
-- Official assessment frameworks, evidence statements, or item specifications explicitly identify the term as student-facing terminology.
-- Official progression or support documents explicitly state that students should learn or use the term.
-
-NEVER sufficient as sole evidence:
-- The wording of the standards.
-- Explanatory narrative written for educators.
-- Curriculum guidance or implementation notes.
-- Examples intended for teachers.
-- General educational knowledge.
-A term backed only by these sources is educator vocabulary, not student vocabulary — "isometric grid" (progression narrative), "valid chain of reasoning with equals signs" (evidence-statement phrasing), and "multiplicative comparison structure" (framework analysis) are all excluded this way. If no official evidence exists that students are expected to know the term, do not include it.
-
-Rules:
-- GRADE-APPROPRIATE is a hard filter: exclude vocabulary above the grade's expectations. Below-grade terms still in everyday use at this grade stay ("addition" is still ${set.gradeSpan} vocabulary).
-- Exhaustive within the evidence rules: sweep every released item, every student glossary/reference sheet, and every explicit students-should-know statement in the corpus. A term with qualifying evidence anywhere must appear, once, normalized, with its aliases collected onto one entry. Exhaustive and conservative are compatible: sweep everything, but the conservatism above governs what counts as a term — completeness never justifies admitting a borderline one.
-- term: the normalized student-facing form.
-- definition: a concise student-appropriate definition of the term — one sentence in language a ${set.gradeSpan} student reads, the way a student glossary would define it (e.g. "perimeter: the distance around the outside of a shape"). Define the term itself, not the standard's expectations about it.
-- aliases: every variant/synonym the documents use (kept as data for term normalization; not displayed).
-- standard: the standard where the term is INTRODUCED FOR THE FIRST TIME — the earliest standard in the set's instructional sequence whose content brings the word into student use (normalized join code, e.g. "4.NF.1"). Not the standard that uses it most; the one that introduces it.
-- artifact: the file name of the uploaded document that best evidences the term. page: the 1-based PDF page in that document where it appears. They must be real locations, not guesses.
-- source: one short phrase of context (e.g. "standards glossary", "item stems 2022–2024", "progression worked examples").
-- Respect the user's recorded gap/conflict resolutions below — terms from scope the resolutions excluded do not belong in the glossary.
-
-Recorded resolutions:${jsonBlock('resolutions', resolutions)}
-Parsed standards tree (digest):${jsonBlock('tree', flattenTreeDigest(set.tree).slice(0, 400))}
-Artifact list (index order matches the attached documents):${jsonBlock('artifacts', set.artifacts.map((a) => a.fileName))}
-
-Output terms: [{ term, definition, aliases, standard, artifact, page, source }], normalized, deduplicated, in alphabetical order by term.`,
   }
 }
 

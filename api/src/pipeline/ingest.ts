@@ -3,7 +3,6 @@ import {
   Artifact,
   CoverageWarning,
   JobMessage,
-  LexiconTerm,
   StandardNode,
   StandardSet,
 } from '../domain/types'
@@ -14,18 +13,15 @@ import { generateStructured } from '../services/claude'
 import {
   ingestConflictsPrompt,
   ingestItemCountPrompt,
-  ingestLexiconPrompt,
   ingestNotesPrompt,
   ingestStandardsPrompt,
 } from '../services/prompts'
 import {
   INGEST_CONFLICTS_SCHEMA,
   INGEST_ITEM_COUNT_SCHEMA,
-  INGEST_LEXICON_SCHEMA,
   INGEST_NOTES_SCHEMA,
   INGEST_STANDARDS_SCHEMA,
   WireIngestConflicts,
-  WireIngestLexicon,
   WireIngestNotes,
   WireIngestStandards,
   WireItemCount,
@@ -194,12 +190,12 @@ async function stopRequested(jobId: string): Promise<boolean> {
   }
 }
 
-async function settleCancelled(jobId: string, phase: 'extract' | 'lexicon'): Promise<void> {
+async function settleCancelled(jobId: string): Promise<void> {
   await mutateJob(jobId, (r) => {
     r.status = 'cancelled'
     // The stage prefix keeps the frontend's phase detection working, so
     // Resume re-runs the right step.
-    r.stage = phase === 'lexicon' ? 'Lexicon — Stopped' : 'Extraction — Stopped'
+    r.stage = 'Extraction — Stopped'
     pushLog(r, 'Stopped by user')
   })
 }
@@ -212,7 +208,7 @@ async function settleCancelled(jobId: string, phase: 'extract' | 'lexicon'): Pro
  * generation. A final cross-document pass
  * finds scope conflicts between the documents and consolidates coverage gaps —
  * each warning carrying the AI's suggested default resolution. The set is NOT
- * published: the user resolves the warnings, then the lexicon step runs.
+ * published: the user resolves the warnings, then publishes.
  */
 export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): Promise<void> {
   if (!msg.setId) throw new Error('ingest message missing setId')
@@ -228,13 +224,13 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
   })
 
   // Documents over the 100-page limit are split into ≤100-page parts here
-  // (items included — the lexicon build attaches them and faces the same caps).
+  // (items included — scope generation attaches them and faces the same caps).
   blobs = await splitOversizedUploads(set, blobs, msg.jobId, ctx)
 
   // Released-items documents are NOT item-extracted at ingestion — they are
-  // held as artifacts for scope generation (and mined by the lexicon build).
-  // Each gets a cheap counting pass so its card can show how many items it
-  // holds. The standards document still processes first.
+  // held as artifacts for scope generation. Each gets a cheap counting pass so
+  // its card can show how many items it holds. The standards document still
+  // processes first.
   const rolePriority: Record<string, number> = { standards: 0, unpacking: 1, progression: 2, items: 3 }
   blobs.sort((a, b) => (rolePriority[a.role] ?? 9) - (rolePriority[b.role] ?? 9))
 
@@ -275,7 +271,7 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
     if (await stopRequested(msg.jobId)) {
       set.updated = today()
       await saveSet(set)
-      await settleCancelled(msg.jobId, 'extract')
+      await settleCancelled(msg.jobId)
       ctx.log(`ingest/extract ${msg.jobId}: stopped by user after ${stagesDone} document(s)`)
       return
     }
@@ -367,7 +363,7 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
   if (await stopRequested(msg.jobId)) {
     set.updated = today()
     await saveSet(set)
-    await settleCancelled(msg.jobId, 'extract')
+    await settleCancelled(msg.jobId)
     ctx.log(`ingest/extract ${msg.jobId}: stopped by user before the conflict pass`)
     return
   }
@@ -414,109 +410,6 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
     )
   })
   ctx.log(`ingest/extract ${msg.jobId}: ${blobs.length} blobs, ${set.warnings.length} warnings, ${blocked} blocked`)
-}
-
-/**
- * Kind `ingest`, step `lexicon` (runs only after the user resolved every
- * conflict/gap): one exhaustive Claude pass over the full document corpus
- * builds the student-facing vocabulary glossary, every term cited to its
- * governing standard + artifact + PDF page. Always rebuilds from scratch
- * (idempotent overwrite), so the same step serves first builds, redelivered
- * attempts, and user-requested rebuilds. Publishes the set on success.
- */
-export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): Promise<void> {
-  if (!msg.setId) throw new Error('ingest message missing setId')
-  const set = await getSet(msg.setId)
-
-  const blobs = await listUploads(msg.setId)
-  const documents: string[] = []
-  const documentNames: string[] = []
-  for (const blob of blobs) {
-    if (blob.size > MAX_PDF_BYTES) continue
-    const buffer = await uploadsContainer().getBlobClient(blob.name).downloadToBuffer()
-    const inspection = await inspectPdf(buffer)
-    if (inspection.kind === 'encrypted') continue
-    const pages = inspection.kind === 'ok' ? inspection.pages : countPdfPages(buffer)
-    if (pages > MAX_PDF_PAGES) continue
-    documents.push(buffer.toString('base64'))
-    documentNames.push(blob.fileName)
-  }
-
-  await mutateJob(msg.jobId, (r) => {
-    r.status = 'running'
-    r.totalStages = 1
-    r.stagesDone = 0 // a redelivered old-code attempt may have left stagesDone at 1 of 2
-    r.stage = 'Lexicon — Glossary'
-    pushLog(r, `Building the vocabulary glossary from ${documents.length} document(s), steered by the recorded resolutions`)
-  })
-
-  const toTerms = (out: WireIngestLexicon): LexiconTerm[] => {
-    const seen = new Set<string>()
-    const terms: LexiconTerm[] = []
-    for (const t of out.terms) {
-      const key = t.term.trim().toLowerCase()
-      if (!key || seen.has(key)) continue
-      seen.add(key)
-      terms.push({
-        term: t.term.trim(),
-        aliases: t.aliases,
-        source: t.source,
-        ...(t.definition.trim() ? { definition: t.definition.trim() } : {}),
-        ...(t.standard.trim() ? { standard: t.standard.trim() } : {}),
-        ...(t.artifact.trim() ? { artifact: t.artifact.trim() } : {}),
-        ...(t.page >= 1 ? { page: t.page } : {}),
-      })
-    }
-    return terms
-  }
-
-  if (await stopRequested(msg.jobId)) {
-    await settleCancelled(msg.jobId, 'lexicon')
-    return
-  }
-
-  // A rebuild replaces the glossary wholesale: clear the old list up front so
-  // the UI never shows stale terms while (or after) the new build runs.
-  if (set.lexicon.length > 0) {
-    set.lexicon = []
-    set.updated = today()
-    await saveSet(set)
-  }
-
-  const glossary = await generateStructured<WireIngestLexicon>({
-    ...ingestLexiconPrompt(set),
-    schema: INGEST_LEXICON_SCHEMA,
-    documents,
-    effort: 'high', // exhaustiveness is the requirement
-  })
-
-  // A stop requested while the call was in flight discards the result (the
-  // glossary stays empty until the next build) and must not publish.
-  if (await stopRequested(msg.jobId)) {
-    await settleCancelled(msg.jobId, 'lexicon')
-    return
-  }
-  set.lexicon = toTerms(glossary)
-
-  // Publish once the lexicon lands — unless a blocking fit-validation error
-  // remains (P10: blocking errors halt publish until resolved).
-  const blocked = set.artifacts.filter((a) => a.reviewStatus === 'blocked').length
-  if (blocked === 0) set.published = true
-  set.updated = today()
-  await saveSet(set)
-
-  await mutateJob(msg.jobId, (r) => {
-    r.status = 'complete'
-    r.stagesDone = r.totalStages
-    r.stage = 'Complete'
-    pushLog(
-      r,
-      blocked === 0
-        ? `Glossary built (${set.lexicon.length} terms); set published`
-        : `Glossary built, but ${blocked} blocking artifact error(s) hold publish until resolved`,
-    )
-  })
-  ctx.log(`ingest/lexicon ${msg.jobId}: ${set.lexicon.length} glossary terms from ${documentNames.length} docs, published=${set.published}`)
 }
 
 function findArtifact(set: StandardSet, role: string, fileName: string): Artifact | undefined {

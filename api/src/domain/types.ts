@@ -58,19 +58,6 @@ export interface StandardNode {
   children?: StandardNode[]
 }
 
-export interface LexiconTerm {
-  term: string
-  aliases: string[]
-  source: string
-  /** Student-appropriate definition shown next to the term. */
-  definition?: string
-  /** Standard code where the term is first introduced, shown as the citation. */
-  standard?: string
-  /** Cited artifact file name + PDF page. */
-  artifact?: string
-  page?: number
-}
-
 export interface ItemRecord {
   id: string
   source: string
@@ -112,7 +99,6 @@ export interface StandardSet {
   warnings: CoverageWarning[]
   tree: StandardNode[]
   items: ItemRecord[]
-  lexicon: LexiconTerm[]
   updated: string
 }
 
@@ -332,7 +318,7 @@ export interface JobStatus {
 export interface JobMessage {
   jobId: string
   kind: JobKind
-  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'lexicon' // 'run' for single-step kinds; ingest uses extract → lexicon
+  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'lexicon' // 'run' for single-step kinds; 'lexicon' only for legacy queued messages
   scopeId?: string
   setId?: string
   unitIndex?: number // for step 'cards'

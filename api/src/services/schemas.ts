@@ -202,7 +202,6 @@ export const APPLY_SCHEMA = withLessonDefs(
   }),
 )
 
-const LEXICON_TERM = obj({ term: STR, aliases: arr(STR), source: STR })
 
 // Flat StandardNode list — parentCode '' marks a root; the tree is rebuilt in code.
 export const INGEST_STANDARDS_SCHEMA = obj({
@@ -218,8 +217,6 @@ export const INGEST_STANDARDS_SCHEMA = obj({
       emphasis: enums(['Major', 'Supporting', 'Additional', 'not designated']),
     }),
   ),
-  representations: arr(LEXICON_TERM),
-  problemTypes: arr(LEXICON_TERM),
   setMeta: obj({ subject: STR, grade: STR, sourceOrganization: STR }),
   coverageWarnings: arr(STR),
   usageNotes: STR,
@@ -265,20 +262,6 @@ export const INGEST_CONFLICTS_SCHEMA = obj({
       text: STR,
       kind: enums(['gap', 'conflict']),
       suggestion: STR,
-    }),
-  ),
-})
-
-export const INGEST_LEXICON_SCHEMA = obj({
-  terms: arr(
-    obj({
-      term: STR,
-      definition: STR,
-      aliases: arr(STR),
-      standard: STR,
-      artifact: STR,
-      page: INT,
-      source: STR,
     }),
   ),
 })
@@ -394,8 +377,6 @@ export interface WireStandardNode {
 
 export interface WireIngestStandards {
   nodes: WireStandardNode[]
-  representations: { term: string; aliases: string[]; source: string }[]
-  problemTypes: { term: string; aliases: string[]; source: string }[]
   setMeta: { subject: string; grade: string; sourceOrganization: string }
   coverageWarnings: string[]
   usageNotes: string
@@ -439,10 +420,6 @@ export interface WireItemCount {
 
 export interface WireIngestConflicts {
   warnings: { text: string; kind: 'gap' | 'conflict'; suggestion: string }[]
-}
-
-export interface WireIngestLexicon {
-  terms: { term: string; definition: string; aliases: string[]; standard: string; artifact: string; page: number; source: string }[]
 }
 
 function toCardField(w: WireCardField) {

@@ -13,7 +13,7 @@ const roleLabel: Record<ArtifactRole, string> = {
   progression: 'Progressions / vertical alignment',
 }
 
-const tabs = ['Configuration', 'Artifacts', 'Standards Tree', 'Alignment Issues', 'Lexicon'] as const
+const tabs = ['Configuration', 'Artifacts', 'Standards Tree', 'Alignment Issues'] as const
 
 /**
  * Deterministic default resolution per gap class: the same warning text always
@@ -179,19 +179,21 @@ export default function SetDetail() {
   const [tab, setTab] = useState<(typeof tabs)[number]>('Configuration')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const [job, setJob] = useState<JobStatus | null>(null)
+  const [jobRaw, setJob] = useState<JobStatus | null>(null)
+  // The lexicon step was removed from the pipeline; production may still hold
+  // legacy lexicon job rows — the UI ignores them entirely.
+  const job = jobRaw && jobRaw.stage.startsWith('Lexicon') ? null : jobRaw
   const [flowError, setFlowError] = useState<string | null>(null)
   const [resolvingAll, setResolvingAll] = useState(false)
   const [stopping, setStopping] = useState(false)
-  const [lexStarting, setLexStarting] = useState(false)
+  const [publishing, setPublishing] = useState(false)
   const nav = useNavigate()
   const set = sets.find((s) => s.id === id)
   const setId = set?.id
   const jobActive = !!job && job.kind === 'ingest' && (job.status === 'queued' || job.status === 'running')
-  const jobPhase: 'extract' | 'lexicon' = job?.stage.startsWith('Lexicon') ? 'lexicon' : 'extract'
 
   // Latest ingest job for this set — one fetch on mount, so a running
-  // extraction/lexicon build is picked up after navigation or reload.
+  // extraction is picked up after navigation or reload.
   useEffect(() => {
     if (!setId) return
     let cancelled = false
@@ -223,26 +225,11 @@ export default function SetDetail() {
 
   if (!set) return <div className="p-10 text-ink-3">Standard set not found.</div>
 
-  const startLexicon = async () => {
-    if (lexStarting) return
-    setLexStarting(true)
-    setFlowError(null)
-    try {
-      await api.buildLexicon(set.id)
-      setJob(await api.getSetJob(set.id))
-    } catch (e) {
-      setFlowError(e instanceof Error ? e.message : 'Could not start the lexicon build.')
-    } finally {
-      setLexStarting(false)
-    }
-  }
-
   const retryJob = async () => {
     setFlowError(null)
     setStopping(false)
     try {
-      if (jobPhase === 'lexicon') await api.buildLexicon(set.id)
-      else await api.ingestSet(set.id)
+      await api.ingestSet(set.id)
       setJob(await api.getSetJob(set.id))
     } catch (e) {
       setFlowError(e instanceof Error ? e.message : 'Could not restart the job.')
@@ -261,45 +248,33 @@ export default function SetDetail() {
   }
 
   const publish = async () => {
-    await publishSet(set.id)
+    if (publishing) return
+    setPublishing(true)
+    setFlowError(null)
+    try {
+      await publishSet(set.id)
+    } finally {
+      setPublishing(false)
+    }
   }
 
   const blocking = set.artifacts.filter((a) => a.reviewStatus === 'blocked')
   const unack = set.warnings.filter((w) => !w.acknowledged)
   const aiQueue = set.items.filter((it) => it.confidence === 'ai-proposed')
-  // `?? []` guards the deploy-skew window where the API still serves the legacy shape.
-  const lexicon = set.lexicon ?? []
-  const lexiconBuilt = lexicon.length > 0
   const canPublish = blocking.length === 0 && unack.length === 0
-  // Uploaded sets publish automatically when the lexicon lands; the button is
-  // for seeded sets and for a held auto-publish (blocked artifact at build time).
-  const showPublish = !set.published && !jobActive && lexiconBuilt
-  const readyForLexicon =
-    !set.published &&
-    !jobActive &&
-    set.tree.length > 0 &&
-    unack.length === 0 &&
-    aiQueue.length === 0 &&
-    blocking.length === 0 &&
-    !lexiconBuilt
 
   // Lifecycle stepper: where the set is between upload and publish, and what to do next.
-  const extractActive = jobActive && jobPhase === 'extract'
-  const lexActive = jobActive && jobPhase === 'lexicon'
+  const extractActive = jobActive
   const extractionDone = set.tree.length > 0
   const resolveOutstanding = unack.length + aiQueue.length
+  const showPublish = !set.published && !jobActive && extractionDone
+  const readyToPublish = showPublish && canPublish && aiQueue.length === 0
   type StepState = 'done' | 'active' | 'error' | 'pending'
   const steps: { label: string; state: StepState; tab: (typeof tabs)[number] }[] = [
     { label: 'Uploaded\nDocuments', state: 'done', tab: 'Artifacts' },
     {
       label: 'AI\nExtraction',
-      state: extractActive
-        ? 'active'
-        : extractionDone
-          ? 'done'
-          : job?.status === 'failed' && jobPhase === 'extract'
-            ? 'error'
-            : 'pending',
+      state: extractActive ? 'active' : extractionDone ? 'done' : job?.status === 'failed' ? 'error' : 'pending',
       tab: 'Standards Tree',
     },
     {
@@ -308,11 +283,10 @@ export default function SetDetail() {
       tab: 'Alignment Issues',
     },
     {
-      label: 'Build\nLexicon',
-      state: lexActive ? 'active' : lexiconBuilt ? 'done' : job?.status === 'failed' && jobPhase === 'lexicon' ? 'error' : 'pending',
-      tab: 'Lexicon',
+      label: 'Publish',
+      state: set.published ? 'done' : readyToPublish ? 'active' : 'pending',
+      tab: 'Configuration',
     },
-    { label: 'Publish', state: set.published ? 'done' : 'pending', tab: 'Configuration' },
   ]
 
   return (
@@ -381,7 +355,7 @@ export default function SetDetail() {
         <div className="animate-rise mt-6 rounded-2xl border border-accent/25 bg-accent-wash/40 p-5 shadow-(--shadow-lift)">
           <div className="flex items-center justify-between gap-4">
             <SectionLabel>
-              {jobPhase === 'lexicon' ? 'AI Lexicon Build' : 'Extracting standards and checking for alignment conflicts.'}
+              Extracting standards and checking for alignment conflicts.
             </SectionLabel>
             <div className="flex items-center gap-3">
               <Mono className="text-[11px] text-ink-3">
@@ -402,7 +376,7 @@ export default function SetDetail() {
           </div>
           <div className="mt-2.5 flex items-center gap-2 text-[12.5px] text-ink-2">
             <span className="stage-pulse h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-            <span className="font-medium">{jobPhase === 'lexicon' ? 'Lexicon building in progress' : job.stage}</span>
+            <span className="font-medium">{job.stage}</span>
           </div>
         </div>
       )}
@@ -410,9 +384,7 @@ export default function SetDetail() {
       {job?.status === 'failed' && !set.published && !jobActive && (
         <div className="animate-rise mt-6 flex items-center justify-between gap-4 rounded-xl border border-rust/25 bg-rust-wash px-4 py-3">
           <div className="text-[12.5px] leading-relaxed text-rust">
-            <span className="font-mono text-[10px] font-semibold uppercase">
-              {jobPhase === 'lexicon' ? 'lexicon build failed' : 'extraction failed'}
-            </span>{' '}
+            <span className="font-mono text-[10px] font-semibold uppercase">extraction failed</span>{' '}
             — {job.error ?? 'the job died before completing.'}
           </div>
           <Btn onClick={() => void retryJob()}>Retry</Btn>
@@ -422,27 +394,23 @@ export default function SetDetail() {
       {job?.status === 'cancelled' && !set.published && !jobActive && (
         <div className="animate-rise mt-6 flex items-center justify-between gap-4 rounded-xl border border-amber-ink/25 bg-amber-wash px-4 py-3">
           <div className="text-[12.5px] leading-relaxed text-amber-ink">
-            <span className="font-mono text-[10px] font-semibold uppercase">
-              {jobPhase === 'lexicon' ? 'lexicon build stopped' : 'extraction stopped'}
-            </span>{' '}
+            <span className="font-mono text-[10px] font-semibold uppercase">extraction stopped</span>{' '}
             — halted by user; already-extracted results are kept.
           </div>
           <Btn onClick={() => void retryJob()}>Resume</Btn>
         </div>
       )}
 
-      {readyForLexicon && (
+      {readyToPublish && (
         <div className="animate-rise mt-6 flex items-center justify-between gap-4 rounded-2xl border border-verdant/25 bg-verdant-wash/60 p-5">
           <div>
-            <SectionLabel>Conflicts Resolved — Build the Lexicon</SectionLabel>
+            <SectionLabel>Conflicts Resolved — Ready to Publish</SectionLabel>
             <p className="mt-1 max-w-xl text-[12.5px] leading-relaxed text-ink-2">
-              AI reads every uploaded document under your recorded resolutions and builds one comprehensive glossary of
-              student-facing, grade-appropriate vocabulary — every term cited to its governing standard, source
-              document, and page.
+              Every alignment issue is resolved. Publish the standard set to make it available for scope generation.
             </p>
           </div>
-          <Btn kind="primary" disabled={lexStarting} onClick={() => void startLexicon()} className="shrink-0">
-            {lexStarting ? 'Starting…' : 'Build Lexicon'}
+          <Btn kind="primary" disabled={publishing} onClick={() => void publish()} className="shrink-0">
+            {publishing ? 'Publishing…' : 'Publish Set'}
           </Btn>
         </div>
       )}
@@ -713,71 +681,6 @@ export default function SetDetail() {
           </div>
         )}
 
-        {tab === 'Lexicon' && !lexiconBuilt && (
-          <div className="max-w-4xl rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
-            <div className="py-6 text-center">
-              <p className="text-[13.5px] leading-relaxed text-ink-2">
-                {extractActive
-                  ? 'AI extraction is running — once it completes, resolve the scope conflicts and confirm the AI-proposed alignments; the lexicon generates after that.'
-                  : lexActive
-                    ? 'AI is building the lexicon now — one comprehensive glossary of student-facing vocabulary, every term cited to its standard, document, and page.'
-                    : extractionDone && resolveOutstanding > 0
-                      ? `Extraction is complete — resolve the remaining ${[
-                          unack.length > 0 ? `${unack.length} conflict${unack.length === 1 ? '' : 's'}` : '',
-                          aiQueue.length > 0 ? `${aiQueue.length} alignment check${aiQueue.length === 1 ? '' : 's'}` : '',
-                        ]
-                          .filter(Boolean)
-                          .join(' and ')} in the Alignment Issues tab to generate the lexicon.`
-                      : readyForLexicon
-                        ? 'All checks are resolved — the lexicon is ready to generate.'
-                        : 'The lexicon generates after extraction and the alignment checks.'}
-              </p>
-              {readyForLexicon && (
-                <div className="mt-4 flex justify-center">
-                  <Btn kind="primary" disabled={lexStarting} onClick={() => void startLexicon()}>
-                    {lexStarting ? 'Starting…' : 'Build Lexicon'}
-                  </Btn>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {tab === 'Lexicon' && lexiconBuilt && (
-          <div className="max-w-4xl rounded-xl border border-hairline bg-panel p-4 shadow-(--shadow-lift)">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <SectionLabel>Glossary — {lexicon.length} Terms</SectionLabel>
-                <p className="mt-1 text-[11.5px] leading-relaxed text-ink-3">
-                  The following list provides student-facing, grade-appropriate vocabulary.
-                </p>
-              </div>
-              {/* Mirror the build-lexicon endpoint's gates — otherwise the button 409s. */}
-              {!jobActive && blocking.length === 0 && unack.length === 0 && aiQueue.length === 0 && (
-                <Btn disabled={lexStarting} onClick={() => void startLexicon()} className="shrink-0">
-                  {lexStarting ? 'Starting…' : 'Rebuild'}
-                </Btn>
-              )}
-            </div>
-            <div className="mt-3 space-y-2">
-              {[...lexicon]
-                .sort((a, b) => a.term.localeCompare(b.term))
-                .map((t) => (
-                  <div key={t.term} className="flex items-baseline justify-between gap-3 border-b border-hairline pb-1.5 last:border-0">
-                    <div>
-                      <Mono className="text-[12.5px] font-medium text-ink">{t.term}</Mono>
-                      {t.definition && <span className="ml-2 text-[12px] leading-relaxed text-ink-2">{t.definition}</span>}
-                    </div>
-                    {t.standard ? (
-                      <Mono className="shrink-0 text-[10.5px] text-ink-3">{t.standard}</Mono>
-                    ) : (
-                      <span className="shrink-0 text-[10.5px] text-ink-3">{t.source}</span>
-                    )}
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )
