@@ -9,6 +9,7 @@ import {
   StandardSet,
   Unit,
 } from '../domain/types'
+import { doctrineExcerptsFor, DoctrineQuery } from './doctrine'
 import { PlanLessonSkeleton, PlanOutput, PlanUnit } from './schemas'
 
 /**
@@ -81,6 +82,24 @@ const BLAST_RADIUS = `Blast radius (spec §8): "When a lesson splits or merges, 
 const EDITING_SPLITS = `Data-informed revision mapping (spec §8): "The tool maps the report onto framework actions using the engine's Editing Splits logic: splits where the reported errors reveal a new/unstable start cue, a new decision step, or a missing prerequisite; modeling intensification inside the atom where they don't; bridge insertion where the confusion runs between two atoms; ceiling or boundary adjustments where the report shows mis-set difficulty." Guardrails apply inside proposals: a change that collapses a boundary protected by a hard split criterion must carry a guardrail note citing the criterion instead of being silently proposed.`
 
 const OUTPUT_DISCIPLINE = `Respond with a single JSON object matching the required schema exactly. No prose outside the JSON, no markdown fences.`
+
+/**
+ * The doctrine-consultation block for card-writing stages: the matching
+ * chapter excerpts from Direct Instruction Mathematics (5th ed.) — the
+ * Instructional Approach is selected FROM the book's procedures and formats,
+ * not paraphrased from memory. Empty when no chapter matches (fallback: the
+ * doctrine principles in the system prompt still apply).
+ */
+const doctrineBlock = (q: DoctrineQuery): string => {
+  const excerpts = doctrineExcerptsFor(q)
+  if (!excerpts) return ''
+  return `
+Doctrine consultation — Direct Instruction Mathematics (5th ed., Stein, Kinder, Silbert & Carnine), the controlling method authority. The chapter excerpts below are the PRIMARY source for field 8 (Instructional Approach): select the single best strategy, its preskills, and the modeling scope FROM these instructional procedures and teaching formats — name the strategy the way the book teaches it, follow its recommended sequence and example selection, and cite the chapter (sourceType "doctrine", label = the chapter title). Where the excerpts do not cover the specific case, fall back to the doctrine principles in the system prompt.
+<doctrine_excerpts>
+${excerpts}
+</doctrine_excerpts>
+`
+}
 
 // The engine's foundational POVs (Lesson Granularity & Modeling Scope, v2 for
 // ANY standard set) — binding on every generation stage; nothing below may
@@ -214,7 +233,7 @@ export function cardsPrompt(
     user: `Generate complete 13-field lesson cards for the ${batch.length} lesson(s) of unit "${unit.id} — ${unit.title}" listed in batch_lessons, following the approved plan skeleton exactly (same lesson ids, same order, same types). Output ONLY the batch_lessons lessons — the unit's remaining lessons are produced by sibling calls; the full unit_skeleton is supplied so relational fields (Prerequisites, Progression Placement, Assessment Boundary, Non-Goals) can reference them by lesson id.
 
 ${CARD_RULES}
-
+${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: batch.map((l) => l.title), standardCodes: batch.flatMap((l) => l.standardCodes) })}
 Additional requirements:
 - evidence-locking is mandatory: generation returns { content, citations[] } per field; uncited fields 3–13 are rejected pre-QC (spec §6 Stage 5); fields 1–2 return citations: [].
 - decision entries must carry rule ids (P#/A#/D#) and quote both sides on every contradiction.
@@ -245,6 +264,7 @@ export function rerunLessonPrompt(
     user: `Regenerate the lesson card "${lesson.id} — ${lesson.title}" in place at the same granularity (spec §6 rerun re-entry: "regenerate-in-place → Stage 5 for that card"). Keep the lesson id, type, and position in the chain; produce a fresh 13-field card cited per the card rules (fields 3–13 cited; fields 1–2 citations: []).
 
 ${CARD_RULES}
+${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: [lesson.title], standardCodes: codes })}
 
 ${jsonBlock('scope_request', scope.request)}
 ${jsonBlock('containing_unit', { id: unit.id, title: unit.title, strand: unit.strand, lessons: unit.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type })) })}
@@ -286,6 +306,7 @@ Rules:
 - Fields 3–13 cited (fields 1–2 carry citations: []); decision entries carry rule ids (P#/A#).
 
 ${CARD_RULES}
+${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: unit.lessons.map((l) => l.title), standardCodes: codes })}
 
 ${jsonBlock('scope_request', scope.request)}
 ${jsonBlock('current_unit', unit)}
@@ -354,6 +375,7 @@ Rules:
 - Every rewritten field 3–13 keeps ≥1 citation (fields 1–2 stay citations: []); the PerformanceReport is citable as sourceType "performance-report".
 
 ${CARD_RULES}
+${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: unit.lessons.map((l) => l.title), standardCodes: [] })}
 
 ${jsonBlock('accepted_proposal', proposal)}
 ${jsonBlock('targeted_unit', unit)}

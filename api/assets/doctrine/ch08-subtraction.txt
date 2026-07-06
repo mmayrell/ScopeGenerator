@@ -1,0 +1,1185 @@
+Direct Instruction Mathematics (5th ed.), Stein, Kinder, Silbert & Carnine — Chapter: Subtraction
+
+Chapter
+8
+Subtraction
+LEARNING OUTCOMES
+8.1 Discuss the two stages of teaching subtraction to young students and the 
+sequence of problem types appropriate for each stage.
+8.2 Describe the procedures recommended to promote conceptual understanding of 
+beginning subtraction.
+8.3 Outline instructional procedures to teach beginning subtraction including the 
+cross-out strategy and missing subtrahend strategy.
+8.4 Discuss the differences in the instructional strategies for teaching subtraction 
+without renaming and subtraction with renaming.
+SKILL HIERARCHY
+Subtraction instruction, like addition instruction, may be divided into two stages. During 
+the beginning stage, introducing the concept, the teacher presents strategies for solving simple subtraction problems with a single-digit minuend, such as 9 - 6 = ; the strategy at this 
+stage involves semi-concrete objects that represent each member in the subtraction problem. The 
+counting, numeral, and equality preskills for subtraction are the same as for addition. After subtraction has been initially taught, problems with a missing subtrahend can be presented. In these 
+problems, all numerals should be below 10 to simplify computation (7 — □ = 3 and 5 — □ = 3). 
+Again, the strategy involves using semi-concrete objects to represent the numerals in a problem.
+In the advanced stage, multi-digit subtraction, students compute basic facts mentally (without semi-concrete prompts). Basic subtraction facts are the 90 possible combinations in which 
+a one-digit subtrahend is subtracted from a one- or two-digit minuend and the difference is a 
+one-digit number. Procedures for teaching students to answer and eventually memorize basic 
+subtraction facts are discussed in Chapter 6.
+Three basic types of column subtraction problems are included in the multi-digit stage. The 
+easiest is the problem in which the subtrahend is smaller than the minuend in each column; 
+renaming is not required:
+49
+-24
+
+116 Part II Basic Concepts and Skills
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type Performance Indicator
+K
+1
+Conceptual introduction
+Subtracting a one- or two-digit number from a two-digit 57 45 28
+1
+number; no renaming
+Subtracting a one- or two-digit number from a two-digit
+-20 -3 —4
+54 46 70
+2
+number; renaming required
+Subtracting a one-, two-, or three-digit number from a three-18 -9 -38
+382 393 242
+2
+2
+digit number; renaming tens to ones
+Subtracting a two- or three-digit number from a three-digit 
+number; renaming from hundreds to ten
+Subtracting a two- or three-digit number from a three-digit
+-37 -174 -6
+423 418
+-171 -83
+352 724 534
+2
+2
+number; renaming from tens to ones and hundreds to tens
+Tens minus 1 facts
+Subtracting a two- or three-digit number from a three-digit
+-187 -578 -87
+70 - 1 = □
+40 - 1 = □
+80 - 1 = □
+504 905 700
+3
+number, zero in tens column; renaming from tens to ones 
+and hundreds to tens
+Subtracting a three- or four-digit number from a four-digit
+-21 -164 -86
+4689 5284 3481
+3
+number; renaming from thousands to hundreds
+Subtracting a one-, two-, three-, or four-digit number from
+-1832 -4631 -1681
+5342 6143 5231
+3
+a four-digit number; renaming required in several columns
+Subtracting a two-, three-, or four-digit number from a
+-68 -217 -1658
+4023 5304 5304
+3
+3
+four-digit number; a zero in either the tens or hundreds 
+column
+Hundreds minus 1 facts
+Subtracting a one-, two-, three-, or four-digit number from
+-184 -1211 -418
+700 - 1 = □
+400 - 1 = □
+800 - 1 = □
+4000 2001 8000
+3
+a four-digit number; a zero in the tens and hundreds column 
+Subtracting a one-, two-, three-, or four-digit number from a
+-1357 -1453 -4264
+1000 1000 1000
+4
+4
+4
+four-digit number with zeros in the hundreds, tens, and ones 
+columns
+Subtracting involving five- and six-digit numbers; with
+renaming
+Thousands minus 1 facts
+Subtracting from a number with four zeros
+-283 -82 -80
+342,523 38,402
+-18,534 -15,381
+5000 - 1 = □
+3000 - 1 = □
+1000 - 1 = □
+80,000 50,000
+-826 -8260
+
+Chapγer8 Subtraction 117
+In the second type of problem, one or more columns have a subtrahend that is larger than 
+the minuend:
+374 5437
+-28 -2859
+Such problems require renaming:
+34 becomes 34
+-15 -15
+Students need not have memorized all basic subtraction facts before problems with renaming are 
+introduced. They should, however, know enough facts to allow teachers to include a variety of 
+renaming problems.
+The third type of problem includes column subtraction problems that require renaming. 
+Included are problems with zeros in the minuend:
+<2p∕
+306 becomes 306
+-216 -216
+3991
+4000 becomes 4000
+and problems with renaming in consecutive columns:
+421 6342
+-247 °r -4971
+A more complete list of problem types and a suggested sequence of introduction appear in 
+the Instructional Sequence and Assessment Chart.
+CONCEPTUAL UNDERSTANDING
+A number of alternative demonstrations for introducing subtraction are suggested in elementary 
+mathematics textbooks. Among these are diagrams using pictures of objects; for example, 5 — 3 
+is represented as
+Another approach is the use of number lines; for example, 8 — 3 is represented as
+I--- 1--- 1--- 1--- 1--- 1--- 1----1--- 1
+1 2 3 4 5 6 7 8
+This text recommends a strategy that uses lines as semi-concrete objects. The strategy 
+teaches subtraction as crossing out; for example, 7 — 4 is represented as
+++++lll
+We recommend delaying the introduction of subtraction until students have demonstrated 
+mastery of the regular addition strategy. However, subtraction may be introduced prior to or 
+after addition problems with missing addends.
+INSTRUCTIONAL PROCEDURES: BEGINNING SUBTRACTION*∙∙∙∙∙∙∙
+Cross-out Strategy
+In the cross-out strategy recommended here, the student first draws the number of lines for the 
+minuend and then subtracts by crossing out the number of lines indicated by the subtrahend:
+6-4 = □
+11++++
+
+118 Part II Basic Concepts and Skills
+Next, the student counts the remaining lines and draws an equal number of lines on the 
+other side of the equal sign:
+6 - 4 = ∏ 
+ll++++ II
+Finally, the student writes the numeral representing that set of lines:
+6 — 4 = 0 
+ll++÷+ II
+Format 8.1: Subtraction with Lines shows the format for introducing subtraction. Note 
+that minus is used as a verb: “How many lines are you going to minus?” Since students have 
+already learned to identify the minus sign, they learn that the minus sign tells them to cross out 
+lines. Later, the term subtraction is introduced, and students learn that a minus tells them to 
+subtract. This is done intentionally to allow students to understand the concept of subtraction 
+without the additional demand of new vocabulary.
+In Parts A and B of the format, the teacher presents structured board and worksheet exercises focusing solely on the preskill task of crossing out lines and counting the remaining lines. 
+Because line drawing is a fine motor skill, many students in beginning mathematics instruction 
+may require extensive practice before they become proficient in crossing out the appropriate 
+number of lines. Part C is a structured worksheet exercise in which the teacher leads students as 
+they work entire problems: drawing lines for the first group, crossing out lines for the amount to 
+be subtracted, counting how many lines they end with, and then applying the equality rule. The 
+minuend in subtraction problems should be 10 or less so that drawing lines does not become too 
+cumbersome. Part D, the less structured worksheet exercise, is the critical part of the format. 
+The worksheet includes a mix of addition and subtraction problems. Instructionally-naive students often have difficulty discriminating which of the two similar problem-solving strategies 
+to use. The format provides systematic practice in helping students make this discrimination. 
+Supervised practice is continued until students can work problems with 80% to 90% accuracy.
+Missing Subtrahend Strategy
+Missing subtrahend problems (7 — □ = 3, 8 — □ = 1) can be introduced when the students can 
+do a worksheet including a mix of addition, regular subtraction, and addition problems with 
+missing addends with 80% to 90% accuracy. Since the strategy for working this type of problem 
+is relatively difficult to teach (students must circle some lines and cross out the remaining Unes), 
+we recommend not presenting the strategy until the end of first grade when the students have 
+had ample practice with the equality principle through missing addend problems.
+The strategy for missing subtrahend problems includes the steps shown in Summary Box 8.1.
+SUMMARY BOX 8.1
+Subtraction: Missing Subtrahend Strategy
+1. Students read problem.
+2. Students draw lines under minuend.
+3. Students determine the number they must end with 
+on both sides.
+4. Students circle three of the seven lines, since they 
+must end with three to make sides equal.
+5. Students cross out uncircled lines.
+6. Students count crossed-out lines and write numeral 
+in the box.
+Seven minus how many equals three?
+7- ∏ = 3 
+©HU
+7- ∏ = 3 
+©Hit
+7-0 =3
+©Hit
+
+Chapter 8 Subtraction 119
+The format for teaching missing subtrahend problems is similar to that for the missing 
+addend operation. The teacher has the students (a) draw lines under the numeral, (b) circle the 
+number of lines representing the difference, (c) cross out the remaining lines, and (d) count 
+crossed-out lines and write the appropriate numeral in the empty box.
+The teacher introduces the entire strategy in structured board and worksheet exercises, 
+stressing the equality principle. Finally, the teacher presents a less structured worksheet exercise 
+that includes a mix of subtraction, missing subtrahend, addition, and missing addend problems.
+Diagnosis and Remediation
+Diagnosis and remediation procedures for beginning subtraction problems are very similar to 
+those discussed for beginning addition problems. The basic steps below apply to diagnosing and 
+remedying errors:
+1. Diagnosis: The teacher analyzes worksheet errors and hypothesizes about the cause of 
+each error.
+2. Confirmation: The teacher interviews the student to determine the cause of the error if it is 
+not obvious.
+3. Reteaching: The teacher provides reteaching through board and/or worksheet presentations 
+focused on a component skill or a strategy.
+4. Assess: The teacher tests the student on a set of problems similar to the ones in which the 
+original errors were made.
+Once students begin working problems independently on their worksheets, their errors usually fall into two main categories:
+1. Strategy errors: a fundamental lack of understanding of the strategy
+2. Component-skill errors: a deficit in one or more of the component skills or preskills used in 
+the strategy
+Strategy errors are remedied by reintroducing the related format. Until the remedy is complete, 
+problems of that type should not appear on independent worksheets.
+Component-Skill Errors Component-skill errors are often difficult to diagnose. Note that in 
+the following problem, the student’s error may have resulted from misidentifying 3 as 4 or simply not crossing out the correct number of lines: 9 — 3 = [5].
+The teacher can determine the specific cause of the errors by looking for patterns. If a student works all of the problems correctly except those that include the numeral 3, the cause of the 
+errors would be the misidentification of the numeral 3. In addition to looking for patterns, the 
+teacher can ask the students to read each problem and describe what they are doing as they work 
+to confirm the cause of the errors.
+Once the teacher determines the specific component-skill deficit, he would reteach that specific skill for several lessons. If the skill is one that would cause students to miss many problems 
+(a skill such as crossing out lines), the teacher would not present any subtraction problems until 
+the students can perform the component skill independently. If the component skill is one that 
+causes students to miss just some problems (numeral misidentification), the teacher excludes 
+subtraction problems with that feature from independent worksheet assignments until the students demonstrate mastery of that component skill.
+A common component-skill error is confusing signs and adding rather than subtracting. 
+Teachers can expect most students to make this error occasionally. However, a remediation procedure is necessary when the error occurs frequently (in more than 10% of problems). The remediation procedure involves reintroducing the less structured worksheet from Format 8.1, Part D, 
+and instructing students to circle the sign before solving the problem.
+Fact Memorization
+Students need an understanding of the subtraction operation, which the crossing-out strategy provides. However, students also must learn to memorize the subtraction facts to reduce difficulties 
+
+120 Part II Basic Concepts and Skills
+in learning multi-digit operations. Fact memorization instruction should begin as soon as students reach the 80% to 90% accuracy criterion during supervised practice of one-digit minus 
+one-digit subtraction problems.
+INSTRUCTIONAL PROCEDURES: MULTI DIGIT 
+SUBTRACTION PROBLEMS φ ∙ ∙ ∙ ∙ ∙ ∙ ∙
+This section deals with subtraction problems with multi-digit numbers. A critical component 
+skill of multi-digit problems is renaming. Two basic renaming strategies are suggested in mathematics texts. The first, the additive balancing or equal addends method, involves adding a tens 
+unit to both the subtrahend and the minuend. In solving a problem with two-digit numbers, the 
+tens unit is added to the ones column of the top numeral, while the tens unit is added to the tens 
+column of the bottom numeral:
+/
+73 becomes 73
+-48 -548
+25 25
+This involves application of the compensation principle for subtraction: The difference between 
+two numbers is unaltered by the addition of the same amount to both terms. In turn, the compensation principle includes the equality principle. Since few students know the compensation 
+principle and many don’t know the equality principle, the equal addends strategy tends not to be 
+understood by most students.
+The second method, sometimes called decomposition, involves renaming the minuend so 
+that a unit from a higher-order column is written in a lower-order column:
+61
+73 becomes 73
+-48 -48
+25 25
+Note that the minuend 73 has been rewritten as 60 and 13.
+The direct instruction procedures are based on the renaming method because this method is 
+used by most teachers in North America. The procedures emphasize knowing when to rename 
+and the mechanics of renaming. The conceptual understanding of renaming is also emphasized 
+but in separate exercises from those for teaching the mechanics of working problems. This separation is done to simplify the formats for teaching the mechanics.
+Three main groups of problems are discussed in this chapter: (a) problems that do not 
+require renaming, (b) problems that require renaming from one column, and (c) problems 
+requiring renaming in two consecutive columns, including problems with a zero in the column 
+that must be renamed.
+Column Subtraction—No Renaming
+Column subtraction problems that do not require renaming are taught in basically the same 
+way as addition problems that do not require renaming. As was the case for addition, we recommend not introducing column problems until students have memorized approximately 12 
+subtraction facts. In working subtraction problems, students subtract in the ones column and 
+then in the tens column. Also, as in addition, students read the number of tens in the tens column rather than the numerals: They would say, “Three tens minus two tens” rather than “30 
+minus 20.”
+Subtraction with Renaming
+Subtracting a one- or two-digit number from a two-digit number when renaming is required is 
+the first type of subtraction problem on the Instructional Sequence and Assessment Chart involving renaming. It is usually introduced during late first grade. The three preskills for solving this
+
+Chapter8 Subtraction 121
+Format 8.2: Teaching 
+Regrouping
+Watch how Michaela introduces 
+the concept of regrouping.
+problem type are (a) the place value-related skills inherent in reading and writing numerals over 
+10, (b) knowledge of at least six facts that can be used for renaming (facts in which the first 
+number is 10 or more), and (c) a conceptual understanding of renaming. Format 8.2: Teaching 
+Regrouping includes a process to teach the concept of regrouping (with objects), which builds 
+the foundation for renaming (with numerals).
+Format 8.2 presents a diagram showing several packages, each of which contains 10 
+objects and several single objects. The teacher tells a story that involves giving away some of 
+those objects: “A boy has 34 nails. He wants to give 8 nails to his sister.” The teacher points out 
+that to give 8 nails to his sister, the boy will have to open a package of 10. The teacher erases 
+one pack of 10 nails and draws 10 single nails. The teacher then erases 8 nails and counts the 
+remaining packages and single nails. This format, with similar examples, is presented for several 
+days prior to introducing the renaming format.
+The procedures for introducing renaming appear in Format 8.3: Subtraction with 
+Renaming. In Part A, students discriminate when renaming is necessary. This discrimination 
+is critical in preventing mistakes in which students subtract the smaller from the larger number 
+regardless of which number is on top (74 — 38, students take 4 from 8). The teacher presents 
+this rule: When we take away more than we start with, we must rename. This rule is not intended 
+to be absolutely mathematically correct but serves as a functional rule to teach the concept. After 
+presenting this rule, the teacher leads students in applying the rule. The teacher points to the 
+top numeral in the ones column and asks the students how many they are starting with and then 
+points to the numeral below it and asks whether they must rename if they take away that number. Example selection is critical in this format. The teacher must include an unpredictable mix 
+of problems, some requiring renaming and some not.
+Part A should be presented for several lessons. The teacher should then test each student 
+individually on a set of about seven problems, asking of each, “Do we have to rename in this 
+problem?” Student performance determines what the teacher does next. If students miss no more 
+than one of the seven problems, the teacher can present Part B, in which the strategy for working 
+problems is presented. If students miss more than one question, Part A is presented for several 
+more lessons.
+Part B introduces the component skill of renaming. The teacher explains to the students that 
+they rename by taking a ten and putting it with the ones number. In 75 — 38, they take a ten 
+from the seven tens and put it with the five ones. After modeling several problems, the teacher 
+tests students, making sure they can follow the steps for renaming.
+Parts C and D are structured board and worksheet exercises in which the entire strategy is 
+presented, applying the rule for when to rename. The application of a rule requires a modified 
+correction procedure for these parts of the format. When students incorrectly identify when to 
+rename, the teacher stops the students and reminds them of the rule. The students then repeat 
+the rule. The teacher then asks guiding questions to help the students apply the rule: “What are 
+we starting with in the ones column? . . . What are we taking away? . . . Are we taking away 
+more than we start with? . .. So do we rename? . ..” The teacher then returns to the beginning of 
+instruction for that problem. After the students correctly solve the problem, additional examples 
+are provided.
+Part E is a less structured worksheet exercise that includes an equal mix of problems that 
+do and do not require renaming. Worksheet exercises should be included in lessons until students can perform with 80% to 90% accuracy. After several days of worksheet exercises with 
+only subtraction problems, the teacher would include some addition problems for discrimination 
+practice.
+Problems requiring renaming become more difficult as the number of digits in the minuend and subtrahend increases. The structured format for presenting each new problem type is 
+quite similar to the structured format just discussed. For example, when problems involving 
+renaming hundreds are introduced, the teacher would first ask the students to identify what 
+they are starting with and taking away in the tens column and then ask if it is necessary to 
+rename to work the problem. The teacher then leads students through solving the problem. In 
+multi-digit problems that require renaming in several columns, the teacher leads the students 
+through working each column, always asking, “What does the column tell us to do? . . . Must 
+we rename?”
+
+122 Part II Basic Concepts and Skills
+The examples for the practice worksheets should include a mix of the currently introduced 
+and previously introduced problem types. When the first problems requiring renaming from tens 
+are introduced, about three-quarters of the problems should involve subtraction and one-quarter 
+addition. Of the subtraction problems, only about half should require renaming. When problems 
+involving renaming from the hundreds are introduced, half of the subtraction problems should 
+require renaming from the hundreds, a quarter from the tens, and a quarter should not require 
+renaming. Some addition problems should also be included. Figure 8.1 is an example of a worksheet that could be presented after problems requiring renaming from the hundreds are taught. 
+Note the mixture of problem types: c, e, h, and j require renaming from hundreds; b and i from 
+tens; a and g do not require renaming; and d and f are addition.
+Self-Checking After students become proficient in working renaming problems, they should 
+be taught to check their answers. A checking procedure for subtraction is adding the subtrahend 
+and the difference. The teacher introduces checking on a worksheet exercise. After the students 
+complete the first problem, the teacher says,
+Here’s how to check your answer to a subtraction problem. Add the bottom two numbers. 
+What’s the answer? . . . Is that the same as the top number in the problem? So your answer 
+is correct.
+To demonstrate why the checking procedure works, teachers should use simple problems like:
+12
+-8
+4
+The teacher uses the same questions: “Add the bottom two numbers . . . What’s the answer? . . . 
+Is that the same as the top number? . . .” With familiar facts, students more readily see that the 
+procedure makes sense. The same type of exercise suggested for encouraging students to use the 
+addition self-check can be used to encourage students to check their subtraction work. Teachers 
+give students a worksheet with some problems worked correctly and some incorrectly. Students 
+are asked to find the problems worked incorrectly by using the self-check strategy.
+Complex Renaming Problems
+This group includes problems in which several consecutive columns must be renamed. First, 
+we discuss problems that do not include zeros in the minuend. Working such problems does not 
+involve new skills, just applying the renaming skill in consecutive columns. Errors often occur 
+because students become confused over the crossed-out digits. When the problem 327 — 149 is 
+worked, the numeral in the hundreds column is 2 and the numeral in the tens column is 1, neither 
+of which comes from the original problem:
+-149
+178
+An important aspect of the teaching procedure is closely monitoring students as they write on their 
+worksheets. Students who are not careful will make errors because of extensive crossing out and 
+rewriting. Therefore, teachers should stress precisely where numerals are to be written. Having 
+students write and solve problems on grid paper can assist students in correctly placing the digits.
+Students encounter more difficulty with problems that require renaming zero. The Instructional Sequence and Assessment Chart provides examples of problems in which the minuend
+FIGURE 8-1 Sample worksheet with 
+renaming problems
+a. 392
+-81
+b. 346
+-118
+c. 423
+-180
+d. 728 
++324
+e. 547
+- 83
+f. 547 g. 285 h. 248 i. 347 j. 236
++38 -84 -58 -109 -46
+
+Chapter8 Subtraction 123
+includes one or more zeros and renaming is required. The basic strategy students are taught is to 
+rename several digits at once. For example, in the problem
+304
+-87
+Format 8.5A
+Renaming Numbers 
+with Zeros
+Watch how Tristan introduces 
+renaming numbers with zeros.
+students treat the 3 hundreds as 30 tens. When they do this (take 1 ten from the 30 tens), the 30 
+is crossed out and replaced with 29:
+29f 
+304 
+-87
+Students would follow a similar procedure when working problems containing zeros in both 
+the tens and hundreds columns:
+299f
+3002 
+-89
+The students would treat the 3000 as 300 tens, crossing out the 300, writing 299 in its place, 
+and putting a ten in the ones column. This procedure was suggested by Cacha (1975) as a means 
+of simplifying renaming that involves zeros.
+A preskill for solving problem types that involve renaming numbers with zeros is learning 
+the tens-numbers-minus-one facts, such as 60 — 1, 90 — 1, 40 — 1. These facts are presented 
+about a week prior to introducing problems such as
+407
+-129
+The format for teaching tens-numbers-minus-one facts consists of two steps. First, the 
+teacher says a tens number (a two-digit number ending in zero) and asks the students to indicate 
+what number precedes it. “What number comes before 80?” Second, the teacher introduces the 
+rule that when you minus 1, you say the number that comes just before the number given. Then 
+the teacher has the students apply the rule to a series of examples. The entire procedure appears 
+in Format 8.4: Preskill: Tens Numbers Minus One.
+Once students have mastered the tens-minus-one preskill, they can be presented with the 
+format for renaming numbers with a zero, which appears in Format 8.5: Renaming Numbers 
+with Zeros.
+The format has three parts. Part A includes a board demonstration by the teacher of how to 
+work the problem. Part B includes steps in which the teacher guides students through solving 
+problems on their worksheets. Part C is a less structured worksheet guide. During the structured 
+board and worksheet exercises, each problem should require renaming. In Part C, the less structured worksheet exercise, students are presented with a mix of problem—half require renaming, 
+and half do not. For example, a typical worksheet might look like Figure 8.2.
+In about half of the problems, the numbers in the ones column require renaming; in the 
+other half of the problems, renaming in the ones column is not required. The mix is very important to prevent students from developing the misrule of always renaming when they see a zero
+FIGURE 8.2 Worksheet problems for 
+renaming with zeros
+1. 402 
+- 69
+2. 503
+-161
+3. 305 
+- 65
+4. 302 
+- 86
+5. 504
+-128
+6. 703 7. 500 8. 300 9. 700 10. 206
+- 42 - 36 - 40 - 4 - 36— — — — —
+11. 508 12. 500 13. 300 14. 501 15. 302
+- 32 - 26 - 20 - 61 - 48
+
+124 Part II Basic Concepts and Skills
+in the tens column. The importance of mixing problems on the worksheets cannot be overemphasized. If the examples used are not carefully designed to provide discrimination practice, the 
+students might develop a serious misrule of always crossing out the hundreds numeral and zero, 
+as in the problem below:
+29 39
+302 402
+-41 —52
+251 340
+Problem types become more complex as the number of digits increases, particularly the 
+number of zeros involved in renaming. The following example shows subtraction from a thousands number with zeros in the hundreds and tens columns.
+3004
+-86
+The preskill for this type of problem is hundreds-minus-one facts (800 — 1, 300 — 1). The 
+teaching procedure for hundreds-minus-one facts is basically the same as for tens-minus-one facts. 
+The teacher presents the structured board and worksheet formats using wording similar to that 
+found in in Format 8.5. The only difference is that the teacher points out that in a problem such as
+3004
+-128
+students rename from 300 tens. “What are you going to take one ten from? What is 300 
+minus 1? . . . So cross out 300 and write 299.” Again, the less structured worksheet exercise is 
+critical for providing discrimination practice.
+The worksheet should include a mix of problems like that in Figure 8.3.
+In some problems, students must rename in the ones column. In some problems, students 
+rename in the tens column. In still others, students must rename in the hundreds column. Teachers can expect students to need a great deal of supervised practice on this before they reach an 
+acceptable accuracy criterion.
+Two additional problem types that may cause students difficulty require renaming from the 
+numbers 10, 100, 1000, or 1100. Problems in which the student must rename from 10, 100, or 
+1000 may cause difficulty because the students do not replace each digit with another digit, as in
+799]
+8004
+Instead, they replace only two of the three digits, as in
+99
+≡0
+991 7991
+T004 with 8004
+Without instruction, students may write the nines in the wrong columns:
+99
+X00O
+-193
+9807
+FIGURE 8.3 Sample worksheet: Renaming
+with two or more zeros
+a. 3004 b. 3004 c. 3001 d. 7005 e. 7005
+- 289 - 302 -1394 -2101 -2104
+f. 7005 g. 6000 h. 6000 i. 4000
+-1149 - 80 - 8 - 50
+
+Chapter8 Subtraction 125
+The teaching procedure for these problems need not be elaborate. The teacher models working 
+several problems and then supervises students as they work the problems.
+Diagnosis and Remediation
+Fact Errors Basic fact errors usually are obvious. For example, in problems a and b below, the 
+student has made obvious errors involving the facts 13-6 and 12-8, respectively.
+3∕ *∕
+a. 435 b. 528
+-162 -186
+283 352
+In order to determine the specific cause of the errors, the teacher should look for error 
+patterns. For example, the teacher should check the problems with errors to see if the same 
+facts were consistently missed. Also, the teacher should utilize the information she has about 
+the student’s performance on recent fact worksheets. To confirm the diagnosis, the teacher 
+should observe the student reworking some of the missed problems and have her explain her 
+thinking.
+The remediation procedure depends on the nature of the fact errors. If a student consistently 
+misses the same facts, the teacher provides extra practice on those facts. On the other hand, 
+some students are erratic in their performance, answering a fact correctly one time and missing it 
+the next. For such students, the teacher may increase the incentives for accurate work.
+Strategy Errors Errors caused by failure to rename are illustrated below. In problem a, the 
+error is in the ones column. In problem b, there are errors in the hundreds and ones columns.
+a. 342 b. 2584
+-128 -1827
+226 /363
+Again, the frequency of the error must be considered before remediation is planned. An 
+occasional error, occurring no more than in 1 out of 10 problems, needs no extensive remediation. The teacher simply has students rework the problem. More frequent errors of this 
+type require in-depth remediation, beginning with reteaching Part A of Format 8.3. Part A 
+focuses on when renaming is required. The teacher presents several problems similar to the 
+ones missed by the student. The teacher points to each column in a problem and asks if renaming is required to work that column. This exercise is continued until students can respond 
+correctly to four or five problems consecutively. Next the teacher leads the students through a 
+structured worksheet exercise with several problems (Part D in Format 8.3), then through less 
+structured worksheet problems (Part E). Finally, the teacher assesses by having the students 
+work a group of problems as he closely monitors. This set of problems should include a mix 
+of problem types so that the teacher can be sure students are discriminating when renaming is 
+required. Students have mastered the strategy when they complete 80% to 90% of the problems accurately.
+Component-Skill Errors Errors involving the procedures of renaming are illustrated below:
+/ 6/ 20j
+a. 35 b. 54 c. 302
+16 -28 -54
+29 46 /58
+In problem a, the student forgot to subtract a ten from the three tens when renaming. This error 
+is not uncommon when renaming is first introduced. For remediation, students are given practice 
+rewriting two-digit numerals. Teachers might use the following wording:
+You’re going to practice renaming. Touch the first numeral. (Check that students are touching the first numeral.) What do you do first to rename this number? Do it. Write a 1 to show 
+one ten. Remember to cross out and write a new tens numeral.
+
+126 Part II Basic Concepts and Skills
+The error in problem b indicates the student is adding rather than subtracting the ten when 
+renaming. The remediation procedure begins with the teacher drawing attention to the fact that 
+when you rename from the tens column, you must take away a ten. The teacher then follows the 
+same procedure as described for problem a.
+The error in problem c indicates that the student either is having difficulty with tens- 
+numbers-minus-one facts or is confused regarding the strategy to use. The teacher should watch 
+the student work several problems to confirm the cause of the error. If the problem relates to 
+tens-minus-one facts, the teacher reteaches tens-minus-one facts (60 - 1, 30 - 1,80 - 1, etc.) 
+from Format 8.4. When students demonstrate mastery of tens-minus-one facts, they are presented with the less structured part of the format for that type of problem. If the error reflects a 
+strategy error, then a more in-depth remediation is needed. The teacher would present all parts 
+of Format 8.5.
+FIGURE 8.4 Diagnosis and remediation of subtraction errors
+Sample Patterns Sample Diagnosis Remediation 
+Procedures
+Remediation Examples
+31
+a. 437 63
+-180 -28
+247 34
+1 1
+Fact error: 
+13-8
+Emphasis on 13 - 8 in 
+fact drill.
+b. 34 352
+-18 - 71
+<26 381
+Component skill:
+Student did not rename 
+column borrowed from.
+You’re going to practice 
+rewriting. Touch the first 
+numeral (check). What 
+do you do first to rewrite 
+this number? . . . Do it. 
+Write a 1 to show one 
+ten. Remember to cross 
+out and write a new 
+number for the first digit.
+For examples, present a 
+worksheet with these 
+numerals:
+a. 27 b. 38 c. 71 d. 42
+c. 34 72
+-18 -36
+24 44
+291 51
+Strategy:
+Renaming not done.
+Present renaming format 
+starting with Part A, in 
+Format 8.3.
+Examples specified for 
+Format 8.3.
+d. ^p4 £4
+- 21 -24
+2713 310
+71 31
+Strategy:
+Renaming was done 
+unnecessarily.
+Same as c Same as c
+e. #3 ,61
+-48 -2
+35 39
+f. 35
+-14
+49
+2114,
+g. ^04
+- 26
+288
+291 391
+Fact error: 
+Minus 1.
+Component skill: Sign 
+discrimination; student 
+added instead of 
+subtracting.
+Component skill: Problems 
+with zero in tens column; 
+inappropriate renaming.
+a. Present minus-1 facts 
+b. Present less- 
+structured worksheet for 
+the particular problem 
+type.
+a. Present less-structured 
+part of Format 8.3 
+Have student circle sign, 
+then work the problem.
+a. Present tens-minus-1 
+preskill (if necessary).
+b. Present the format for 
+renaming numbers with 
+zeroes (Format 8.5)
+Mix: some problems 
+require renaming, and 
+some do not. Renaming 
+problems sample all 
+types introduced to date.
+Equal mix of addition and 
+subtraction.
+6-8 problems 
+Examples specified for
+Format 8.5
+h. M02 4^2
+- 41 - 52
+2511 3410
+Strategy;
+Renaming unnecessarily.
+Format 8.5, Part C Example specified for
+Format 8.5
+
+Chapter8 Subtraction 127
+A special group of problems that may cause students difficulty are problems with a zero in 
+the ones column of the minuend or subtrahend:
+70 74
+-34 -30
+Students often become confused when working problems with zero, answering 
+70 — 34 as 44 or 74 — 30 as 40. If a teacher notes errors with this problem type, a special exercise composed of problems like the ones below should be given. A teacher would first review 
+minus-zero facts, pointing out that when you minus zero you end with the same number you 
+started with, then lead students through working the problems. The exercise is continued until 
+students can work the problems with 90% accuracy for several days in a row.
+60 64 40 43
+-34 -30 -20 -20
+40 78 70
+-23 -30 -38
+After reteaching the component skill, the teacher assesses the students on a set of problems similar to the ones on which the original errors were made to ensure mastery of the strategy.
+A summary of the diagnosis and remediation procedures for subtraction appears in Figure 8.4.
+APPLY WHAT YOU LEARNED
+Click on the V to answer the questions online.
+1. Below are Maria’s and Alex’s performances on a set of performance indicators. Specify the problem 
+type with which instruction should begin for each student.
+Maria
+3 3 / // ^1
+a. 423 418 228 b. 352 724 534
+-171 -83 z-137 -187 -578 -87
+c25o2 335 91 245 266 567
+4 *1
+c. 70 - 1 = 69 d. 503 504 700
+40 - 1 = 39 -87 -26 -86
+80 - 1 = 79 486 428 786
+*1
+e. 4689 5284 3481
+-1832 -4631 -1681
+3257 653 2201
+Alex
+3f 1 4/ // ^1
+a∙ 423 418 228 b. 352 724 534
+-171 -83 z•137 -187 -578 -87
+252 335 91 245 567
+d.
+49ι 49 69
+c. 70 - 1 = 69 503 504
+40 - 1 = 39 -87 -26 -86
+80 - 1 = 79 415 478 614
+/
+e. 4689 5284 3481
+-1832 -4631 -1681
+3857 1453 2200
+
+128 Part II Basic Concepts and Skills
+2. Below is an excerpt of the independent worksheet to be given to students who have just demonstrated 
+accuracy in solving problems involving renaming from hundreds to tens. The teacher made some 
+errors in constructing the worksheet.
+a. Indicate the inappropriate examples and specify the problem type.
+b. Identify any omitted problem types that should be included on the worksheet.
+a. 524
+-186
+b. 504
+-328
+c. 324
+-192
+d. 533
+-261
+e. 824 f. 602 g. 523 h. 65
+-161 -159 -186 -32
+3. Describe the problem type that each example below represents. List the problems in the order they 
+are introduced. Write the grade level when each problem type is typically introduced.
+63 353 48 523 346 503
+-18 -182 -23 -486 -128 -87
+4. These 12 problems that appeared on the worksheet to be done independently by the students in 
+Mr. Kuboyama’s math group. Next to each student’s name are the problems missed by the student. 
+For each student:
+a. Specify the probable cause or causes of the student’s error.
+b. Describe the remediation procedure. Be specific (name format part).
+4023
+-1857
+4702
+-2563 ξ
+8346
+-1895
+342
+-185
+7304
+-1286
+430
+-82
+2036 3248 3852 402 3826 8306
+-518 -1026 ξ-1624 -81 -63 -1243
+James 39 29
+402 8306
+-81 -1243
+311 7053
+Isabella 391 / 69/
+4023 4702
+-1857 -2563
+2165 1138
+Santiago 79
+4702
+-2563
+2239
+Caleb 342 3852
++ 185 + 1624
+157 228
+5. Specify the wording the teacher would use in the structured worksheet presentation for the problem.
+314
+-182
+6. In presenting Format 8.3, Part A, a board format for introducing renaming problems, the teacher asks 
+for this problem, “Must we rename?” The student says, “No.” Specify the wording the teacher uses in 
+making the correction.
+57
+-28
+7. These less structured worksheets were made by several teachers for the less structured part of the 
+format for teaching students to work problems that require renaming from the hundreds column. Two
+
+Chapter8 Subtraction 129
+teachers constructed unacceptable lists. Identify these teachers and tell why each list is unacceptable. 
+For each unacceptable list, specify what could be done to make the list acceptable.
+a. 342
+-181
+623
+-182
+483
+-193
+362
+-181
+534
+-184
+235
++ 132
+427
+-193
+329
+-152
+427
+-121
+b. 383 432 342 282 346 425 524 473 392
+-195 -150 -186 -195 -138 + 132 -187 -197 -161
+c. 428 328 526 48 362 364 325 436 329
+-368 -209 -385 -29 -182 -148 + 132 -214 + 142
+Format 8.1
+SUBTRACTION WITH LINES
+TEACHER STUDENTS
+Part A: Structured Board Presentation—Preskill of Minusing Lines
+1. (Write the Following Problem and lines on the board.)
+6-2
+ιιιιιι
+Everyone, read this problem. 6-2
+This is a minus problem. What kind of problem is this? A minus problem
+2. (Point to minus 2.) What does this say? Minus 2
+Minus 2 tells us to cross out two lines.
+What does minus 2 tell us to do? Cross out two lines.
+Watch me cross out two lines.
+(Draw two minuses through two lines and count each time.) Minus 1, minus 2.
+3. Let's see how many lines we have left. I'll touch, and you count. 1, 2, 3, 4
+How many did we end up with? 4
+(Repeat steps 1-3 with 7 - 4, 5 - 3.)
+Part B: Structured Worksheet—Preskill of Minusing Lines
+(Students have worksheets with four to six problems like the one below.) 
+6-2 
+mm
+(Note that the lines under the first numeral in each problem are already 
+drawn.)
+1. Touch problem a on your worksheet. (Check.) Read the problem. 6-2
+What kind of problem is this? A minus problem
+2. Touch the first group. How many lines are in the first group? 6
+How many lines are you going to minus? 2
+Minus the lines. (Check that students minus two lines.)
+To correct: When you minus 2, you cross out two lines.
+3. Now count and see how many lines you have left. (Pause.)
+How many did you end with? 4
+(Repeat steps 1-3 with remaining examples.)
+continued
+
+130 Part II Basic Concepts and Skills
+Format 8.1 (continued)
+SUBTRACTION WITH LINES
+TEACHER
+Part C: Structured Worksheet—Entire Strategy
+(Give the students a worksheet with four to six problems like the ones 
+below.)
+5 - 3 = □
+4 - 2 = □
+2 - 0 = □
+8 - 4 = □
+1. Touch the first problem on your worksheet. (Check.) Read the problem.
+2. What kind of problem is this?
+Touch the first group. How many lines are you going to draw?
+Draw five lines under the 5.
+3. How many lines are you going to minus?
+Minus the lines. (Monitor worksheet responses.)
+4. Now count and see how many lines you end with. (Pause.) How Many?
+5. So how many must you end with on the other side of the equal?
+Draw two lines and write the numeral in the box.
+6. Now read the whole statement.
+5 - 3 = □ how many?
+Say the statement again.
+(Repeat steps 1-6 with the remaining problems.)
+Part D: Less Structured Worksheet
+1. (Give the students a worksheet with an equal mix of addition and
+subtraction problems.)
+a. 4 + 3 = □ f. 7-0 = □
+b. 8 - 2 = □ g∙ 6-4 = □
+c. 7 - 5 = □ h. 2 + 4 = □
+d. 5 - 4 = □
+e. 7 + 0 = □
+i. 5 + 3 = □
+This worksheet is tricky. In some problems you plus, and in some 
+problems you minus. When you plus, you make more lines. What do you 
+do when you plus?
+When you minus, you cross out lines. What do you do when you minus?
+2. Touch problem a. Read it.
+Is that a plus or minus problem?
+What do you do when you plus?
+3. Make the lines under the first group, then plus.
+4. Now make the sides equal and fill in the box.
+(Repeat steps 2-4 with the remaining problems.)
+STUDENTS
+5 - 3 = how many?
+A minus problem
+5
+3
+2
+2
+5-3 = 2
+2
+5-3 = 2
+Make more lines
+Cross out lines
+4 + 3 = how many?
+Plus problem
+Make more lines
+
+Chapter8 Subtraction 131
+Format 8.2
+TEACHING REGROUPING (See Video)
+Format 8.3
+TEACHER STUDENTS
+O
+1. (Draw the following boxes on the board.)
+0 Qθ] Eθ] II
+A boy has nails. He has three packages with 10 nails in each package and
+4 nails not in a package. Let's figure out how many nails he has in all. 
+(Point as you count.) 10, 20, 30, 31, 32, 33, 34.
+2. The boy wants to give 8 nails to his sister. We have a problem. He can't give 
+8 nails to his sister the way the nails are now. He has 4 nails and packages 
+of 10 nails. He has to regroup the nails. When we regroup, we put a group 
+of 10 with the 4 nails. What do we do when we regroup in this problem? Put a group of 10 with 4.
+3. We open a pack of 10 nails (erase a group of 10 nails) and put the 10 nails 
+over here.
+(Draw the following on the board.) 
+III11 I
+r-1 π ∣∣lll 1Eθ] Eθ] ι
+∣
+4. We still have 34 nails. They're just in different groups. We have two 
+groups of 10 and a group of 14.
+Now let's give 8 away. (Erase 8.) Let's see how many we have left. 
+(Point to 6) How many? 6
+(Point to remaining boxes of nails.) 2 tens equal how many? 20
+Yes. What is 20 plus 6? 26
+Right, 26. The boy starts with 34. He gives away 8 and ends with 26.
+5. (Present one or two more problems.)
+26
+SUBTRACTION WITH RENAMING
+TEACHER STUDENTS
+Part A: When to Rename
+1. (Write the following problem on the board.)
+75
+-49
+Here's a rule about renaming with subtraction problems: When we 
+take away more than we start with, we must rename. My turn. When 
+do we rename? When we take away more than we start with.
+Your turn. When do we rename?
+(Repeat statement with students until they can say it by themselves.)
+When we take away more 
+than we start with.
+continued
+
+132 Part II Basic Concepts and Skills
+Format 8.3 (continued)
+SUBTRACTION WITH RENAMING
+TEACHER STUDENTS
+2. (Point to the 5.) What number are we starting with in the ones 
+column? 5
+We're starting with 5 and taking away 9. Do we rename? (Pause and 
+signal.) Yes
+Right, we have to rename because we're taking away more than we 
+start with; 9 is more than 5.
+3. (Write the following problem on the board.)
+75
+-43
+What number are we starting with in the ones column? 5
+What are we taking away? 3
+Do we rename if we take away 3? (Pause, signal.) No
+We don't rename. We're not taking away more than we start with.
+4. (Write the next problem on the board.)
+38
+-27
+What are we starting out with now in the ones column? 8
+What are we taking away? 7
+Do we rename? (Pause, signal.) No
+Why? We're not taking away more
+5. (Repeat step 4 with these problems.)
+38 42 42 42
+-29 -37 -30 33
+(Give individual turns to several children.)
+Part B: Steps in Renaming
+1. (Write these problems on the board.)
+53 75 92
+-26 -28 -15
+(Point to first problem.) Read this problem.
+than we start with.
+53 - 26
+The ones column tells us to start with 3 and take away 6. What does 
+the ones column tell us to do? Start with 3 and take away 6
+Do we have to rename? (Pause, signal.) Yes
+Yes. We start with 3 and take away more than 3.
+2. Here's how we rename: First we take one ten from the 5 tens.
+What do we do first? Take one ten from the 5 tens
+Next we put that ten with the 3 ones. What do we do next? Put the ten with the 3 ones
+(Write 1 by 3 to show that 1 ten has been added to the 3 ones.)
+We just took 1 ten from the 5 tens. How many tens do we have left? 4
+
+Chapγer8 Subtraction 133
+TEACHER STUDENTS
+We cross out the 5 in the tens column and write 4. (Cross out the 5 in 
+the tens column and write 4 above it.)
+(Repeat steps 1 and 2 with additional problems.)
+Part C: Structured Board Presentation
+1. (Write this problem on the board.)
+43
+-16
+Read the problem. 43 - 16
+What does the ones column tell us to do? Start with 3 and take away 6
+Do we rename? (Pause, signal.) Yes
+To correct: Here's the rule: When we take away more than we start 
+with, we must rename. What's the rule? When we take away more
+What are we starting with in the ones column?
+than we start with, we must 
+rename.
+3
+Are we taking away more than 3? Yes
+So, do we rename? Yes
+2. What do we do first to rename? Take one ten from the 4 tens
+(Point to 4.) If we take one ten from the 4 tens, how many tens 
+will be left? 3 tens
+So I cross out the 4 and write 3 to show that 3 tens are left. (Cross out 
+4 and write 3.)
+3. What do we do next? Put that ten with the 3 ones
+Right, put the ten with the 3 ones. (Write 1 in front of 3.)
+Now we have 13 in the ones column.
+Figure out what 13 - 6 is. (Pause.) What's 13-6? (Pause, signal.) 7
+We write 7 in the ones column. (Write 7 under the line.)
+4. The tens column says 3 tens minus 1 ten. How many is 3 tens minus
+1 ten? (Pause, signal.) 2 tens
+We write 2 in the tens column. (Write 2 under the line.)
+5. What is 43 minus 16? 27
+(Repeat steps 1-5 with additional problems.)
+Part D: Structured Worksheet
+1. (Give students worksheets with these problems.)
+92 86 64
+-35 -17 -49
+Read the first problem on your worksheet. 92 - 35
+2. What does the ones column tell you to do? Start with 2 and take away 5
+Do you rename? (Pause, signal.) Yes
+continued
+
+134 Part ∏ Basic Concepts and Skills
+Format 8.3 (continued)
+SUBTRACTION WITH RENAMING
+TEACHER STUDENTS
+3. What do you do first to rename?
+If you take one ten from the 9 tens, how many will be left?
+So cross out the 9 and write 8 above it. (Check student work.)
+4. What do you do now?
+Do that. Put the ten with the 2 ones. (Check student work.)
+How many do you have in the ones column?
+5. What is 12 - 5? (Pause, signal.) 
+Write 7 under the line in the ones column.
+6. Look at the tens column. What does the tens column tell us to do?
+What is 8 tens minus 3 tens?
+Write 5 under the line in the tens column.
+7. What is 92 minus 35?
+(Repeat steps 2-7 with remaining problems.)
+Part E: Less Structured Worksheet
+1. (Give students a worksheet like the following:)
+a. 84 b. 32 c. 46 d. 56 e. 23
+-23 +29 -8 -32 +65
+f. 42 g. 34 h. 58 i. 95 j. 78
+-26 -26 -52 -38 -32
+k. 10 ∣. 88 m. 35 n. 63 o. 29
++11 +12 -17 -7 -27
+Touch problem a.
+2. Read the problem.
+What kind of problem is this?
+(Ask the following questions for subtraction problems only.)
+3. Look at the ones column and get ready to tell me if you need to 
+rename. (Pause.) Do you need to rename?
+(If the answer is yes, present step 4. If the answer is no, go to step 5.)
+4. Where do you get the ten from?
+How many tens will you have left?
+5. Work the problem.
+(Repeat steps 2-5 with remaining problems.)
+Take one ten from the 9 tens 
+8 tens
+Put that ten with the 2 ones
+12
+7
+Start with 8 tens and take 
+away 3 tens
+5 tens
+57
+No
+
+Chapter8 Subtraction 135
+Format 8.4
+TENS NUMBERS MINUS ONE
+(Repeat step 3 with 30 - 1f 80 - 1, 40 - 1, 70 - 1.)
+TEACHER STUDENTS
+1. I'll say numbers, and you say the number that comes just before. Listen: 60.
+What comes just before? (Pause 2 seconds. Signal.)
+To correct: Model counting from 57 for the students, emphasizing 59. Repeat 
+the question.
+(Repeat step 1 with 30, 80, 40, 70.)
+2. Listen: When you minus one, you say the number that comes just before. I'll 
+say a problem, and you tell me the answer. Listen: 60 - 1 is . .. (Pause, signal.)
+To correct: What number comes just before 60?
+59
+59
+Format 8.5
+RENAMING NUMBERS WITH ZEROS (See Video in Part A)
+TEACHER STUDENTS
+V
+Part A: Structured Board Presentation
+1. (Write this problem on the board.)
+304
+-186
+Read the problem. 304 - 186
+2. What do we do in the ones column? Start with 4 and take
+Do we have to rename? (Pause, signal.)
+away 6
+Yes
+3. We have a problem. We can't take a ten from zero tens, so we have to 
+take a ten from the 30 tens. We're going to take one ten from 30 tens. 
+(Circle 30 with finger.)
+What are we going to take one ten from? 30 tens
+What is 30 tens minus 1 ten? 29 tens
+So I cross out 30 and write 29 above it. (Cross out 30 and write 29 above.)
+4. Now I'll put the 1 ten with the 4 ones. (Write 1 ten by the 4 ones.)
+What is 1 ten and 4 ones? 14
+What is 14 - 6? (Pause, signal.) 8
+So I write 8 in the ones column. (Write 8 in the ones column.)
+5. Now look at the tens column. How many tens are we starting with now? 9
+What is 9 - 8? 1
+So I write 1 under the tens column. (Write 1 under the tens column.)
+6. How many hundreds are we starting with now? 2
+What is 2 - 1? 1
+So I write 1 in the hundreds column. (Write 1 in the hundreds column.)
+continued
+
+136 Part II Basic Concepts and Skills
+Format 8.5 (continued)
+RENAMING NUMBERS WITH ZEROS
+TEACHER STUDENTS
+7. What is the answer to this problem? 118
+(Repeat steps 1-7 with these examples: 504 - 327, 602 - 148J
+Part B: Structured Worksheet
+406 905 403
+-287 -626 -248
+1. Touch the first problem. Read it. 406 - 287
+2. What does the ones column tell us to do? Start with 6 and take away
+Do you have to rename? (Pause.) 7
+Yes
+3. Can you take one ten from zero tens? No
+Where are you going to get the 1 ten? From 40 tens
+What is 40 tens minus 1 ten?
+Cross out the 40 and write 39 above it. (Check work.)
+Now put the 1 ten with the 6 ones. (Check work.)
+39 tens
+4. Now work the problem in the ones column.
+What is 1 ten and 6 ones? 16
+What is 16 - 7? 9
+Write it. (Check work.)
+5. How many tens are you starting with now? 9
+What is 9 - 8? 1
+Write it. (Check work.)
+6. How many hundreds are you starting with now? 3
+What is 3 - 2? 1
+Write it. (Check work.)
+Read the whole problem and say the answer.
+(Repeat steps 1-6 with remaining examples.)
+406 - 287 = 119
+Part C: Less Structured Worksheet
+a. 804 b. 905 c. 609
+-619 -164 -426
+d. 605 e. 302 f. 508
+-197 -42 -349
+1. Touch problem a.
+2. Read the problem. 804 - 619
+3. Look at the ones column and get ready to tell me if you need to rename. 
+(Pause.) Do you need to rename? Yes
+Where do you get the ten from? From 80 tens
+4. Work the problem. (Monitor students.)
+(Repeat steps 1-4 with remaining problems.)

@@ -26,7 +26,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
     status: missingCodes.length > 0 ? 'flag' : 'pass',
     detail:
       missingCodes.length > 0
-        ? `In-scope content keys without a landing atom: ${missingCodes.join(', ')}.${orphans.length > 0 ? ` Orphan atoms outside the plan: ${orphans.join(', ')}.` : ''}`
+        ? `The plan includes these standards, but no lesson's Standard field carries them: ${missingCodes.join(', ')} — every planned standard needs a lesson that teaches it.${orphans.length > 0 ? ` Also, these lessons are not part of the approved plan: ${orphans.join(', ')}.` : ''}`
         : `Every in-scope content key (${plannedCodes.length}) lands in ≥1 atom; ${orphans.length > 0 ? `orphan atoms outside the plan: ${orphans.join(', ')}` : 'no orphan atoms'}.`,
   })
 
@@ -47,7 +47,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
     status: badRefs.length > 0 ? 'flag' : 'pass',
     detail:
       badRefs.length > 0
-        ? `Unresolved or forward prerequisite references: ${badRefs.join('; ')}.`
+        ? `These lessons list a prerequisite that is taught LATER in the sequence, or not at all (“U3.L2 → U4.L1” means lesson U3.L2 says it requires U4.L1, which comes after it): ${badRefs.join('; ')}. A lesson can only rely on material taught earlier — either the teaching order or the prerequisite reference is wrong.`
         : `All ${refCount} prerequisite references resolve to an earlier lesson or a prior-grade tag.`,
   })
 
@@ -63,7 +63,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
     status: tripleViolations.length > 0 ? 'flag' : 'pass',
     detail:
       tripleViolations.length > 0
-        ? `Start cue · single decision path · one response form not verifiable on: ${tripleViolations.join(', ')}.`
+        ? `The New Learning field on these lessons is missing one of its three required parts — a start cue (what the student sees), a single decision path (the one strategy), and one response form (what the student produces): ${tripleViolations.join(', ')}.`
         : `Start cue · single decision path · one response form present on all ${lessons.length} New Learning fields.`,
   })
 
@@ -82,7 +82,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
     status: strategyViolations.length > 0 ? 'flag' : 'pass',
     detail:
       strategyViolations.length > 0
-        ? `Instructional Approach could not be verified single-strategy on: ${strategyViolations.join(', ')}.`
+        ? `The Instructional Approach on these lessons may teach more than one way to solve the same problem — Direct Instruction requires exactly one best strategy per problem type: ${strategyViolations.join(', ')}.`
         : 'No Instructional Approach names two computation strategies.',
   })
 
@@ -101,7 +101,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
     status: badNeighborRefs.length > 0 ? 'flag' : 'pass',
     detail:
       badNeighborRefs.length > 0
-        ? `Boundary/non-goal/progression references that do not resolve to a lesson in this scope: ${[...new Set(badNeighborRefs)].join('; ')}.`
+        ? `These fields point at lessons that do not exist in this scope (“U2.L1 → U9.L4” means a field on U2.L1 references U9.L4, which is not in the scope): ${[...new Set(badNeighborRefs)].join('; ')}.`
         : 'Boundaries and non-goals reference only lessons that exist in this scope; split pairs and bridges partition cleanly.',
   })
 
@@ -114,7 +114,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
     status: ceilingViolations.length > 0 ? 'flag' : 'pass',
     detail:
       ceilingViolations.length > 0
-        ? `Difficulty Ceiling missing or uncited on: ${ceilingViolations.join(', ')}.`
+        ? `The Difficulty Ceiling on these lessons is empty or cites no evidence for how hard the problems may get: ${ceilingViolations.join(', ')}.`
         : 'All ceilings are stated with cited evidence within standards-document limits and P1 evidence.',
   })
 
@@ -125,7 +125,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
     status: unratedUnits.length > 0 ? 'flag' : 'pass',
     detail:
       unratedUnits.length > 0
-        ? `Units without a theme/emphasis-traceable rationale: ${unratedUnits.join(', ')}.`
+        ? `These units are missing the rationale that connects them to the course's themes and emphasis: ${unratedUnits.join(', ')}.`
         : `All ${units.length} units carry a rationale traceable to the set's theme/emphasis statements or progression streams.`,
   })
 
@@ -138,7 +138,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
     status: emptyReleased.length > 0 ? 'fail' : 'pass',
     detail:
       emptyReleased.length > 0
-        ? `Released Items empty (no observed item and no generated exemplar) on: ${emptyReleased.join(', ')}.`
+        ? `These lessons show neither a released test item nor a labeled generated example — the Released Items field must never be empty: ${emptyReleased.join(', ')}.`
         : `Field never empty: ${withItems} card${withItems === 1 ? '' : 's'} carry captioned observed items; ${withExemplar} carry a labeled generated ceiling exemplar with inference basis and in-boundary ceiling.`,
   })
 

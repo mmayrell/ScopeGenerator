@@ -364,6 +364,18 @@ export default function ScopeView() {
     }
   }
 
+  // Download CSV: one row per lesson, the card carried as JSON in the last column.
+  const exportCsv = async () => {
+    if (!scope) return
+    setExportError(null)
+    try {
+      const { downloadScopeCsv } = await import('../export/scope-csv')
+      downloadScopeCsv(scope, sets)
+    } catch (e) {
+      setExportError(e instanceof Error ? e.message : 'Could not build the CSV.')
+    }
+  }
+
   // While the scope is generating (initial run, rerun, apply-proposal) or a proposal is
   // drafting/iterating, poll its document every 2s until it settles.
   useScopePolling(scope && scopeUnsettled(scope) ? [scope.id] : [])
@@ -533,6 +545,7 @@ export default function ScopeView() {
           <Btn className="!px-2.5 !py-1 !text-[11.5px]" disabled={exporting} onClick={() => void exportDoc()}>
             {exporting ? 'Preparing…' : 'Download Doc'}
           </Btn>
+          <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => void exportCsv()}>Download CSV</Btn>
           <Btn kind="night" className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setRevisionOpen(true)}>Update with Feedback/Data</Btn>
           <Btn kind="danger" className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setConfirmDelete(true)}>Delete</Btn>
         </div>

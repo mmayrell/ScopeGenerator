@@ -1,0 +1,1346 @@
+Direct Instruction Mathematics (5th ed.), Stein, Kinder, Silbert & Carnine — Chapter: Addition
+
+Chapter
+Addition
+LEARNING OUTCOMES
+7.1 Discuss the two stages of teaching addition to young students and the sequence 
+of problem types appropriate for each stage.
+7.2 Explain the importance of the equality principle and outline procedures for 
+teaching it.
+7.3 Outline instructional strategies to teach beginning addition including addition 
+the slow way, missing addend addition, and addition the fast way.
+7.4 Discuss the differences in the instructional strategies for teaching the three types 
+of multi-digit addition problems.
+SKILL HIERARCHY
+• ∙ ∙ ∙ ∙ ∙ . ∙
+Our discussion of addition is divided into two stages. The beginning stage discusses strategies 
+designed to establish a conceptual understanding of the process of addition. These strategies, 
+usually taught with semi-concrete objects or representations, are introduced in kindergarten. The 
+multi-digit stage requires mental computation rather than relying on representations of concrete 
+objects. This typically begins during first grade and continues into the upper-elementary grades.
+During the beginning stage, students are taught to solve simple addition problems with concrete or semi-concrete objects representing each addend. For example, when solving the problem 4 + 2, students are taught to draw four lines under the numeral 4 and two lines under the 
+numeral 2. The students then determine the sum by counting all of the lines. Counting, numeral 
+identification, and equality preskills must be mastered in order to work these problems. Missing 
+addend problems in which an addend must be computed (4 + □ = 7) are also presented during 
+this stage. An understanding of equality is also essential to solving missing addend problems.
+In the advanced stage, when multi-digit addition is taught, students work problems without making concrete representations for each addend. A preskill necessary for solving column 
+addition problems is knowledge of basic addition facts. The ability to accurately and quickly 
+respond to a fact problem allows students to focus their attention on the strategies for solving 
+multi-digit problems. Too little attention is usually given to the process by which students learn 
+to memorize basic addition facts. In order to aid the teacher in teaching this critical preskill, we 
+have devoted an entire chapter to the process of teaching addition, subtraction, multiplication, 
+and division facts (see Chapter 6).
+
+Chapter 7 Addition 89
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type Performance Indicator
+K Begin fact memorization See Chapter 6
+K Adding two one-digit numbers within 5 4 3 2
++ 1 +2 +2
+1 Determining an unknown whole number 8 + □=11 2 + □ = 7 3 + □ = 9
+1 Adding a two-digit and a one- or two-digit 35 64 35
+number; no renaming +21 +23 +2
+1 Adding two two-digit numbers; renaming from 37 48 57
+ones to tens +46 + 14 +27
+1 Adding three single-digit numbers 1 4 1
+3 4 3
++2 + 3 + 5
+1 Complex facts; adding a single-digit number to Test students individually; teacher asks:
+a teen number—sum below 20 13 + 3 = 14 + 4 = 12 + 2 =
+2 Adding a three-digit and a one- or two-digit 326 423 570
+number; no renaming +21 + 5 +21
+2 Adding one-, two-, and three-digit numbers; 4 14 21
+no renaming 21 71 14
++2 + 10 +33
+2 Adding a three-digit and a one-, two-, or 247 258 276
+three-digit number; renaming from ones to tens +315 + 13 +8
+2 Adding two two- or three-digit numbers; 374 83 187
+renaming from tens to hundreds +261 +43 + 81
+2 Adding two three-digit numbers; renaming 376 248 437
+from ones to tens and tens to hundreds + 185 + 164 +275
+2 Adding three two-digit numbers; renaming— 48 39 34
+ones column totals less than 20 14 16 24
++ 12 +23 + 12
+Adding three or four numbers; renaming from 385 157 8
+ones to tens and from tens to hundreds—sums 6 23 156
+of columns below 20 24 245 280
++ 120 + 3 +42
+2 Adding three two-digit numbers—ones column 28 29 38
+totals 20 or more 17 16 18
++28 +35 + 15
+3 Adding three, four, or five multi-digit numbers; 892 8 3856
+renaming in all or some columns totaling 20 or 1486 4086 2488
+more 38 85 1932
+286 193 + 1583
++35 +242—
+The first type of column problem introduced in the advanced stage involves adding multidigit numbers in which the sum in each column is less than 10; accordingly, renaming is not 
+required (36 + 13). The next major type of problem involves adding two or more multi-digit 
+numbers in which the sum of one or more columns is greater than 10 and requires renaming 
+(36 + 15). The initial problem in this group involves adding two double-digit numerals such 
+
+90 Part II Basic Concepts and Skills
+as 45 + 37. Problems with hundreds and thousands numbers are introduced after students have 
+been taught to read and write those numerals.
+The third major type of problem involves addition of three or more multi-digit numbers. 
+The difficulty of these problems increases as the sum of each column becomes greater. For 
+example, adding 23 + 14 + 32 is not difficult, since a sum never reaches 10. On the other 
+hand, in a problem such as 39 + 16 + 27, the sum for the first two numbers in the one’s column is more than 10(9 + 6 = 15). The student must not only rename but also must be able to 
+figure out facts in which a single-digit number is added to a two-digit number. The sum of the 
+first two digits in the ones column, 9 and 6, is 15. The students must then add 7 to 15 to figure 
+the sum of the ones column. We refer to problems in which a student must mentally add a 
+single-digit number to a two-digit number as complex addition facts. A great deal of practice is 
+necessary for students to master complex addition facts.
+The Instructional Sequence and Assessment Chart shown on the previous page includes our 
+recommended instruction and assessment sequence.
+CONCEPTUAL UNDERSTANDING
+The major objective of beginning addition instruction is to develop a conceptual understanding 
+of addition as a union of disjoint sets. Most educators agree that, at this stage, demonstrations 
+should involve concrete objects. Math educators recommend a variety of methods for introducing addition. Using the term sets and giving demonstrations of joining two sets are suggested in 
+some commercial programs:
+Format 7.1A:
+Equality Introduction
+Watch how Michaela demonstrates the equality rule.
+Demonstrations through number lines also are suggested:
+I I I
+I----- 1------- 1-----i------- 1------ 1------ 1------ 1------ 1------ 1
+0123456789
+2 + 4 = 6
+The direct instruction strategies recommended in this text use lines as semi-concrete objects 
+to represent the members of sets. While nothing is wrong with using concrete manipulatives, 
+having students draw lines has several advantages. Drawing lines graphically demonstrates 
+equality (the same number of lines are on both sides of the equal sign), and teachers can more 
+readily monitor student performance on written work because the lines provide a written record 
+of student performance, which makes diagnosis of errors easier.
+A unique feature of the direct instruction strategies for introducing the addition process is 
+the integration of the equality principle into the strategy. It is important that initial strategies 
+demonstrate the application of the equality principle because a grasp of equality is necessary for 
+success in more complicated exercises.
+Equality can be taught by presenting a functional definition and a series of positive and 
+negative examples. The definition is functional in that it describes a condition that must be met 
+for the equality principle to apply. We must end with the same number on this side and the other 
+side of the equal sign. Format 7.1: Equality Introduction is a format for introducing equality. 
+This format should be presented during the beginning stage before addition is introduced. The 
+format includes three parts. In Part A, the teacher introduces the equal sign and equality rule. In 
+Part B, the teacher demonstrates examples in which the sides are equal and examples in which 
+the sides are not equal. Diagrams like the one below in which lines are written inside two adjoining circles are written on the board.
+
+Chapter 7 Addition 91
+£ Format 7.1B:
+Equality Rule
+Watch how Michaela demonstrates when the equality rule.
+The teacher leads the students in determining whether an equal sign would be drawn 
+between the circles. Part C is a less structured worksheet exercise similar to Part B. Note that 
+in Parts B and C, students are asked to say the rule. Saying the rule may be quite difficult for 
+lower-performing students. To ease this difficulty, the teacher might first model, lead, and test, 
+saying just the first half of the rule: We must end with the same number. Lower performers may 
+need many repetitions. After several days, the teacher provides practice in saying the last half of 
+the rule and then the entire rule.
+Making lines for each addend and then counting the lines is called addition the slow way. 
+Students draw the appropriate number of lines under each numeral:
+4 +2 =∏
+Illi II
+Students count the lines and then draw the same number of lines on the other side of the equal 
+sign and write the answer in the box:
+4+2 = [6] 
+ιιιι ιι ιιιιιι
+By counting the lines one by one and drawing the same number of lines on the other side, 
+the concept of equality is reinforced. Note that in this strategy, plus is used as a verb; students 
+are taught, “The plus sign says to count all the lines.” Later the terms addition and adding 
+are introduced. Separating the teaching of the concept of addition and the related terminology 
+makes it easier for the students to master strategies for addition initially. Substituting the terms 
+at a later date decreases the cognitive demands made on the students when learning a new 
+strategy.
+Problems with missing addends are introduced after students demonstrate mastery of 
+beginning addition exercises. In solving problems with missing addends:
+4 + □ = 7
+Illi lllllll
+The teacher points out that the sides are not equal. The students must draw lines to make the 
+sides equal and then write the numeral representing the number of lines drawn.
+After the students can solve addition and missing addend problems, using a line-drawing 
+strategy, a new strategy, called addition the fast way, is introduced. In addition the fast way, students make lines only under the second addend, count the lines beginning with the first numeral 
+(ffoouurr, 5, 6), and then write the answer in the box. Addition the fast way represents a transition from the semi-concrete stage in which objects are drawn to represent each member of the 
+set to the stage in which no concrete representations are used. A similar fast-way strategy can be 
+taught for missing addend problems.
+INSTRUCTIONAL PROCEDURES: BEGINNING ADDITION
+∙∙∙∙∙*∙∙
+Addition the Slow Way
+Addition the slow way is an important strategy because it is the first problem-solving strategy 
+taught. The following preskills are those that students should have mastered before addition the 
+slow way is introduced:
+1. Identifying and writing the numerals 0-10 and the symbols +, —, —, and □
+2. Equality rule
+3. Reading an equation
+4. Drawing the appropriate number of lines to represent a numeral
+5. Counting the lines in two groups
+6. Writing the numeral that represents a set of objects
+
+92 Part II Basic Concepts and Skills
+SUMMARY BOX 7.1
+Beginning Addition Strategy
+1. Students read equation: 5 + 2 = how many?
+2. Students recite equality rule: "We must end up with the same number on this side AND the other 
+side of the equal sign."
+3. Students draw lines under the first addend and then under the second addend.
+4. Students count all lines on that side of the equal sign.
+5. Students apply the equality rule and make lines under the box on the other side of the equal sign.
+6. Students write a numeral to represent the number of lines.
+The format for teaching students to work addition problems the slow way appears in 
+Format 7.2: Teaching Addition the Slow Way. In Part A, the teacher works the problem on 
+the board. The steps in the strategy are summarized in Summary Box 7.1.
+When presenting Part A, the teacher should repeat the example until students can correctly 
+respond to all of the questions. If a student hesitates or responds incorrectly, the teacher would 
+model the correct answer, then repeat the question, and ask the students to respond. Following 
+the correction, all the steps in Part A of Format 7.2 are repeated demonstrating how all the steps 
+fit together.
+Part B is a structured worksheet exercise, and Part C is a less structured worksheet exercise. 
+Example selection for all worksheet exercises should include only numerals that students can 
+identify and write. Sums should not exceed 10. On the worksheets, spaces should be left under 
+the numerals for students to draw lines. Once they develop 80% to 90% accuracy in working 
+the problems, students may work independently on this type of exercise. Eight to 10 problems 
+should appear daily on student worksheets for several weeks. Note that on worksheets, spaces 
+are drawn below each numeral to prompt drawing the lines.
+Missing Addend Strategy
+£ Format 7.3A: Solving
+Missing Addends
+Watch how Tristan uses the script 
+to guide him as he teaches about 
+which side to start on when 
+solving for missing addends.
+The strategy discussed in this section teaches students to find the missing addend in a problem 
+such as 5 + □ = 8. The strategy is based on the equality rule (We must end with the same number this side and the other side of the equal sign). Students are presented this form of problem to 
+enhance their understanding of the equality principle and to demonstrate that the equality principle may be used to solve a variety of problem types.
+To solve this simple form of missing addend problems, the students first find the side of the 
+equal sign that tells how many they end with. The teacher then points out that the sides are not 
+equal until the students end with the same number on both sides. The teacher directs the students 
+to draw lines on the side with the box so that the sides will be equal and to fill in the missing 
+numeral.
+Format 7.3: Solving Missing Addends presents the missing addend strategy. Part A 
+teaches students the component skill of determining the side to start working on. The exercise 
+points out that since a box doesn’t tell how many lines to draw, it can’t be the side to start on. 
+Parts B and C are structured board and worksheet exercises, respectively. Note that in step 5 of 
+Part B and step 7 of Part C, the teacher reminds the students that the lines under a box tell what 
+numeral goes in the box.
+5 + □ = 7
+II
+This prompt prevents errors like 5 + 7 = 7 in which students write the number that they 
+counted to instead of writing the numeral for the number of lines for the missing addend.
+Part D is a less structured worksheet exercise that includes an equal mixture of missing 
+addend and regular addition problems. In Part D, the teacher leads the students through 
+steps designed to teach the students when to apply the missing addend strategy. The teacher 
+
+Chapter 7 Addition 93
+then instructs the students to make both sides equal and finally to fill in the missing numeral. 
+Lower-performing students may need a great deal of practice on this before they can discriminate when and how to apply the regular addition and missing addend strategies. Examples 
+should be limited to problems in which the sum is 10 or less. This limitation is suggested to 
+prevent the tasks from becoming too cumbersome.
+When the missing addend is zero, as in 8 + □ = 8, the teacher can use this wording to 
+replace steps 6, 7, and 8 in Part C:
+6. This is a special kind of problem. The sides are already equal. Eight on both sides. So you 
+shouldn’t make any lines. You plus zero lines. Write a zero in the box.
+7. Eight plus how many equals 8?
+8. Say the whole statement.
+We recommend that teachers present several examples in which the missing addend is zero 
+in Part C , for example, 8 + □ = 8 and 2 + □ = 2. Teachers should continue to present problems in which the missing addend is zero in Part D.
+Addition the Fast Way
+Addition the fast way (see Format 7.4: Teaching Addition the Fast Way) is taught as a transitional step between the strategy in which students draw lines for each member of the sets represented by each addend and later exercises in which students memorize addition facts. When time 
+for math instruction is limited, teachers can skip addition the fast way and move directly into 
+fact teaching (see Chapter 6). The addition the fast way strategy differs from addition the slow 
+way in that the student draws lines only to represent the addend following the plus sign:
+7 + 4=□
+Illi
+When solving the problem, the student starts counting at the number represented by the 
+numeral in the first addend position and then counts the lines (in the problem above, students 
+count “ssevvenn, 8, 9, 10, 11”). Then the student writes the numeral representing the sum in the 
+box on the other side of the equal sign. The student does not draw lines under the box. The only 
+new preskill for this strategy is rote counting beginning at a number other than 1.
+Addition the fast way is introduced when students are able to work a mixture of addition 
+and missing addend problems with 80% to 90% accuracy. Teachers can expect some students 
+to have difficulty coordinating counting from a number other than 1 and touching lines. For 
+students who consistently have difficulty with this step, the teacher should present an exercise 
+focusing solely on this component skill. The teacher might write a series of problems in which 
+the lines are drawn:
+5 + 3
+III
+3 + 4
+Illi
+II
+9 + 5 
+ιιιιι
+7 + 2
+The teacher models and tests counting until the students can consistently count correctly. 
+For example, for 5 + 3, the teacher says, “Ffiivve” then touches each line and counts “6, 7, 
+8.” The teacher then tests by presenting another example, 7 + 2, touching 7 and saying, “Get it 
+going,” to indicate that students begin with 7 and then count each line.
+Example selection criteria for addition the fast way problems are somewhat different from 
+those for addition the slow way. Larger numerals can be written in the first addend position 
+because the student no longer has to draw lines to represent that amount. The second addend, 
+however, should remain a smaller number (1-8). Teachers must design the problems so that the 
+sum is represented by a numeral the students have been taught to write.
+After students work addition problems the fast way accurately, subtraction instruction can 
+begin (see Chapter 8). After students work addition problems fluently, memorization of addition 
+facts should begin (see Chapter 6).
+
+94 Part II Basic Concepts and Skills
+Diagnosis and Remediation
+Previously, we have stressed the importance of immediately correcting all student errors. 
+At times, it may become apparent that a pattern of errors persists. This section presents basic 
+procedures for diagnosing and remedying persistent errors in beginning addition. The basic 
+steps below apply to diagnosing and remedying errors on any type of problem.
+1. Diagnosis: The teacher analyzes worksheet errors and hypothesizes about the cause of 
+each error.
+2. Confirmation: The teacher interviews the student to determine the cause of the error if it is 
+not obvious.
+3. Reteaching: The teacher provides reteaching through board and/or worksheet presentations 
+of a component skill or a strategy.
+4. Assess: The teacher tests the student on a set of problems similar to the ones on which the 
+original errors were made.
+Once students begin working problems independently using a specific strategy, the errors 
+they make on their worksheets fall into two main categories (fact errors are not possible at this 
+stage because facts are not used nor have they been taught).
+1. Component-skill errors: a difficulty on one or more of the component skills or preskills used 
+in the strategy
+2. Strategy errors: a fundamental lack of understanding of the strategy
+The similarities in the suggested remediation for each type of error should be noted.
+Component-Skill Errors Component-skill errors may be made on symbol identification and 
+writing, counting and/or drawing lines, and application of the equality rule. When errors are 
+related to component-skills, error patterns are more readily apparent. Therefore, a teacher often 
+can determine the cause of these errors by carefully analyzing worksheets. For example, on an 
+addition the fast way worksheet, a student made the following errors:
+By analyzing the errors made by the student, the teacher can determine whether the student 
+had trouble coordinating counting from a number or incorrectly identified the numeral representing the first addend while touching the first line under the second addend. For example, in 
+problem a above, the student may have touched the first line under 2 while saying sssiiixxx and 
+then would have said 7 when touching the second line.
+To remedy a component-skill error, the teacher presents practice exercises on the component skill in isolation for several lessons before returning to the more advanced problems. For 
+example, to remedy the errors made by the student above, the teacher would present an exercise 
+on coordinating counting and touching lines. The teacher would focus on that one skill until the 
+student reached a criterion of about 90% correct responses. Then the teacher would give the 
+student addition problems similar to those in the original exercise. This would assess if mastery of the component skill allows students to successfully complete the strategy. If students do 
+not demonstrate mastery of the strategy, additional structured practice on the strategy may be 
+required or another component-skill error may be present.
+
+Chapter 7 Addition 95
+Another possible component error involves symbol identification. If a student missed a 
+problem because of numeral misidentification (identifying 6 as 9), the teacher would reteach 
+identifying the numeral 6 for several lessons. During this time, the student would not be asked to 
+solve problems including the numeral 6.
+Strategy Errors A strategy error indicates a fundamental lack of understanding of how 
+to sequence the steps in the problem-solving strategy. In the example below, a strategy error 
+occurred when, after drawing lines under each numeral, the student wrote the next number in 
+the counting sequence (10) in the box instead of the total number of lines counted (9). This error 
+clearly indicates that the student is not employing the strategy.
+3 + 6 = 10
+ιιι ιιιιιι
+To remedy a strategy error, the teacher reintroduces the format in which the strategy is 
+taught to the student, beginning with the structured board presentation, and then progresses to 
+the structured and less structured worksheet presentations. A common strategy error students 
+make when solving problems with missing addends involves adding the addend and the sum: 
+6+15 = 9. Such errors indicate students are not applying the equality principle. For these 
+types of errors, the teacher begins with the structured board presentation, Part B of Format 7.3: 
+Solving Missing Addends, then progresses to worksheets in Parts C and D.
+INSTRUCTIONAL PROCEDURES: MULTI-DIGIT ADDITION
+«•••••••
+Column addition problems may be divided into three groups. Simplest are those that do not 
+require renaming:
+24 
++ 15
+Next are problems with two multi-digit addends, where renaming is necessary:
+424 
++317
+Most difficult are problems with more than two multi-digit addends with renaming:
+671 
+424 
++317
+Students work column addition problems by using their knowledge of facts. Therefore, 
+problems should be constructed from facts the students have been taught.
+Problems Not Requiring Renaming
+Column addition problems without renaming are usually introduced in first grade after students 
+have learned to read and write numerals through 99 and are able to mentally determine answers 
+to about 25 basic addition facts. Remember that basic addition facts include all possible pairings 
+in which the addends are single-digit numbers. Students need many months of practice before 
+they have memorized all basic facts. However, the introduction of multi-digit addition problems 
+need not be delayed until students have memorized all basic addition facts. Initial examples, 
+however, should be designed to include the easier addition facts. Exercises to help memorize 
+basic addition facts are discussed in detail in Chapter 6.
+The procedure for teaching students to work these problems is relatively simple. The teacher 
+has the students read the problem and then points out the place value columns, telling students to 
+first add the ones and then add the tens. Teaching students to always begin working in the ones 
+column helps prevent errors on more difficult renaming problems. Although students can compute the correct answer if they begin in the tens column on problems that don’t require renaming, 
+
+96 Part II Basic Concepts and Skills
+they will eventually have difficulty when they start working problems that do require renaming. 
+Therefore, students should be taught to always begin solving the problem in the ones column.
+24 24 BUT 24 24
++ 12 then 12 NOT + 17 then + 17
+6 36 3 311
+After learning which column to begin with when solving a problem, students add the ones 
+and then the tens, writing the sum for each column. The teacher asks about the number of tens 
+rather than the quantity represented by the tens number; that is, for
+34 
++21
+the students indicate they are adding 3 tens and 2 tens, not 30 and 20, to remind students they 
+are working in the tens columns. We do not include a format in the book for this problem type 
+because the teaching procedure is quite simple: A teacher first uses a structured board presentation and then structured and less structured worksheet exercises. The transition from structured 
+board to independent worksheet can be made in about four lessons.
+Problems Requiring Renaming
+Problems requiring renaming are usually introduced during first grade. Preskills include working addition problems without renaming, reading and writing numerals, knowing basic addition 
+facts, and using expanded notation with teen and tens numbers.
+Preskill A unique preskill for renaming involves adding three single-digit numbers. For example, 
+when adding tens in
+1
+37 
++29
+6
+the student must add 1 + 3 to get the sum of 4 and then add the sum to 2. Adding three numbers 
+is significantly more difficult for low performers than adding two numbers. When adding three 
+numbers, the student must add the first two numbers, remember the answer, and then add the 
+third number to that sum.
+Adding three single-digit numbers should be taught several weeks prior to the introduction of renaming problems. The format for teaching students a strategy to solve these problems 
+appears in Format 7.5: Adding Three Single-Digit Numbers. The format contains only two 
+parts: a structured board presentation and a structured worksheet presentation. Since relatively 
+few steps are involved, a less-structured worksheet format is not needed.
+The most common error made on this format occurs in step 6 of Part A and step 4 of Part B 
+when students are asked to identify the next two numbers to be added. Students often respond 
+with the second and third numbers instead of the sum of the first two numbers and the third 
+number. For example, in the following problem
+2 
+3 
++4
+the students answer 3+4 rather than 5 + 4. In Part A, the teacher tries to prompt the correct 
+response by referring to that question as the “hard part.” If students do make the error, the 
+teacher must model and test the answer and then repeat the entire sequence from the beginning. 
+(“Now we’re adding 5+4. What are we adding now? What is 5 + 4?. . . Let’s do the whole 
+problem again from the beginning.”)
+There are two example selection guidelines for this format. In about half of the examples, 
+the top numeral should be 1 because in most renaming a 1 is placed in the tens column. Initially, 
+
+Chapter 7 Addition 97
+the sum of the three single digits should be 10 or less so that students will be able to concentrate 
+on adding the three numbers rather than figuring out more difficult basic facts.
+Introducing the Problems The first type of renaming problem involves adding a two-digit 
+numeral to another one- or two-digit numeral. Renaming is explained to students by pointing 
+out that a tens number may not appear in the ones column and must be placed on top of the tens 
+column. For example, leading the students through the problem
+37 
++25
+the teacher asks the students what 7 + 5 equals. After the students say 12, the teacher says, “We 
+have a problem. Twelve equals 1 ten and 2 ones. We can’t have a ten in the ones column. So, 
+we put the 1 ten at the top of the tens column” (teacher writes 1 over 3) “and the 2 ones under the 
+ones column” (teacher writes 2 under 5). Format 7.6: Adding Two Numerals with Renaming 
+can be used for introducing renaming.
+While Part A focuses student attention on the fact that they cannot have a ten in the ones 
+column, Part B sets up the sequence of steps the students will follow when working problems on 
+their own. The vocabulary used in this format was selected to foster the students’ understanding 
+of the operation. For example, under step 6 in Part A, it is important to remind the students that 
+they are adding tens (“How many tens do we end up with?”) so that they remember the values 
+of the numbers and do not just think of the numbers as individual numerals (3 in the tens column represents 30, not 3). Note that in Part B, step 3, the teacher prompts the students less on 
+determining what 13 equals. Instead of just telling the students that 13 = 10 + 3, the teacher 
+encourages the students to answer independently.
+A common error made on renaming problems involves renaming the wrong numeral. For 
+example, in working the problem 37 + 27, the student places the 4 above the tens column and 
+writes 1 under the ones column. If the students write the numerals in the wrong places, the 
+teacher should not merely model where to write the numerals but should ask students the critical 
+questions (Part B, step 3) so that they can see why the numerals need to be in the appropriate 
+places. After the students correctly answer the questions, the teacher can demonstrate how to put 
+a ten on top of the tens column.
+If a student hesitates in answering on a particular step, the teacher should say the answer, 
+repeat the question, and have the student respond again. After using this correction procedure, 
+the teacher should then present the entire problem to give students the opportunity to successfully work through all of the steps in the strategy.
+As students learn to read and write larger numbers, renaming problems with these numbers 
+are introduced. First, problems in which students rename to the hundreds column are introduced. 
+The format for presenting problems in which the students must rename to the hundreds column 
+would be very similar to the format for renaming to the tens column (Format 7.6: Adding Two 
+Numerals with Renaming). For example, the students are working this problem:
+283 
++ 185
+After asking the students what 8 tens + 8 tens equals, the teacher would say, “We have a 
+problem. Sixteen tens equals 1 hundred plus 6 tens. We can’t have a hundred in the tens column, 
+so we put it at the top of the hundreds column” (teacher writes 1 over the 2) “and put the 6 tens 
+here” (teacher writes 6 under the tens column).
+Problems in which students rename twice, to the tens column and then to the hundreds 
+column, are introduced next. These problems and future problem types will require only a brief 
+introduction, because once students understand the process of renaming, they usually have little 
+difficulty generalizing. Lower-performing students, however, may need more supervised practice with worksheets containing a variety of problem types. Summary Box 7.2: Addition with 
+Renaming outlines the steps in the renaming strategy.
+When introducing the strategy using the structured board and worksheet parts of a format, the 
+teacher should use only examples of the type being introduced. When presenting the less structured and supervised parts of the format, the teacher should give the students a cumulative review
+
+98 Part II Basic Concepts and Skills
+FIGURE 7.1 Sample worksheet for adding with renaming
+356 
++277
+486 
++281
+395
+-243
+495 
++235
+386
+-241
+489 37 523 924 924
++232 +28 +206 -201 +31— — — ...... —
+372 938 356 284 565
++472 -214 +217 +382 +265— — — — —
+87 87 299 468 98
++47 -47 +91 -354 +97
+worksheet. Worksheets are designed to provide cumulative review so that previously taught types 
+of problems receive systematic practice. We recommend that one-third to one-half of the problems 
+on the worksheet be the most recently introduced type pf problems. The others should be addition 
+problems of previously introduced types and subtraction problems. The problems should be written 
+in random order. Several examples of the new problem type can appear at the beginning of the worksheet. Otherwise, no more than two or three problems of the same type should appear consecutively.
+Cumulative review is especially important when introducing renaming. A student has not 
+mastered renaming until he can discriminate when renaming is appropriate. Addition problems 
+that do not require renaming must be included so that students do not get into the habit of always 
+putting a 1 at the top of the tens column. Likewise, subtraction problems must be included so 
+that the students receive continued practice discriminating addition from subtraction.
+An example of a worksheet for a lesson that takes place several days after introducing 
+renaming to the tens and the hundreds columns appears in Figure 7.1. Note that more than one- 
+third of the problems contain double renaming. Of the other addition problems, several involve 
+just renaming from the tens to the hundreds columns, and several involve no renaming at all. 
+About one-third of the problems are subtraction problems.
+Three or More Addends
+The last major problem type includes those problems with three or more multi-digit addends. 
+Some of these problems are particularly difficult because the student is required to mentally add 
+a number represented by a single-digit numeral to a number represented by a two-digit numeral. 
+For example, note the problems below:
+36 47
+16]12 + 4 24]11 + 3
++24j +13j
+rSUMMARYj BOX 7.2
+5839
+2467 ] 16 + 9
+3589 
++2849 ]25 + 9
+Addition with Renaming
+1. Students read the problem.
+2. Students begin adding in the ones column.
+3. If the sum of the ones column is 10 or more, students determine that they must rename.
+4. Students use expanded notation to determine the number of tens and ones in the sum of the 
+ones column.
+5. Students rename by putting the tens in the tens column and the ones in the ones column.
+6. Students add the first two tens in the tens column and then add the next ten to that sum.
+7. Students write the sum of tens in the tens column.
+
+Chapter 7 Addition 99
+O
+ Format 7.7A: Complex Addition Facts 
+with a Total Less than 20 
+Watch how Tristan gives his 
+students think time before asking 
+them to respond.
+In each problem, the sum of the first two addends in the ones column is a teen number 
+(12, 11, and 16). The next step in each problem involves adding a single-digit numeral to a teen 
+numeral (12 + 4, 11 + 3, 16 + 9). As mentioned earlier, we call facts in which a single-digit 
+number is added to a two-digit number complex addition facts. Learning complex addition facts 
+is a critical preskill that takes many months of practice to master. Teachers should begin practice 
+exercises on this preskill after students know about 50 basic addition facts.
+Format 7.7: Complex Addition Facts with a Total Less Than 20 shows how to 
+present adding a single-digit number to a teen number when the total does not exceed 
+19(14 ÷ 3, 15 ÷ 2). Students are typically introduced to these problems sometime in first 
+grade. The students learn to transform a complex fact into two simple facts. For example, students transform 16 + 3 into 10 + 6 + 3, add 6 + 3, and then add 10 + 9. Note that extensive 
+practice on this skill is required to develop fluency.
+After students can solve this first type of complex addition fact mentally, they can begin 
+column addition problems involving three or more numerals that require renaming. These 
+problems can be introduced with a relatively simple format. The teacher has the students add 
+all the numerals in the ones column. After the sum of the ones column is computed, the students 
+rename to the tens column and write the ones under the ones column. A similar procedure 
+is followed with the tens, hundreds, and thousands columns. Note that examples should be 
+carefully selected so that students do not encounter complex addition facts that have not been 
+previously taught.
+Self-Checking After students become proficient in working renaming problems with three 
+addends, they should be taught to check their answers. A checking procedure for addition is 
+adding from the bottom digit in each column, assuming the students start with the top digit in 
+each column when they originally work the problem. The teacher introduces checking using a 
+worksheet exercise. Students complete the first problem, and the teacher says, “Here’s how to 
+check your work to make sure you have the right answer. Start with the bottom number and add 
+up the column. What are the first two numbers?. . . What’s the answer?. . . What’s the answer for 
+the next two numbers?. . . Is that what you wrote in the answer for the ones column and at the 
+top of the tens column?. . . Let’s start from the bottom again. . . What are the first two numbers 
+you add in the tens column?. . . What’s the answer for the next two numbers?. . . Is that what you 
+wrote for the answer?”
+Determining whether students check their work is difficult because checking doesn’t require 
+any additional writing. An exercise to encourage checking involves giving students already- 
+worked problems, about half of which have incorrect answers, and instructing students to check 
+the answers and correct mistakes.
+Diagnosis and Remediation
+As mentioned previously, the teacher must carefully analyze student work to provide remediation accordingly. In the multi-digit stage of addition instruction, students might make three 
+types of errors persistently: facts, component, and strategy. In the area of addition, the most 
+common errors involve facts, the component skill of renaming, and inattention to the sign in the 
+problem.
+Fact Errors Fact errors cause most column addition errors. Such errors are sometimes easy to 
+identify, as in the problems below:
+a. b. c.
+// / 1
+357 228 648
++248 +744 +28l
+606 971 919
+Note that in each example, the student missed the problem because of a fact error (in problem a, the student wrote 16 for 7 + 8). In some cases, however, teachers cannot easily determine if a fact error caused the incorrect answer. For example, in the following problems, the
+
+100 Part II Basic Concepts and Skills
+errors could have been caused by failing to rename or by a fact error. In problem d, the student 
+might have incorrectly added 1 + 5 + 4 in the tens column or failed to rename.
+d. e.
+/ /
+357 228
++248 +743
+595 961
+In order to determine the specific cause of the errors, the teacher should look for error 
+patterns. For example, the teacher should check the errors to see if the same facts were consistently missed. Also, the teacher should utilize the information she has about the student’s 
+performance on recent fact worksheets. To confirm the diagnosis, the teacher should observe the 
+student reworking some of the missed problems and have her explain her thinking.
+The remediation procedure depends on the nature of the fact errors. If a student consistently 
+misses the same facts, the teacher provides extra practice on those facts. On the other hand, 
+some students are erratic in their performance, answering a fact correctly one time and missing it 
+the next. For such students, the teacher may increase the incentives for accurate work.
+A final note on facts concerns teachers who work with older students who rely on their fingers 
+to figure out basic facts. Unfortunately, since lower-grade classrooms often do not provide adequate practice on fact mastery, many students may be using their fingers to figure out basic facts. 
+Teachers should be careful not to forbid the students to use their fingers if that is their only strategy 
+for deriving an answer. Rather, the teacher should ensure that students are using a finger strategy 
+that is relatively efficient and that students use the strategy accurately. Mistakes in finger strategies 
+may occur because a student makes errors in counting or does not coordinate putting up his fingers 
+and counting (the student does not put up a finger for each number counted). The ultimate goal is to 
+teach students to master their facts and to stop relying on finger counting altogether.
+Component-Skill Errors The first component-skill error involves renaming. Note the errors 
+in the problems below:
+6 39
+48 27
++28 + 19
+121 112
+The student work clearly presents a pattern of errors suggesting the diagnosis of incorrectly 
+renaming. Because the pattern of errors is so clear, additional confirmation is not necessary 
+before introducing remediation exercises. Errors in which students place the numbers incorrectly 
+are quite serious because they indicate a fundamental misunderstanding of basic place value concepts. Remediation of the component skill involves a set of problems containing boxes in which 
+the sum of the ones column and the numeral above the tens column are to be recorded. For each 
+problem, the teacher tells the student the sum of the numerals in the ones column and then asks 
+how many tens and ones make up that sum. The student answers and then fills in the numerals. 
+The remediation set should contain approximately 10 examples that look similar to the following.
+□ □ □ □
+68 45 24 86
++19 ÷29 + 18 +27■ —... - ■ .. .. .....
+□ □ □ □
+After the student demonstrates mastery of the retaught component skill, the teacher leads the 
+students through a set of four to six addition problems using Part C of Format 7.6: Adding Two 
+Numerals with Renaming. The first three to four examples of the less structured worksheet 
+should be problems in which renaming is required. Examples in the worksheet should also contain some discrimination problems in which renaming is not required so that students do not get 
+into the habit of always writing a 1 above the tens column. Students have shown mastery when 
+they complete at least 90% of all problems on the discrimination worksheet correctly.
+
+Chapter? Addition 101
+Failure to attend to the sign is a common cause of errors in column addition problems:
+342 304
++ 131 -201
+211 505
+If such errors occur on more than 10% of the problems, students should be given a special worksheet with an equal mix of addition and subtraction problems in random order:
+37 28 47 38 47 86 48
+-15 +13 +24 -16 +25 -23 +20
+The teacher presents the less structured worksheet exercises, instructing students to circle and 
+say the sign before working each problem.
+Strategy Errors Strategy errors demonstrate a fundamental misunderstanding of the strategy. 
+An example of one type of strategy error appears below:
+35 68
++27 + 18
+512 716
+This is quite a serious error, indicating the student does not understand the concept of 
+renaming. The remediation procedure for all strategy errors involves reteaching the format for 
+that particular type of problem. The teacher presents several problems using a structured board 
+presentation and then leads the students through several worksheet problems using the structured and then the less structured parts of the format.
+A summary of the errors common to column addition and the diagnosis and remediation 
+procedures appropriate for each appear in Figure 7.2. Unless otherwise noted, after each remediation procedure, the teacher needs to give students worksheets similar to the ones on which the 
+original errors were made in order to test whether the remediation was effective.
+FIGURE 7-2 Diagnosis and remediation of addition errors
+Error Pattern Diagnosis Remediation Procedures Remediation Examples
+Fact Errors
+a. 46 263
++17 +174
+64 447
+Component-Skill Errors
+Basic fact errors.
+Student doesn't know the 
+fact 6 + 7.
+Emphasize 6 + 7 in fact 
+memorization exercises. 
+See Chapter 6.
+b. 3 2 Renaming errors. Student Steps from structured work­ 10 problems in this form:
+46 53 renames incorrectly, writing sheet exercise that focus on □ □+ 17 +29 the tens digit in the ones renaming. (Format 7.6, 69 46
+81 91 column. Part B, steps 1-3) +36 +29
+□ □
+c. 49 253 Sign discrimination error. Less structured worksheet Mix of addition and
++ 17
+32
+-174
+427
+Student subtracts instead of 
+adding, and vice versa.
+exercise. Have students circle the sign before working 
+each problem. (Format 7.6, 
+Part C, steps 1-4)
+subtraction problems.
+Note: After addressing any component-skill error, assess students using worksheets similar to the ones on which errors were 
+originally made in order to determine if the remediation was successful.
+Strategy Errors
+d. 46 253 Student does not carry; Present the format begin+ 17 + 174 writes the entire number in ning with structured board
+513 3127 the sum. Have student solve 
+a problem while thinking 
+out loud to determine student knowledge of preskills.
+exercise. (Format 7.6, Part A)
+
+102 Part II Basic Concepts and Skills
+APPLY WHAT YOU LEARNED
+Click on the √ to answer the questions online.
+1. Identify the problem type for each of the following examples. List the problems in the order in which 
+they appear on the Instructional Sequence.
+a. 462 
++371
+d. 84
++ 13
+b. 35 e. 348
+16 + 135
++24— f. 368
+c. 46 +259
+87
++ 19
+2. The following is an excerpt from Format 7.3 for solving missing addends. Student responses are 
+included. Specify how the teacher would use the equality principle to correct the error.
+Missing Addend Format
+Part B: Structured Board Presentation
+TEACHER STUDENTS
+(Write the following 4 + ∣ ∣ = 6
+problem on the board.) 1111 111111
+4. We want to end with the same number on both sides.
+(Point to 4 + ∣ ∣.) “How many on this side now?” 4
+“Think. How many do we have to end with on this side?” 4
+3. Below is an excerpt from an independent worksheet to be given to students who have just demonstrated accuracy in solving problems requiring the addition of two two-digit numbers with renaming 
+from the ones to tens columns. The teacher has made some errors in constructing the worksheet.
+a. Indicate the inappropriate examples.
+b. Identify any omitted problem types that should be included on the worksheet.
+Worksheet
+a. 462
++ 183
+b. 75
++ 16
+c. 141
++324
+d. 38
++26
+e. 582
++ 15
+f. 1 g∙ 46 h. 617 i. 58
+3 + 15 + 124 +25
++6
+4. At the beginning of the unit, the teacher tested Leslie. Her work on the performance indicators 
+appears below. Specify the type of problems with which instruction should begin for Leslie. Explain 
+your answer.
+461 512 622
+a. 1
+37
++46
+83
+1
+48
++ 14
+61
+1
+57
++27
+84
+b. 1
+247
++315
+562
+1 
+258
++ 13
+272
+1 
+276
++ 8
+284
+c. 13 + 3 = 16 d. 374 248 437
+14 + 4 = 18 +261 + 364 +285
+12 + 2 = 14 535 511 652
+e. 1 1 1
+276 248 437
++ 185 + 365 +285
+
+Chapter? Addition 103
+5. Below are 11 problems that appeared on the worksheets to be done independently by the students in 
+Mrs. Ash’s math group. Next to each student’s name are the problems missed by the student. For each 
+student:
+a. Diagnose: Specify the probable cause or causes of the student’s errors
+b. Confirm: Verify the diagnosis, if needed
+c. Remediate: Indicate if a component skill or strategy should be retaught and the examples that 
+could be used
+d. Assess: Provide examples that could be used to determine student mastery of the strategy
+37
++ 26
+364 57
++212 -23
+36
++22
+48
++28
+72
++26
+58
+-32
+57 
++34
+48
+-24
+34 
++26
+514
++23
+Errors: Ian
+3
+37
++26 
+”77
+6
+48
++28
+∕<2∕
+Moniqua 37 
++26
+513
+48 
++28 
+616
+34
++26
+510
+Pablo 37 
++26
+//
+1
+48
+-24
+72
+6. Specify a diagnosis and remediation for each of the students listed below.
+a. For each student, describe the probable cause or mistaken strategy responsible for the errors.
+b. For each remediation, indicate the format and the part of that format you would begin remediation 
+with. If no format appears in the book for that problem type, indicate the page in the text that 
+discusses that problem type.
+Student Λ
+3 +□
+Illi
+4 + 0 
+ιιιιι
+Student B
+6 + 3 = [7∣ 
+III
+2 + 4 = [7] 
+1111
+7. Write the wording the teacher uses in the structured worksheet part in presenting the following 
+problem:
+162
++283
+8. Below are worksheets made by three teachers for the less structured part of the format for teaching 
+students to work problems with renaming from the ones to tens columns. Two teachers constructed 
+unacceptable lists. Identify these teachers and tell why each is unacceptable. For the unacceptable 
+lists, specify what could be done to make the list acceptable.
+a. 37 
++25
+37
+-25
+237 
++ 86
+481
++ 110
+374
+-213
+48 
++24
+786
++346
+u 48 78 37 58 73 57
+D.
++26 +25 +8 +24 +28 + 18
+47 47 385 68 28 74 92 75 342
+C.
++25 -25 +214 +48 +36 +23 -31 +38 +26
+
+104 Part II Basic Concepts and Skills
+Format 7.1
+EQUALITY INTRODUCTION
+TEACHER
+(See Videos in Parts A and B)
+STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following problem on the board.)
+(Point to equal sign.) This is an equal sign. What is this?
+2. Here's a rule: We must end with the same number on this side (point to left 
+side of equal) and the other side of the equal sign.
+3. (Point to left side.) Let's see if we end with the same number on this side and 
+on the other side.
+4. (Point to left side.) Count the lines on this side as I touch them. (Point to each 
+line as students count.)
+5. How many did we end with on this side?
+6. So we must end with 5 on the other side. (Point to right side.)
+7. Let's count the lines. (Point as students count.)
+Did we end with 5?
+So the sides are equal. We ended with the same number on this side and the 
+other side.
+Equal sign
+1, 2, 3, 4, 5
+5
+1, 2, 3, 4, 5
+Yes
+Part B: Less Structured Board Presentation
+1. (Write the following problem on the board.)
+Listen to the equal rule: We must end with the same number on this side 
+and on the other side of the equal sign. Say the equal rule. (Repeat rule with 
+students until they can say it without assistance.)
+2. Let's see if the sides are equal.
+3. (Point to left side.) How many do we end with on this side? (Pause, signal.)
+4. (Point to right side.) How many do we end with on this side? (Pause, signal.)
+5. Do we end with the same number on this side (point to the right side) and on 
+the other side?
+6. Are the sides equal?
+7. The sides are not equal, so I don't write an equal sign.
+(Repeat steps 1-7 with several examples, half equal and half unequal. Give 
+individual turns to several students.)
+4
+2
+No
+No
+
+Chapter 7 Addition 105
+TEACHER STUDENTS
+Part C: Less Structured Worksheet
+1. (Give students worksheet with these problems.)
+2. Say the equal rule. We must end with 
+the same number 
+on this side and on 
+the other side of the 
+equal sign.
+3. Count and see if the sides are equal. (Pause.) Are the sides equal?
+To correct: (Point to left side). Count these lines. Tell me how many you end 
+with. (Point to right side.) Count these lines. Tell me how many you end with.
+Did you end with the same number on this side and the other side?
+4. Do you write in an equal?
+5. (If answer to 3 is yes, write the equal.)
+(Repeat steps 1-5 with remaining problems.)
+No
+No
+Format 7.2
+TEACHING ADDITION THE SLOW WAY
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following problem on the board.)
+5 + 3 = □
+Read the problem. 5 + 3 = how many?
+(Point to the equal sign.) What is this? Equal
+2. Listen to the equal rule: We must end with the same number on this side 
+(circle 5 + 3) and on the other side (circle box) of the equal sign.
+What is the equal rule? We must end with the
+3. (Point to 5.) How many in the first group?
+same number on this side 
+and on the other side of 
+the equal sign.
+5
+I'll draw five lines under the 5. Count as 1 draw the lines. (Draw five lines 
+on the horizontal line under the 5.) 1, 2, 3, 4, 5
+continued
+
+106 Part JI Basic Concepts and Skills
+Format 7.2 (continued)
+TEACHING ADDITION THE SLOW WAY
+TEACHER STUDENTS
+4. (Point to + 3.) This says "plus three." Plus tells us to draw more lines, so I 
+draw three lines under the 3. Count as I draw the lines. (Draw three lines 
+on the horizontal line under the 3.) 1, 2, 3
+5. We've drawn all the lines on this side. Let's count and see what we end 
+with. Count as I touch the lines. (Touch lines.) 1, 2, 3, 4, 5, 6, 7, 8
+What number did we end with? 8
+We must end with the same number on this side and on the other side of 
+the equal sign.
+6. (Point to 5 + 3.) We ended with 8 on this side. So what number must we 
+end with on the other side? 8
+I'll draw the lines. You count and tell me when to stop. (Draw lines on the 
+horizontal line under the box.) 1, 2, 3, 4, 5, 6, 7, 8, stop
+5 + 3 = □ 
+Hill III lllllll
+To correct: If children don't say stop after 8, keep drawing lines, then say, 
+We made a mistake. You have to tell me to stop. (Repeat from step 5.)
+7. The lines under a box tell what numeral goes in the box. How many lines 
+are under the box? 8
+So what numeral goes in the box? 8
+(Write 8 in the box.) What does 5 + 3 equal? 8
+8. Say the whole statement. 5 + 3 = 8
+9. (Repeat steps 1-8 until students can answer several problems 
+with no errors.)
+Part B: Structured Worksheet Presentation
+(Here is a sample worksheet item.)
+a. 5 + 3 = □
+1. Touch problem a.
+2. Read the problem as 1 clap. Get ready. (Clap at 1-second intervals.) 
+5 + 3 = how many?
+3. How many in the first group? 5
+Make the lines. Students draw five lines.
+4. The next part of the problem says plus 3. What do you do when 
+you plus 3? Make three lines.
+5. Make the lines under the 3. Students draw three lines.
+6. Let's count all the lines on this side. Put your finger over the first line. 
+(Check.) Touch and count the lines as I clap. (Clap one clap per second.) 1, 2, 3, 4, 5, 6, 7, 8
+5 + 3 — ∣ ∣ 
+ιιιιι ιιι ιιιιιιι
+
+Chapter? Addition 107
+TEACHER STUDENTS
+7. How many lines did we end with? 8
+8. So how many must we end with on the other side of the equal? 8
+9. Make the lines and write the numeral.
+10. What does 5 + 3 equal? 8
+11. Say the statement. (Repeat steps 1-11 with additional problems.) 5 + 3 = 8
+Part C: Less Structured Worksheet
+1. (Give students worksheets with problems.)
+Touch problem a. 6 + 3 = □
+2. Read the problem. 6 + 3 = how many?
+3. First you make six lines, then you plus. How do you plus 3? Make three lines.
+4. Make the sides equal and fill in the missing numeral. (Check.)
+5. What does 6 + 3 equal? 9
+6. Say the statement. (Repeat steps 1-6 with additional problems.) 6 + 3 = 9
+Format 7.3
+SOLVING MISSING ADDENDS (See Video in Part A)
+TEACHER STUDENTS
+u
+Part A: Preskill—Side to Start On
+1. (Write the following problems on the board.)
+4 + □ = 6
+1 + □ = 3
+3 + 2 = □
+8 + □ = 9
+5 + 3 = □
+Listen: I'm going to tell you something about the side you start with.
+You start with the side that tells how many lines to draw. Listen again: 
+You start with the side that tells how many lines to draw.
+2. My turn. (Point to 4 + □ in the first problem.) Can I start on this side? 
+No. How do I know? Because the box does not tell me how many lines 
+to draw. (Point to 6.) Can I start on this side? Yes. How do 1 know?
+Because a 6 tells how many lines to draw.
+3. Now it is your turn. (Point to 4 + □ in the first problem.) Can 1 start on 
+this side?
+How do you know?
+4. (Point to 6.) Can 1 start on this side? (Repeat steps 1-4 with remaining 
+problems.)
+No
+Because a box does not tell 
+how many lines to draw.
+Yes
+continued
+
+108 Part II Basic Concepts and Skills
+Format 7.3 (continued)
+SOLVING MISSING ADDENDS
+TEACHER STUDENTS
+Part B: Structured Board Presentation
+1. (Write the following problem on the board.)
+4 + □ = 6
+Read this problem.
+2. This is a new kind of problem. It doesn't tell us how many to plus. We
+4 + how many = 6
+have to figure out how many to plus. What must we figure out?
+3. We use the equal rule to help us. The equal rule says we must end 
+with the same number on this side (point to 4 + □) and on the other 
+side (point to 6) of the equal sign. First we figure the side we start 
+counting on.
+How many to plus
+(Point to 4 + □J Do I start counting on this side? No
+Why not? The box does not tell how 
+many lines to make.
+(Point to 6.) Do I start counting on this side?
+The 6 tells me to make six lines. (Draw six lines on the horizontal line 
+under the 6.)
+4. We want to end with the same number on both sides. (Point to 4 + □J
+Yes
+How many on this side now? 4
+I'll draw four lines. (Draw four lines on the horizontal line under 4.) 
+Think. How many do we need to end with on this side?
+To correct: (Repeat the equal rule.) What number did we end with on 
+the other side? What number do we have to end up with on this side?
+We have 4. We want to end with 6. Count as I make the lines. Tell me
+6
+when to stop. (Point to 4.) How many in this group?
+Get it going. (Draw lines on the horizontal line under box as
+4
+students count.)
+To correct: If students do not say stop after saying 6, tell them, ∖Ne 
+ended with 6 on the other side. We must end with 6 on this side.
+Then repeat from step 4.
+ffoouurr, 5, 6, stop
+5. What number did we end with? 6
+We made the sides equal. Are we going to write 6 in the box?
+To correct: If children say yes, Remember: the lines under the box tell 
+what numeral goes in the box.
+The number of lines under the box tells us what numeral to write in the
+No
+box. What numeral? (Write 2 in box.) 2
+6. 4 + how many = 6? 2
+Say the whole statement. (Repeat steps 1-6 with additional problems.)
+Part C: Structured Worksheet Presentation
+(Below is a sample worksheet item.)
+5 + □ = 8
+4 + 2 = 6
+
+Chapter? Addition 109
+TEACHER STUDENTS
+1. Touch problem a. Read the problem. 5 + how many + 8
+2. Touch the side you start counting on. Students touch side with 8.
+3. Make the lines under the 8. Students make eight lines.
+4. Touch the side that says "5 + how many." Students touch that side.
+5. How many do you have on that side now? 5
+Make five lines under the 5. Students make five lines.
+6. Think: How many do you have to end up with on that side?
+To correct: You want to make the sides equal. You ended with 8 on the 
+other side, so you must end with 8 on this side.
+7. Touch the 5. You have five lines so far. Make more lines under the box
+8
+so that you end with 8 on that side. Students draw more lines.
+How many did you end with on that side? 8
+Are you going to write 8 in the box?
+No, the lines under the box tell us what numeral to write in the box.
+No
+8. Count the lines you made under the box and write the numeral. Students write 3.
+9. 5 + how many = 8? 3
+Say the whole statement.
+When the missing addend is zero, as in 8 + □ = 8:
+10. This is a special kind of problem. The sides are already equal. Eight on 
+both sides. So you shouldn't make any lines. You plus zero lines. Write 
+a zero in the box. (Check.)
+5 + 3 = 8
+11. Eight plus how many equals 8? Zero
+12. Say the whole statement.
+Part D: Less Structured Worksheet
+1. (Give students a worksheet with an equal mix of addition and missing 
+addend problems.)
+a. 5 + 3 = □ d. 3 + 4 = □
+b. 4 + □ = 6 e. 6 + □ = 7
+c. 3 + □ = 8 f. 5 + 3 = □
+8 + 0 = 8
+Touch problem a. Read the problem.
+2. Touch the side you start counting on.
+3. Make the lines on that side and get ready to tell me how many you end
+5 + 3 = how many?
+with. (Pause.) What do you want to end with? 8
+4. Touch the other side. (Pause.) What do you want to end with? 8
+5. Make lines to make the sides equal. Students make lines.
+6. Count the lines under the empty box and write the numeral. Students write 8 in box.
+
+110 Part II Basic Concepts and Skills
+Format 7.4
+TEACHING ADDITION THE FAST WAY
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following problem on the board.)
+5 + 3 = □
+I'll touch and you read. 5 + 3 equals how many?
+2. We're going to work this problem a fast way. We draw lines under the 
+numeral after the plus. (Point to + 3.) What does this say? Plus three
+So how many lines are we going to draw? 3
+I'll make the lines. (Draw 3 lines under the 3.)
+3. Watch me count the fast way. (Touch 5 and then each line.)
+Ffiivve, 6, 7, 8.
+Now it's your turn to count the fast way. How many are in the first 
+group? Get it going .... count. (Touch 5 for 2 seconds and then touch 
+each line.) ffiivve, 6, 7, 8
+4. How many did we end with on this side? 8
+So how many must we end with on the other side? 8
+I'll write an 8 in the box. (Write 8 in the box.)
+5. Read the whole statement. (Repeat steps 1-5 with 7 + 4 and 9 + 5.) 5 + 3 = 8
+Part B: Structured Worksheet
+1. (Write the following problem on the board.)
+4 + 2 = □
+(Point to 4 + 2 = □J Touch this problem on your worksheet. (Pause.)
+Read the problem out loud. Get ready. (Clap for each symbol.) 4 + 2 = how many?
+2. Let's work this problem the fast way. Touch the numeral after the plus. 
+(Pause.)
+How many lines are you going to plus? 2
+Make the lines under the 2. (Check.)
+3. Touch the 4 and get ready to count the fast way. Four. Get it going. 
+(Clap as students touch and count.) Count. ffoouurr, 5, 6
+To correct: (Teacher models.) My turn . ... (If necessary, moves student's 
+finger as he counts.)
+4. How many did you end with on the side you started with? 6
+How many must you end with on the side with the box? 6
+Yes, 6 equals 6. What numeral will you write in the box? 6
+Do it.
+5. Read the whole statement. 4 + 2 = 6
+
+Chapter? Addition 111
+TEACHER STUDENTS
+Part C: Less Structured Worksheet
+(Make a worksheet with addition problems similar to the following.)
+4 + 3 = □
+1. Everybody, read the first problem on your worksheet. Get ready.
+(Clap for each symbol.)
+2. (Work problem.) Now you're ready to plus lines and count the fast way. 
+What are you going to do?
+Do it. (Check students as they work.)
+3. Read the whole statement.
+4 + 3 equals how many?
+Plus the lines and count the 
+fast way.
+4 + 3 = 7
+Format 7.5
+ADDING THREE SINGLE-DIGIT NUMBERS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following problems on the board.)
+1 1 3
+3 2 1
++2 +4 +6
+You're going to learn how to work a special kind of problem today.
+Read this problem. 1+3 + 2
+2. Watch me work it. First I add 1+3. What do I add first? 1 + 3
+What is 1 + 3? (Pause.) 4
+3.1 + 3 = 4. Now I add 4 + 2. What do I add next? 4 + 2
+What is 4 + 2? (Pause.) 6
+4. So I write the 6 below the line.
+5. Let's see if you remember. What are the first numbers I add? 1 + 3
+6. What is 1 + 3? (Pause.) 4
+Here's the hard part. What are the next numbers I add? 4 + 2
+To correct: (If student says 3 + 2, repeat steps 2-6.) What is 4 + 2?
+(Pause. Write 6.) 6
+7. Read the problem and the answer. 1+3+2=6
+(Repeat with two more examples. Give individual turns to several students.)
+Part B: Structured Worksheet Presentation
+(Students have worksheets with 10 problems of the type below.)
+2 1 5
+4 4 2
++3 +3 +2
+continued
+
+112 Part ∏ Basic Concepts and Skills
+Format 7.5 (continued)
+ADDING THREE SINGLE-DIGIT NUMBERS
+TEACHER STUDENTS
+1. Touch the first problem. Read it.
+2. Touch the first numbers you add. (Monitor responses.) What are they?
+3. What is 2 + 4? (Pause.)
+4. Now tell me the next numbers you add. (Pause.)
+Yes, 6 + 3.
+2 + 4 + 3
+2 + 4
+6
+6 + 3
+5. What is 6 + 3? (Pause, signal.) 
+Write 9 below the line.
+9
+6. Read the problem now.
+(Repeat Part B with two more examples. Have students finish the 
+worksheet independently.)
+2+4+3=9
+Format 7.6
+ADDING TWO NUMERALS WITH RENAMING
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following problems on the board.)
+36 48 26
++27 +26 +16
+1. Read this problem as I point. 36 + 27 = how many?
+2. What column do we start working in? The ones column
+3. What are the first two numbers we're going to add? 6 + 7
+To correct: Point to 6 and 7. Repeat step 3.
+4. What is 6 + 7? 13
+5. We have a problem. Thirteen equals 1 ten and 3 ones.
+We can't have a 10 in the ones column, so we put the 1 ten at the top 
+of the tens column. Where do we put the 10? At the top of the tens column
+(Write 1 over 3.) We write three ones under the ones column. Where 
+do we put the three ones? (Write 3 under 7.) Under the ones column
+6. What are the first two numbers to add in the tens column? 1 + 3
+What does 1+3 equal? (Pause.) 4
+Now what two numbers will we add? 4 + 2
+What is 4 + 2? 6
+How many tens do we end up with? 6 tens
+We end up with 6 tens, so I'll write 6 under the tens column. 
+(Write 6 in the tens column.)
+
+Chapter? Addition 113
+TEACHER STUDENTS
+7. We are finished. (Point to 63.) What does 36 + 27 equal? 63
+Read the problem and say the answer.
+(Repeat steps 2-7 with remaining problems.)
+Part B: Structured Worksheet Presentation
+(Students have worksheets with the following problems.)
+45 57 36 47
++38 +37 +16 +26
+36 + 27 = 63
+1. Touch the first problem on your worksheet. Read the problem. 45 + 38 = how many?
+2. What column do you start working in? The ones
+What are the first two numbers you're going to add? 5 + 8
+What is 5 + 8? (Pause.) 13
+3. There's a problem. What does 13 equal? 1 ten and 3 ones
+Can we have a ten in the ones column? No
+So where do you put the ten? At the top of the tens column
+Write a 1 at the top of the tens column. (Monitor student responses.) 13 equals 1 ten and 3 ones
+How many ones are left?
+Write them under the ones column. (Check.)
+4. Look at the tens column. What are the first two numbers to add in
+3
+the tens column? 1 + 4
+What is 1 + 4? (Pause.) 5
+Now what numbers will you add? 5 + 3
+What is 5 + 3? 8
+How many tens do you end up with?
+Write the tens under the tens column. (Monitor student responses.)
+8 tens
+5. You're finished. What does 45 + 38 equal? 83
+Read the problem and say the answer.
+(Repeat steps 1-5 with remaining examples.)
+Part C: Less Structured Worksheet
+(Give students a worksheet containing some problems that involve 
+renaming and some that do not.)
+47 53 42 78
++25 +24 -31 + 18
+78 56 75 26
++21 +36 -23 +43
+45 + 38 = 83
+1. Everyone, read problem one on your worksheet. 47 + 25
+What type of problem is this: addition or subtraction? Addition
+2. What are the first two numbers you add? 7 + 5
+What is 4 + 7? (Pause.) 12
+continued
+
+114 Pari II Basic Concepts and Skills
+Format 7.6 (continued)
+ADDING TWO NUMERALS WITH RENAMING
+TEACHER STUDENTS
+3. Do you have to move a ten over to the tens column?
+4. Now work the problem on your own. (Pause.)
+Yes
+5. What does 47 + 25 equal?
+(Repeat steps 1-5 with remaining problems.)
+72
+Format 7.7
+COMPLEX ADDITION FACTS WITH A TOTAL
+LESS THAN 20 (See Video in Part A)
+TEACHER STUDENTS
+V
+Part A: Structured Presentation
+1.1 want to add 15 + 3 in my head.
+2. Fifteen equals 10 + 5, so when we add 15 + 3, we add 10 and (pause) 5 + 3.
+When we add 15 + 3, we add 10 and what numbers? 5 + 3
+3. What is 5 + 3? (Pause.) 8
+What is 10 + 8? 18
+So what is 15 + 3? 18
+4. Say the whole statement.
+(Repeat steps 1-4 with 14 + 2, 11 + 4, 14 + 3, 15 + 3, 12 + 2. Give individual turns 
+on steps 1-3.)
+Part B: Less Structured Presentation
+15 + 3 = 18
+1. Listen: 14 + 3. What does 14 equal? 10 + 4
+2. So when we add 14 + 3, we add 10 plus what numbers? 4 + 3
+3. What is 4 + 3? (Pause.) 7
+4. Say the whole statement. 14 + 3 = 17
+5. What is 14 + 3?
+(Repeat with 14 + 5, 12 + 3, 16 + 3, 13 + 4, 15 + 3. Give individual turns to several 
+students.)
+Part C: Supervised Practice
+17
+1. What does 11+4 equal? (Pause.)
+To correct: (Use step 1 from Part B.)
+15
+2. Say the whole statement.
+(Repeat step with 17 + 2, 14 + 5, 12 + 6, 16 + 3, 11 + 6, 13 + 5. Give individual 
+turns to several students.)
+11+4=15

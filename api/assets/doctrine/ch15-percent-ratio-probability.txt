@@ -1,0 +1,1286 @@
+Direct Instruction Mathematics (5th ed.), Stein, Kinder, Silbert & Carnine — Chapter: Percent, Ratio, and Probability
+
+Chapter
+15
+Percent, Ratio, and Probability
+LEARNING OUTCOMES
+15.1 Explain how instruction in the areas of percent, ratio, and probability are 
+organized to increase efficiency.
+15.2 Discuss how the interrelationships among percent, ratio, and probability 
+support the context for teaching these concepts together.
+15.3 Discuss the recommended procedures for teaching percentage problems.
+15.4 Describe how fraction skills are integrated into solving ratio problems.
+15.5 Discuss how to introduce the concept of probability to students.
+15.6 Describe the two most common types of errors involving percent, ratio, and 
+probability and the recommended remediation procedures.
+SKILL HIERARCHY
+• ∙ ∙ ∙ ∙ ∙ . ∙
+The introduction of percent, ratio, and probability follows instruction on most of the basic 
+fraction and decimal skills discussed in the earlier chapters. Fraction and decimal skills serve 
+as the preskills for percent, ratio, and probability problems. To solve a percentage problem, the 
+student must be able to multiply mixed decimals; to solve a ratio problem, the student must be 
+able to convert a fraction to a decimal or mixed decimal and round off the decimal or mixed decimal numeral; to solve a probability problem with different numbers of trials, the student must 
+be able to find equivalent fractions.
+As seen in the Instructional Sequence and Assessment Chart, we recommend beginning 
+instruction in percent, ratio, and probability in fifth grade because these skills reinforce and support fraction instruction. Note on the chart that we recommend introducing percentage-related 
+skills before ratio and probability skills.
+
+392 Part III Extended Concepts and Skills
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type Performance Indicator
+5 Converting percentages to 
+decimal figures
+Write these percentages as decimals: 
+45% = 
+15% = 
+6% = 
+1% =
+5 Determining a percent of a 
+given number
+What is 8% of 20?
+What is 25% of 12?
+What is 130% of 50?
+5 Simple percentage word 
+problems
+Jane took 20 basketball shots. She made 60% of her shots. How many 
+shots did she make?
+Tara scored 5% of her team's points. Her team scored 60 points. How 
+many points did Tara score?
+In May a store sold 300 shirts. In June the store sold 130% of what it sold 
+in May. How many shirts did it sell in June?
+5 Converting a decimal to a 
+percent
+.32 = %
+.6 = %
+3.4 = %
+5 Converting a fraction to a 
+percent: percentage comes 
+out even
+Convert these fractions to percentages: 
+1= - ⅞= 5 Converting a fraction to a 
+percent: rounding off required
+h 1- %
+I- %
+5 Simple ratio word problems: 
+total is given
+Bill took 20 basketball shots. He made 12. What is his shooting 
+percentage?
+Ann has 15 friends; 9 of her friends are from Texas. What percentage of 
+her friends are from Texas?
+5 Single-event probability 
+problems
+Given a picture of a container with objects of two colors, what is the 
+probability fraction for pulling out an object of one color?
+6 Complex percentage 
+problems
+Jill earned $80 in May. In June she earned 30% more than she did in May. 
+How much did Jill earn in June?
+Tim borrowed $200. He must pay 9% interest. How much must he pay 
+back altogether?
+6 Complex ratio problems; total 
+not given
+I got A's on 5 tests and B's on 4 tests. What percent of the tests did I get 
+A's on?
+There are 4 boys and 6 girls. What percent of the class is boys?
+6 Probability of two 
+independent events
+Bill has 5 blue pens and 15 red pens. What percent of the pens 
+are blue?
+Given pictures of two or more containers, what is the probability of pulling 
+a specified object from both containers?
+6 Probability Word Problems If a person has a pair of dice each with 2 red sides and 4 green sides, 
+what it the probability of rolling both and getting 2 red sides?
+
+Chapter 15 Percent, Ratio, and Probability 393
+CONCEPTUAL UNDERSTANDING
+Percentage problems require the student to determine the quantity that represents a given percent of 
+another quantity; for example, what is 30% of 60? Percentage skills are frequently used in daily life:
+You need to get 70% of the questions on the test correct to pass. If there are 20 problems on 
+the test, how many must you get correct to pass?
+Ratio problems require students to convert a numerical relationship (ratio) between two 
+3quantities into a percent. The fraction — is converted to 75%. An example of using ratios in real- 
+world situations is:
+Anna made 3 of 7 shots. What percent of her shots did she make?
+Probability also has numerous practical applications, as in understanding weather predictions, political reports, and chances of winning the lottery. The probability of an event happening can be expressed in fractions ranging from 0 to 1 (0 = no chance; ½ = 50% chance; 
+1 = 100% chance). Depending on the context, the probability is reported in percent (20% 
+chance of rain), ratios (the chance of winning the lottery is 1 in 14 million), or decimals (the 
+probability of the result from a study being random is .001, therefore the results of this study 
+are significant). We recommend introducing probability using fractions to reinforce and extend 
+previously taught fractions and equivalent fractions concepts.
+PERCENTAGE PROBLEMS
+Two types of percentage problems are common to elementary mathematics instruction. The easier type of problem states a percent and quantity and asks students to find the percentage:
+The teacher said that 70% was a passing grade. There are 50 problems on the test. How 
+many problems must I get to pass? (70% of 50 is .70 × 50 = 35)
+The more difficult problem type requires students to calculate the percentage of an original 
+quantity and then either add or subtract that amount from the original quantity:
+Bill borrowed $80 from the bank. He must pay 8% interest on the loan. How much must he 
+pay back to the bank? (.08 × 80 = 6.40, $80.00 + $6.40 = $86.40)
+Converting Percent to Decimal
+Prior to introducing percentage problems, teachers would ensure that students have mastered 
+multiplying decimal and mixed decimal numerals and converting a percent to a decimal.
+Format 15.1: Converting Percent to Decimal introduces the concept of percent. The format contains three parts. In Part A, the teacher presents the percent sign and teaches students 
+to read percent numerals. In Part B, a structured board presentation, the teacher demonstrates 
+how a percent number can be converted to a decimal number by deleting the percent sign, and 
+placing a decimal point so that there are two decimal places. Part C is a structured worksheet 
+exercise. Daily worksheet practice should continue for several weeks.
+Example selection is important when teaching this format. One-third of the percent figures 
+should be below 10%, one-third between 10% and 100%, and one-third over 100%. For example, a conversion exercise might include the following percentages: 5%, 28%, 1%, 235%, 30%, 
+300%. Exposure to these types of problems provides students with the practice needed to generalize the strategy to a wide range of examples. Percentage below 10% are included to teach students that when converting a percent below 10%, they must write a zero in front of the decimal 
+numeral (6% — .06, 1% = .01). Percentages of 100% and above are included to show that a 
+whole number is present (354% = 3.54,200% = 2).
+Initially, examples that require converting a percent including a decimal, such as 87.5%, to 
+a decimal are not included. This type of problem requires the students to add two more decimal 
+places (87.5% = .875). Format 15.1 could be adapted to teach this procedure.
+
+394 Part HI Extended Concepts and Skills
+∣∣ Format 15.2A:
+Solving Simple 
+Percentage Problems 
+Watch how Kristen brings 
+students to mastery.
+Simple Percentage Problems
+Simple percentage problems involve multiplying a quantity by a given percent 
+(40 X 30% = 12). This type of problem can be introduced after students can translate percentage to decimals and can accurately multiply decimal numerals. Format 15.2: Solving Simple 
+Percentage Problems shows how to teach students to solve these types of problems.
+Part A of this format is designed to teach students rules that will help them determine if their 
+answers to subsequent problems are correct. The students are taught that if the problem asks 
+for 100%, then the answer is the same as the number being multiplied (100% × 20 = 20). 
+Likewise, if the percent is more than 100%, the answer is more than the number being multiplied; if less than 100%, the answer is less than the number being multiplied. Students then 
+use the rules to predict the answers to numerical problems. Although these rules appear to be 
+extremely simple, we have found through examining student errors that many students find it 
+challenging to figure out these relationships on their own.
+Part B is a structured board presentation in which the strategy for solving percentage 
+problems is presented: Convert the percent to a decimal and then multiply that decimal and the 
+amount given. Students apply the rules learned in Part A to check their answers.
+Part C is a structured worksheet exercise. To simplify the multiplication, students may be 
+instructed to write the two-digit numeral on the bottom when given a problem with a two-digit 
+and a three-digit number. For example, in solving 125% × 60, the student writes:
+1.25 
+× 60
+Examples for the worksheet should include sets of three problems in which the same 
+numeral is multiplied. In one problem, the percent would be below 10%; in another problem, 
+between 10% and 100%; and in another problem, more than 100%. For example, a sample set 
+for an exercise might include these problems:
+30% × 60 25% × 36
+3 % × 60 2% × 36
+130% × 60 125 % × 36
+These example-selection guidelines are designed to provide practice with a range of problems 
+that reinforce the rule they learned in Part A.
+Simple Percentage Word Problems
+Simple percentage word problems state an amount and ask the student to determine a percentage 
+(the number obtained by finding the percent of another number). A distinguishing characteristic of 
+these problems is the inclusion of the word “of.” Below are two typical simple percentage problems:
+There are 60 children in our school; 75% of the children are girls. How many girls are there 
+in our school?
+Trina made 60% of her shots. She took 20 shots. How many shots did she make?
+These word problems are introduced when students can calculate percentage problems such 
+as 40% × 20 accurately. As preparation for these word problems, teachers would give students 
+computation problems in which the word “of’ is substituted for the multiplication sign (75% of 
+48). After several lessons, the teacher would introduce word problems by modeling them and providing practice. After students have mastered solving this type of word problem, the teacher would 
+remind the students to apply the rule for checking their answers found in Part A of Format 15.2.
+The problem said she got 60% of her shots in. She took 20 shots. Is the answer going to be 
+more than 20, equal to 20, or less than 20?
+An independent worksheet would include problems with percentages below 10%, problems with 
+percentages between 10% and 100%, and problems with percentages above 100%.
+Complex Percentage Problems
+Complex percentage problems usually give the percent that an original amount has either 
+increased (or decreased) and asks the students to figure out the amount of the increase (or
+
+Chapter 15 Percent, Ratio, and Probability 395
+FIGURE 15.1 Sample interest exercise
+Amount of Loan
+a. $500
+Interest Rate 
+for 1 Year
+5%
+Amount of Interest 
+for 1 Year
+Amount to Be Paid Back 
+at End of 1 Year
+b. $500 8%
+c. $1000 4%
+d. $1000 7%
+decrease) and the new total. These complex percentage problems should be introduced after students have practiced simple percentage problems for several weeks. An example of a complex 
+percentage problem is illustrated below:
+The bike store sold 50 bikes in May. In June the sales went up 20%. How many more bikes 
+did the store sell in June than in May? How many bikes did the store sell in June?
+The teacher models how to solve the problem: first computing the percentage increased 
+or decreased by converting the percent to a decimal and then multiplying. This amount is then 
+added to or subtracted from the original amount to determine the new total. For example, in the 
+problem above, the student converts 20% to .20 and multiplies .20 × 50, resulting in 10. Therefore, the store sold 10 more bikes in June than in May. The additional 10 bikes are added to the 
+50 bikes sold in May to determine that 60 bikes were sold in June.
+A special type of problem involves computing simple interest. The teacher can explain the 
+term “interest” to students by using an explanation similar to the one below.
+When you borrow money from a bank, you must pay back the bank extra money. The extra 
+money is interest. If the bank charges 10% interest, you must pay back the money you 
+borrowed plus 10% of the amount you borrowed.
+Figure 15.1 is a sample interest exercise. Students fill in missing amounts in a table to determine 
+interest for various loans. More complex interest problems are introduced in later grades.
+RATIO PROBLEMS
+• ∙ ∙ ∙ ∙ ∙ ∙ ∙
+In ratio problems, students must convert a fraction to a percent. There are three basic types of 
+ratio problems:
+1. Numerical problems for converting a fraction to a percent.
+2 - = 40 %
+5 - = 125 % 4
+2. Simple ratio word problems in which the total and one partial quantity are given and 
+students calculate the percent.
+Sara made 10 out of 20 shots. What percent of her shots did she make?
+3. Complex word problems in which students are required to add specific amounts prior to 
+determining a percent.
+Shilah made 10 shots and missed 10 shots. What percent of her shots did she make?
+1010+10-20 — = 50 %20
+Converting a Fraction to a Percent
+Converting a fraction to a percent can be introduced several weeks after students have mastered 
+simple percentage problems. Format 15.3: Converting Decimals and Fractions to Percentages 
+
+396 Part III Extended Concepts and Skills
+teaches this conversion skill. Prior to this instruction, students need to have mastered converting 
+fractions to decimals (dividing the numerator by the denominator in a fraction and rounding off 
+the resulting decimal number).
+The format includes five parts. In Part A, the teacher presents a strategy for converting 
+decimal numerals to percentages: Write a percent sign and move the decimal point two places 
+toward the percent sign. The wording for this procedure is designed to assist students in determining the direction to move the decimal point. After presenting the rule, the teacher applies 
+the rule to a range of examples including mixed decimals and decimal numbers with tenth, hundredth, and thousandth decimal places.
+Part B is a worksheet exercise in which students practice converting decimals to a percent. 
+Initially, the teacher would guide the students through several conversions and then have the 
+students work the remaining problems independently. As in Part A, the examples selected for 
+Part B should include decimals expressed as tenths, hundredths, and thousandths in addition to 
+one or two whole numbers and several mixed decimals. When converting a tenths decimal or 
+whole number, the teacher tells the students the number of zeros to add:
+.1 = .10 = .iqa% = 10%
+A sample set for a worksheet exercise might include these numerals: 3.2, .475, 6, .08, .4, .37, 2, 
+6.1,35, .875, and.l.
+Prior to introducing Part C, the teacher would provide several days of practice on Part B. 
+In Part C, a structured board exercise, the teacher presents the two-step strategy for converting 
+fractions to a percent: First convert the fraction to a decimal, and then convert that decimal to a 
+percent. The teacher would then demonstrate the application of the strategy with several fractions. Summary Box 15.1 outlines the strategy introduced in Part C.
+Part D is a structured worksheet exercise in which students are given a worksheet with 
+prompts to help make the conversion. A prompted problem looks like this:
+%
+The teacher asks students how to change a fraction to a decimal, reminding students to put the 
+decimal point in the answer. Then the teacher asks students how to covert the decimal to a percent and has the students calculate the answer. Part E is a less structured worksheet exercise in 
+which the prompts are removed.
+Two example-selection guidelines are critical for Parts C, D, and E. First, proper and 
+improper fractions should be included so that students can see that the strategy also applies to 
+/ 5 A
+percentages greater than 100% I — = 125% I. The second example selection guideline relates to
+the need to round answers. Initially, problems should be limited to fractions that do not require 
+rounding off to compute the percent. Problems that must be rounded off require an extra step 
+3 17 6 6and should not be introduced for several weeks. The fractions —, —, —, —, and — are examples 4 2 10 8 4 r
+5 2 4 3 5of fractions that do not require rounding off. Later, fractions such as — — —, —, and — that do 
+require rounding off may be included.
+When problems requiring rounding off are introduced, the teacher tells the students to divide 
+until the answer has three digits after the decimal and then round off to the nearest hundredth. 
+For example, when converting — to a percent, the student divides to the thousandths place, then 
+writes a line after the 1 (the hundredths numeral), and then rounds off the answer to .71:
+.71 4 
+7)5.0010 
+4 9
+10
+7
+30
+28
+2
+
+Chapter 15 Percent, Ratio, and Probability 397
+After students have had several weeks of practice in converting fractions to decimals, the
+teacher can introduce the new steps of reducing the fraction before dividing when possible. For 
+9 3example, — can be reduced to —, so students would divide 3 by 4 instead of 9 by 12. Reducing 
+fractions prior to dividing is especially helpful when working with two-digit denominators. If 
+the denominator can be reduced to one digit, the division problem will be much easier.
+A final consideration in teaching students to convert fractions to decimals involves providing students with adequate practice so that they can memorize the percentages that 
+more common fractions represent. The percentages for these fractions should be taught: 
+13 112 1 1- = 25%, - = 75%, - = 50%, - = 33%, - = 67%, - = 20%, and — = 10%. To facilitate4 4 2 3 3 5 10 
+memorization of these percentages, the teacher may provide flash card practice or another type 
+of memorization exercise. However, this memorization practice would not begin until after
+several weeks of instruction on converting fractions to percentages.
+Nummary j BOX 15.1
+Converting Decimals and Fractions to Percentages
+1. Students change a fraction to a decimal by dividing the 
+numerator by the denominator.
+2. Students change the decimal to a percent by writing % sign 
+and moving the decimal two places toward the percent sign.
+3 -75
+- = 4)3.00
+4 28
+20
+20
+.75 = 75%
+O
+ Format 15.4A: 
+Simple Ratio Word
+Problems
+Watch how Joe teaches his 
+students to solve simple ratio 
+word problems.
+Simple Ratio Word Problems
+In contrast to simple percentage problems in which a quantity and a percent are given, simple 
+ratio word problems contain two related quantities, and students are asked to express the relationship between them as a percent. Problems a and b are examples of this type of problem:
+a. There were 20 problems on the test. Jack got 14 correct. What percent of the problems did 
+Jack get correct?
+b. There are 12 children in our class; 8 are girls. What percent of our class is girls?
+Most simple ratio problems are related to classification problems(see Chapter 11). They involve 
+a subset of a total set, as in problems correct (subset) out of problems on the test (total set) or 
+girls (subset) out of children (total set).
+Simple percentage problems can be introduced when students have mastered converting 
+fractions to a percent figure. Format 15.4: Simple Ratio Word Problems contains three parts. 
+In Part A, the structured board presentation, students are taught the component skill of converting the relationship expressed in the word problem to a fraction. The teacher presents the rule 
+that the number that tells how many altogether is written as the denominator of the fraction; she 
+then models and tests with several examples. For example, “Sheila took 12 shots; she made 10” 
+10 translates to —.12
+Part B provides structured worksheet practice on converting ratio word problems to fractions. Part C is a less structured worksheet in which the teacher guides students in rewriting 
+the relationship in the word problem as a fraction and then changing the fraction to a percent. 
+Practice would include as many real-life situations as possible. (What percent of the children are 
+girls? What percent of the days has it rained?)
+Complex Ratio Word Problems
+In complex ratio word problems, the students must add two quantities to derive a sum that 
+will be the denominator of the fraction used to compute percent. For example, a problem may 
+
+398 Part III Extended Concepts and Skills
+state that there are 4 boys and 6 girls and ask for the percent of the children that are girls. For 
+that problem, the quantities 4 and 6 must be added to determine the denominator, since the 
+fraction is
+girls 
+boys and girls
+Complex ratio word problems are not introduced until students have had several weeks of practice with simple ratio problems.
+In Format 15.5: Complex Ratio Problems, the teacher guides students in identifying the 
+denominator representing the total. For example:
+This problem asks what fraction of the children are girls, so the fraction will be girls over 
+children. How many children? So what do I write for the denominator?
+After providing guided practice, the teacher would give students worksheets with both simple 
+and complex ratio problems, such as a and b below:
+a. There are 6 children in the club, and 4 are girls. What percent of the children are girls?
+b. There are 4 boys and 6 girls in the club. What percent of the children in the club are girls?
+Note that the total in both problems is the number of children. In problem a, a simple ratio 
+problem, the number of children is given. Problem b does not give the total, so 4 boys and 6 girls 
+must be added to determine the total number of children, making it a complex ratio problem. 
+Presenting related simple and complex problems is necessary to provide students with practice 
+in determining the total (denominator of the fraction). When guiding students through the problems on the worksheet, the teacher would ask the students if the problem provides the quantity 
+for the total. If the problem does not provide the total, the teacher would prompt the students to 
+identify and add the subsets in order to obtain the quantity for the total before having students 
+complete the problem.
+Additional instruction on more difficult ratio word problems is presented in Chapter 18, 
+“Pre-algebra.” In that chapter we discuss how to teach students to set up ratio tables to solve 
+typical word problems.
+PROBABILITY PROBLEMS
+• •••••a.
+Until relatively recently, probability was not introduced until high school. It is now commonly 
+included in middle school commercial mathematics programs. We recommend introducing 
+probability in fifth grade so students have opportunities to appreciate the connections between 
+fractions and probability.
+Probability is often introduced through activities such as flipping a coin, rolling a die, or 
+selecting a specific shape from a group of shapes. This type of activity involving observing and 
+recording data is referred to as experimental probability. Experimental probability activities 
+involve identifying what a trial is (one flip, one roll, or one selection), conducting many trials, 
+recording the data from these trials, and reporting the probability of a specified outcome. For 
+example, a teacher may give students a coin and instruct the students to flip the coin and record 
+when the coin lands in the heads position. The teacher would inform the students that one flip of 
+the coin is called a “trial.” Once the students have recorded the number of times the coin landed 
+heads up (the outcome), the teacher would teach the students how to write a probability fraction 
+that represents the outcome compared to the total number of trials. For example, if the coin landed 
+12heads up 12 out 20 trials, the probability fraction would be — with the numerator representing 
+the 12 times the coin landed heads up and the denominator representing the total number of trials.
+When introducing experimental probability using activities that involve selecting 
+objects from a group of objects (such as pulling colored pencils from a box), teachers must 
+make certain that students follow several guidelines. These include (a) objects are selected 
+from the container without looking, (b) only one object is selected at a time, (c) a record is 
+kept of the object selected, and (d) the object is returned to the container before selecting 
+another.
+
+Chapter 15 Percent, Ratio, and Probability 399
+Experimental probability activities are designed to provide students with a conceptual 
+understanding of probability. These types of activities also incorporate data analysis skills when 
+students record the results of their experimental trials. Therefore, we recommended using these 
+types of activities as an introduction to the concept of probability.
+In contrast to experimental probability, where the focus is on observing events, theoretical 
+probability focuses on predicting the likelihood of an event happening using mathematics. In this 
+chapter we include instructional procedures for calculating the theoretical probability of single 
+events, for different numbers of trials, and for two independent events or compound probability. 
+Word problem instruction is also included as an application of probability skills to daily life.
+Single-Event Probability
+Format 15.6 Writing Probability Fractions contains three parts. Part A introduces students 
+to probability fractions used to indicate the likelihood that an event will happen. Pictures are 
+used to represent the problem. The picture might represent a box of pencils with 12 yellow pencils and 8 green pencils. The probability fraction for yellow pencils (the chances of choosing a 
+12yellow pencil out of all of the pencils) is —.
+In Part B students write probability fractions for pictures. They learn that the denominator 
+represents the total number of objects and the numerator indicates the likelihood of the specified 
+object being pulled from the container in the picture. In Part C, a less structured worksheet, the 
+teacher guides students through writing probability fractions for several pictures.
+Format 15.7: Probability for Different Numbers of Trials requires understanding the 
+concept of a trial and mastery of equivalent fractions. Part A teaches that any fraction that is 
+equivalent to the probability fraction will provide information regarding the probability of an 
+event with different numbers of trials. For example, if the probability fraction for pulling red 
+3marbles from a bag is — indicating that in five trials one would expect to pull a red marble three 
+5 3times, then in ten trials one would expect to pull a red marble 6 times because — is equivalent to 
+6—. Part B, the less structured worksheet, provides guided practice in writing probability fractions and equivalent fractions for pictures.
+Compound Probability
+Compound probability is less intuitive than single-event probability. Compound probability is 
+the likelihood of two or more events happening together. The calculation for compound probability involves finding the probability fraction for each single event and multiplying them.
+To provide justification for this procedure the teacher may describe a compound probability 
+situation and show all of the possible outcomes. For example, the teacher may use the first picture in Format 15.8: Introducing Compound Probability in which there are 2 cans each with
+one star, one cube, and one circle. The question for this example asks the probability of pulling a 
+star from both cans. The calculation to find the probability is — × j = — A table similar to the 
+one below showing all of the possible combinations of shapes from the two containers can be
+used to justify this answer. The table shows the nine possible results of pulling one shape from 
+each can. Only one of the nine trials ( — j results in pulling a star from each can.
+Trials #1 #2 #3 #4 #5 #6 #7 #8 #9
+Can 1 Star Star Star Cube Cube Cube Circle Circle Circle
+Can 2 Star Cube Circle Star Cube Circle Star Cube Circle
+Format 15.8: Introducing Compound Probability has two parts. Part A, the structured 
+board presentation, introduces the procedure for calculating compound probability first with two 
+events and then with three. If students have mastered the preskill of multiplying fractions, this 
+
+400 Part III Extended Concepts and Skills
+calculation is relatively simple. In Part A, the teacher models finding compound probability 
+using pictures of containers with shapes as described above. The second example in Part A illustrates the efficiency of this calculation. This example includes 10 shapes in each of three containers, resulting in 1,000 possible combinations, making drawing pictures unrealistic. Part B 
+provides worksheet practice in calculating compound probability.
+Probability Word Problems
+When students have mastered single-event probability, they can apply their skills to word problems. Format 15.9: Probability Word Problems provides instructional procedures for applying 
+probability skills to word problems. Initially these word problems should include only single-event probability, but as soon as students have learned to calculate compound probability, 
+these problems can be included. Problems like the following can be used to provide opportunities for discrimination practice between single event and compound probability:
+There 4 blue marbles, 5 red marbles, 1 green marble, and 2 black marbles. You select one 
+marble without looking. What is the probability of selecting a blue marble? Red? Green? 
+Black? (single-event probability)
+You have two standard decks of cards (with 52 cards). You randomly draw one card from 
+each deck. What is the probability of getting the queen of hearts from each deck? (compound probability)
+DIAGNOSIS AND REMEDIATION
+Common percent, ratio, and probability errors fall into one of the two following categories:
+1. Component-skill error: The student makes an error on a previously taught skill, which 
+causes the student to complete the problem incorrectly. For example, when working the 
+problem 5% of 75, the student multiplies .5 by 75 rather than .05 by 75. In this example, 
+the student made an error converting the percent to a decimal. The remediation procedure 
+involves reteaching the earlier-taught component skill of converting a percent to a decimal, 
+being sure to include examples less than 10%. When the student’s performance indicated 
+mastery of the component skill, the teacher would assess the student the result of this remedy by providing a worksheet with problems similar to the original.
+2. Strategy error: A strategy error is evident when the student shows no indication of following 
+the steps in the strategy. For example, when attempting to calculate the compound probability of rolling a 5 on two dice at the same time, the student calculates — rather than cal- 
+111 6 .
+culating — × — = —. The remediation procedure involves reteaching the entire strategy 6 6 36
+beginning with the structured board part of the format.
+APPLY WHAT YOU LEARNED r
+Click on the V to answer the questions online.
+1. Below are errors made by students. Specify the probable cause of each error and describe a remediation procedure.
+a. What is 38% of 90?
+Jamel
+90
+× .38
+720 = 3420
+2700
+3420
+
+Chapter 15 Percent, Ratio, and Probability 401
+Hoang
+90.00
++ .38 = 90.38
+90.38
+Sara
+90
+× .38
+720 = 9.9
+270
+9.90
+b. What is 5% of 60?
+Grace
+60
+× .5 = 30
+30.0
+c. Bill took 15 shots; he made 12 of his shots. What percent of his shots did he make? 
+Ewan
+15
+12
+1.25
+1¾15X) - 125%
+12
+30
+24
+60
+Jet
+■69
+— = 15)12.0 = 69% 
+15 90
+300
+135
+Tai
+.8
+— = 15^2.0 = 8%
+fδ 'n12.0
+2. 3Specify the wording the teacher uses in a structured worksheet presentation for converting — to
+a percent.
+3. Below are sets of examples teachers constructed for an exercise to teach students to convert percent 
+figures to decimals. Tell which sets are inadequate and why.
+Set A: 85% 94% 30% 62% 53% 6%
+Set B: 40% 5% 135% 240% 7% 82%
+Set C: 130% 20% 72% 145% 80% 360%
+4. Write word problems for a single-event probability situation and compound probability situation.
+
+402 Part III Extended Concepts and Skills
+Format 15.1
+CONVERTING PERCENT TO DECIMAL
+TEACHER STUDENTS
+Part A: Reading and Writing the Percent Sign
+1. (Write % on board.) This is a percent sign. What is this? A percent sign
+2. (Write 42% on board.) This says 42%. What does this say? 42%
+3. (Write 30% on board.) What does this say? 30%
+(Repeat step 4 with 8%, 142%, 20%, 96%, and 300%.)
+Part B: Structured Board Presentation
+1. Percent means hundredths. What does percent mean? Hundredths
+2. 87% means 87 hundredths. What does 87% mean? 87 hundredths
+(Repeat step 2 with 50%, 214%.)
+3. What does 30% mean? 30 hundredths
+(Repeat step 3 with 248%, 8%.)
+4. How many decimal places in a hundredths number? Two
+5. Here's a rule for changing a percent number to a decimal number: Get 
+rid of the percent sign and put in a decimal point so that there are 
+two decimal places. How many decimal places must we have when we 
+change a percent number to a decimal number? Two
+6. (Write 236% on board.) Read this. 236%
+I want to change this numeral to a decimal. What does 236% mean? 236 hundredths
+How many decimal places in a hundredths number? Two
+So I get rid of the percent sign and put in two decimal places. 2 and 36 hundredths
+(Write 2.36.) Read this.
+Yes, 236% = 2.36.
+7. (Write 8% on board.) Read this. 8%
+I want to change this numeral to a decimal. What does 8% mean? 8 hundredths
+How many decimal places in a hundredths number? Two
+So I get rid of the percent sign and put in two decimal places. 8 hundredths
+(Write .08.) Read this.
+Yes, 8% = .08.
+(Repeat steps 6 and 7 with 34%, 126%, 5%, 82%.)
+Part C: Structured Worksheet
+(Give students a worksheet with instructions and problems similar to those 
+below.)
+1. Change these percent to decimals:
+a. 35% =______________ e. 1% =___________
+b. 200% =____________ f. 192% =___________
+c. 6% =______________ g. 374% =___________
+d. 72% = h. 2% =
+
+Chapter 15 Percent, Ratio, and Probability 403
+TEACHER STUDENTS
+2. Read the directions. Change these percents to 
+decimals.
+3. Read the percent numeral in problem a.
+4. What does 35% mean?
+5. How many decimal places in a hundredths number?
+6. Where will we write the decimal point?
+7. Write the decimal numeral.
+8. What decimal did you write?
+Yes, 35% equals 35 hundredths.
+(Repeat steps 3-8 with remaining problems.)
+35%
+35 hundredths 
+Two
+In front of the 3
+35 hundredths
+Format 15.2
+SOLVING SIMPLE PERCENTAGE PROBLEMS
+TEACHER
+O
+Part A: More/Less Than 100%
+1. (Write 100% on board.) I want to change 100% to a decimal, so I get rid 
+of the percent sign and put in two decimal places.
+(Write 1.00 on board.) 100% equals what whole number?
+Yes, 100% equals one whole. So when we multiply by 100%, we don't 
+change the value of the number we're multiplying. The answer is the 
+same as the number we're multiplying.
+2. Here are some rules about other percents: If we multiply by more than 
+100%, our answer is bigger than the number we're multiplying. If we 
+multiply by less than 100%, our answer is less than the number we're 
+multiplying.
+3. If you multiply by 100%, what do you know about the answer?
+1
+4. If you multiply by less than 100%, what do you know about the answer?
+Right, when the percent is less than 100, you multiply by a number less 
+than 1. So the answer must be less than the number we're multiplying.
+5. If you multiply by more than 100%, what do you know about the 
+answer?
+(Repeat steps 1-5 until students respond correctly.)
+6. Here's a problem: 60% × 20. Say the problem.
+What's the percent?
+Is the answer more than 20, less than 20, or equal to 20?
+(See Video in Part A)
+STUDENTS
+The answer is the same 
+as the number we're 
+multiplying.
+The answer is less than the 
+number we're multiplying
+The answer is more than the 
+number we're multiplying
+60% × 20
+60
+Less than 20
+continued
+
+404 Part III Extended Concepts and Skills
+Format 15.2 (continued)
+SOLVING SIMPLE PERCENTAGE PROBLEMS
+TEACHER STUDENTS
+To correct: Remember: If the percent is less than 100, the answer is less 
+than the amount we're multiplying. Is the percent less than 100? So, tell 
+me about the answer.
+How do you know? The percent is less than 100.
+7. (Repeat step 6 with 140% of 20, 100% of 20, 24% of 150, 100% of 150, 
+and 60% of 150.)
+Part B: Structured Board Presentation
+1. (Write 75% × 20 on board.) Read this problem. 75% × 20
+What is the percent? 75
+What is the amount? 20
+Will the answer be more or less than 20? Less than 20
+2. Here's how we find the exact answer. We change the percent to a Change the percent to a
+decimal, then multiply. How do we find the exact answer? decimal and multiply
+3. First we write 75% as a decimal; 75% equals how many hundredths? 75
+Yes, 75% can be written as 75 hundredths. (Write .75.)
+4. Now we multiply. (Write the problem on the board.)
+20
+× .75
+100
+1400
+1500
+We multiplied by a decimal numeral, so I must put a decimal point in the 
+answer. Where do I put the decimal point? After the 5
+So what whole number do we end with? 15
+5. What is 75% × 20? 15
+Write 75% × 20 = 15. Say the statement. 75% × 20 = 15.
+6. Let's see if that follows the rules. The amount we began with was 20. We 
+were finding less than 100%. Our answer must be less than 20. Is 15 less 
+than 20? Yes
+So our answer makes sense.
+(Repeat steps 1-6 with these problems: 125% × 20, 5% × 20, 120% × 65, 
+12% × 65, 20% × 65.)
+Part C: Structured Worksheet
+a. 30% × 50 = □
+b. 130% × 50 = □
+c. 3% × 50 = □
+d. 25% × 72 = □
+1. Read problem a. 30% × 50 =
+What is the percent? 30
+What is the amount? 50
+Will the answer be more or less than 50? Less than 50
+
+Chapter 15 Percent, Ratio, and Probability 405
+TEACHER STUDENTS
+2. Remember, we find the exact answer by changing the percent to a 
+decimal and then multiplying. How do we find the exact answer?
+Change the percent to a 
+decimal and then multiply
+3. First you need to write 30% as decimal; 30% equals how many 
+hundredths?
+4. Write 30% as 30 hundredths.
+5. What do you do next?
+6. Multiply. (Pause.) What is 30% × 50.
+(Repeat steps 1-6 for problems b-d.)
+30
+Multiply by 50
+15
+Format 15.3
+CONVERTING DECIMALS AND FRACTIONS TO PERCENTAGES
+a. .38 = e. 3 = I. 7.3 =
+b. 4.1 = f. .542 = j. .485 =
+c. .7 = g. .04 = k. .8 =
+d. .07 = h. .4 = I. .02 =
+TEACHER STUDENTS
+Part A: Converting Decimals to Percent
+1. We change a decimal to a percent by adding a percent sign after the 
+numeral and moving the decimal point two places toward the percent 
+sign. Listen again.
+(Repeat rule.)
+(Write .486 on board.)
+2. Read this decimal.
+I want to change this decimal to a percent. First I write the percent sign 
+after the numeral.
+(Write .486% on board.)
+3. Now I move the decimal point two places, toward the percent sign. 
+What do I do?
+486 thousandths
+Move the decimal point 
+two places toward the 
+percent sign
+(Erase decimal point. Move the decimal point two places to right: 48.6%.)
+4. What percent do we end with?
+(Repeat steps 2-4 with 1.4, 2, .73, .04.)
+Part B: Converting Decimal to Percent Worksheet
+1. (Give students a worksheet with instructions and problems like the 
+following one.)
+Convert these decimals and mixed decimals to percentages:
+48.6%
+continued
+
+406 Part III Extended Concepts and Skills
+Format 15.3 (continued)
+CONVERTING DECIMALS AND FRACTIONS TO PERCENTAGES
+TEACHER STUDENTS
+2. Read the instructions.
+3. Where do we write the percent sign?
+4. What do we do to the decimal point?
+5. Touch a. Read the numeral.
+6. Write the digits 3 and 8 in the space next to the decimal. Write in the 
+percent sign.
+7. What must you do to the decimal point?
+Put in the decimal. What percent does 38 hundredths equal?
+(Repeat steps 5-7 with several more problems; then have students work 
+the rest on their own.)
+Part C: Structured Board Presentation
+1 . (Write ¾ on the board.)
+I want to write this fraction as a percent. Here's how we change a 
+fraction to a percent. First we change the fraction to a decimal and then 
+change that decimal to a percent. Listen again. (Repeat procedure.) Read 
+this fraction.
+2 .1 want to change this fraction to a percent. First I change the fraction to 
+a decimal. What do I do first?
+How do I change % to a decimal?
+I'll work the problem. I divide until there is no remainder. (Solve the 
+problem.)
+Convert these decimals and 
+mixed decimals to percents. 
+After the numeral
+Move it two places toward 
+the percent sign 
+.38
+Move it two places toward 
+the percent sign
+38%
+Five-fourths
+Change the fraction to a 
+decimal.
+Divide 4 into 5
+- = 4)5.00 = 1.25
+4 4
+1 00
+80
+20
+What mixed decimal does ¾ equal?
+3. First I changed the fraction to a decimal. Now I change the decimal to a 
+percent. What do I do next?
+I write the percent sign and move the decimal two places toward the 
+percent sign (Write 125% on board.)
+What percent does ¾ equal?
+(Repeat steps 1-3 with 3∕s, ½, and 7∕s.)
+1 and 25 hundredths
+Change the decimal to a 
+percent
+125 percent
+
+Chapter 15 Percent, Ratio, and Probability 407
+TEACHER STUDENTS
+Part D: Structured Worksheet
+1. (Give students a worksheet with instructions and problems like the 
+following.)
+Change these fractions to percentages:
+a. ∣ = J = - ------------------=-------------------%
+b. | = J = ∙=%
+2. in these problems, you must figure out the percent a fraction equals. 
+First you change the fraction to a decimal. What do you do first?
+How do you change ¾ to a decimal?
+Divide 4 into 3. Don't forget to put the decimal point in the answer.
+(Pause.) What decimal does ¾ equal?
+Write 75 hundredths in the space next to the division problem. Now you 
+change the decimal to a percent.
+3. What do you do?
+Do it and write your answer in the last space.
+4. What percent does ¾ equal?
+(Repeat steps 2-4 with remaining problems.)
+Part E: Less Structured Worksheet
+Change the fraction to a 
+decimal
+Divide 4 into 3
+75 hundredths
+Change the decimal to a 
+percent
+75%
+1. (Give students a worksheet with instructions and problems like the 
+following one.)
+Change each fraction to a percent:
+2. Read the directions.
+3. Touch a.
+4. What is the first fraction?
+What do you do first to %?
+Do it. Make 3⅛ into a decimal.
+What decimal does ⅜ equal?
+5. Now write 75 hundredths as a percent. (Pause.) 
+What percent does 75 hundredths equal?
+(Repeat steps 3-5 with remaining problems.)
+Change each fraction to a 
+percent
+Three-fourths
+Make it a decimal
+75 hundredths
+75%
+
+408 Part III Extended Concepts and Skills
+Format 15.4
+SIMPLE RATIO WORD PROBLEMS
+TEACHER
+o
+Part A: Structured Board Presentation: Translating to Fractions
+1. Listen to this problem: Jill took 8 basketball shots; she made 4 of the 
+shots. What fraction of the shots did she make? Listen again: Jill took 8 
+shots. She made 4 of the shots. What fraction of the shots did she make?
+2. The problem asks what fraction of her shots she made. The fraction 
+will be how many she actually made over how many she took 
+altogether. The denominator tells how many altogether. What does the 
+denominator tell?
+How many shots did she take altogether?
+So I write 8 on the bottom.
+(Write the following on the board.)
+8
+3. The numerator tells how many shots she made. How many shots did 
+she make?
+I write 4 on the top.
+(Write the fraction on the board.)
+4
+8
+4. Jill took 8 shots. She made 4 shots. What fraction of her shots did she 
+make?
+(Repeat steps 1-4 with the examples below.)
+a. Jill has 8 pencils; 5 are blue. What fraction of her pencils are blue?
+b. The class has 8 students; 5 are girls. What fraction of the students are 
+girls?
+c. There are 10 apples in a bag; 6 of the apples are red. What fraction of 
+the apples are red?
+d. Bill saved $5 so far. He needs $8 altogether. What fraction of the 
+money he needs does he have?
+Part B: Structured Worksheet
+1. (Give students a worksheet with instructions and problems like the ones 
+below.)
+Write the fractions for these problems:
+a. Jane made 12 out of the 16 shots she took during the game.
+b. Alex has 15 friends; 10 of his friends live in California.
+(See Video in Part A)
+STUDENTS
+How many altogether 
+8
+Four-eighths
+4
+
+Chapter 15 Percent, Ratio, and Probability 409
+TEACHER STUDENTS
+c. Sarah won 8 out of the 12 races she ran in last year. □
+rη
+d. Tim picked 30 flowers; 18 are roses.
+I_ I 
+□ 
+∏
+2. Read the directions.
+I__ I
+Write the fractions for these 
+problems.
+3. Read problem a. What should the denominator of the fraction tell?
+What numeral tells about altogether?
+Say the fraction.
+Write it.
+(Repeat step 2 with several problems and then have students do rest on 
+their own.)
+Part C: Less Structured Worksheet
+How many altogether 
+16
+Twelve-sixteenths
+1. (Give students a worksheet with problems like the ones below.)
+a. Jean ran in 8 races. She won 2 of the races. What percent of the races 
+did she win?
+b. Ann's team won 6 out of 8 games. What percent of the games did 
+Ann's team win?
+c. Dina got 12 out of 15 problems correct on her test. What percent of 
+the problems did she get correct?
+d. Jill has 8 pencils; 4 of her pencils are red. What percent of her pencils 
+are red?
+2. Read problem a. The problem asks for a percent. To find the percent, 
+first you write a fraction. (Repeat the problem.)
+What fraction do you write?
+Write it.
+3. Now you change the fraction to a percent.
+4. What percent of the races did she win?
+(Monitor while students work the rest of the problems independently.)
+Two-eighths
+25%
+Format 15.5
+COMPLEX RATIO PROBLEMS
+continued
+TEACHER STUDENTS
+Part A: Determining the Fraction
+1. Listen to this problem: I'm going to tell you about the cars that a 
+salesman sold in September. He sold 10 blue cars (write 10 blue cars on 
+board) and 14 red cars (write 14 red cars on board) in September. What 
+fraction of the cars he sold were red?
+2. The problem asks for the fraction of the cars that were red, so the 
+fraction will be the number of red cars sold over the total number 
+of cars sold. What should the denominator tell? The total number of cars sold
+
+410 Part III Extended Concepts and Skills
+Format 15.5 (continued)
+COMPLEX RATIO PROBLEMS
+TEACHER STUDENTS
+How many cars were sold altogether? (Pause.) 24
+(Write the following on the board.)
+24
+To correct: Remember: The dealer sold 10 blue cars and 14 red cars. To find 
+the total number of cars sold, what must you do? What is 10 and 14? 24
+3. What does the numerator tell? The number of red cars sold
+How many red cars were sold? 14
+(Write the following on the board.)
+14
+24
+4. What fraction of the cars sold in September were red? 14
+(Repeat steps 1-4 with several examples of both simple and complex 
+ratio problems.)
+24
+Format 15.6
+WRITING PROBABILITY FRACTIONS
+TEACHER STUDENTS
+Part A: Structured Board Presentation: Introduction
+1. (Draw the picture below on the board.)
+We can write fractions to tell what we can expect to happen. The 
+fraction doesn't tell us what will happen but what will probably 
+happen. What does the fraction tell us? What will probably happen
+2. We will write a fraction that tells about the chances of pulling a triangle 
+from this can. The denominator tells about the total number of things in 
+the can. The numerator tells about the number of triangles. Again, the 
+denominator tells about the total number of things in the can and the 
+numerator tells about the number of triangles.
+What does the denominator tell?
+What does the numerator tell?
+The total number of things 
+in the can
+The number of triangles in 
+the can
+
+Chapter 15 Percent, Ratio, and Probability 411
+TEACHER STUDENTS
+3. We can do this for any container. If the can had 12 things in it, what 
+would the denominator be?
+If the can had 4 things in it, what would the denominator be?
+If the can had 100 things in it, what would the denominator be?
+4. The can on the board has 8 things in it. What would the denominator 
+be for this can?
+(Write the denominator for triangles.)
+5. There are 3 triangles in the can. What would be the numerator?
+(Write the numerator for triangles.)
+The probability fraction for the chances of pulling a triangle from the 
+can is ⅜. What is the probability fraction for the chance of pulling a 
+triangle from the can?
+6. Tell me again, how many things in the can?
+Think about how many circles. What is the fraction for the chances of 
+pulling out a circle?
+(Write ⅝ in the circles fraction.)
+Which probability fraction is closer to one, ⅜ or 5/e?
+So pulling a circle is more probable than pulling a triangle.
+7. (Change the number of circles and triangles in the can.)
+12
+4
+100
+8
+3
+3
+8
+8
+5
+8
+5
+8
+Circles Triangles
+2 8
+5 1
+8 6
+(For each, ask:)
+What is the probability fraction for circles?
+What is the probability fraction for triangles?
+Which probability fraction is closer to 1?
+So is it more probable that a circle or a triangle will be pulled?
+Part B: Probability Fractions
+1. (Draw the picture below on the board.)
+Triangles
+How many times you 
+expect to pull a triangle
+How many trials 
+you could take
+The probability fraction tells about the chances of pulling a triangle 
+from the can. What does it tell about?
+The chances of pulling a 
+triangle from the can
+continued
+
+412 Part III Extended Concepts and Skills
+Format 15.6 (continued)
+WRITING PROBABILITY FRACTIONS
+TEACHER STUDENTS
+2. The denominator tells how many trials. What does the denominator tell 
+about?
+The numerator tells how many times you would expect to pull out a 
+triangle. What does the numerator tell?
+(Repeat until firm.)
+3. (Write the following fractions on the board: ⅝, 10∕i4, 2∕s, 3∕w, 4∕s. For each 
+probability fraction, ask:)
+How many trials could you take?
+How many times would you expect to pull a triangle?
+Part C: Less Structured Worksheet
+How many trials
+How many times you would 
+expect to pull a triangle
+(Give students a worksheet like the following one.) 
+Write the probability fractions.
+Touch the first box. (Pause.) What is the probability fraction for circles?
+What is the probability fraction for stars?
+Which fraction is closer to 1?
+So is it more probable that a circle or a star will be pulled?
+Write the probability fractions for each of the remaining boxes.
+(Monitor students’ responses as they work.)
+3
+5
+2
+5
+3
+5
+Circle
+Format 15.7
+PROBABILITY FOR DIFFERENT NUMBERS OF TRIALS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Draw the picture below on the board.)
+Λ o° δΔo
+O O L U 00 ∣ L U 00 I L U
+i∣ I I I I
+00 L U j -* ∣ mo  ∣ o  o  ∣ l∏ o  ∣ σ *
+
+Chapter 15 Percent, Ratio, and Probability 413
+continued
+TEACHER STUDENTS
+2. You know that we can make predictions based on our probability 
+fractions. If there are 8 things in the can and 3 of them are triangles, 
+you can expect that if a person took 8 trials they would probably pull a 
+triangle from the can 3 times.
+If the probability fraction - is the fraction for 8 trials, then any fraction o
+3that is equivalent to - will tell about a different number of trials.
+This is the equivalent fraction for a different number of trials.
+6 3 3(Point to —.) We multiplied - by - to get the equivalent fraction.16 #3
+What is the new fraction?
+This fraction tells us that if we took 16 trials, then we would expect to 
+pull out 6 triangles.
+6
+16
+θ
+3. For the new fraction (point to —), how many trials would you take? 16How many times would you expect to pull out a triangle?
+Yes, if you took 16 trials you would expect to pull 6 triangles.
+16
+6
+15 34. (Point to —.) This is an equivalent fraction. This fraction equals -. What40 o
+is the equivalent fraction?
+3 15What fraction equal to one was - multiplied by to get —r?o *rU
+15
+40
+5
+515For the new fraction (point to —), how many trials would you take?
+How many times would you expect to pull out a triangle?
+So if you took 40 trials you would expect to pull 15 triangles.
+(Repeat step 3 for ~.)oU
+40
+15
+35. (Write on the board: - = —J
+This probability fraction is ∣. The denominator for the new fraction 
+is 25. Does 25 tell about trials or the number of times someone 
+pulled out a triangle?
+Remember how we made equivalent fractions. What do you multiply 
+5 by to get 25?
+3So what is the fraction equal to one that we multiply j by?
+So what is the numerator for our new fraction?
+(Write 15 in the numerator of the new fraction.)
+Number of trials
+5
+5
+5
+15
+2 86. (Write on the board: - = -.)
+What number will be the denominator of the new fraction?
+How do you know? (Call on an individual.)
+12
+We multiply 2 × 4 to get 
+8, so to get an equivalent
+A
+That means that if you took 12 trials you would expect to pull 8 triangles.
+7. (Write on the board: - = —.) 4 24
+Everyone, think about the fraction equal to one needed to complete the 
+equivalent fraction. (Pause.) Use that fraction equal to one to find the 
+numerator of the equivalent fraction. What is the numerator of the new 
+fraction?
+That means that if you took 24 trials, you would expect to pull 18 triangles.
+4 fraction, we multiply by —.
+18
+
+414 Part HI Extended Concepts and Skills
+Format 15.7 (continued)
+PROBABILITY FOR DIFFERENT NUMBERS OF TRIALS
+TEACHER STUDENTS
+Part B: Less Structured Worksheet
+1. (Give the students a worksheet similar to the following.)
+Box 1:
+Circles Stars
+3 _ _ 2
+5 25 5 25
+Box 2: 
+Circles
+6 _ 
+8 16
+Stars
+2
+8 ^ 16
+Box 3: 
+Circles
+2 =
+8 ^ 32
+Stars
+3 = _
+8 - 32
+Squares
+3 = _
+8 “ 32
+The probability fractions are written for each box. Find the equivalent 
+fraction for the different number of trials.
+2. Touch the first box. What is the probability fraction for circles?
+3. What is the denominator in the new fraction?
+So this fraction will be for 25 trials. Think about the numerator for the 
+new fraction. (Pause.) What is the new numerator?
+So, if you took 25 trials how many times would you expect to pull a 
+circle from the box?
+(Repeat steps 2 and 3 for all examples.)
+3
+5
+25
+15
+15 times
+Format 15.8
+INTRODUCING COMPOUND PROBABILITY
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. Listen, a can had 12 things in it and 1 was a star. What is the 1
+probability of pulling a star from the can? 12
+2. Listen, a can has 5 things and 3 are stars. What is the probability 3
+of pulling a star? 5
+3. Listen, a can has 6 things in it and 6 are stars. What is the probability 6
+of pulling a star? 6
+Yes, you would pull a star from the can on any trial you took.
+
+Chapter 15 Percent, Ratio, and Probability 415
+TEACHER STUDENTS
+4. For these problems we just did, you had only one can for each trial. 
+Sometimes you have more than one can for each trial. The next 
+problem shows 2 cans with shapes in them. In each can there are 
+3 shapes: 1 star, 1 circle, and 1 cube.
+(Draw the following on the board.)
+0 ⅛r θ g L o J I ⅜ J
+We want to find the probability of pulling a star from both cans.
+5. For this problem you pull from the first can and then from the second 
+can. What is the fraction for stars in the first can?
+What is the fraction for stars in the second can?
+6. To determine the probability of pulling a star from both cans, you 
+multiply the fractions. What do you do to determine the probability of 
+drawing a star from both cans?
+1 1What is j x —?
+1So the probability of pulling a star from both cans is -.9
+7. What if there were a third can just like the first two? Say the fraction 
+for pulling a star from the first can.
+Say the fraction for pulling a star from the second can.
+Say the fraction for pulling a star from the third can.
+8. Say the multiplication problem for pulling a star from the 3 cans.
+1 1 19. Raise your hand when you know what — × ~ × — is. (Wait.) What does 
+it equal?
+So the probability of someone pulling a star from all 3 cans is It 
+would only happen about 1 out of every 27 trials.
+10. Let's try another one. (Draw the following on the board.)
+☆ △ o ☆ ☆ o
+0 Λ Λθ Δ * 3
+This example has 3 cans with shapes. All the cans have 10 shapes. The 
+first can (point) has 1 star. Say the probability fraction for pulling a star 
+from that can.
+7(Write — under the can.)
+1
+3
+3
+Multiply the fractions
+2
+9
+2
+3
+2
+3
+2
+3
+1 1 1
+3 X 3 X 3
+1
+27
+1_
+10
+continued
+
+416 Part III Extended Concepts and Skills
+Format 15.8 (continued)
+INTRODUCING COMPOUND PROBABILITY
+TEACHER STUDENTS
+11. The next can has 3 stars (point). Say the probability fraction for pulling 
+a star from that can.
+3
+10
+(Write ~ under the can.)
+12. The last can (point) has 7 stars. Say the probability fraction for pulling 7
+a star from that can. (Write -~ under the can.) 10
+13. Raise your hand when you can say the multiplication problem for 
+pulling a star out of all 3 cans. (Wait.) Say the multiplication for the 
+3 cans.
+1 3 7
+io x io x 10
+21That equals γθθθ (write on board). If you took a thousand trials of
+pulling objects from the 3 cans, you'd only pull out 3 stars about 
+21 times.
+Format 15.9
+PROBABILITY WORD PROBLEMS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+(Students will need a piece of paper or whiteboard to write on. Write this 
+problem on the board: A die has 6 sides; 2 sides are yellow, and 4 sides 
+are green. If a person rolled the die 18 times, how many times would you 
+expect a yellow side to come up?)
+1. What color parts are we interested in? Yellow
+2. So the probability fraction will tell about yellow sides and total sides. 2
+What is the probability fraction? 6
+3. So if you rolled the die 6 times, how many times would you expect a 
+yellow side to come up? 2 times
+4. But the problem asks how many times we would expect yellow to
+2
+come up if we rolled the die 18 times. That is 18 trials. (Write 6 = .)
+5. We can make a new fraction that will tell about 18 trials. Listen: Each 
+time the die is rolled is a trial. So there are 18 trials. Is 18 the numerator 
+or the denominator for our new fraction? Denominator
+Yes, 18 is about trails, so it goes in the denominator. (Write 18 in the 
+2
+new denominator: θ =
+6. We will use y to stand for yellow in the numerator. (Write y in the
+2 2_numerator: g = j gj
+7. On your paper or white board solve for y. (Wait.) What does y equal? 
+So you would expect the yellow side to come up for 6 of the 18 trials. 
+The answer to the question is 6. You would expect the yellow side to 
+come up if you rolled the die 18 times. 6
+
+Chapter 15 Percent, Ratio, and Probability 417
+TEACHER STUDENTS
+8. Let's try another word problem. (Write the following on the board: 
+There are 52 cards in the deck: 13 have red fronts, 13 have green fronts, 
+13 have yellow fronts, and 13 have blue fronts. If you took 104 trials of 
+taking a card from the deck, on how many trials would you take a card 
+with a green front?)
+What color are we interested in? Green
+9. The problem tells about green cards and total cards. Raise your hand 13
+when you know the probability fraction for green cards. (Pause.) What 
+is the probability fraction?
+52
+13 1310. (Write — on the board.) Yes, the fraction is —. So if you take
+52 cards, how many would you expect to be green cards? 13
+Look at the problem; how many trials does the problem ask about? 104
+Yes. Is 104 the numerator or denominator of the new fraction?
+13Yes, 104 goes in the denominator (Write — =
+11. We will use g to stand for green cards in the numerator.
+<wrl,s ⅛ - ⅛j
+The denominator
+12. On your paper or white board, solve for g. (Pause.) What does g equal? 
+The answer to the question is 26. You would expect to take 26 green 
+cards in 104 trials.
+26

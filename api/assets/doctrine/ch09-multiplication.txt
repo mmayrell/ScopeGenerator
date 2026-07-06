@@ -1,0 +1,1481 @@
+Direct Instruction Mathematics (5th ed.), Stein, Kinder, Silbert & Carnine — Chapter: Multiplication
+
+Chapter
+Multiplication
+LEARNING OUTCOMES
+9.1 Discuss the two stages of teaching multiplication to young students and the 
+sequence of problem types appropriate for each stage.
+9.2 Describe the procedures recommended to promote conceptual understanding 
+of beginning multiplication.
+9.3 Outline instructional procedures to teach single-digit and missing factor 
+multiplication strategies.
+9.4 Explain the instructional procedures to teach multi-digit multiplication.
+SKILL HIERARCHY
+Our discussion of multiplication is divided into two stages. The beginning stage involves presenting strategies designed to establish a conceptual understanding of the process of multiplication. These strategies typically are taught to students in second grade. The advanced stage 
+involves teaching students to work multi-digit problems in which students rely on mental computation rather than on representations of concrete objects. This stage typically begins during 
+third grade and continues into the upper grades.
+During the beginning stage, a procedure for solving simple multiplication problems with 
+concrete or semi-concrete objects to represent the members in each group is presented. For 
+example, when determining the total in an array such as the one below, students are shown that 
+they can count by 3 four times and end with 12. When solving the problem 3 × 4, the students 
+are taught to hold up four fingers for the second factor and then skip count by threes for each of 
+the four extended fingers: 3, 6, 9, 12. (The teaching procedures for skip counting are discussed 
+in Chapter 4.) Students should have mastered at least three skip-counting series before multiplication is introduced.
+o o o o 
+o o o o 
+o o o o
+
+138 Part II Basic Concepts and Skills
+Missing-factor problems, in which one factor and the product are given and a missing 
+factor must be computed (e.g.,4 × □ = 12), also are presented during this stage. In the 
+missing-factor strategy, students do not know the number of fingers to extend because a 
+box or unknown represents the second factor. For these problems, students hold up a fist 
+and extend a finger every time they skip count, stopping at the product. In 3 × □ = 15, 
+students extend a fist, count 3 (extending one finger), count 6 (extending a second finger), count 9 (extending a third finger), count 12 (extending a fourth finger), and count 
+15 (extending a fifth finger). Since they extended five fingers, the unknown factor is 
+5: 3 ×[5] = 15. The teacher then summarizes by asking students how many times they 
+counted to end up with 15. Teachers working with upper-elementary-grade students who 
+have limited knowledge of multiplication might consider beginning instruction with basic 
+fact memorization exercises instead of presenting finger strategies that could result in an 
+overreliance on using fingers.
+In the advanced stage, when multi-digit numbers are multiplied, students work problems using knowledge of basic multiplication facts. Therefore, basic multiplication facts 
+must be taught as a prerequisite skill. Exercises to facilitate memorization of basic facts 
+can begin a month or so after students have learned to use the count-by strategy to work 
+multiplication problems. (See Chapter 6 for a discussion of teaching basic facts.) In addition to basic multiplication facts, renaming and complex addition facts (adding a single 
+digit to a multi-digit addend) also are necessary preskills. Knowledge of complex facts such 
+as 72 + 4 is required in many problems with multi-digit factors. For example, in working 
+95 × 8, students first multiply 5 × 8 and then must add the 4 from the 40 to 72, the product 
+of 9 × 8:
+4
+95 
+× 8 
+760
+The need for teaching complex facts can be avoided by presenting a low-stress multiplication algorithm. In the low-stress multiplication algorithm, students write out the complete 
+answer every time they multiply. This strategy requires no renaming:
+32 
+× 24 
+8 
+120
+40 
+600 
+768
+Students add the products, a process that seldom involves complex facts. The major disadvantage of the low-stress algorithm, which is discussed later in this chapter, is its limited acceptance 
+in U.S. schools.
+Another preskill for multi-digit operations is expanded notation. When students multiply 
+34 × 7, they need to understand that they are multiplying 4 × 7 and 30 × 7, which assumes 
+knowledge of the expanded notation skill of translating 34 into 30 and 4 (see Figure 9.1).
+There are two basic types of multi-digit multiplication problems. The first type involves 
+a single-digit factor and a multi-digit factor. This type includes both problems that do not 
+require renaming and those that do. In the easier group, the first product is less than 10, and 
+renaming is not required; for example, 32 × 3 does not require renaming in the first product 
+(2 × 3 = 6). Problems in the harder group, such as 32 × 7, require renaming; in 2 × 7 = 14, 
+the 10 from 14 is moved to the tens column. The second major type of problem involves multiplying two multi-digit numbers (32 × 13, 189 × 43, 342 × 179). A more detailed description of the various multiplication problem types appears in the Instructional Sequence and 
+Assessment Chart.
+
+Chapter 9 Multiplication 139
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type Performance Indicator
+K Count by tens to 100
+1 Count by twos to 20
+Count by fives to 60
+2 Count by nines to 90
+Count by fours to 40
+Count by twenty-fives to 100
+Count by sevens to 70
+Count by threes to 30
+Count by eights to 80
+Count by sixes to 60
+3 One digit times one digit 2 × 7 =
+9 × 3 =
+5 × 6 =
+3 Missing factor multiplication; both 2×□ = 8
+factors are one-digit numbers 5×□ = 10
+9×□ = 36
+3 One-digit factor times two-digit 43 31 32
+factor; no renaming × 2 × 5 × 4
+3 One-digit factor times two-digit 35 43 17
+factor; renaming × 5 × 9 × 2
+4 One-digit factor times two- or three-digit factor; 5 × 35 =
+problem written horizontally 9 × 34 =
+7 × 56 =
+4 One-digit factor times three-digit factor 758 364 534
+× 2 × 5 × 9
+4 One-digit factor times three-digit factor; zero in 405 302 105
+tens column × 3 × 5 × 9
+4 One-digit factor times three-digit factor; 352 × 9 =
+horizontal alignment 7 × 342 =
+235 × 5 =
+4 Two-digit factor times two-digit factor 37 26 34
+× 25 × 52 × 25
+4 Two-digit factor times three-digit factor 324 343 423
+× 29 × 95 × 29
+5 Three-digit factor times three-digit factor 284 242 624
+× 346 × 195 × 283
+5 Three-digit factor times three-digit factor; 
+zero in tens column of multiplier 382 320 523
+× 506 × 402 × 703
+
+140 Part II Basic Concepts and Skills
+FIGURE 9.1 Using expanded notation to explain multi-digit 
+multiplication
+27 20 7
+× 4 = × 4 + × 4 = 108
+80 28
+28 =108
+CONCEPTUAL UNDERSTANDING
+• * * ∙ ∙ ∙ . .
+The meaning of multiplication can be conveyed in various ways. The most common ways of 
+introducing the concept are repeated addition, equivalent sets, number lines, and arrays. For 
+example, multiplication of 3 × 4 can be represented using a number line or an array. See below.
+3 3 3 3
+I--- 1--- 1--- 1--- 1--- 1--- 1--- 1--- 1--- 1--- 1---- 1-- 1
+0 1 2 3 4 5 6 7 8 9 10 11 12
+In this chapter, we recommend using an equivalent sets (array) demonstration to introduce the 
+concept of multiplication. The discussion of Format 9.1 in the next section includes procedures 
+for teaching the concept.
+INSTRUCTIONAL PROCEDURES: BEGINNING MULTIPLICATION
+Single-Digit Multiplication
+Format 9.1A Single 
+Digit Multiplication
+Watch how Michaela introduces 
+the concept of multiplication.
+Multiplication with single-digit factors can be introduced when students have mastered three 
+count-by series (twos, fives, nines) and can read and write all numerals between 1 and 99. Single-digit 
+multiplication is typically taught in third grade. Format 9.1: Single-Digit Multiplication is 
+divided into five parts. Since an equivalent-sets representation is easier for students to understand, we introduce the multiplication concept in Part A with illustrations of equivalent sets. The 
+students are shown a group of equivalent sets and told they can figure the total a “fast way” when 
+each set has the same number. After verifying that each set has the same number, the teacher 
+demonstrates how to write the problem as a multiplication problem. Next, the teacher demonstrates how to use skip counting to determine the total. In the final step of Part A, students count
+
+Chapter 9 Multiplication 141
+the members of the sets one at a time to verify that the answer derived through multiplication is 
+correct. Part A should be included only the first two or three days that the format is presented.
+In Part B, students learn to translate a multiplication statement into terms that indicate how 
+the problem is to be solved. For example, in initial problems, the multiplication sign (X) is read 
+as “count by.” Students are taught to read the multiplication statement 5 × 2 = as “count by 
+5 two times.” By reading the statement this way, students know exactly what to do to derive an 
+answer. “Count by 5 two times” tells them to extend two fingers for the number of times they 
+skip count and then to skip count by fives. After several weeks, students learn to read problems 
+in the conventional manner (e.g., 4 × 3 is read as “4 times 3”).
+When reading multiplication problems in Part B, students begin with the multiplication 
+sign, saying “count by” and then the first numeral; 5 × 3 is read “count by 5 three times.” Since 
+translating multiplication problems differs from reading addition or subtraction problems, in 
+which students read in a strict left-to-right order, multiplication problems require a slightly different signal. The teacher should point under both the numeral and the times sign when having 
+students translate problems. For some students, the teacher may need to point under the sign first 
+and then point to the first numeral to emphasize that the multiplication sign is read before the 
+numeral.
+In Part C, the teacher guides students in solving several multiplication examples in a structured board presentation. First, students read and translate a problem. They hold up the appropriate number of fingers, and the teacher models skip counting while touching each extended 
+finger. Next, the students skip count each time they touch an extended finger. Finally, the students work three new problems without the benefit of teacher modeling.
+Part D is the structured worksheet presentation. The teacher has the students extend the 
+appropriate number of fingers, identify the skip-counting number, and then work the problem. 
+Part E is the less structured worksheet part of the format. Students work a set of problems on 
+their own with the teacher carefully monitoring their performance. After students demonstrate 
+accuracy during group instruction, they are given 5 to 10 problems daily in independent worksheet exercises.
+When having the students count and touch their fingers in step 3, Part C, the teacher must be 
+sure that students coordinate saying the numbers while touching their extended fingers. Struggling students may say the first number in the skip-counting series before touching the first 
+extended finger. In 2 × 5, for example, students may say 2 and then, when they touch their 
+finger, count 4, continuing to count 6, 8, 10, 12. The correction for this error is to model, then 
+lead by actually guiding the student’s hand to coordinate touching and counting, and then test by 
+watching while the student touches and counts alone. As a delayed test, the teacher should then 
+present a series of examples for the students to practice only the touching and counting and not 
+the entire sequence of steps in Part C. Instead of presenting all of the steps, the teacher tells the 
+student the problem and how many fingers to hold up and then has the student touch and count. 
+For example, the teacher would present a series of examples using this wording: “You’re going 
+to count by 5 three times. Hold up three fingers. Good. Now count by 5. Remember to touch 
+each finger as you count by 5.” With this correction, the teacher is providing intensive practice 
+on an important component skill prior to reintroducing the entire strategy.
+Two example-selection guidelines are recommended for this format. First, example selection should be coordinated with count-by instruction. The first digit in the multiplication problem should be taken from a skip-counting series the students previously have mastered. For 
+example, a problem such as 6 × 7 would not be included until students have mastered counting 
+by sixes. As a general rule, problems with a specific numeral as the first digit should be included 
+in multiplication tasks after students have reviewed that count-by series for about 2 weeks. Second, there should be a mix of problems. As a general rule, no more than two or three problems in 
+a row should have the same numeral as the multiplicand or multiplier. Following is an example of an acceptable set of examples:
+5 × 2 2 × 2
+2 × 4 5 × 4
+9 × 3 9 × 1
+9 × 5 5 × 3
+
+142 Part II Basic Concepts and Skills
+The mix of problems helps to ensure that students develop the habit of carefully attending to 
+both factors.
+Missing-Factor Multiplication
+Missing-factor multiplication, or algebra multiplication, is not only a useful skill in its own right 
+but also is a critical preskill for the simple division strategies discussed in the next chapter. In 
+order to solve a missing-factor multiplication problem, students must determine the number of 
+times they count by a certain number. For example, in the problem 5 × □ = 15, students figure 
+out how many times they have to count by 5 to get to 15. Students extend a finger every time 
+they skip count; they extend one finger when they say 5, a second when they say 10, and a third 
+when they say 15. The three extended fingers represent the missing factor.
+Missing-factor multiplication problems can be introduced after students have mastered 
+solving regular multiplication problems. A timeframe of at least 3 to 4 weeks between the introduction of regular multiplication and problems with missing factors is recommended to enable 
+students to develop this mastery.
+In Part A of Format 9.2: Missing-Factor Multiplication, students learn to translate the 
+problem type. Next, the teacher models the strategy. The teacher holds up a closed fist to indicate that the number of times to count is unknown and then extends a finger every time she skip 
+counts. Then the teacher tests the students by guiding them through several examples. In Part B, 
+the structured worksheet, students apply the strategy as the teacher guides them to hold up a fist, 
+identify the skip-counting number and the product, and extend a finger each time they count. 
+Part C is the less structured worksheet in which students are taught to discriminate between regular problems and algebra problems (e.g.,2 × 8 = □,2 × □ = 8).
+Example-selection guidelines are identical to those for regular multiplication. The first 
+factor in the problem should represent a count-by series the students have mastered. Different 
+numerals should appear as the first factor. Independent practice worksheets should include an 
+equal mix of regular multiplication and multiplication problems with missing factors.
+Diagnosis and Remediation
+Four errors, two component-skill and two strategy, are commonly seen in single-digit multiplication. The first type of error results from skip counting incorrectly. Students may either forget a 
+number or switch from one series to another while counting. Although this count-by component 
+skill error is usually obvious on worksheets, it can only be confirmed by asking students to work 
+problems aloud. A worksheet illustrating this count-by component-skill error appears below. 
+Note that of the eight problems on the worksheet, only two were missed. Both these missed 
+problems had 9 as one factor and a numeral of 5 or more as the other factor.
+5
+10
+2
+9
+× 
+× 
+× 
+×
+4 = 20
+3 = 30
+7 = 14
+6 = 50
+9
+10
+9
+5
+× 
+× 
+× 
+×
+3 = 27
+6 = 60
+5 — 47
+2 = 10
+The errors indicate that the student may have had difficulty remembering the higher numbers in the count-by-9 series. To remedy the count-by skill deficit, the teacher provides practice 
+on counting by nines for several lessons. The student shouldn’t be required to solve any multiplication problems involving with nines until he has mastered counting by nines.
+The second error pattern is one in which answers are consistently off by one count-by number. For example, in regular multiplication problems, a student might answer a set of problems 
+like this: 9×6 = 63,7×6 = 49, 5 × 6 = 35. Quite often the cause of this error is that the 
+student says the number for the first group and then begins counting as opposed to touching and 
+counting simultaneously. For example, a student working 4 × 3 may say the number 4 before 
+touching his fingers and then say 8, 12, and 16 as he touches the three raised fingers. This type 
+of error can be confirmed by watching the student as he works the problems.
+To remedy this type of error, the teacher presents Part C of Format 9.1: Single-Digit 
+Multiplication, the structured board part of the multiplication format. The teacher continues
+
+Chapter 9 Multiplication 143
+FIGURE 9.2 Diagnosis and remediation of single-digit multiplication errors
+Error Pattern Diagnosis Remediation Procedures Remediation Examples
+Component-Skill Errors
+a. 9 × 6 = 51
+8 × 4 = 32
+6 × 5 = 30
+9 × 3 = 26
+b. 9 × 6 = 63
+8 × 4 = 40
+6 × 5 = 36
+Student doesn't know 
+count-by-nines series.
+Student not coordinating 
+touching and counting.
+Present Part B of Format 4.5: 
+Count-By.
+Present Part C of Format 9.1: 
+Single-Digit Multiplication.
+Practice counting by 
+nines
+Regular multiplication 
+problems
+Note: After addressing any component-skill error, assess students using problems similar to the ones on which errors were originally 
+made in order to determine if the remediation was successful.
+Strategy Errors
+c.9×6 = 15
+8 + 4=12
+6 × 5 = 11
+Student is confusing 
+addition with multiplication; 
+not attending to the sign in 
+the problems.
+d. 2 ×
+6 ×
+9 ×
+4 ×
+3S = 8
+5 =[30]
+6 = [54] 
+[32]= 8
+Student is confusing 
+regular multiplication 
+and missing factor 
+multiplication.
+Present Part E of Format 9.1: 
+Single-Digit Multiplication. Instruct 
+students to circle the sign before 
+working each problem on the less 
+structured worksheet.
+Present Part C of Format 9.2: 
+Missing Factor Multiplication.
+Mix of addition and 
+multiplication problems
+Mix of regular 
+multiplication problems 
+and problems with a 
+missing factor
+to present this part until the students can respond correctly to approximately four consecutive 
+problems. Several days of practice on this exercise should be provided before students are given 
+problems to work independently.
+The third type of error occurs when students confuse the multiplication and addition operations. This type of error can be confirmed by examining student work samples and interviewing 
+students, if needed. The remediation procedure involves presenting the less structured format for 
+regular multiplication, which includes a mix of multiplication and addition problems. For remediation purposes, the teacher would instruct students to circle the sign in the problems before 
+working them.
+The fourth type of error common to single-digit multiplication occurs when students confuse regular and missing-factor multiplication, writing 5 × [50] = 10 or 2 × [8] = 4. The remediation procedure involves reviewing the less structured part of Format 9.2: Missing-Factor 
+Multiplication, which contains a mixture of regular and algebra multiplication problems. The 
+teacher would present the less structured worksheet with about 10 problems, observing and correcting errors. This remediation continues daily until students correctly answer 9 of 10 problems 
+without teacher assistance for several days in a row. The diagnosis and remediation information 
+is summarized in Figure 9.2.
+INSTRUCTIONAL PROCEDURES: MULTI-DIGIT MULTIPLICATION
+Two algorithms for solving problems with multi-digit factors are commonly taught. One algorithm is called the long-form or low-stress algorithm. The other algorithm is called the short 
+form. Both forms are illustrated in Figure 9.3.
+Both algorithms are based on the distributive property of multiplication, which states that 
+the product of a multiplier and a multiplicand will be the same as the sum of a series of products 
+from multiplying individual number pairs. For example, 3 × 24 = (3 × 20) + (3 × 4).
+The advantages of the long-form algorithm are that it does not alternate between multiplication and addition and seldom requires renaming. Moreover, it clearly shows the distributive
+
+144 Part II Basic Concepts and Skills
+FIGURE 9.3 Two algorithms for multi-digit 
+multiplication
+Long Form Short Form
+232
+× 7 232
+/4 x_2
+210 f624
+1400
+1624
+property of multiplication. Its disadvantage, however, is that in problems involving multi-digit 
+factors, many numerals must be written as partial products:
+245 
+× 37
+35
+280
+1400
+150
+1200
+6000
+9065
+The advantage of the short-form algorithm lies in its relative efficiency in solving problems 
+with multi-digit factors and its widespread usage. Its disadvantages lie with the difficulty a student may have when alternating between addition and multiplication and with the inclusion of 
+complex addition facts.
+In this section, we discuss in detail the procedures for teaching the short-form algorithm, 
+primarily because it is the one used in most classrooms. The section on the short-form algorithm 
+is divided into two parts. The first addresses problems in which one of the factors is a single-digit 
+number and the other factor a multi-digit number. The second part addresses problems in which 
+each factor is a multi-digit number.
+Single-Digit Factor and Multi-Digit Factor
+Multiplication problems in which a single-digit factor and multi-digit factor are multiplied usually are introduced during mid-third grade.
+Preskills Three preskills necessary to work these problems are (a) multiplication facts; (b) 
+place value skills, including expanded notation and placing a comma in the proper position when 
+writing an answer in the thousands; and (c) complex addition facts in which a single-digit number is added to a two-digit number.
+Basic multiplication facts include all of the possible combinations of single-digit factors. 
+Memorizing basic facts is a very demanding and lengthy process. Most students will not have 
+memorized all basic multiplication facts by mid-third grade. Therefore, initially, problems should 
+be limited so that they include only basic facts the teacher is sure students have memorized. As 
+students learn more basic facts, these should be integrated into multiplication problems.
+When introducing multiplication facts to students, teachers may find multiplication maps 
+useful (see Table 9.1). Each map is designed to facilitate learning multiplication facts for a 
+particular series. Students who can visualize the maps in their minds learn and remember facts 
+more easily.
+Each map has a unique pattern. For nines, the second digit decreases by 1, while the first digit 
+increases by 1. For fives, the last digit of the numerals in the first column is 5; the last digit of the 
+numerals in the second column is zero. For fours, the second digits repeat after 20 (4, 8, 12, 16, 20, 
+24, 28, 32, 36, 40). The pattern for threes shows that all values below the top row have a second 
+digit one less than the digit above it. For sevens, the second digit of each number is one more than the 
+digit above it. Teachers need to provide lots of practice with number maps and count-bys. Practice 
+activities may require students to write missing numerals or complete blank maps.
+
+Chapter 9 Multiplication 145
+TABLE 9.1 Multiplication Maps for 9s, 5s, 3s, 7s, and 4s
+9 
+TF
+27 
+3?
+45
+54
+63
+72 
+8?
+90
+9 
+_8 
+____7
+6 
+__5 
+____4 
+___ 3
+2
+____1 
+___ 0
+9
+1 .
+2____
+3___„
+4____
+5_
+6__ _
+7____
+8_
+90
+5 10
+15 20
+25 30
+35 40
+45 50
+5
+15
+25
+35
+45
+— 1_
+1____2____
+2____ 3____
+3____ 4____
+4____ 5____
+5
+30
+45
+3 6 9
+12 15 18
+21 24 27
+30
+— — —
+1____ 1____ 1____
+2____ 2___ 2____
+3____
+3
+24
+7 14 21
+28 35 42
+49 56 63
+70
+— — —
+2____ 3____4____
+4■_ 5____ 6____
+7___
+7
+56
+4 8 12 16 20
+24 28 32 36 40
+4 8 ____2 _ ___6 ____0
+____4 ____8 ____2 ____6 ____0
+The preskill of expanded notation is needed in order for the students to understand the 
+renaming procedure in the short-form algorithm. Procedures for teaching expanded notation and 
+other place value concepts appear in Chapter 5.
+The preskill of correctly placing commas seems trivial but needs to be taught. After completing problems with larger numbers, students are expected to place a comma in the answer. 
+The procedure is simple. The teacher presents the following rule: The comma is written between 
+the hundreds and the thousands. Then the teacher models and tests application of the rule. The 
+teacher writes a series of three-, four-, and five-digit numerals on the board and then demonstrates how to find where to place the comma. Starting at the ones column, the teacher points 
+to each numeral, saying “ones, tens, hundreds, thousands,” and then places the comma between 
+the hundreds and the thousands columns. After modeling several examples, the teacher tests the 
+students with a new set of examples.
+Complex addition facts involve mentally adding a single-digit number to a two-digit number (35 + 7, 27 + 3, 42 + 5). Complex addition facts were discussed earlier in the addition 
+chapter as a preskill for adding a series of multi-digit numbers. This type of addition fact is 
+found in the short-form multiplication algorithm, when the student adds the renamed units to the 
+
+146 Part II Basic Concepts and Skills
+product of a column. For example, in the problem 35 × 9, the student first multiplies 9 × 5 and 
+gets 45. Because the student has learned expanded notation, she knows that 45 is the same as 
+four tens and five ones and places the numerals in the appropriate columns.
+4
+35 
+× 9
+5
+The student then multiplies 9 × 3 for a product of 27. Next, the student must mentally add the 
+complex addition fact, 4 + 27:
+4
+35 
+× 9
+315
+There are easier and more difficult types of complex addition facts. In the easier type, the sum has 
+the same number of tens as the original two-digit addend: 64 + 3 = 67, 43 + 5 = 48, 
+75 + 4 = 79. In the more difficult type of complex addition facts, the sum has a tens number 
+one higher than the original two-digit addend: 36 + 7 = 43, 58 + 8 = 66, 48 + 4 = 52, 
+49 + 9 = 58.
+Instruction on complex addition facts begins in late first grade. First, students are taught 
+to add a single-digit number to a teen number: 14 + 3, 16 + 2, then 17 + 6, 15 + 8, and so 
+on. After several months of practice with teen numbers, students are introduced to complex 
+facts with tens numbers, first with easier facts (24 + 3, 36 + 2). The more difficult facts are 
+introduced in second grade (49 + 6, 45 + 8). Practice is continued for many months to develop 
+fluency. Procedures for teaching complex addition facts appear in Chapter 7.
+Strategy Column multiplication is initially introduced with simple problems without renaming. That is, the product of the numbers in the ones column should be less than 10:
+34 43 31 32
+× 2 × 2 × 5 × 4
+When presenting this type of problem, the teacher points out that the student first multiplies the 
+ones and then the tens. The teaching procedure would be quite similar to the one that involves 
+renaming (see Format 9.3: One-Digit Factor Tinies Two-Digit Factor—Renaming).
+Problems with renaming are introduced several days after problems without renaming have 
+been presented. In Part A of Format 9.3, the structured board presentation, the students break 
+the problem into two parts. The two parts for 5 × 47 are 5 × 7 ones and 5 × 4 tens. After multiplying in the ones column, the teacher models how to rename, multiply the second part of the 
+problem, add the renamed number, and write the answer. Parts B and C provide structured and 
+less structured worksheet practice.
+Note in the format the balance between explaining to students the concept and providing 
+clear guidance in the procedures of working the problem. Also note the use of a place value 
+grid or graph paper. The purpose of the grid is to prompt the students to place numerals from 
+the product in the proper columns. Proper placement of numerals in the product, though not a 
+critical component of these problem types, is critical in problems with two multi-digit factors. 
+The place value grid would appear on students’ worksheets for about a week and then could be 
+dropped. The day the grid is dropped, the teacher leads the students through several problems, 
+pointing out the need to write numerals in the proper positions. The teacher also examines students’ worksheets carefully for column alignment errors.
+Multi-digit problems written horizontally are introduced after students can correctly work vertically aligned problems. The teacher presents a strategy in which the students rewrite the problem 
+vertically, writing the one-digit factor under the multi-digit factor. In later grades, the teacher presents a strategy in which students multiply horizontally, writing the product and renaming:
+12
+5 × 324 = 1620
+
+Chapter 9 Multiplication 147
+This strategy is taught prior to introducing fraction multiplication and division problems with 
+multi-digit divisors, both of which involve horizontal multiplication:
+5- × 324 324)16204
+Problems with a one-digit factor and a three-digit factor (243 × 5 and 342 × 9) are introduced in fourth grade. The format for presenting problems of this type is essentially the same 
+as the format for introducing problems with a two-digit factor. The same basic explanation for 
+renaming from the ones to the tens column is used in presenting renaming from the tens to the 
+hundreds column. In 543 × 5, students multiply the 4 tens and add the renamed ten. Then the 
+teacher explains that they can’t have 21 tens in the tens column, so they write a 2 over the hundreds column to represent 20 tens (2 hundreds). The remaining ten is written under the tens column in the answer. Note that, at this point, the teacher need not require the students to say that 
+20 tens equal 200 but simply to write the 2 in the hundreds column.
+A special problem type includes a zero in the tens column of the three-digit factor 
+(403 × 5 and 306 × 2). Students may have trouble adding the renamed ten to zero. This type 
+of problem is introduced shortly after problems with three-digit factors are introduced. Several 
+problems of this type should be presented daily for about 2 weeks. The first several days the 
+teacher models a few problems and then closely supervises students as they work the problems 
+independently.
+Example Selection Two rules govern example selection. First, the basic facts included in 
+problems should be those that the student has already mastered. Second, less structured, supervised practice, and independent worksheets should include a mixture of problems. About half 
+of the worksheet should contain problems of the most currently introduced type while the other 
+half should contain previously introduced multiplication problem types. About 10% of the worksheet should contain addition problems to keep students in the habit of carefully examining the 
+sign in a problem before working it.
+Self-Checking In mid-fourth grade, or whenever students become proficient in multiplying 
+by a one-digit factor and dividing by a one-digit divisor, students should be taught to check their 
+answers. A checking procedure for multiplication is to divide the answer by the one-digit factor. 
+If the quotient equals the other factor, the answer is correct. The teacher introduces self-checking 
+with a worksheet exercise. After her students complete the first multiplication problem (7 × 35), 
+the teacher says, “Here’s how to check your work to make sure you have the right answer. We 
+multiplied by 7, so we divide 7 into the answer. What’s the answer to the multiplication problem? Divide 7 into 245. Write the problem and work it. Is the answer 35? So the answer for the 
+multiplication problem must be correct.”
+Determining whether students have checked their work in multiplication is easy because 
+checking requires writing a division problem. An exercise to encourage self-checking is to give 
+students already-worked problems, half of which have incorrect answers. The teacher would 
+instruct the students to check their answers and find the mistakes.
+Two Multi-Digit Factors
+Problems with two multi-digit factors are usually introduced during mid-fourth grade and 
+include four types of problems. The simplest problems involve two two-digit factors. The next 
+most difficult problems are those with a two-digit factor and a three-digit factor. This type is 
+introduced during late fourth grade. The last type, which is presented during fifth grade, includes 
+two three-digit factors.
+The preskills for introducing problems with two multi-digit factors include the preskills for 
+problems with a one-digit and multi-digit factor (basic multiplication facts, place value skills, 
+complex addition facts) and a new preskill, column addition with renaming, which is required 
+when the student must add the partial products.
+Format 9.4: Two-Digit Factor Times Two-Digit Factor shows how to present problems 
+in which both factors are two-digit numbers. We recommend using a place value grid or graph
+
+148 Part II Basic Concepts and Skills
+FIGURE 9.4 Using a place value grid in 
+multi-digit multiplication
+×
+1
++ 6
+8
+4
+2
+1
+4
+5
+2 
+5
+0 
+0
+0
+×
+2
+9
+1
+4
+2
+7
+2
+9
+6
+6
+6 
+0
+6
+3
+7
+8
+5 1
+paper for the first several weeks this problem type appears. Examples of problems worked in a 
+grid appear in Figure 9.4.
+In Part A, the teacher presents the numbers in the order in which they are multiplied. For 
+example, in the problem
+52 
+× 37
+“We multiply 7 × 2, then 7 × 5, then 3 × 2, then 3 × 5.” This part focuses simply on procedures. Part B is a structured board presentation in which the teacher models the steps in solving a 
+problem. Note in steps 3 and 5 that the teacher summarizes what has been done to that point: “First 
+we multiplied 52 by 7 ones, now we’ll multiply 52 by 3 tens.” Step 3 also points out that when 
+multiplying by the tens number, a zero must first be placed in the ones column. This step is critical.
+52 
+× 37 
+175 
+0
+Part C is a structured worksheet presentation. Step 5 of Part C, during which the teacher 
+leads students in multiplying by the tens number, is the step in which students are most likely 
+to have difficulty. Note the wording is very specific regarding where numerals are placed. Part 
+D is a less structured worksheet presentation. It includes problems with a two-digit factor and 
+problems with a one-digit factor as the bottom factor as well as some addition problems with a 
+one-digit addend.
+Diagnosis and Remediation
+The specific cause of errors is sometimes obvious, as in problem a below, and sometimes not 
+obvious, as in problem b. In problem a, we can readily assume the student made a fact error, 
+multiplying 7 X 6 and writing 58.
+a. b.5 4
+36 36
+× 7 × 7
+<242
+In problem b, we cannot be sure of the error. The student may have multiplied wrong or added 
+wrong. If the cause of the error is not clear, the teacher should have the student rework the problem in front of her so that she can confirm the specific cause.
+Fact Errors The remediation procedure for basic fact errors depends on the number of fact 
+errors made by the student. If a student makes a few fact errors, the teacher simply records the 
+facts the student missed and incorporates them into practice exercises for the next several lessons. If a student makes fact errors on more than 10% of the problems, the teacher should test 
+the student individually to determine what action to take. The teacher tests the student verbally 
+on the facts missed (What is 8 X 7?9 × 4?8 X 6?). If the student responds correctly to the 
+missed facts, the teacher should tentatively conclude that rushing through the problems caused 
+the errors. The remediation procedure would involve increasing motivation to perform accurately. If the student’s performance indicates she does not know many basic facts, the teacher
+
+Chapter 9 Multiplication 149
+should devote more time to basic facts and, if possible, limit problems to include only basic facts 
+the student knows or give students a fact table from which they can derive the answers.
+Component-Skill Errors Many of the component-skill errors in column multiplication are 
+related to addition. Renaming errors may involve either (a) renaming the wrong number or moving a number to the wrong column:
+o2 /
+58 312
+× 9 ×7
+477 2274
+or (b) forgetting to add the renamed number:
+7 1
+58 82
+× 9 × 7
+452 564
+If students make frequent errors in which they rename the ones number to the tens column, 
+the error may be due to a lack of understanding of place value. The teacher would test the students on the tasks in the writing tens numerals format (see Format 5.8: Writing Tens Numerals 
+Using Place Value Concepts). When the students consistently respond correctly to those tasks, 
+such as how many tens in 57, the teacher would reintroduce the multiplication format, beginning 
+with the structured worksheet exercise.
+If students miss many problems because they fail to add the renamed number, the teacher 
+would first present the structured worksheet part of Format 9.3 again and then progress to the 
+less structured worksheet exercise emphasizing the need to rename the added tens.
+Addition mistakes account for a sizable proportion of student errors on multiplication problems. Below are several examples of addition errors:
+a. b. 3 c.5 ° 5
+88 34 28
+× 7 — X_7
+626 296 186
+To confirm that addition is the cause of the error, the teacher may interview the student or ask 
+him to think out loud while working. For example, in problem a, the student added 5 to 56 and 
+obtained the incorrect sum of 62. If students make frequent addition errors, the teacher would 
+place extra emphasis on teaching complex addition facts. Teachers working with older students 
+who have little knowledge of basic addition facts should permit students to use their fingers in 
+computing complex addition facts; however, they should insist on accuracy. Providing additional practice on worksheets that include only complex addition facts would be useful for 
+these students.
+Students often have difficulty with problems that have a zero in the tens column:
+306 
+× 7
+Students may multiply the renamed number:
+24
+306
+× 7
+2382
+or treat the zero as if it were a 1:
+/4
+306
+× 7
+22/2
+
+150 Part ∏ Basic Concepts and Skills
+The remediation procedure for errors on this type of problem begins with testing and, if necessary, teaching times-zero facts: “When you multiply by zero, you end up with zero. What is 
+5 × 0? 8 × 0? 3 × 0?” The teacher would then give students a worksheet containing 10 to 20 
+partially completed problems. On that worksheet, the multiplication in the ones column would 
+be complete and the renamed numeral written above the tens column, as follows:
+4 
+306
+× 7
+<2
+The problems on the worksheet should contain a random order of problems with zero in the tens 
+column, 1 in the tens column, and other numerals in the tens column. About half of the problems 
+should contain zero in the tens column. The teacher would lead the students through several 
+problems beginning with the multiplication in the tens column. After the teacher leads the students through several problems, the students would complete the rest without assistance. Finally, 
+the teacher would have the students independently complete a worksheet similar to the original.
+Errors unique to problems with two multi-digit factors include not writing a zero in the ones 
+column when multiplying by tens:
+46 
+× 24 
+184
+92
+and inappropriately recording the partial products so that numbers are added in the wrong columns:
+425 
+× 37 
+2975 
+13750 
+42455
+Both errors can be identified by closely examining student work.
+To remedy the first error, caused by forgetting the zero, the teacher leads students through 
+about three multiplication problems using Part C of Format 9.4, the structured worksheet presentation for a two-digit factor times a two-digit factor. In Part C, the teacher prompts students to write a 
+zero when multiplying by tens. After students have correctly completed several problems during the 
+structured worksheet presentation of the format, the students are ready to complete the less structured practice. The worksheet for the less structured practice should contain four or five multi-digit 
+problems with a one-digit factor and about 10 to 15 multiplication problems with two-digit factors. 
+Using some problems with single-digit factors provides necessary discrimination practice. Students 
+must remember and apply the rule about zeros correctly rather than write a zero in every problem.
+To remedy errors caused by students’ inadvertently writing numerals in the wrong columns, 
+the teacher should point out the errors to the students and remind them to carefully align the 
+columns. Often, just providing feedback on why the students missed the problems is enough to 
+encourage students to be more careful. However, if students continue to make column alignment 
+errors, the teacher should reintroduce the use of the place value grid or graph paper. The teacher 
+should lead students through working the first couple of problems using Part C in Format 9.4, 
+the structured worksheet, and have the students complete the remaining problems independently.
+Students also may answer problems incorrectly because of an error in adding the partial 
+products. In problem a below, the student failed to rename from the hundreds digit to the thousands digit when adding the partial products. In problem b, the student made a basic addition 
+error (7 + 9 ≠ 18):
+a. 688 b. 688
+× 94 × 94
+2753 3753
+61920 61920
+63672 63872
+
+Chapter 9 Multiplication 151
+Renaming errors often result from carelessness. Teachers should insist that students write 
+neatly. The remediation for renaming errors might involve giving the students a worksheet with 
+about 10 problems. In each problem, the multiplication should be done already. The student’s 
+task is to add the partial products. After the student can perform accurately on this worksheet, 
+the teacher has the student complete the original worksheet independently.
+Strategy Errors Strategy errors indicate that the student simply has not learned the steps in 
+the algorithm. Below are examples of student performance that indicate a strategy error:
+428 32
+×3 × 57
+12624 160224
+The remediation for such errors involves presenting the entire format for the particular problem 
+type, beginning with the structured board presentation. The diagnosis and remediation information is summarized in Figure 9.5.
+FIGURE 9.5 Diagnosis and remediation of multi-digit multiplication errors
+Error Pattern Diagnosis Remediation Procedures Remediation Examples
+Fact Errors
+34 
+a. 156
+V 7
+Student makes an error Provide practice for the student with
+in problems containing 6 × 7.
+the fact 6 × 7.1090
+. 406b.
+4 
+106 Student multiplies the 
+zero as if it were a one.
+Reteach times-zero facts. 1 × 0
+2 × 0× 3 ×__7
+1248 712 3 × 0
+4 × 0
+5 × 0
+6 × 0
+7 × 0
+8 × 0
+9 × 0
+Component-Skill Errors
+34
+r 156 Student renames Present Parts C, D, and E of Format 5.8: 64
+c∙× 7 incorrectly. Writing Tens Numerals Using Place Value × 9
+1090 Concepts. Then present the structured
+8 worksheet from Format 9.3: One-Digit 39
+46 156 Factor Times Two-Digit Factor—Renam­ × 5
+× 3 ×__ 7 ing.
+201 752
+1 
+d. 46
+34
+156 Student does not add Teach complex addition facts and 12 + 1 =
+× 3 × 7 the renamed number provide practice. 15 + 4 =
+148 982 correctly. 32 + 9 =
+21 + 5 =
+1 
+e. 406
+24
+106 Students multiples the Teach times-zero facts and provide prac­ Times-zero facts;
+× 3 × 7 renamed number. tice. Then present the structured work802 1031238 9&2 sheet from Format 9.3: One-Digit Factor
+Times Two-Digit Factor—Renaming. ×_ 7 ×_ 5
+continued
+
+152 Part II Basic Concepts and Skills
+FIGURE 9.5 (continued)
+Error Pattern Diagnosis Remediation Procedures Remediation Examples
+f. 406 106 Student does not Modify Format 9.3: One-Digit Factor Times 103
+× 3 × 7 rename when the Two-Digit Factor—Renaming to include × 5
+1208 702 problem includes a single-digit times three-digit factor
+802
+× 7
+zero. problems with zero in the tens column.
+g. 46
+4
+56 Student does not Present the less structured practice from Include a mix of
+× 23 × 17 write zero in the ones Format 9.4: Two-Digit Factor Times problems with two138 392 column when multiply­ Two-Digit Factor. digit and one-digit
+92 56 ing by tens. factors as the second
+230 448 factor.
+1 4 Student does not align Present the structured worksheet from 35
+k 46h' × 23
+138
+920
+56
+× 17 numerals in columns 
+appropriately, causing
+Format 9.4: Two-Digit Factor Times
+Two-Digit Factor. Provide grid or graph
+× 18
+560 an addition error. paper to the student to support proper 92
+9338 5992 alignment of columns. × 37
+96 Students does not Reteach adding partial products, and 35
+i. × 78 rename when addition then provide a worksheet focused on × 18
+768 partial products, result­ adding partial products for practice.
+926720 ing in an addition error.
+6488 × 37
+Note: After addressing any component-skill error, assess students using problems similar to the ones on which errors were 
+originally made in order to determine if the remediation was successful.
+APPLY WHAT YOU LEARNED j
+Click on the V to answer the questions online.
+1. Describe the problem type each example below represents. List the problems in the order they are 
+introduced. Write the grade level when each type is typically introduced.
+a. 758 b. 9 × 4 = □ c. 3 × 26 d. 32
+× 2 × 2
+e' ×32 f ×37 g∙ ×24 h. 5 × □ = 20
+2. Describe the strategy recommended in this text for introducing the concept of multiplication.
+3. At the beginning of a unit, the teacher tested Paul. His performance on the performance indicators 
+appears below. Specify the problem type with which instruction should begin. Explain your answer.
+Paul
+a. 43
+× 2
+86
+31 
+× 5
+155
+32
+× 4
+128
+b. 35 
+× 5 
+1525
+43 
+× 9
+3627
+17
+× 2
+34
+c. 5 × 35 = 175
+9 × 34 = 296
+7 × 56 = 392
+d. 758 364 534 e. 403 302 105
+× 2 × 5 × 9 X 5 × 5 × 9..... ■■■ 11 1 —..— ■■ ■ ' .. -", I .. I ...... ■...... ___
+1516 1820 4806 2105 1600 1305
+
+Chapter 9 Multiplication 153
+4. Below are 10 problems that appeared on a worksheet that was done independently by the students in 
+Mr. Wilson’s math group. Next to each student’s name are the problems missed by the student. For 
+each student, specify the probable cause or causes of the student’s error. Describe how Mr. Wilson 
+will confirm the cause(s), provide remediation, and assess for mastery.
+24 342 61
+× 37 ×__ 7 × 84
+23
+× 53
+203 60
+× 5 × 9
+21
+× 43
+28
+× 73
+432
+×__ 6
+48
+× 37
+Moniquα Jennifer Peter
+203 48 28 203 60
+×__ 5 ×37 ×73 × 5 × 9
+1105 338 84 1065 549
+1440 1980
+1778 2064
+Shelley Melissa
+24 23 28
+×37 ×53 ×75
+168 69 140
+72 1150 I960
+240 1119 2000
+5. A student makes the following component error on the less structured worksheet presentation:
+7
+43 
+× 9
+2
+Assume this type of error occurs frequently. How would the teacher remediate this error and assess 
+for mastery?
+6. Write the wording the teacher would use in the structured worksheet part of a format in presenting 
+the following problem:
+304 
+× 7
+7. A student’s worksheet assignment contains the following worked problems:
+3 ×^ = 9 2 ×[^]= 6
+What error is the student making? Describe how the teacher would confirm the error, provide remediation, and assess for mastery.
+Format 9.1
+SINGLE DIGIT MULTIPLICATION (See Video Part A)
+TEACHER STUDENTS
+Part A: Pictorial Demonstration
+1. fWr/'te the following boxes on the board.)
+5 5 5
+continued
+
+154 Part II Basic Concepts and Skills
+Format 9.1 (continued)
+SINGLE DIGIT MULTIPLICATION
+TEACHER
+2. We're going to learn a fast way to work problems that talk about the same 
+number time and time again. (Point to each column and ask the following 
+question.) How many in this group?
+Are we talking about the same number time and time again?
+3. When we talk about the same number time and time again, we make a times 
+problem. What number are we talking about time and time again?
+So we write 5. (Write 5.)
+How many groups of 5 do we have?
+To correct: Count the groups of 5. (Point to each group as students count.)
+So I write times 3. (Write × 3.)
+4. Read the problem.
+We can figure out 5 × 3 a fast way. We count by 5 three times: (Point to each 
+group of 5 as you count.) 5,10,15. There are 15 in all.
+5. Let's count by ones and make sure 15 is right. (Point to each individual 
+member as students count.)
+Are there 15?
+So we can count the fast way when we talk about the same number time and 
+time again. (Repeat steps 1-4 with the following boxes.)
+□ □ □ □
+□ □ □ □
+Part B: Analyzing Problems—Reading Partial Problems
+1. (Write these partial problems on the board.)
+5 ×
+10 ×
+2 X
+9 ×
+2. (Point to ×.) This sign tells you to count by. What does it tell you to do?
+3. (Point to 5 ×.) So this tells you to count by 5. What does this tell you to do?
+4. (Point to 10 ×.) What does this tell you to do?
+5. (Point to 2 ×.) What does this tell you to do?
+6. (Point to 9 ×) What does this tell you to do?
+Analyzing Problems—Reading Entire Problems
+7. (Point to 5 ×.) What does this tell you to do?
+(Write 3 after 5 X: 5 x 3.) Now this problem tells you to count by 5 three 
+times. What does this problem tell you to do?
+8. (Point to 10 ×.) What does this problem tell you to do?
+(Write 4 after 10: 4 × 10.) What does this problem tell you to do now?
+9. (Point to 2 ×.) What does this problem tell you to do?
+(Write 5 after 2 X: 2 x 5.) What does this problem tell you to do now?
+10. (Point to 9 ×.) What does this problem tell you to do?
+(Write 4 after 9 X: 9 × 4.) What does the problem tell you to do now?
+STUDENTS
+5
+Yes
+5
+3
+5 × 3
+1, 2, 3, 4 . . .15
+Yes
+Count by
+Count by 5
+Count by 10
+Count by 2
+Count by 9
+Count by 5
+Count by 5 three times
+Count by 10
+Count by 10 four times
+Count by 2
+Count by 2 five times
+Count by 9
+Count by 9 four times
+
+Chapter 9 Multiplication 155
+continued
+TEACHER STUDENTS
+11. Let's start over. (Point to 5 × 3.) What does this problem tell you to do?
+(Repeat step 11 with each problem. Give individual turns to several students.)
+Part C: Structured Board Presentation
+1. (Write this problem on the board.)
+2 × 5 = □
+Count by 5 three times
+2. What does this problem tell us to do? (Point to problem as students read.) Count by 2 five times
+How many times are we going to count?
+So I'll put up five fingers. Watch me count by 2 five times: (Count and touch 
+fingers.) 2, 4, 6, 8, 10.
+3. Now it's your turn to count by 2 five times. How many times are you going to
+5
+count?
+Hold up five fingers.
+5 times
+You're counting by 2 five times. What number are you going to count by?
+Touch a finger every time you count. Counting by 2. Get ready, count.
+2
+(Clap at intervals of 2 seconds.) Students touch an 
+extended finger every 
+time they count: 2, 4, 
+6, 8, 10
+What number did you end with?
+So I'll write a 10 in the box. (Write 10.)
+4. (Write the problem below on the board.)
+2 × 3 = □
+10
+5. What does this problem tell us to do? Count by 2 three times
+How many times are you going to count?
+Hold up your fingers. (Monitor students' responses.)
+3
+What number are you going to count by? 2
+Get ready to count. (Clap at intervals of 2 seconds.) Students touch an 
+extended finger every 
+time they count: 2, 4, 6
+How many did you end with? 6
+So I'll write 6 in the box. (Write 6.) When we count by 2 three times, 
+what do we end with?
+6. (Repeat steps 4 and 5 with 5 × 4 = □, 70 × 3 = □, 2 X 4 = □, 
+and 9 × 3 = □).
+(Give individual turns to several students.)
+Part D: Structured Worksheet
+1. (Give students a worksheet with problems like the following.)
+a. 5 × 3 = □
+b. 10 × 4 = □
+c. 2 × 6 = □
+6
+
+156 Part H Basic Concepts and Skills
+Format 9.1 (continued)
+SINGLE DIGIT MULTIPLICATION
+TEACHER STUDENTS
+2. (Touch problem a.) What does the problem tell you to do?
+How many times are you going to count?
+Hold up your fingers. (Monitor responses.)
+Count by 5 three times 
+3
+Students hold up three 
+fingers.
+What number are you counting by?
+3. Get ready. Count. (Clap at intervals of about 1 second.)
+5
+Students count 5, 10, 
+15, touching each 
+extended finger.
+When you count by 5 three times, what do you end with?
+Write 15 in the box. (Check student work.)
+(Repeat steps 2 and 3 with remaining problems.)
+Part E: Less Structured Worksheet
+15
+1. (Give students a worksheet with a variety of multiplication and addition 
+problems like the following.)
+a. 5 × 4 = □
+b. 5 + 4 = □
+c. 10 × 3 = □
+d. 10 × 5 = □
+e. 10 + 5 = □
+2. Touch problem a. Put your finger under the sign. What does the problem tell 
+you to do, plus or count by?
+Say the problem.
+Work it and write how many you end with in the box. (Monitor student 
+responses.)
+(Repeat step 2 with remaining problems.)
+Count by
+Count by 5 four times
+Format 9.2
+MISSING-FACTOR MULTIPLICATION
+TEACHER STUDENTS
+Part A: Structured Board Presentation—Model and Test Translation
+1. (Write the problem below on the board.)
+5 × □ = 20
+2. Here's a new kind of problem. Here's what it tells us to do. (Point to 
+each symbol as you read.) Count by 5 how many times to end with 20?
+3. (Point to □J
+Does this problem tell how many times we count by 5?
+Right, we have to figure out how many times we count by 5.
+No
+
+(Repeat steps 7 and 8 with 2 × □ = 14, 10 × □ = 30, 9 x □ = 36, 
+2 × □ = 6.)
+Chapter 9 Multiplication 157
+TEACHER STUDENTS
+4. Your turn to read the problem. I'll touch, and you read.
+(Touch ×, then 5, □ =, and 20. Repeat step 4 until students respond 
+correctly.) Count by 5 how many times 
+to end with 20?
+5. Let's work this problem. What are we going to count by?
+Do we know how many times we count?
+I hold up a fist to show that I don't know how many times to count.
+How many are we going to end with?
+6. My turn. Γm going to count by 5 and end with 20. (Begin with a closed 
+fist, then hold up a finger each time you count: 5, 10, 15, 20.)
+I put up a finger each time I counted. Here's how many times I counted. 
+How many?
+So how many fives in 20?
+7. Now it's your turn. Say what the problem tells us to do.
+(Point to 5 x □ = 20 )
+5
+No
+20
+4
+4
+Count by 5 how many times 
+to end with 20
+You have to figure out how many times we count. What do you have 
+to figure out?
+What are you counting by?
+Do you know how many times to count?
+So hold up a fist. What number are you going to end with?
+8. Each time I clap, count by five and put up a finger. (Students are to hold 
+up a finger each time you clap. Clap at 2-second intervals.)
+How many times we count
+5
+No
+20
+Students count 5, 10, 15, 
+20, putting up a finger each 
+time they count.
+How many times did you count by 5?
+I'll write a 4 in the box. (Write 4 in box.)
+4
+Part B: Structured Worksheet
+1. (Give the students a worksheet with the following problems.)
+a. 5 × □ = 20
+b. 2 × □ = 10
+c. 10 × □ = 40
+d. 9 X □ = 18
+e. 5 × □ = 30
+2. Touch problem a. What does the problem tell you to do? Count by 5 how many times 
+to end with 20
+3. What do you have to figure out?
+Put up your fist. What are you counting by?
+What are you going to end with?
+How many times we count
+5
+20
+continued
+
+158 Part II Basic Concepts and Skills
+Format 9.2 (continued)
+MISSING-FACTOR MULTIPLICATION
+TEACHER STUDENTS
+4. Count and put up a finger each time you count. Get ready. Count. 
+(Clap at 2-second intervals.) Students count 5, 10, 15, 
+20, putting up a finger each 
+time they count.
+How many times did you count?
+Write 4 in the box.
+(Repeat steps 2-4 with remaining problems.)
+Part C: Less Structured Worksheet
+4
+1. (Give students a worksheet with an equal mix of regular and missing 
+factor problems.)
+a. 5 × □ = 10
+b. 9 × 3 = □
+c. 2 × □ = 8
+d. 2 x 6 = □
+2. Touch problem a. (Monitor students' responses.)
+3. What does the problem tell you to do? Count by 5 how many times 
+to end with 10?
+4. What are you counting by?
+5. Does the problem tell you how many times to count?
+6. Show me what you hold up.
+7. Work the problem and write the answer in the box. 
+(Repeat steps 2-7 with remaining problems.)
+5
+No
+Students hold up fist.
+Format 9.3
+ONE-DIGIT FACTOR TIMES TWO-DIGIT FACTOR—RENAMING
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the problem below on the board.)
+4 7
+_x _ 5.
+2. Read the problem. 5 × 47
+3. To work this problem, first we multiply 5 × 7
+4. What do we do first? Multiply 5 × 7
+5. Next we multiply 5 × 4 tens. What do we do next? Multiply 5 × 4 tens
+(Repeat steps 2-5 until students respond correctly.) 
+6. What is 5 × 7? 35
+We can't write 35 in the ones column. We must rename. How many tens 
+are in 35? 3 tens
+
+Chapter 9 Multiplication 159
+TEACHER STUDENTS
+I put 3 above the tens column and put a plus sign in front of it to remind us to 
+add those tens.
+Thirty-five has 3 tens and how many ones?
+I write the 5 under the ones column.
++3
+7. Now we multiply 5 × 4 tens. How many tens is 5 × 4 tens?
+8. Now we add the 3 tens we placed above the tens column. What is 20 + 3? 
+Yes, 23 tens. 23 tens is the same as 2 hundreds and 3 tens, so I write 2 
+hundreds and 3 tens in the answer.
++3
+9. What does 5 × 47 equal?
+(Repeat steps 1-9 with the problems below.)
+36 42 34
+X 2 × 9 × 5
+Part B: Structured Worksheet
+1. (Give students a worksheet with the following problems.)
+a. b. 1 
+×
+4
+7
+c.
+×
+4 8
+2
+d.
+×
+7 6
+5
+e.
+×
+3 7
+2
+20
+23
+235
+2 3
+5
+7
+5
+7
+5
+5
+2 5
+2. Read problem a.
+What numbers do we multiply first?
+What is 9 × 5?
+How many tens in 45?
+Write plus 4 over the tens column. How many ones in 45?
+Write the 5 under the ones column.
+3. What numbers do we multiply next?
+What is 9 × 2?
+What do we do now?
+What is 18 + 4?
+Write 22 next to the 5 under the line. What is 9 × 25?
+Read the whole problem.
+(Repeat steps 2 and 3 with remaining examples.)
+Part C: Less Structured Worksheet
+1. (Give students a worksheet with the following problems.)
+9 × 25
+9X5
+45
+4
+5
+9 X 2
+18
+Add 4
+22
+225
+9 × 25 == 225
+a. 35 b. 79 c. 35
+X 5 X 2 + 5— — —
+d. 64 e. 83 f. 83
+X 9 X 5 + 5
+continued
+
+160 Part II Basic Concepts and Skills
+Format 9.3 (continued)
+ONE-DIGIT FACTOR TIMES TWO-DIGIT FACTOR—RENAMING
+TEACHER STUDENTS
+2. Read problem a. 5 × 35
+What type of problem is this?
+(If the problem is addition, tell students to work the problem.)
+Multiplication
+What will you do first? Multiply 5 × 5
+What is 5 × 5?
+Rename the tens in 25 and write the ones.
+25
+3. What numbers do we multiply next? 5 × 3
+Then what do we do?
+Work the rest of the problem. (Pause.)
+Add the 2
+4. What is 5 × 35?
+(Repeat steps 2-4 with remaining problems.)
+175
+Format 9.4
+TWO-DIGIT FACTOR TIMES TWO-DIGIT FACTOR
+TEACHER STUDENTS
+Part A: Order of Multiplying
+1. (Write these problems on the board.)
+5 8
+.× 4 3
+2 7
+2<9 5
+4 2
+× 5_7_
+2. (Point to 58 × 43.) Read the problem.
+Here's how we work multiplication problems with two numbers on the bottom.
+First, we multiply all the numbers on the top by the ones. (Point to 3.) Then we 
+multiply all the numbers on the top by the tens. (Point to 4.)
+3. My turn. (Point to the numerals as you say them.) First we multiply 3 × 8, then 3 × 5, 
+then 4 × 8, then 4 × 5.
+58 × 43
+4. (Point to 3.) What numbers do we multiply first? 3 × 8
+(Point to 3.) What numbers do we multiply next? 3 × 5
+(Point to 4.) What numbers do we multiply next? 4 X 8
+(Point to 4.) What numbers do we multiply next?
+(Repeat steps 2-4 with remaining problems. Give individual turns.)
+4 X 5
+
+Chapter 9 Multiplication 161
+TEACHER STUDENTS
+Part B: Structured Board Presentation
+1. (Point to the problem below.)
+5 8
+× 4 3
+Read the problem.
+2. What numbers do we multiply first?
+3. What is 3 × 8?
+(Point above the tens column.) What number do I write here?
+(Write 2.)
+(Point under the ones column.) What number do I write here? 
+(Write 4.)
+4. What numbers do we multiply next?
+5. What is 3 x 5?
+6. What else do we do?
+What is 15 + 2?
+There are no more numbers on top to multiply, so I write the 17 under the line next 
+to the 4. (Write 17.)
+7. We multiplied 3 × 58. What is 3 × 58?
+I cross out the 2 we wrote above the tens column and the 3 to show we're finished 
+with those numbers.
+×
+1
+5 8
+41
+7 4
+8. Now we multiply 4 tens × 58. Tens numbers have a zero, so we put a zero in the ones 
+column to show we're multiplying by tens. How do we show we're multiplying by tens? 
+(Write 0 under 4.)
+Now we multiply 4 × 8, then 4 × 5. What is 4 × 8?
+(Point above tens column.) What number do I write here?
+(Write 3.)
+(Point next to zero.) What number do I write here?
+(Write 2.)
+3
+×
+5
+4
+8
+1 7 4
+2 3 2 0
+9. Now what numbers do we multiply?
+What is 4 × 5?
+What do we do now?
+What is 20 × 3?
+Where do I write the 23?
+(Write 23.)
+58 × 43 
+3 × 8
+24
+2
+4
+3 × 5
+15
+Add 2 
+17
+174
+Put a zero in the 
+ones column.
+32
+3
+2
+4 X 5
+20
+Add 3
+23
+Next to the 2
+continued
+
+162 Part II Basic Concepts and Skills
+Format 9.4 (continued)
+TWO-DIGIT FACTOR TIMES TWO-DIGIT FACTOR
+TEACHER STUDENTS
+10. First we multiplied 3 × 58 and ended with 2330. Now let's add those numbers and 
+figure out what 43 × 58 equals. What is 4 + 0?
+(Write 4.)
+What is 7 + 2?
+(Write 9.)
+What is 1 + 3?
+(Write 4.)
+What is 0 and 2?
+(Write 2.)
+11. We're finished adding. I'll put in the comma. Where does it go?
+(Write the comma.)
+What does 43 × 58 equal?
+(Repeat steps 1-11 with 22 × 87, 16 × 94, and 35 × 79.)
+Part C: Structured Worksheet
+1. (Give students worksheets with problems such as these.)
+a. 2 8 b. 6 4 c. 8 7
+.213.6. .212.3. 21A⅛
+4
+9
+4
+2
+Between the 2 
+and 4
+2,494
+2. Touch problem a on your worksheet. (Pause.) Read the problem.
+What numbers are you going to multiply first?
+What is 6 × 8?
+Write it; don't forget to rename. (Monitor responses.)
+3. What do you multiply next?
+What is 6 × 2?
+What do you do now?
+What is 12 + 4?
+Write 16 next to the 8. (Monitor responses.)
+4. Are you done multiplying by 6?
+Cross out the 6 to show you're finished. (Monitor responses.)
+5. You multiplied 6 × 28. Now multiply 30 × 28. What do you write to show that you 
+are multiplying by tens?
+Write it. (Monitor responses.) What numbers do you multiply now?
+What is 3 × 8?
+Write the 4 next to the zero. Write the 2 over the 2. (Monitor responses.)
+6. Now what are you going to multiply?
+What is 3 × 2?
+What do you do now?
+What is 6 + 2?
+Write it. (Monitor responses.)
+36 × 28 
+6 × 8
+48
+6 × 2
+12 
+Add 4
+16
+Yes
+zero 
+3 × 8 
+24
+3 × 2
+6
+Add 2
+8
+
+Chapter 9 Multiplication 163
+TEACHER STUDENTS
+7. You multiplied 6 × 28 and 30 × 28. Add the sums to see what 36 × 28 equals, then 
+put in the comma. (Pause to allow students to add.)
+8. What is 36 × 28?
+(Repeat steps 2-8 with several examples.)
+Part D: Less Structured Practice
+1008
+1. (Give students worksheets with a mix of multiplication problems with two-digit and 
+one-digit factors and some addition problems. Use the following prompts as students 
+work through the problems.)
+2. Touch problem____ . (Pause.) Read the problem.
+What kind of problem is this?
+(If the problem involves addition or multiplication with one-digit factors, have the 
+students solve independently. If the problem involves multiplication with two-digit 
+factors, use the prompts in steps 2-3.)
+3. What numbers do you multiply first?
+What numbers do you multiply next?
+What numbers do you multiply next?
+What numbers do you multiply next?
+4. What are you going to do just before you start to multiply by 5 tens?
+Right, remember to write the zero. Work the problem.
+(Repeat with remaining problems.)
+Write a zero

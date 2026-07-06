@@ -30,3 +30,6 @@ api/assets/seed.json
 *.njsproj
 *.sln
 *.sw?
+
+# Build-generated (api prebuild exports it from src/data/seed.ts)
+api/assets/seed.json

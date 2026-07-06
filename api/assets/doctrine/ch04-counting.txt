@@ -1,0 +1,644 @@
+Direct Instruction Mathematics (5th ed.), Stein, Kinder, Silbert & Carnine — Chapter: Counting
+
+Chapter
+Counting
+LEARNING OUTCOMES
+4.1 Identify four different types of counting skills and discuss the importance 
+of each.
+4.2 Contrast the use of pictorial representations and manipulatives to introduce 
+counting.
+4.3 Outline instructional strategies to teach counting, including rote counting, 
+counting from numbers other than one, and skip counting.
+SKILL HIERARCHY
+Counting skills not only are important in and of themselves, but they are also important prerequisite skills for many problem-solving strategies. The Instructional Sequence and Assessment 
+Chart outlines a recommended instructional sequence for the following counting skills: rote 
+counting, rational counting, counting from a number other than one, skip counting, and ordinal 
+counting.
+Rote counting is identifying number names in sequence (1, 2, 3, 4, 5, 6). We suggest that 
+during kindergarten students are taught to count to 100; first grade students to 1,000; and second 
+grade students into the thousands.
+Rational counting involves coordinating counting with the touching of objects to determine the quantity of a particular group. Rote counting is a prerequisite skill for rational counting. 
+We recommend that students be able to rote count to 10 before rational counting is introduced. 
+Initial rational counting exercises involve counting a single group of objects. Later exercises 
+involve counting two groups of objects, a prerequisite skill for early addition.
+Counting from a number other than one is also a prerequisite skill for addition. For example, students begin with 6 and then count 7, 8, 9. In early addition problems such as 6 + 3, 
+students would be taught to say 6, extending the pronunciation for a few seconds, and then count 
+markers for the second addend: sssiiixxx, 7, 8, 9.
+
+26 Part II Basic Concepts and Skills
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Note: For performance indicators involving writing, if a student fails the written test, the teacher should check student 
+performance orally.
+Grade Level Problem Type Performance Indicator
+K Counting by ones from 1 through 30 Verbal test: teacher asks students to count to 30.
+K Counting a group of lines Teacher writes four lines, asks how many lines. Repeat with 
+seven lines, five lines.
+κ Counting two groups of lines Teacher writes ∣ ∣ ∣ ∣ ∣ ∣ ∣ ∣ ∣ and asks, "How many lines 
+all together?"
+κ Counting from a number other than 1 Verbal test: teacher asks students to begin counting at 6, 
+at 11, at 8.
+κ Ordinal counting first through tenth Verbal test: teacher draws 10 lines on board, asks the 
+students to touch third line and seventh line.
+κ Counting backward from 10 to zero Verbal test: teacher asks students to count backward from 
+10 to zero.
+κ Counting by ones from 1 through 100 Write the number that comes next:
+26,_____ ,_____ , 29,_____
+46_____________ _ 49______
+κ Skip counting by 10 Verbal test: teacher asks students to count by 10s to 100.
+1 Skip counting by 2, 5, 100 Fill in the missing numerals:
+2, 4, 6,_____ _ ___________________
+5, 10, 15______ _ ___________________
+100, 200, 300,_____ ,_____ _ _____________,_____ ,
+1 Counting by ones 100 to 999 Write the numeral that comes next:
+599,______299,_____
+499______ 699,_____
+889_______ 704_____
+349,_____  509,_____
+2 Skip counting Fill in the missing numerals:
+9, 18, 27_____________________ ______ _ _____________
+4, 8, 12,_____ ,____________ _ ______,_____ _ ______
+7, 14, 21,_____ ,_____ ,_____ _____________ _ ______
+3, 6, 9_____________ _ ______ _ ______________ ______,
+8, 16, 24_____________________ ___________________ _
+6, 12, 18_____________ _ ___________________ _ ______,
+2 Counting by ones 1,000 to 9,999 Write the numeral that comes next:
+3,101______  2,529______
+5,499______  7,308,_____
+3,999,_____  7,999______
+
+Chapter 4 Counting 27
+Skip counting is counting in which the students say multiples of a base number. For example, 
+when counting by fives, students say 5, 10, 15, 20, 25, 30. We recommend that skip counting by 
+tens be taught early to facilitate teaching rote counting to higher numbers. From skip counting, 
+students learn that 40 follows 30; therefore, they more easily learn to say 40 after 39. Similarly, 
+they learn to say 50 after 49, 60 after 59.
+Skip counting by tens is taught after students can rote count to 30. Skip counting by twos 
+and fives is taught later in first grade. Other skip-counting series are taught in second grade. 
+Learning the skip-counting series in early grades also facilitates solving basic multiplication 
+problems. For example, 2 × 3 involves skip counting by twos three times and results in 6 (see 
+Chapter 9, “Multiplication”).
+Ordinal counting, counting associated with position, is introduced when the students have 
+mastered rational counting. Ordinal counting is taught because of the common use of ordinal 
+numbers. Teachers often use ordinal numbers in directions (“Touch the third problem.”).
+CONCEPTUAL UNDERSTANDING ∙*∙∙∙∙.∙
+Many commercial programs do not differentiate between teaching rote counting and teaching 
+rational counting. We recommend teaching rote counting without the use of manipulatives or 
+visual representations prior to teaching rational counting (see Instructional Procedures for teaching Rote Counting). However, we recommend using pictorial representations of objects when 
+introducing rational counting. Teachers can better monitor student performance during group 
+instruction if the students are touching and counting pictures, as opposed to managing the students’ use of manipulatives. As soon as students are proficient in counting pictures of objects, 
+they can more easily apply their skills to different types of manipulatives.
+INSTRUCTIONAL PROCEDURES ∙∙∙β∙∙..
+The teaching procedures for the major counting skills appear in this section. The skills are listed 
+in their relative order of introduction. Rote counting by ones to 30 is discussed first. Rational 
+counting is discussed next. Rational counting would be introduced when students can rote count 
+to about 10. Thereafter, daily lessons would include both rote and rational counting exercises. 
+After students learn to count one group of objects, they count two groups of objects and determine the total quantity. Next, procedures for teaching students to count from numbers other than 
+one, to ordinal count, to rote count between 30 and 100, to rote count between 100 and 999, and 
+to skip count are discussed.
+Rote Counting by Ones to 30
+On the first day of instruction, the teacher tests the students to determine how high they can rote 
+count without error. The teacher pretests the students individually simply by asking them to count 
+as high as they can. The teacher records the highest number to which each student counts. The performance of the group determines which new numbers are introduced. The teacher notes the lowest 
+number correctly counted to by members of the group and adds the next two or three numbers in 
+the counting sequence. For example, if a student counts to 11 on the pretest, the new part would be 
+11, 12, 13 (the last number said correctly on the pretest, 11, and the next two numbers, 12 and 13). 
+The teacher should test students at the beginning of each lesson to determine whether new numbers 
+can be introduced. If the students count correctly, the teacher introduces several new numbers. If 
+the students make errors, the teacher repeats the format with the previously introduced numbers.
+The format for introducing new numbers in the counting sequence appears in Format 4.1: 
+Introducing New Numbers. The teacher first tests students on previously introduced numbers 
+(1-10). Next, the teacher models counting from 1 to 13, then models just the new part, 11, 12, 13 
+(see step 2 in Format 4.1). In step 3, the teacher leads the students in saying the new part. When 
+introducing new numbers, during both the model and lead (steps 2 and 3), the teacher should 
+emphasize the new numbers by saying them in a louder voice so that students are always hearing 
+a correct answer. When the students appear able to say the new part by themselves, the teacher 
+
+28 Part II Basic Concepts and Skills
+tests (step 4), then has them say the entire counting series from 1 through the new part (step 5). 
+The students should repeat the counting sequence until they say it correctly several times in 
+a row. Providing sufficient practice for students to count correctly several times is important 
+to facilitate retention. Teachers should not forget to provide individual turns, as well. Finally, 
+teachers should give a delayed test to ensure that students have mastered the sequence. 
+Summary Box 4.1 outlines the critical steps in the teaching format.
+The teacher often must provide practice for students in counting at a lively pace. To do 
+this, she uses a model-lead-test presentation, modeling how fast she wants the students to count. 
+Counting at a lively pace helps keep students attentive. In future lessons, as the students become 
+more proficient, the rate should be increased. Some students may need 15 to 20 repetitions 
+before they can say a new part of the counting sequence correctly. If teachers provide adequate 
+repetition during the first weeks of instruction, they will find that they save time in later weeks. 
+When students can count familiar numbers at a lively pace, the teacher introduces new numbers 
+in the counting sequence.
+When presenting a counting task, the teacher must be quite careful not to give the students 
+inappropriate cues. For example, some teachers have a tendency to count quietly when students 
+are supposed to be counting alone (steps 4 and 5). Sometimes teachers just move their lips, 
+inappropriately prompting the students to say the next number, precluding them from answering 
+independently. If a teacher finds that a number of students can count correctly with the group 
+but cannot perform the counting task individually, the teacher might be prompting unnecessarily 
+during group instruction.
+Correcting Errors Teachers must be careful to correct all student errors. If students leave out 
+a number (counting 1, 2, 3, 4, 6), they should be stopped immediately and the teacher should 
+model the “hard part” by saying four numbers, beginning with two numbers before the missed 
+number (3, 4, 5, 6). Next, the teacher should lead the students on the hard part, test them on the 
+hard part, and then have them begin counting again from 1, which will serve as a delayed test.
+The teacher should be quite careful when making this correction. If a counting error is corrected inappropriately, students may become quite confused. The mistake teachers should avoid 
+is saying the skipped number after the student has made the error. For example, the student says, 
+“1, 2, 3, 4, 6,” and the teacher says, “5.” What the student hears is “1, 2, 3, 4, 6, 5.” The teacher 
+can avoid this mistake by saying “stop” when a student makes an error and then modeling the 
+entire hard part. The teacher should repeat a rote counting exercise until students can respond 
+correctly to the complete series multiple times without errors. If the teacher does not immediately correct the errors and provide sufficient practice, students are less likely to remember the 
+sequence the next day.
+Mastering rote counting requires even more practice for struggling students. One way to 
+prevent students from becoming frustrated while practicing counting is to spend only 2 to 3 minutes 
+on rote counting tasks at any one time and present those counting tasks several times during a 
+lesson. This distributed practice tends to be more effective than spending 10 to 15 minutes on 
+counting all at once. Also, counting practice should not be restricted to the instructional time 
+allotted for mathematics. The teacher may have students practice counting when they are lining 
+up for recess, just before they go to lunch, during opening exercises in the morning, or during
+[ BOX 4.1 ___________________
+Rote Counting: Introducing New Numbers into 
+a Counting Sequence
+1. Teacher tests students on the previously introduced counting sequence.
+2. Teacher models counting sequence, emphasizing new part.
+3. Teacher models and tests students on the new part of the sequence until students can say the new 
+part correctly three times in a row.
+4. Teacher tells students the number they will be ending with.
+5. Teacher tests students from the beginning of the sequence through the new part.
+6. Teacher practices new counting sequence frequently throughout the day.
+'SUMMARY.
+
+Chapter 4 Counting 29
+the last 5 minutes of class. Finally, the teacher should treat counting as a fun exercise. One way 
+this can be done is to incorporate game-like activities into counting exercises; for example, have 
+students count one time with their hands on their knees, the next time with hands on their heads, 
+and so on.
+Rational Counting: One Group
+Rational counting is the one-to-one correspondence of touching objects while counting. We 
+recommend that teachers initially use lines or illustrations of objects to teach rational counting 
+skills for reasons of efficiency. The preskill for rational counting is rote counting. The initial 
+exercises in rational counting can begin when the students can rote count to 10.
+Format 4.2: Rational Counting has two parts. In Part A, the teacher touches lines as 
+the students count and then asks what number they ended with. In Part B, the students count 
+illustrations of objects on their worksheets. The objects in the illustrations in Part B should 
+be spaced sufficiently so that the students do not become confused about which object they 
+are touching. The students begin the task by pointing at, not touching, the first object. The 
+teacher signals by saying, “Get ready,” and then claps. If the students are already touching the 
+first object, they might touch the second object when they hear the clap. The teacher claps at 
+about 1-second intervals. Note that clapping too fast or at an unpredictable rate might result in 
+coordination errors.
+Monitoring student performance is particularly critical in this format. Since coordinating 
+touching and counting is the key behavior, listening to the students count is not sufficient. When 
+the skill is first taught, the teacher must repeat the task until he has watched each student touch 
+objects while counting. If students do not begin at the first picture, they will make mistakes. 
+Note that during step 1 of Part B, the teacher demonstrates that counting can be done from left 
+to right or right to left. However, to facilitate monitoring, we recommend that all students count 
+from left to right.
+Correcting Errors Students may make coordination or rote counting errors. If a student 
+makes a coordination error, saying the number before touching the object, the teacher tells the 
+student to count only when touching an object. The teacher then repeats the task, saying, “Go 
+back to the first object and point to it.” The teacher checks that students are pointing correctly 
+and then repeats the task. As with all corrections, after an error is made, a student should 
+repeat the task until she performs it correctly several times in a row. If a student has difficulty 
+coordinating counting and pointing, the teacher can slow the cadence and prompt the student 
+by taking the student’s hand, counting with her, and moving the student’s index finger from 
+object to object. The teacher may need to repeat this procedure several times before retesting 
+the student by having her touch and count the objects without assistance. If students make 
+many rote counting errors (counting 1, 2, 3, 5, 6), the teacher should delay rational counting 
+and provide extra practice on rote counting.
+Practice and Review Exercises in counting objects on worksheets should be done daily for 
+several weeks. After students can quickly and accurately count lines and pictures of objects, they 
+may be given manipulatives to count. Initially, the objects can be arranged in a row, which makes 
+counting manipulatives easier. Counting objects in rows is like counting pictures in rows. After 
+students can count objects in rows, objects can be placed more randomly in front of students.
+Rational Counting: Two Groups
+Counting two groups of lines is introduced when students are able to count a single group of six 
+to eight lines. The format for counting two groups of lines teaches students the function of the 
+word “all” and prepares them for addition. When students first add, they count two groups of 
+lines—“all” of the lines. The format for counting two groups appears in Format 4.3: Counting 
+Two Groups of Lines. In Part A, the teacher draws two groups of lines on the board and has the 
+students count the lines in the first group, count the lines in the second group, and then count all 
+of the lines in both groups. Part B is a worksheet exercise in which the students count two groups 
+of objects on their worksheets.
+
+30 Part II Basic Concepts and Skills
+Correcting Errors The error students are likely to make in Part A occurs when they are 
+asked to count all of the lines. After counting the lines in the first group, a student is likely 
+to say “one” for the first line in the second group instead of continuing to count. To correct, 
+the teacher models and tests students on that step and then repeats from step 2. For example, 
+if in counting the lines in this diagram Illi II, the student counts 1, 2, 3, 4, 1,2, the teacher 
+models correct counting by saying, “When we count all of the lines, we keep on counting. 
+My turn: 1, 2, 3, 4, 5, 6.” The teacher then tests the students on counting all of the lines and 
+repeats steps 2-5. Counting all of the lines independently in step 5 serves as a delayed test 
+for the original task.
+Practice and Review Once students are proficient at counting one group of pictures, many 
+practice opportunities can be provided for counting manipulatives and classroom objects. 
+Students can count the windows in the room, the students at each table, or the pencils in a 
+box as the teacher points or touches. Paired practice can be provided by having one student 
+drop objects or counters into a container while another counts. Roles then are reversed as the 
+other student removes objects one at a time while the first student counts. Students can count, 
+rearrange, and recount the same group of objects.
+Once students are proficient at counting two groups of pictures, they can be given practice counting two groups of objects. Teachers can pose questions that prepare students for later 
+problem-solving applications. For example, the teacher arranges a group of three girls and a 
+group of five boys at the front of the class. “How many girls in this group?” “How many boys in 
+this group?” “Now let’s count all of the children.” “How many children in all?”
+Counting from Numbers Other Than One
+Counting from numbers other than one saves time when teaching rote counting to higher numbers. If students can start at numbers other than one, teachers can focus on the new parts of the 
+number sequences. For example, if students can count to 32 and the teacher is introducing rote 
+counting to 35, the teacher would have students practice counting from 30 (30, 31, 32, 33, 34, 
+35) rather than starting from one. A second reason for teaching counting beginning at a number 
+other than one is that this counting skill is a preskill for the early addition strategy. Students 
+solve a problem such as 4 + 3 = □ by starting to count from 4 and then counting each line in 
+III 
+the second group: 5, 6, 7.
+Format 4.4: Counting from Numbers Other Than One shows how to teach students to 
+count beginning from a number other than one. This format is introduced when students can rote 
+count to about 15. The format contains two parts. The first part teaches students the meaning of 
+the term “get it going.” (When the teacher says, “Get it going,” the students say the designated 
+number, holding the number as long as the teacher signals; (4 is said, “ffoouurr.”) The signal 
+used is quite different from signals used in other rote counting tasks. To prompt the students to 
+say the number for a longer time, the teacher signals by moving her hand in a circular motion. 
+(See picture of hand signal.) The students are to begin saying the number as the teacher begins 
+the signal (moving her finger) and to stop saying the number when the teacher stops the signal 
+(dropping her hand). The purpose of this get-it-going signal is to better enable the students to 
+respond in unison.
+When presenting Part B, the teacher should present a set of at least three examples. Initially, 
+the examples all should be less than 10. The exercise is repeated until students respond correctly 
+to the entire set, which increases the likelihood that they can generalize the skill to other numbers. Responding correctly to an entire set requires that the teacher repeat all of the examples in 
+the set until the students can respond to them consecutively with no errors. Students will need 
+several repetitions before they master an entire set. If high expectations are maintained initially, 
+the amount of practice needed to master subsequent sets will be reduced.
+
+Chapter 4 Counting 31
+Format 4.4A/B:
+Counting from
+Numbers Other Than 1
+Watch how Michaela demonstrates the get-it-going signal 
+and uses it to teach counting 
+from a number other than one.
+Correcting Errors Sometimes students make the error of starting over at 1—:for example, 
+“ffoouurr, 1, 2, 3, 4.” The teacher corrects by modeling and then leading the students several 
+times emphasizing the next number in the sequence. However, if the students continue to make 
+errors, the teacher can introduce a procedure in which she counts quickly from 1 to the get-it- 
+going number and then signals for the students to join her. For example, the teacher would say, 
+‘TH start counting and when I signal, you count with me: 1, 2, 3 (signal), ffoouurr, 5, 6, 7, 8, 9.” 
+The teacher responds with students several times then tests them for mastery. After the students 
+begin responding correctly to several consecutive examples, they no longer need the prompt of 
+beginning the sequence at 1.
+Ordinal Counting
+Ordinal counting involves saying the number associated with a relative position, such as first, 
+second, third, fourth, fifth, and sixth. Ordinal counting is introduced when students can rote 
+count to 15 and can count a group of objects. A model-lead-test-delayed test procedure is used 
+to introduce ordinal counting. Teachers may introduce ordinal counting by having children participate in a race, after which the teacher discusses the positions of the runners: “Who came in 
+first? Who came in second?” The teacher would then model and test various ordinal counting 
+sequences.
+Counting by Ones from 30 to 100
+The procedure for counting by ones from 30 to 100 should demonstrate the relationship between 
+each tens grouping; that is, each decade has a sequence in which the numerals 0, 1, 2, 3, 4, 5, 
+6, 7, 8, 9 appear in the ones column: 40, 41, 42, 43, 44, 45, 46, 47, 48, 49. Two preskills related 
+to counting higher numbers are rote counting beginning at a number other than one and skip 
+counting by tens (10, 20, 30, 40, 50, 60, 70, 80, 90, 100), which is discussed later in the chapter.
+The format for counting numbers from 30 to 100 is similar to Format 4.1: Introducing 
+New Numbers for introducing new numbers in the early counting sequence with two modifications. First, the new part begins at a tens number ending in 7 and continues through the next tens 
+number ending in 2 (27, 28, 29, 30, 31, 32). Starting at a higher number (28 or 29) gives students 
+too little time to prepare for transition to the next decade. Starting at the beginning of the decade 
+(21, 22) makes the task time-consuming. Second, instead of testing the students on counting 
+from one, the teacher has them count from a number approximately 10 to 20 numbers lower than 
+the new part in order to save additional time.
+The first exercises should teach students to count from the thirties to the forties. Counting 
+from the forties to the fifties and higher should be introduced several days later or whenever 
+students master the lower numbers. After students practice counting through a new decade for 
+2 days, the examples are modified daily to promote generalization. For example, students might 
+count from 27 to 42 one day, from 25 to 47 the next, and from 27 to 49 the next.
+Counting Backward
+Once students can count to 50, counting backward can be introduced. Counting backward is an 
+important preskill for some beginning subtraction strategies. Students initially learn to count 
+backward from 5, then they are introduced to counting backward from increasingly higher numbers. A beginning exercise may have the teacher write a number line from 0 to 5:
+•-------∙ .......... ♦---- - →-------+........... ■+—∖
+0 1 2 3 4 5
+The teacher models, leads, and tests on counting backward while touching the numerals on 
+the number line. Numerals then may be erased one at a time; each time the students count backward from 5. Ideally, the teacher provides delayed tests throughout the day. If students perform 
+the sequence correctly the next day with no visual prompt, two or three more numbers may be 
+added to the counting backward sequence.
+
+32 Part II Basic Concepts and Skills
+Counting Between 100 and 999
+Students are usually taught to count from 100 through 999 during first grade. First, students are 
+taught to count by hundreds from 100 to 1,000. This hundreds skip-counting series is usually 
+quite easy for students to learn, requiring only a few days of practice. Once students can count 
+by ones through 99 and by hundreds from 100 to 1,000, the teacher can introduce counting by 
+ones in the hundreds numbers. We recommend using a three-stage procedure. In the first stage, 
+the teacher has students count a single decade within a single hundred (350-359). The teacher 
+uses a model-lead-test-delayed test procedure on four to five sets of examples each day. Examples 
+similar to the following set are presented daily until students demonstrate mastery:
+350, 351, 352, 353, 354, 355, 356, 357, 358, 359
+The second stage introduces students to making the transition from one decade to the 
+next. An example set should include several series extending from a number with 5 in the ones 
+column to the next number in the counting sequence that has 5 in the ones column (325-335). 
+Examples similar to those below are presented daily until students demonstrate mastery. 
+Lower-performing students may require 2 to 3 weeks of practice.
+785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795
+The third stage focuses on the transition from a hundreds series to the next hundreds series. 
+The example set should include several series extending from a hundreds number ending with 
+95 to the next number in the counting series that has a 5 in the ones column (495-505). A daily 
+lesson would include examples like the following:
+495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505
+Practice and Review After the students have mastered transitioning from a hundreds series 
+to the next, review can be provided through written worksheets in which the teacher writes 
+a numeral on a worksheet with 10 spaces following it. The students are to fill in the next 10 
+numerals. For written exercises, teachers should be careful to use number sequences that involve 
+only those numbers students can write accurately from dictation.
+Skip Counting
+Skip counting refers to counting each number of a specified multiple. When a student skip 
+counts by fives, the student says, “5, 10, 15, 20, 25, 30, 35, 40, 45, 50.” When skip counting by 
+eights, the student says, “8, 16, 24, 32, 40, 48, 56, 64, 72, 80.” Throughout this book, we refer to 
+a skip-counting sequence as a count-by series. Knowledge of the count-by series for multiples of 
+2, 3, 4, 5, 6, 7, 8, 9, and 10 is an important preskill for the memorization of basic multiplication 
+and division facts. Students should learn to count 10 numbers for each series except fives: 2 to 
+20, 3 to 30, 4 to 40, 6 to 60, and so on. Students should learn to count by fives to 60 because 
+telling time requires this skill. Teachers also may want to teach counting by twenty-fives to 100 
+as a prerequisite to counting money.
+We recommend introducing the tens count-by series first because knowledge of this series 
+is a preskill for rote counting to 100. Counting by tens is typically introduced after students can 
+rote count by ones to about 30, usually several months into kindergarten. The next count-by 
+series, the twos, is not introduced until the students have mastered counting by tens. This may be 
+several weeks later. Thereafter, a new series may be introduced when students can say each of 
+the previously introduced series accurately and fluently.
+We suggest teaching the count-by series cumulatively in the following sequence: 10, 2, 5, 9, 
+4, 25, 3, 8, 7, 6. This order is designed to separate those count-by series that contain many of the 
+same numbers. For example, several numbers in the fours series also appear in the eights series: 
+4, 8, 12, 16, 20, 24. Students may begin counting by fours and switch to eights when they come 
+to 16, 24, or 32 (4, 8, 12, 16, 24, 32, 40). The chances of making that error are reduced when the 
+two series are not introduced consecutively.
+
+Chapter 4 Counting 33
+©
+Format 4.5A:
+Count-By
+Watch Michaela's clear point- 
+and-touch signal.
+O
+ Format 4.5B: 
+Count-By
+Watch how Michaela corrects 
+Jerone's error and brings the 
+group to mastery.
+Format 4.5: Count-By includes two parts. Part A demonstrates to students that they end up 
+with the same number whether they count by ones or count by another number such as twos or 
+fives. It is also intended to show that counting by a number other than one can save time.
+Part B is designed to teach students to memorize the various count-by series and includes a 
+review of previously introduced count-by series. Two or three previously taught series should be 
+reviewed daily.
+When teaching the count-by series, the teacher uses a model-lead-test-delayed test procedure, saying the numbers of the new series alone, saying the numbers of the new series with 
+the students, and finally having the students say the numbers themselves. Teachers will need to 
+adjust how many numbers in a given series they introduce based on their students’ performance. 
+Teachers working with instructionally naive students may introduce only the first three numbers 
+of a series (9, 18, 27), while teachers working with more experienced students might introduce 
+five or six numbers (9, 18, 27, 36, 45).
+On the second day of instruction on a series, the teacher tests the students on the part of the 
+series taught during the previous lesson. If the students make an error, the teacher repeats 
+the model-lead-test-delayed test procedure from steps 2 and 3 of Part B. If the students know the 
+part of the series previously taught or require just a couple of practice opportunities to say the 
+previously taught part correctly, the teacher introduces the next several numbers of the count-by 
+series. For example, if students have been previously taught the nines series to 36 (9, 18, 27, 36), 
+the new part would include 45 and 54. The teacher uses a model-lead-test-delayed test procedure 
+beginning with 9 and emphasizing the new part (9, 18, 27, 36, 45, 54).
+Practice and Review As with any rote counting task, adequate repetition must be provided 
+for student mastery. A teacher may have to lead lower-performing students five to ten times 
+through a series until they can say it fluently without errors. When leading students, the teacher 
+should initially lead with a strong voice, particularly when saying difficult parts of a counting 
+sequence. The purpose of using a voice emphasis is to ensure that all students are hearing the 
+correct response and to prevent them from following the lead of students who may be responding 
+incorrectly. A brisk rhythm should be established by the teacher’s tapping his foot or clapping 
+his hands to make mastering the series easier. Additional practice on previously taught series 
+also can be provided through peer tutoring or other partner practice activities. A new series is 
+introduced only when students know all of the previously introduced series.
+Correcting Errors Count-by errors are corrected by following the model-lead-test-delayed 
+test correction procedures. When the teacher hears an error, he immediately stops the students, 
+models the hard part (the two numbers just before the missed number and the one number following the missed number), leads the students on the hard part several times, tests the students 
+on the hard part, and then has them say the entire series from the beginning. For example, if 
+students count “8, 16, 24, 32, 40, 48, 54,” the teacher stops them as soon as he hears 54 instead 
+of 56. Next, he models, leads, and tests on the hard part: 40, 48, 56, 64. After students perform 
+acceptably on the test of the hard part, the teacher has the students count from the beginning, 
+which serves as a delayed test.
+'summary j BOX 4.2
+Skip Counting: Introducing a New Count-by Series
+1. Teacher writes part of the new count-by series on the board and models saying the series. (The 
+teacher determines how much of the series to introduce at once based on previous performance 
+of the students.)
+2. Teacher leads the students in reading the new series from the board.
+3. Teacher gradually erases numbers in the series as students practice saying the series.
+4. Teacher tests students on saying the series from memory.
+5. Teacher alternates practice with previously introduced series and the new series as a delayed test.
+
+34 Part II Basic Concepts and Skills
+APPLY WHAT YOU LEARNED
+Click on the V to answer the questions online.
+1. Identify four different types of counting skills and discuss the importance of each.
+2. Contrast the use of pictorial representations and manipulatives to introduce counting.
+3. When counting from 1 to 10, a student counts “5, 6, 7, 9.” Immediately after the student says “9,” the 
+teacher says “8” to correct her. What is the problem with this correction? What should the teacher say 
+and do? Give specific teacher wording.
+4. Two days ago, the teacher introduced rote counting to 16. At the beginning of today’s lesson, the 
+teacher tests the students and they can all count to 16. What should the teacher do for the rote counting exercise today? What if the students had not been able to count to 16?
+5. The teacher tells the students to count to 45. A student counts correctly until 39 and then says 50. 
+What should the teacher say to correct the error?
+6. When counting this group of Unes, I I I I I, a student ends up with 8. What are two possible causes of 
+the error? How would the correction procedures differ?
+Format 4.1
+INTRODUCING NEW NUMBERS
+TEACHER STUDENTS
+1. You are going to count and end up with 10. What number will you end 
+up with? 10
+Start at 1, get ready, count. 1, 2, 3, 4, 5, 6,
+2. Γm going to count and end up with 13. What am I going to end 
+up with?
+7, 8, 9, 10
+13
+Yes, 13. Listen: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13. (Quickly count to 
+10 and then emphasize 11, 12, 13.) Listen to the new part: 11, 12, 13.
+3. When I drop my hand, say the new part with me. (Extend pronunciation 
+of 10.) Teeennn (drop hand and respond with students), 11,12,13. 11, 12, 13
+Again. Teeennn (drop hand), 11, 12, 13. 11, 12, 13
+(Repeat until students respond correctly several times in a row.)
+4. Say the new part all by yourselves: teeennn (drop hand). 11, 12, 13
+5. Now you're going to count and end up with 13. What number 
+will you end up with? 13
+Starting at 1, get ready, count. 1, 2, 3, 4, 5, 6,
+(Give individual turns.)
+7, 8, 9, 10, 11, 
+12, 13
+
+Chapter 4 Counting 35
+Format 4.2
+RATIONAL COUNTING
+TEACHER
+Part A: Structured Board Presentation
+1. (Draw four lines on the board.)
+My turn. Every time I touch a line, I count. Watch. (Touch lines at 
+1-second intervals.) 1, 2, 3, 4.
+What number did I end with?
+(Repeat step 1 with seven lines.)
+2. (Draw six lines on the board.) Every time I touch a line, you count.
+(Point to left of line.) Get ready.
+(Touch lines from left to right at 1-second intervals as students count.)
+(If students count before you touch a line, tell them:
+Watch my finger. Count only when I touch a line.)
+3. What number did we end with?
+4. So, how many lines are there?
+5. (Repeat steps 2-4 with three lines, then seven lines. Give individual 
+turns to several students.)
+Part B: Structured Worksheet Presentation
+Sample worksheet item:
+STUDENTS
+4
+1, 2, 3, 4, 5, 6
+6
+6
+1. (Hold up a worksheet, and point to a group of objects.)
+We're going to count all the objects. Watch me count. (Touch the objects 
+from left to right and count.) 1, 2, 3, 4, 5.
+Watch me count again. (Touch objects from right to left and count.) 
+1, 2, 3, 4, 5.
+2. Everyone, hold your finger over the first picture (Check to see that all 
+students are pointing to but not touching the appropriate picture.)
+Each time I clap, you touch an object and say the number. Get ready. 
+(Clap one time per second. Count with students while monitoring their 
+touching.) 1, 2, 3, 4, 5
+3. All by yourselves, you're going to count the pictures. Hold your finger 
+over the first picture. (Check.) Get ready. (Clap one time per second.) 
+How many lines are there?
+4. (Repeat steps 2 and 3 with other examples. Give individual turns 
+to several students.)
+1, 2, 3, 4, 5
+1, 2, 3, 4,5
+5
+
+36 Part II Basic Concepts and Skills
+Format 4.3
+COUNTING TWO GROUPS OF UNES
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following lines on the board.)
+Here are two groups of lines. (Touch the first group.) Here is the first 
+group. (Touch the second group.) Here is the second group.
+2. Let’s count the lines in the first group. (Touch as students count.)
+How many in the first group?
+3. Let's count the lines in the second group. (Touch as students count.)
+How many in the second group?
+4. Now let's count all the lines. You count the lines in the first group, and 
+then you keep on going and count the lines in the second group. (Touch 
+as students count.)
+5. How many lines in all?
+(Repeat with additional examples.)
+Part B: Structured Worksheet Presentation
+1, 2, 3, 4, 5
+5
+1,2,3
+3
+1, 2, 3, 4, 5, 6, 7, 8
+8
+mm d,oooo ooo
+1. Touch a. (Check.)
+2. Touch the first group of lines. I'll clap. You count the objects in the first 
+group. Put your finger over the first line. (Pause and check.) Get ready.
+(Clap at 1-second intervals.) How many in the first group?
+3. (Repeat step 2 with the second group.)
+4. Now you're going to count all the lines. Start counting with the first 
+group. Put your finger over the first line. (Pause and check.) Get ready.
+(Clap at 1 -second intervals.)
+5. How many in all?
+6. (Repeat steps 1-5 with b, c, and d. Be sure to give individual turns.)
+3
+1, 2, 3, 4, 5, 6, 7
+7
+
+Chapter 4 Counting 37
+Format 4.4
+COUNTING FROM NUMBERS OTHER THAN 1
+TEACHER
+Part A: Preskill—Get-lt-Going Signal
+1. "Get it going" means to say a number for as long as I move my finger.
+2. (Hold up hand.) My turn. I'm going to get 4 going.
+(Move hand in circular motion, saying ffoouurr with extended 
+pronunciation. After several seconds, drop hand and stop saying 4.)
+3. (Repeat step 2 with the numbers 6 and 9.)
+4. Let's do it together. We have 4. How many do we have?
+Get it going: ffoouurr.
+5. You have five. How many do you have?
+Get it going: ffiivve
+(Repeat step 5 with the numbers 7 and 3.)
+Part B: Oral Presentation
+1. We're going to get it going and count. My turn. We have four.
+Get it going.
+(Signal by moving hand in circular motion. After 2 seconds, drop hand.) 
+Ffoouurr, 5, 6, 7, 8, stop. (Count at a rate of about two numbers a 
+second.)
+2. Get it going and count with me. You have 4. How many do you have?
+Get it going: Foouuurr, 5, 6, 7, 8.
+3. All by yourselves. You have 4. Get it going.
+4. (Repeat steps 1-3 with the numbers 7 and then 3. Give individuals turns.)
+(See Video A∕B)
+STUDENTS
+4 
+ffoouurr
+5 
+ffiivvee
+4
+Ffoouurr,
+5, 6, 7, 8
+ffoouurr, 5, 6, 7, 8
+Format 4.5
+COUNT-BY (See Videos in Parts A and B)
+continued
+TEACHER STUDENTS
+Cl
+Part A: Introducing the Count-by
+1. (Draw lines in groups of two on the board.)
+II II II II II
+Let's find out how many lines we have. I'll touch and you count.
+How many lines are there? (Write 10 next to the last group.)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+10
+
+38 Part II Basic Concepts and Skills
+Format 4.5 (continued) 
+COUNT-BY
+TEACHER STUDENTS
+Now I'll show you a fast way to count those lines. (Circle each group of 
+two lines with your finger. For each group, ask, "How many lines in this 
+group?" After asking about all five groups, ask, "How many lines are in 
+each group?")
+When we count groups of 2, we count lines the fast way.
+2. Let's figure out the numbers we say when we count by 2. Count the lines 1, 2
+in the first group. (Point to each line as students count.)
+Yes, there are two lines, so 1 write 2 above the first group (Write 2 above 
+the first group.)
+Count the lines in the first and second groups. 1, 2, 3, 4
+You counted four lines so far, so I'll write 4 above the second group.
+(Write it.)
+(Continue to have the students count each successive group from the 
+beginning, writing the appropriate numeral above each group, such as 
+the following:
+2 4 6 8 10
+II II II II II
+When the students have finished, the lines should look like the above 
+example.)
+3. Now you know what numbers to say when you count by 2. Let's count 
+the lines again, but this time we'll count by 2. (Point to each numeral as 
+students count.) 2, 4, 6, 8, 10
+4. How many did you end up with when you counted by 2? 10
+5. (Point to the 10 written next to the last group.) How many did you end 
+up with when you counted the regular way? 10
+See, the fast way really does work.
+V
+Part B: Structured Board Presentation
+1. (Write the following numerals on the board.) 6, 12, 18, 24, 30 
+Today we are going to learn to count by 6.
+2. I will say the first few numbers in the series: 6, 12, 18, 24, 30.
+3. Say this part with me as I touch each numeral. Get ready. (Signal) 6, 12, 18, 24, 30
+4. Say the series by yourselves. Get ready. (Signal.) 6, 12, 18, 24, 30
+(Give individual turns to several students.)
+5. (Erase one of the numerals in the series.) Say the sixes again, 
+including the missing number. 6, 12, 18, 24, 30
+(Repeat step 5, erasing another numeral each time, until students can say 
+the series without help.)
+6. (Alternate previously learned count-by series with practice on new series.)
