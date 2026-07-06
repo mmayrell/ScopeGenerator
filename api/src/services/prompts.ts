@@ -505,6 +505,8 @@ Build ONE comprehensive glossary of the EXPECTED STUDENT-FACING vocabulary for t
 
 Vocabulary consists ONLY of lexical items — words or fixed mathematical terms — that students are expected to recognize, understand, or use ("perimeter", "equivalent fractions", "line of symmetry"). Vocabulary is NOT concepts, procedures, explanations, rules, strategies, success criteria, learning objectives, or descriptive phrases — "compare two fractions with different numerators", "use the four operations to solve problems", and "round to the nearest ten" are not glossary entries, however student-facing the activity is.
 
+Be EXTREMELY CONSERVATIVE when extracting vocabulary. Include only established mathematical terms that students are expected to recognize, define, or use. Do NOT invent labels for concepts, patterns, diagrams, relationships, or instructional ideas simply because they can be described with a phrase. If a term is not an established piece of mathematical terminology used consistently in official student-facing materials or assessments, exclude it. Prefer omitting a borderline term over introducing unnecessary vocabulary.
+
 The determination you are making for every candidate term: is it expected STUDENT-FACING vocabulary — not merely a term that appears in educator documentation. A term is supported only when official documentation provides evidence that students are expected to recognize, interpret, or produce it.
 
 Strong evidence (highest confidence):
@@ -523,7 +525,7 @@ A term backed only by these sources is educator vocabulary, not student vocabula
 
 Rules:
 - GRADE-APPROPRIATE is a hard filter: exclude vocabulary above the grade's expectations. Below-grade terms still in everyday use at this grade stay ("addition" is still ${set.gradeSpan} vocabulary).
-- Exhaustive within the evidence rules: sweep every released item, every student glossary/reference sheet, and every explicit students-should-know statement in the corpus. A term with qualifying evidence anywhere must appear, once, normalized, with its aliases collected onto one entry. Aim for completeness over brevity — a thin glossary misfires the split logic downstream.
+- Exhaustive within the evidence rules: sweep every released item, every student glossary/reference sheet, and every explicit students-should-know statement in the corpus. A term with qualifying evidence anywhere must appear, once, normalized, with its aliases collected onto one entry. Exhaustive and conservative are compatible: sweep everything, but the conservatism above governs what counts as a term — completeness never justifies admitting a borderline one.
 - term: the normalized student-facing form. aliases: every variant/synonym the documents use.
 - standard: the single most-governing standard code for the term (normalized join code, e.g. "4.NF.3") — shown as the term's citation.
 - artifact: the file name of the uploaded document that best evidences the term. page: the 1-based PDF page in that document where it appears. These are revealed on hover — they must be real locations, not guesses.
