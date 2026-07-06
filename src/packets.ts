@@ -20,7 +20,7 @@ export const FRAMEWORKS: { key: PacketFramework; label: string; blurb: string; y
   {
     key: 'ccss',
     label: 'Pure Common Core',
-    blurb: 'CCSS-M · NY State released questions (annual), MCAS released items, SBAC samples',
+    blurb: 'CCSS-M · full SBAC sample-item bank, NY State, MCAS, Ohio, and California released materials',
     years: [2026, 2025, 2024, 2023, 2022, 2021, 2019, 2018, 2017],
   },
   {

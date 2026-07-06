@@ -269,7 +269,13 @@ and `POST /packets` carries the selected standards verbatim; the backend hunts t
   in sources located through this call's searches; a standard with nothing findable is reported as a
   **gap** (documentation gap, not failure); `alignment: 'official'` only when the source itself maps
   the item to the code, else `'ai-inferred'`; source URL must come from search results. Replies are
-  additionally sanitized in code (off-batch codes dropped, URLs must be http(s), ≤4 items/standard).
+  additionally sanitized in code (off-batch codes dropped, URLs must be http(s), ≤6 items/standard).
+- **SBAC index** (`api/src/data/sbac-items.ts`, generated from the live
+  `sampleitems.smarterbalanced.org/BrowseItems/search` catalog): the full catalog JSON (~2.2 MB)
+  exceeds any fetch budget, so CCSS hunt batches inject their standards' official bank entries
+  (item ids, claim/target, DOK, keys, release year) directly into the prompt. The agent must obtain
+  each item's text from a printable source (SBAC/CAASPP scoring guides, state renditions) — bank
+  metadata alone is never transcribed; unobtained ids are named in the gap note.
 - **Settlement**: all batches done → packet `complete` (job log summarizes items/coverage/gaps).
   Stop (`cancelRequested`) → packet `cancelled` at the next checkpoint, found items kept. Terminal
   worker failure → packet `failed` via `markPacketFailed`, found items kept. `POST /packets/{id}/retry`

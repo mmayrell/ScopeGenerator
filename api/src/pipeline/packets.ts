@@ -1,5 +1,6 @@
 import { InvocationContext } from '@azure/functions'
 import { EvidencePacket, HuntedItem, JobMessage, PacketStandard } from '../domain/types'
+import { SBAC_ITEMS } from '../data/sbac-items'
 import { getPacketOrUndefined, mutatePacket } from '../data/packets'
 import { getJob, mutateJob, pushLog } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
@@ -32,7 +33,8 @@ const EXECUTION_DEADLINE_MS = 8.5 * 60 * 1000
 /** Standards per hunt call — keeps each web-search turn focused and bounded. */
 const BATCH_SIZE = 4
 const MAX_SEARCHES_PER_BATCH = 8
-const MAX_ITEMS_PER_STANDARD = 4
+/** Headroom for full SBAC-bank coverage (some standards carry 4+ official sample items) plus state released items. */
+const MAX_ITEMS_PER_STANDARD = 6
 const HUNT_MAX_TOKENS = 24000
 
 const isTruncation = (e: unknown): boolean =>
@@ -337,9 +339,9 @@ function mergeItems(packet: EvidencePacket, found: HuntedItem[]): void {
 // (one grade-4 math hunt was safety-refused off a stray fetch).
 const FRAMEWORK_HUNTS: Record<EvidencePacket['framework'], { programs: string; hint: string; domains: string[] }> = {
   ccss: {
-    programs: 'Common Core–aligned state assessments',
-    hint: 'New York State Testing Program released questions (nysedregents.org/ei/ei-math.html — released annually 2017–2026 except 2020, with item maps and scoring keys), Massachusetts MCAS released items (doe.mass.edu/mcas/release.html, 2019 onward), and Smarter Balanced (SBAC) official sample items (sampleitems.smarterbalanced.org — genuine but not tied to an administration year; use year 0).',
-    domains: ['nysedregents.org', 'nysed.gov', 'doe.mass.edu', 'mass.gov', 'smarterbalanced.org', 'corestandards.org', 'engageny.org'],
+    programs: 'Common Core–aligned state assessments and the Smarter Balanced sample-item bank',
+    hint: 'Work these sources, in order: (1) Smarter Balanced (SBAC) official sample items — the batch prompt lists every bank item for your standards with official alignment and answer keys; the item viewer (sampleitems.smarterbalanced.org/Item/<id>) and browser (sampleitems.smarterbalanced.org/BrowseItems?Claim=MATH1&Subject=MATH&Grade=<N>) are JS apps a fetch cannot read, so transcribe their stems from the printable Smarter Balanced sample-item scoring guides (search "smarter balanced scoring guide grade N mathematics filetype:pdf") or from state renditions of the same items. (2) New York State Testing Program released questions (nysedregents.org/ei/ei-math.html — released annually 2017–2026 except 2020, with item maps and scoring keys). (3) Massachusetts MCAS released items (doe.mass.edu/mcas/release.html, 2019 onward). (4) Ohio\'s State Tests released items (education.ohio.gov and the Ohio Cambium portal — yearly released item PDFs with alignments). (5) California CAASPP materials (cde.ca.gov, caaspp.org — California administers Smarter Balanced; its practice-test scoring guides print SBAC-style items in full).',
+    domains: ['nysedregents.org', 'nysed.gov', 'doe.mass.edu', 'mass.gov', 'smarterbalanced.org', 'corestandards.org', 'engageny.org', 'education.ohio.gov', 'ohio.gov', 'cambiumast.com', 'cambiumtds.com', 'cde.ca.gov', 'caaspp.org', 'caaspp-elpac.org'],
   },
   teks: {
     programs: 'STAAR (State of Texas Assessments of Academic Readiness)',
@@ -424,6 +426,36 @@ Binding rules:
 9. NEVER transcribe items from tests administered before 2017. If the only findable materials for a standard predate 2017, report the standard as a gap instead.
 10. Find up to ${MAX_ITEMS_PER_STANDARD} strong items per standard — prefer breadth (every standard covered) over depth. Work decisively: pick sources fast, transcribe, and answer — a smaller honest result beats an exhaustive search that never finishes.`
 
+/** CCSS code → the SBAC bank's id style (cluster letter dropped): 4.NBT.B.5 → '4.NBT.5', 4.NF.B.3a → '4.NF.3a'. */
+const sbacCodeOf = (code: string): string => code.replace(/^(\d+\.[A-Z]+)\.[A-Z]\./, '$1.')
+
+/**
+ * The batch's slice of the official Smarter Balanced sample-item bank — the
+ * full catalog JSON (~2.2 MB) is far beyond a fetch budget, so the baked
+ * index supplies what exists per standard: ids, official alignment, claim,
+ * DOK, type, published keys, release year. The agent's job is then to obtain
+ * each item's TEXT from a printable source, never to invent it.
+ */
+function sbacBlock(batch: HuntBatch): string {
+  const lines: string[] = []
+  for (const st of batch.standards) {
+    const entries = SBAC_ITEMS[sbacCodeOf(st.code)]
+    if (!entries || entries.length === 0) continue
+    lines.push(
+      `- ${st.code}: ${entries
+        .map(
+          (e) =>
+            `item ${e.id} (claim ${e.claim}${e.target ? ` target ${e.target}` : ''}, DOK ${e.dok}, ${e.type}${e.keys ? `, key: ${e.keys}` : ''}${e.year ? `, released ${e.year}` : ''})`,
+        )
+        .join('; ')}`,
+    )
+  }
+  if (lines.length === 0) return ''
+  return `\n\nOfficial Smarter Balanced sample items for these standards (from the SBAC item bank — this alignment IS official; each item's page is https://sampleitems.smarterbalanced.org/Item/<id> but that viewer is a JS app a fetch cannot read):
+${lines.join('\n')}
+Cover every listed item whose text you can obtain from a printable source (SBAC or CAASPP scoring-guide PDFs, or a state rendition); use program "Smarter Balanced sample item", the listed release year, the item id as itemNumber, and the listed key as the answer. An item you cannot obtain the text of must NOT be transcribed from this metadata — mention the unobtained ids in the standard's gap note instead.`
+}
+
 async function huntBatch(
   packet: EvidencePacket,
   batch: HuntBatch,
@@ -446,7 +478,7 @@ Where genuine released items usually live: ${hunt.hint}
 ${yearsLine}
 
 Grade ${batch.grade} — ${batch.domainName}:
-${batch.standards.map((s) => `- ${s.code}: ${s.text}`).join('\n')}
+${batch.standards.map((s) => `- ${s.code}: ${s.text}`).join('\n')}${packet.framework === 'ccss' ? sbacBlock(batch) : ''}
 
 Search the web for released tests, released item documents, and official sample items assessing these specific standards; open the best documents with web_fetch and transcribe from them. Transcribe every genuine item you find (up to ${perStandard} per standard), and report standards with no findable released evidence as gaps.${
     concise
