@@ -749,8 +749,7 @@ export default function SetDetail() {
               <div>
                 <SectionLabel>Glossary — {lexicon.length} Terms</SectionLabel>
                 <p className="mt-1 text-[11.5px] leading-relaxed text-ink-3">
-                  Student-facing, grade-appropriate vocabulary drawn from every uploaded document — the shared
-                  controlled vocabulary every later stage speaks.
+                  The following list provides student-facing, grade-appropriate vocabulary.
                 </p>
               </div>
               {/* Mirror the build-lexicon endpoint's gates — otherwise the button 409s. */}
