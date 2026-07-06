@@ -30,8 +30,8 @@ export default function Shell() {
           {/* Expanded: full LearnWith.AI wordmark over the product name. */}
           <div className="hidden lg:block">
             <img src={lwaiLogo} alt="LearnWith.AI" className="h-9 w-auto" />
-            <div className="mt-2.5 font-display text-[15px] leading-5 font-semibold text-white">LWAI Scope Generator</div>
-            <div className="font-mono text-[10px] tracking-wide text-white/40">evidence-locked scoping</div>
+            <div className="mt-2.5 font-display text-[15px] leading-5 font-semibold text-white">Scope Generator</div>
+            <div className="font-mono text-[10px] tracking-wide text-white/40">Evidence-Locked Scoping</div>
           </div>
         </div>
         <nav className="flex flex-col gap-0.5 px-2.5 lg:px-3">

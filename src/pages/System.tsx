@@ -10,7 +10,7 @@ const LockBadge = ({ updated }: { updated: string }) => (
     <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
       <path d="M4.5 7V5a3.5 3.5 0 017 0v2M3.5 7h9a1 1 0 011 1v5a1 1 0 01-1 1h-9a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
-    locked — in force since {updated}
+    locked — {updated}
   </Pill>
 )
 
@@ -18,7 +18,7 @@ function SectionCard({ section }: { section: FrameworkSection }) {
   return (
     <div className="rounded-2xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
       <div className="flex items-center justify-between gap-3">
-        <Pill tone={section.kind === 'engine' ? 'accent' : 'night'}>{section.kind}</Pill>
+        <Pill tone={section.kind === 'engine' ? 'accent' : 'night'}>{section.kind === 'engine' ? 'Engine' : 'Doctrine'}</Pill>
         <div className="flex items-center gap-2">
           <LockBadge updated={section.updated} />
           <Mono className="text-[12px] text-ink-3">{section.version}</Mono>
