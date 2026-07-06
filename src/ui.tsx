@@ -122,48 +122,119 @@ const sourceTone: Record<Citation['sourceType'], { label: string; cls: string }>
   'performance-report': { label: 'Report', cls: 'text-rust bg-rust-wash border-rust/25' },
 }
 
-export function CiteChips({ citations: rawCitations }: { citations: Citation[] }) {
+const POPOVER_W = 320 // w-80
+const POPOVER_EST_H = 190 // flip threshold — measured typical excerpt popover
+
+export function CiteChips({ citations: rawCitations, dark = false }: { citations: Citation[]; dark?: boolean }) {
   // One chip per source: the same document cited twice on one field reads as
   // an error, not as extra provenance — the first citation's popover stands in.
   const citations = rawCitations.filter((c, i) => rawCitations.findIndex((o) => o.label === c.label) === i)
+  // Hover opens (with a grace timer so the pointer can travel into the
+  // popover); click pins per chip for touch and keyboard. The popover is
+  // PORTALED to <body> at fixed viewport coordinates: lesson cards clip
+  // overflow (rounded corners over the dark record bands), which would cut
+  // off an in-flow absolute popover for chips near the card's bottom edge.
   const [open, setOpen] = useState<number | null>(null)
+  const [pinnedIdx, setPinnedIdx] = useState<number | null>(null)
+  const [anchor, setAnchor] = useState<DOMRect | null>(null)
   const ref = useRef<HTMLSpanElement>(null)
+  const popRef = useRef<HTMLSpanElement>(null)
+  const hoverTimer = useRef<number | undefined>(undefined)
   useEffect(() => {
     if (open === null) return
     const close = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(null)
+      const t = e.target as Node
+      if (ref.current?.contains(t) || popRef.current?.contains(t)) return
+      setOpen(null)
+      setPinnedIdx(null)
+    }
+    // Fixed-position popovers don't track scroll — close instead of drifting.
+    const onScroll = () => {
+      setOpen(null)
+      setPinnedIdx(null)
     }
     document.addEventListener('mousedown', close)
-    return () => document.removeEventListener('mousedown', close)
+    window.addEventListener('scroll', onScroll, true)
+    return () => {
+      document.removeEventListener('mousedown', close)
+      window.removeEventListener('scroll', onScroll, true)
+    }
   }, [open])
+  useEffect(() => () => window.clearTimeout(hoverTimer.current), [])
   if (!citations.length) return null
+
+  const show = (i: number, el: Element) => {
+    window.clearTimeout(hoverTimer.current)
+    setAnchor(el.getBoundingClientRect())
+    setOpen(i)
+  }
+  const leave = () => {
+    window.clearTimeout(hoverTimer.current)
+    hoverTimer.current = window.setTimeout(() => {
+      // A pinned chip survives hover-away; a hover-opened one closes.
+      setOpen((cur) => (cur !== null && cur === pinnedIdx ? cur : pinnedIdx))
+    }, 150)
+  }
+  const chipCls = dark
+    ? 'border-white/12 bg-white/5 text-white/60 hover:text-white/85 hover:border-white/25'
+    : ''
+
+  const c = open !== null ? citations[open] : null
+  // Below the chip unless that would leave the viewport — then above; clamp horizontally.
+  const placement =
+    anchor === null
+      ? null
+      : {
+          left: Math.max(8, Math.min(anchor.left, window.innerWidth - POPOVER_W - 8)),
+          ...(anchor.bottom + POPOVER_EST_H > window.innerHeight
+            ? { bottom: window.innerHeight - anchor.top + 6 }
+            : { top: anchor.bottom + 6 }),
+        }
+
   return (
     <span ref={ref} className="relative ml-1 inline-flex flex-wrap items-center gap-1 align-baseline">
-      {citations.map((c, i) => (
-        <span key={i} className="relative">
+      {citations.map((cit, i) => (
+        <span key={i} className="relative" onMouseEnter={(e) => show(i, e.currentTarget)} onMouseLeave={leave}>
           <button
-            onClick={() => setOpen(open === i ? null : i)}
-            className={`inline-flex cursor-pointer items-center rounded-[5px] border px-1.5 py-px font-mono text-[10.5px] leading-4 transition-opacity hover:opacity-75 ${sourceTone[c.sourceType].cls}`}
-            title={c.label}
+            onClick={(e) => {
+              if (pinnedIdx === i) {
+                setPinnedIdx(null)
+                setOpen(null)
+              } else {
+                setPinnedIdx(i)
+                show(i, e.currentTarget)
+              }
+            }}
+            className={`inline-flex cursor-pointer items-center rounded-[5px] border px-1.5 py-px font-mono text-[10.5px] leading-4 transition-colors ${chipCls || `transition-opacity hover:opacity-75 ${sourceTone[cit.sourceType].cls}`}`}
+            title={cit.label}
           >
-            {c.label}
+            {cit.label}
           </button>
-          {open === i && (
-            <span className="animate-rise absolute top-full left-0 z-50 mt-1.5 block w-80 rounded-xl border border-hairline bg-panel p-3.5 shadow-(--shadow-float)">
-              <span className="flex items-center justify-between gap-2">
-                <span className={`rounded-[5px] border px-1.5 py-px font-mono text-[10px] ${sourceTone[c.sourceType].cls}`}>
-                  {sourceTone[c.sourceType].label}
-                </span>
-                <Mono className="text-[10.5px] text-ink-3">{c.locator}</Mono>
-              </span>
-              <span className="mt-2 block font-medium text-[12.5px] text-ink">{c.label}</span>
-              <span className="mt-1.5 block border-l-2 border-hairline-2 pl-2.5 font-display text-[13px] leading-relaxed text-ink-2 italic">
-                {c.excerpt}
-              </span>
-            </span>
-          )}
         </span>
       ))}
+      {c !== null &&
+        placement !== null &&
+        createPortal(
+          <span
+            ref={popRef}
+            style={{ position: 'fixed', width: POPOVER_W, ...placement }}
+            className="animate-rise z-50 block rounded-xl border border-hairline bg-panel p-3.5 shadow-(--shadow-float)"
+            onMouseEnter={() => window.clearTimeout(hoverTimer.current)}
+            onMouseLeave={leave}
+          >
+            <span className="flex items-center justify-between gap-2">
+              <span className={`rounded-[5px] border px-1.5 py-px font-mono text-[10px] ${sourceTone[c.sourceType].cls}`}>
+                {sourceTone[c.sourceType].label}
+              </span>
+              <Mono className="text-[10.5px] text-ink-3">{c.locator}</Mono>
+            </span>
+            <span className="mt-2 block font-medium text-[12.5px] text-ink">{c.label}</span>
+            <span className="mt-1.5 block border-l-2 border-hairline-2 pl-2.5 font-display text-[13px] leading-relaxed text-ink-2 italic">
+              {c.excerpt}
+            </span>
+          </span>,
+          document.body,
+        )}
     </span>
   )
 }

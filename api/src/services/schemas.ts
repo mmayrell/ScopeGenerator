@@ -1,6 +1,7 @@
 import {
   Citation,
   DecisionEntry,
+  DecisionField,
   DecisionType,
   GeneratedExemplar,
   Lesson,
@@ -57,6 +58,23 @@ const DECISION_TYPES = [
   'assumption',
 ]
 const DECISION_FLAGS = ['thin-evidence', 'ai-proposed', 'inferred']
+// The card field a decision governs ('card' = lesson-level: granularity, type, sequencing).
+const DECISION_FIELDS = [
+  'card',
+  'standards',
+  'cluster',
+  'objectives',
+  'emphasis',
+  'progression',
+  'prerequisites',
+  'boundary',
+  'newLearning',
+  'approach',
+  'nonGoals',
+  'ceiling',
+  'assessment',
+  'releasedItems',
+]
 const LESSON_TYPES = ['new-learning', 'bridge', 'application-tier']
 const EVIDENCE_STATUS = ['observed', 'inferred', 'mixed']
 
@@ -82,6 +100,7 @@ const CARD_FIELD = obj({
 const DECISION = obj({
   n: INT,
   type: enums(DECISION_TYPES),
+  field: enums(DECISION_FIELDS),
   rule: STR,
   text: STR,
   citations: arr(ref('citation')),
@@ -272,6 +291,7 @@ export interface WireCardField {
 export interface WireDecision {
   n: number
   type: DecisionType
+  field: DecisionField
   rule: string
   text: string
   citations: WireCitation[]
@@ -418,6 +438,9 @@ export function toLesson(w: WireLesson, validItemIds: Set<string>): Lesson {
     text: d.text,
     citations: d.citations as Citation[],
     ...(d.flags.length > 0 ? { flags: d.flags } : {}),
+    // Constrained decoding guarantees the enum, but the unconstrained fallback
+    // path does not — anything unrecognized settles at the lesson level.
+    field: (DECISION_FIELDS as string[]).includes(d.field) ? d.field : 'card',
   }))
   const exemplars = (w.generatedExemplars ?? [])
     .filter((e) => e.stem.trim().length > 0)

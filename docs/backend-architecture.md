@@ -184,7 +184,9 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
    Checkpoint to `jobs/<jobId>/plan.json`; set `totalUnits`; enqueue one `cards` message per unit.
 2. **`cards`** (Stage 5, parallel per unit): one Claude call per unit (effort `medium`,
    max_tokens 48000 — sized to fit the 10-minute consumption cap). Output (structured): full `Unit`
-   with 14-field `Lesson`s — every field `{ content, citations[] }`, decision entries with rule IDs,
+   with 14-field `Lesson`s — every field `{ content, citations[] }` (fields state the WHAT only;
+   reasoning is banned from field content), decision entries with rule IDs and a `field` tag naming
+   the card field each governs (`card` = lesson-level; the UI renders each record under its field),
    `generatedExemplar` for lessons with no in-boundary items (never-empty Released Items, spec §7.13).
    Checkpoint to `jobs/<jobId>/unit-<i>.json`; increment `unitsDone` (ETag retry); any completion
    observing all units done enqueues `finalize` (at-least-once; finalize is idempotent).

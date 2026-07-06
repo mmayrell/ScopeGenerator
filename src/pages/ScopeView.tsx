@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api } from '../api'
 import { fieldMeta } from '../data/meta'
 import { scopeUnsettled, useScopePolling, useStore } from '../store'
-import type { DecisionEntry, Lesson, Proposal, Scope } from '../types'
+import type { DecisionEntry, DecisionField, Lesson, Proposal, Scope } from '../types'
 import { breakNumberedList, Btn, capsStandardCodes, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
 
 const typeTone: Record<Lesson['type'], { label: string; tone: 'accent' | 'cite' | 'night' }> = {
@@ -20,6 +20,58 @@ const decisionLabel: Record<DecisionEntry['type'], string> = {
   contradiction: 'Contradictions & Conflicts',
   override: 'Override',
   assumption: 'Thin-Evidence Assumptions',
+}
+
+// Scopes generated before decisions carried a `field` tag: place each entry by
+// what its type governs; everything lesson-wide settles at the card level.
+const legacyDecisionField: Record<DecisionEntry['type'], DecisionField> = {
+  granularity: 'card',
+  strategy: 'approach',
+  boundary: 'boundary',
+  ceiling: 'ceiling',
+  contradiction: 'card',
+  override: 'card',
+  assumption: 'card',
+}
+
+/** One decision entry — the numbered row inside a black record band. */
+function DecisionRow({ d }: { d: DecisionEntry }) {
+  return (
+    <div className="flex items-start gap-3">
+      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 font-mono text-[10.5px] font-semibold text-white/80">{d.n}</span>
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[12px] font-semibold text-white/90">{decisionLabel[d.type]}</span>
+          <span className="rounded-[5px] border border-white/15 bg-white/5 px-1.5 py-px font-mono text-[10px] text-white/60">{d.rule}</span>
+          {d.flags?.map((fl) => (
+            <span key={fl} className="rounded-[5px] border border-amber-ink/40 bg-amber-ink/20 px-1.5 py-px font-mono text-[10px] text-amber-wash">{fl}</span>
+          ))}
+        </div>
+        <p className="mt-1 text-[13px] leading-relaxed text-white/75">
+          {d.text}
+          {/* hover a citation to read the exact sentences that drove the decision */}
+          <CiteChips citations={d.citations} dark />
+        </p>
+      </div>
+    </div>
+  )
+}
+
+/** The black record band rendered directly under the field its entries govern. */
+function DecisionBand({ title, purpose, entries }: { title: string; purpose: string; entries: DecisionEntry[] }) {
+  return (
+    <section className="grid grid-cols-1 gap-3 border-b border-hairline bg-night px-6 py-4.5 last:border-0 xl:grid-cols-[200px_1fr] xl:gap-6">
+      <div className="pt-0.5">
+        <span className="text-[12px] leading-snug font-semibold text-white/90">{title}</span>
+        <div className="mt-1 text-[11px] leading-snug text-white/45">{purpose}</div>
+      </div>
+      <div className="space-y-3.5">
+        {entries.map((d) => (
+          <DecisionRow key={d.n} d={d} />
+        ))}
+      </div>
+    </section>
+  )
 }
 
 // ---------- data-informed revision ----------
@@ -224,6 +276,17 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
   }, [sets, scope.setIds, scope.setId])
   const tt = typeTone[lesson.type]
 
+  // Each field's record renders directly under it; lesson-level calls
+  // (granularity, type, sequencing) close the card.
+  const decisionsByField = useMemo(() => {
+    const map = new Map<DecisionField, DecisionEntry[]>()
+    for (const d of lesson.decisions) {
+      const f: DecisionField = d.field ?? legacyDecisionField[d.type] ?? 'card'
+      map.set(f, [...(map.get(f) ?? []), d])
+    }
+    return map
+  }, [lesson.decisions])
+
   return (
     <article className="animate-rise" key={lesson.id}>
       {/* card header */}
@@ -240,13 +303,15 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
         </div>
       </header>
 
-      {/* fields 1–13 */}
+      {/* fields 1–13, each followed by its own decision record */}
       <div className="mt-7 overflow-hidden rounded-2xl border border-hairline bg-panel shadow-(--shadow-lift)">
         {fieldMeta.map((fm) => {
           // Scopes generated before a field existed (e.g. Objectives) lack it.
           const field = lesson.fields[fm.key] ?? { content: '—', citations: [] }
+          const fieldDecisions = decisionsByField.get(fm.key)
           return (
-            <section key={fm.key} className="group grid grid-cols-1 gap-2 border-b border-hairline px-6 py-4.5 last:border-0 hover:bg-paper/40 xl:grid-cols-[200px_1fr] xl:gap-6">
+            <Fragment key={fm.key}>
+            <section className="group grid grid-cols-1 gap-2 border-b border-hairline px-6 py-4.5 last:border-0 hover:bg-paper/40 xl:grid-cols-[200px_1fr] xl:gap-6">
               <div className="pt-0.5">
                 <div className="flex items-baseline gap-2">
                   <Mono className="text-[10.5px] text-ink-3">{String(fm.n).padStart(2, '0')}</Mono>
@@ -290,45 +355,27 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
                 )}
               </div>
             </section>
+            {fieldDecisions && (
+              <DecisionBand
+                title="Decision Record"
+                purpose={`Why ${fm.label} reads the way it does — cited; hover a citation for the exact sentences`}
+                entries={fieldDecisions}
+              />
+            )}
+            </Fragment>
           )
         })}
 
-        {/* field 14 — decision record */}
-        <section className="grid grid-cols-1 gap-3 bg-night px-6 py-5 xl:grid-cols-[200px_1fr] xl:gap-6">
-          <div className="pt-0.5">
-            <div className="flex items-baseline gap-2">
-              <Mono className="text-[10.5px] text-white/40">14</Mono>
-              <span className="text-[12.5px] font-semibold text-white">Decision Record</span>
-            </div>
-            <div className="mt-1 text-[11px] leading-snug text-white/45">The why, auditable — every consequential decision, reasoned on the card itself</div>
-          </div>
-          <div className="space-y-3.5">
-            {lesson.decisions.map((d) => (
-              <div key={d.n} className="flex items-start gap-3">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 font-mono text-[10.5px] font-semibold text-white/80">{d.n}</span>
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-[12px] font-semibold text-white/90">{decisionLabel[d.type]}</span>
-                    <span className="rounded-[5px] border border-white/15 bg-white/5 px-1.5 py-px font-mono text-[10px] text-white/60">{d.rule}</span>
-                    {d.flags?.map((fl) => (
-                      <span key={fl} className="rounded-[5px] border border-amber-ink/40 bg-amber-ink/20 px-1.5 py-px font-mono text-[10px] text-amber-wash">{fl}</span>
-                    ))}
-                  </div>
-                  <p className="mt-1 text-[13px] leading-relaxed text-white/75">{d.text}</p>
-                  {d.citations.length > 0 && (
-                    <div className="mt-1.5 flex flex-wrap gap-1">
-                      {d.citations.map((c, i) => (
-                        <span key={i} className="rounded-[5px] border border-white/12 bg-white/5 px-1.5 py-px font-mono text-[10px] text-white/55" title={c.excerpt}>
-                          {c.label}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* lesson-level decision record — granularity/type/sequencing, plus any
+            entry not tied to a single field (legacy scopes route contradictions,
+            overrides, and assumptions here too) */}
+        {(decisionsByField.get('card') ?? []).length > 0 && (
+          <DecisionBand
+            title="Lesson Decision Record"
+            purpose="Calls that shape the whole card — granularity, lesson type, sequencing, and any decision not tied to a single field"
+            entries={decisionsByField.get('card')!}
+          />
+        )}
       </div>
     </article>
   )

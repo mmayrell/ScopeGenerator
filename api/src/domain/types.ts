@@ -132,6 +132,27 @@ export type DecisionType =
   | 'override'
   | 'assumption'
 
+/**
+ * The card field a decision governs — its record renders directly under that
+ * field. 'card' = lesson-level calls (granularity, type, sequencing) rendered
+ * in the trailing lesson-level record.
+ */
+export type DecisionField =
+  | 'card'
+  | 'standards'
+  | 'cluster'
+  | 'objectives'
+  | 'emphasis'
+  | 'progression'
+  | 'prerequisites'
+  | 'boundary'
+  | 'newLearning'
+  | 'approach'
+  | 'nonGoals'
+  | 'ceiling'
+  | 'assessment'
+  | 'releasedItems'
+
 export interface DecisionEntry {
   n: number
   type: DecisionType
@@ -139,6 +160,8 @@ export interface DecisionEntry {
   text: string
   citations: Citation[]
   flags?: ('thin-evidence' | 'ai-proposed' | 'inferred')[]
+  /** Optional only for scopes generated before per-field records existed (the UI falls back to a type-based mapping). */
+  field?: DecisionField
 }
 
 export interface CardField {
