@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api } from '../api'
 import { fieldMeta } from '../data/meta'
@@ -21,121 +20,6 @@ const decisionLabel: Record<DecisionEntry['type'], string> = {
   contradiction: 'Contradictions & Conflicts',
   override: 'Override',
   assumption: 'Thin-Evidence Assumptions',
-}
-
-// ---------- print view (Download PDF) ----------
-
-function PrintScope({ scope }: { scope: Scope }) {
-  const { sets } = useStore()
-  const scopeSetIds = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
-  const scopeSets = sets.filter((st) => scopeSetIds.includes(st.id))
-  const itemsById = new Map(scopeSets.flatMap((st) => st.items.map((it) => [it.id, { it, setId: st.id }] as const)))
-  const lessons = scope.units.reduce((n, u) => n + u.lessons.length, 0)
-  // Portal to <body>: the print view must be normal document flow — inside the
-  // app shell it can only be isolated with visibility + absolute positioning,
-  // and Chromium's print fragmentation produces corrupt PDFs when forced page
-  // breaks live inside absolutely-positioned content.
-  return createPortal(
-    <div className="print-root bg-white px-8 py-6 text-ink">
-      <h1 className="font-display text-[26px] font-semibold">{capsStandardCodes(scope.title)}</h1>
-      <p className="mt-1 text-[11px] text-ink-2">
-        {scopeSets.map((st) => st.name).join(' + ')} · {scope.engineVersion.split(' (')[0]} ·{' '}
-        {(scope.doctrineVersions[0] ?? '').split(' (')[0]} · v{scope.version} · {scope.updated} · {scope.units.length}{' '}
-        units · {lessons} lessons
-      </p>
-
-      {/* Table of contents — anchors survive Save as PDF as clickable links */}
-      <nav className="mt-6">
-        <h2 className="border-b-2 border-ink pb-1.5 font-display text-[17px] font-semibold">Table of Contents</h2>
-        {scope.units.map((u) => (
-          <div key={u.id} className="print-avoid-break mt-3">
-            <p className="text-[11.5px] font-bold">
-              {u.id} · {u.title}
-            </p>
-            <ul className="mt-1 space-y-0.5 pl-4">
-              {u.lessons.map((l) => (
-                <li key={l.id} className="text-[11px] leading-relaxed">
-                  <a href={`#print-${l.id}`} className="text-ink underline decoration-ink/30">
-                    {l.id} — {l.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </nav>
-
-      {scope.units.map((u) => (
-        <section key={u.id} className="print-break-before mt-8">
-          <div className="print-avoid-break border-b-2 border-ink pb-1.5">
-            <h2 className="font-display text-[19px] font-semibold">
-              {u.id} · {u.title}
-            </h2>
-            <p className="text-[10.5px] text-ink-2">
-              {u.strand} — {u.rationale}
-            </p>
-          </div>
-          {u.lessons.map((l) => (
-            <div key={l.id} id={`print-${l.id}`} className="mt-5">
-              <div className="print-avoid-break">
-                <h3 className="font-display text-[15px] font-semibold">
-                  {l.id} — {l.title}
-                </h3>
-                <p className="text-[10px] text-ink-2 uppercase">
-                  {l.type} · evidence: {l.evidenceStatus}
-                </p>
-              </div>
-              {fieldMeta.map((fm) => {
-                const field = l.fields[fm.key]
-                return (
-                  <div key={fm.key} className="print-avoid-break mt-2.5">
-                    <div className="text-[10px] font-bold text-ink uppercase">
-                      {String(fm.n).padStart(2, '0')} {fm.label}
-                    </div>
-                    <p className="text-[11px] leading-relaxed">{field.content}</p>
-                    {fm.key === 'releasedItems' && (
-                      <div className="mt-2 space-y-3">
-                        {l.itemRefs.map((rid) => {
-                          const entry = itemsById.get(rid)
-                          if (!entry) return null
-                          return (
-                            <div key={rid} className="print-avoid-break">
-                              <p className="text-[9.5px] font-semibold text-ink-2">
-                                {entry.it.test} · {entry.it.year} · Q{entry.it.itemNumber} — {entry.it.alignmentCode}
-                              </p>
-                              {entry.it.imagePath ? (
-                                <img
-                                  src={api.itemImageUrl(entry.setId, entry.it.id)}
-                                  alt={entry.it.stem}
-                                  className="mt-1 max-h-[340px] max-w-full border border-ink/20"
-                                />
-                              ) : (
-                                <p className="text-[10.5px] italic">{entry.it.stem}</p>
-                              )}
-                            </div>
-                          )
-                        })}
-                        {l.generatedExemplar && (
-                          <div className="print-avoid-break border-l-2 border-ink/30 pl-2">
-                            <p className="text-[9.5px] font-semibold text-ink-2">
-                              Generated exemplar — not a released item
-                            </p>
-                            <p className="text-[10.5px]">{l.generatedExemplar.stem}</p>
-                            <p className="text-[10px] text-ink-2">Answer: {l.generatedExemplar.answer}</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          ))}
-        </section>
-      ))}
-    </div>,
-    document.body,
-  )
 }
 
 // ---------- data-informed revision ----------
@@ -459,35 +343,26 @@ export default function ScopeView() {
   const [retrying, setRetrying] = useState(false)
   const [genAction, setGenAction] = useState<'pause' | 'resume' | 'cancel' | null>(null)
   const [lookedUp, setLookedUp] = useState(false)
-  const [printing, setPrinting] = useState(false)
+  const [exporting, setExporting] = useState(false)
+  const [exportError, setExportError] = useState<string | null>(null)
 
-  // Download PDF: render the print view, tag <body>, wait for the released-item
-  // screenshots to finish loading (they start fetching only when the print view
-  // mounts — printing before they decode leaves blank boxes in the PDF), then
-  // open the browser's print dialog (Save as PDF). Capped so a dead image
-  // endpoint can't hold the dialog hostage.
-  useEffect(() => {
-    if (!printing) return
-    document.body.classList.add('print-scope')
-    const done = () => setPrinting(false)
-    window.addEventListener('afterprint', done)
-    let cancelled = false
-    const t = setTimeout(() => {
-      const images = [...document.querySelectorAll<HTMLImageElement>('.print-root img')]
-      void Promise.race([
-        Promise.allSettled(images.map((img) => img.decode().catch(() => undefined))),
-        new Promise((resolve) => setTimeout(resolve, 15000)),
-      ]).then(() => {
-        if (!cancelled) window.print()
-      })
-    }, 50)
-    return () => {
-      cancelled = true
-      window.removeEventListener('afterprint', done)
-      clearTimeout(t)
-      document.body.classList.remove('print-scope')
+  // Download Doc: builds a clean .docx (fields only — no citations, no
+  // decision records) that opens in Word and converts to an editable Google
+  // Doc when dropped into Google Drive. The docx library loads lazily so it
+  // stays out of the main bundle.
+  const exportDoc = async () => {
+    if (!scope) return
+    setExporting(true)
+    setExportError(null)
+    try {
+      const { downloadScopeDocx } = await import('../export/scope-docx')
+      await downloadScopeDocx(scope, sets)
+    } catch (e) {
+      setExportError(e instanceof Error ? e.message : 'Could not build the document.')
+    } finally {
+      setExporting(false)
     }
-  }, [printing])
+  }
 
   // While the scope is generating (initial run, rerun, apply-proposal) or a proposal is
   // drafting/iterating, poll its document every 2s until it settles.
@@ -655,10 +530,15 @@ export default function ScopeView() {
         <div className="mt-3 flex flex-wrap gap-1.5 px-2">
           <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setQcOpen(true)}>QC report</Btn>
           <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setHistOpen(true)}>History</Btn>
-          <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setPrinting(true)}>Download PDF</Btn>
+          <Btn className="!px-2.5 !py-1 !text-[11.5px]" disabled={exporting} onClick={() => void exportDoc()}>
+            {exporting ? 'Preparing…' : 'Download Doc'}
+          </Btn>
           <Btn kind="night" className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setRevisionOpen(true)}>Update with Feedback/Data</Btn>
           <Btn kind="danger" className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setConfirmDelete(true)}>Delete</Btn>
         </div>
+        {exportError && (
+          <p className="mt-2 px-2 text-[11px] leading-snug text-rust">{exportError}</p>
+        )}
 
         <div className="mt-6 space-y-5">
           {scope.units.map((u) => (
@@ -746,8 +626,6 @@ export default function ScopeView() {
           )}
         </div>
       </Modal>
-
-      {printing && <PrintScope scope={scope} />}
 
       {revisionOpen && <RevisionDialog scope={scope} onClose={() => setRevisionOpen(false)} />}
 
