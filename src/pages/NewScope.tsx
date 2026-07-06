@@ -124,7 +124,7 @@ export default function NewScope() {
           {mode === 'course' ? 'Full Course' : mode === 'standard' ? standard : topic}
         </h1>
         <p className="mt-1 text-[13px] text-ink-2">
-          {set?.name} · Engine v2.3 · DI BrainLift v1.8 — the run is checkpointed and resumable; units stream in as stages 3–5 complete.
+          {set?.name} · Engine v2.3 · DI BrainLift v1.8
         </p>
         <div className="mt-8">
           <Progress pct={complete ? 100 : jobPct(job)} />
