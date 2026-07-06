@@ -39,6 +39,11 @@ const isTruncation = (e: unknown): boolean =>
   /truncated \(max_tokens/i.test(e instanceof Error ? e.message : String(e))
 const isAbort = (e: unknown): boolean =>
   /abort/i.test((e as { name?: string }).name ?? '') || /abort/i.test(e instanceof Error ? e.message : String(e))
+// Safety refusals on math hunts are classifier false positives set off by
+// fetched page content, not by the request — retry once lean (different
+// searches/fetches), then skip the batch instead of failing the packet.
+const isRefusal = (e: unknown): boolean =>
+  /declined this request/i.test(e instanceof Error ? e.message : String(e))
 
 interface HuntBatch {
   key: string
@@ -194,16 +199,19 @@ export async function huntPacketStep(msg: JobMessage, context: InvocationContext
         try {
           found = await huntBatch(packet, batch, controller.signal, lean)
         } catch (e) {
-          if (isTruncation(e)) {
-            // Web output is nondeterministic — one concise re-hunt usually fits.
-            // A second truncation records the batch as searched (its standards
-            // stay documentation gaps) instead of failing the whole packet via
-            // the worker's fail-fast on max_tokens.
-            context.warn(`packet/hunt ${packetId}: ${label} truncated — retrying concisely`)
+          if (isTruncation(e) || isRefusal(e)) {
+            // Both are worth exactly one lean re-hunt: truncation because web
+            // output is nondeterministic and a concise reply usually fits;
+            // refusal because it is a classifier false positive set off by
+            // whatever page got fetched, and a re-hunt fetches differently. A
+            // second failure records the batch as searched (its standards stay
+            // documentation gaps) instead of failing the whole packet via the
+            // worker's fail-fast.
+            context.warn(`packet/hunt ${packetId}: ${label} ${isRefusal(e) ? 'refused' : 'truncated'} — retrying lean`)
             try {
               found = await huntBatch(packet, batch, controller.signal, true)
             } catch (e2) {
-              if (!isTruncation(e2)) throw e2
+              if (!isTruncation(e2) && !isRefusal(e2)) throw e2
               found = []
               truncatedTwice = true
             }
@@ -256,7 +264,7 @@ export async function huntPacketStep(msg: JobMessage, context: InvocationContext
       pushLog(
         r,
         skippedAfterCuts
-          ? `${label}: the search could not finish within the execution window — batch skipped; its standards remain documentation gaps`
+          ? `${label}: the search could not be completed (ran long, overflowed, or was declined twice) — batch skipped; its standards remain documentation gaps`
           : found.length === 0
             ? `${label}: no released items found online (documentation gap)`
             : `${label}: found ${found.length} released item${found.length === 1 ? '' : 's'} covering ${covered} standard${covered === 1 ? '' : 's'}`,
@@ -323,23 +331,30 @@ function mergeItems(packet: EvidencePacket, found: HuntedItem[]): void {
 
 /** Where genuine released items live for each framework — search guidance, not a restriction. */
 // Search guidance grounded in AI-verified research of the official release
-// pages (what actually exists 2017–2026), cross-checked per year.
-const FRAMEWORK_HUNTS: Record<EvidencePacket['framework'], { programs: string; hint: string }> = {
+// pages (what actually exists 2017–2026), cross-checked per year. `domains`
+// is the web_fetch allow-list: genuine released items live only on official
+// portals, and fetching arbitrary pages feeds untrusted content to the model
+// (one grade-4 math hunt was safety-refused off a stray fetch).
+const FRAMEWORK_HUNTS: Record<EvidencePacket['framework'], { programs: string; hint: string; domains: string[] }> = {
   ccss: {
     programs: 'Common Core–aligned state assessments',
     hint: 'New York State Testing Program released questions (nysedregents.org/ei/ei-math.html — released annually 2017–2026 except 2020, with item maps and scoring keys), Massachusetts MCAS released items (doe.mass.edu/mcas/release.html, 2019 onward), and Smarter Balanced (SBAC) official sample items (sampleitems.smarterbalanced.org — genuine but not tied to an administration year; use year 0).',
+    domains: ['nysedregents.org', 'nysed.gov', 'doe.mass.edu', 'mass.gov', 'smarterbalanced.org', 'corestandards.org', 'engageny.org'],
   },
   teks: {
     programs: 'STAAR (State of Texas Assessments of Academic Readiness)',
     hint: 'Texas Education Agency released STAAR tests and answer keys (tea.texas.gov released-test-questions pages: 2017–2019 and 2021–2022 as PDFs; 2023 onward the redesigned tests live on the official Cambium practice site linked from texasassessment.gov).',
+    domains: ['tea.texas.gov', 'texas.gov', 'texasassessment.gov', 'cambiumtds.com', 'cambiumast.com'],
   },
   sol: {
     programs: 'Virginia SOL (Standards of Learning) official practice item sets',
     hint: 'IMPORTANT: VDOE has released NO full grade 3–8 math SOL tests since spring 2014 (those align to the superseded 2009 standards — do not use them). The genuine current materials are the official SOL Practice Items aligned to the 2023 Mathematics SOL, published 2025 on doe.virginia.gov (online TestNav sets plus grade-by-grade printable multiple-choice PDFs with keys). The 2018-era practice sets align to the 2016 standards — map one to a 2023 code only when the content genuinely matches, and say so in notes.',
+    domains: ['doe.virginia.gov', 'virginia.gov', 'pearsonaccessnext.com'],
   },
   best: {
     programs: 'Florida FAST assessments (B.E.S.T. standards)',
     hint: 'FLDOE/Cambium FAST released tests and Test Release Support Documents (flfast.org — spring 2023 onward, with answer keys and B.E.S.T. benchmark codes) plus official B.E.S.T. sample items. Anything before 2023 is the old FSA program aligned to the superseded MAFS standards — do not use it.',
+    domains: ['fldoe.org', 'flfast.org', 'cambiumast.com', 'cambiumtds.com'],
   },
 }
 
@@ -450,6 +465,7 @@ Search the web for released tests, released item documents, and official sample 
     effort: concise ? 'low' : 'medium',
     webSearch: true,
     maxSearches: concise ? 3 : MAX_SEARCHES_PER_BATCH,
+    fetchDomains: hunt.domains,
     ...(signal ? { signal } : {}),
   })
 

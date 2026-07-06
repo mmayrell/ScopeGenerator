@@ -39,6 +39,14 @@ export interface GenerateStructuredOptions {
   /** Max server-side searches per call (webSearch only; default 8). */
   maxSearches?: number
   /**
+   * Restrict web_fetch to these domains (subdomains included). Fetched pages
+   * are untrusted input straight into the model — an arbitrary landing page
+   * can trip the safety classifiers (a grade-4 math hunt was refused with
+   * category 'bio'), and genuine released items only live on official portals
+   * anyway. Search stays unrestricted for discovery.
+   */
+  fetchDomains?: string[]
+  /**
    * Hard deadline for the whole call. Queue workers MUST pass one for
    * long-running web-search calls: an unbounded call launched late in an
    * execution blows the 10-minute Consumption cap and the host kill skips all
@@ -192,7 +200,13 @@ async function callOnce(
     // Fetch lets the model open the pages/PDFs its searches surface — search
     // snippets alone cannot carry a faithful item transcription.
     if (webFetchSupported) {
-      tools.push({ type: 'web_fetch_20250910', name: 'web_fetch', max_uses: opts.maxSearches ?? 8 })
+      tools.push({
+        type: 'web_fetch_20250910',
+        name: 'web_fetch',
+        max_uses: opts.maxSearches ?? 8,
+        max_content_tokens: 30000,
+        ...(opts.fetchDomains && opts.fetchDomains.length > 0 ? { allowed_domains: opts.fetchDomains } : {}),
+      })
     }
     request.tools = tools
   }
