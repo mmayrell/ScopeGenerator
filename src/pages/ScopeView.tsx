@@ -60,19 +60,18 @@ function RevisionDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Less
   }
 
   return (
-    <Modal open onClose={onClose} title={`Update from Student Data — ${lesson.id}`} wide>
+    <Modal open onClose={onClose} title="Update from Student Data" wide>
       {!proposal ? (
         <div className="space-y-4">
           <p className="text-[12.5px] leading-relaxed text-ink-2">
-            Describe the instructional results—what lessons were involved, what student performance revealed, and any
-            recurring error patterns. Your report will be analyzed to generate evidence-based recommendations. All
-            proposed changes are reviewed before anything is applied.
+            Describe the instructional evidence—what lessons were involved, what feedback, observations, or student
+            performance revealed, and any recurring patterns, misconceptions, or outcomes. Your report will be analyzed
+            to generate evidence-based recommendations. All proposed changes are reviewed before anything is applied.
           </p>
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={5}
-            placeholder="Describe the instructional results"
             className="w-full rounded-xl border border-hairline bg-panel px-3.5 py-3 text-[13px] leading-relaxed outline-none placeholder:text-ink-3 focus:border-accent/40"
           />
           {submitError && (
