@@ -61,7 +61,6 @@ export default function NewScope() {
 
   const set = sets.find((s) => s.id === setId)
   const standards = useMemo(() => (set ? flattenStandards(set.tree) : []), [set])
-  const gapHit = set?.warnings.some((w) => w.acknowledged) && mode === 'course'
 
   useEffect(() => () => clearTimeout(navTimer.current), [])
 
@@ -307,23 +306,13 @@ export default function NewScope() {
           )}
         </div>
 
-        {gapHit && (
-          <div className="rounded-xl border border-amber-ink/25 bg-amber-wash px-4 py-3 text-[12.5px] leading-relaxed text-amber-ink">
-            <span className="font-mono text-[10px] font-semibold uppercase">acknowledged gaps in range</span> — This request lands inside acknowledged coverage gaps
-            ({set?.warnings.filter((w) => w.acknowledged).map((w) => w.text.split(':')[0]).join('; ')}). Affected components will run on anticipated-evidence inference (D1), flagged on their cards.
-          </div>
-        )}
-
         {launchError && (
           <div className="animate-rise rounded-xl border border-rust/25 bg-rust-wash px-4 py-3 text-[12.5px] leading-relaxed text-rust">
             <span className="font-mono text-[10px] font-semibold uppercase">could not start</span> — {launchError}
           </div>
         )}
 
-        <div className="flex items-center justify-between border-t border-hairline pt-5">
-          <div className="text-[11.5px] text-ink-3">
-            Records engine + doctrine versions on the scope. Whole-course generation is a long job — checkpointed, resumable.
-          </div>
+        <div className="flex items-center justify-end border-t border-hairline pt-5">
           <Btn
             kind="primary"
             disabled={launching || !setId || (mode === 'standard' && !standard) || (mode === 'topic' && !topicMapped)}
