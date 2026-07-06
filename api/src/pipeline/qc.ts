@@ -179,6 +179,33 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
           : `All ${inBoundary.length} in-boundary released items attach to a lesson — the released test is fully modeled.`,
   })
 
+  // 11. Clean-field separation — field content states the WHAT; reasoning
+  // lives in the per-field decision records. Rule ids (P#/D#/A#) and
+  // derivation narrative in content are the machine-detectable signatures of
+  // reasoning leaking into a field.
+  // Rule ids only in citation shape ("per D1", "(P3)", "rule A2") — a bare
+  // letter-digit token can be legitimate content.
+  const RULE_ID = /\b(?:per|rule)\s+[PDA]\d{1,2}\b|\([PDA]\d{1,2}\)/
+  const DERIVATION = /extrapolated from|inferred from the|overrides? the .{0,30}default|because the|per the (decomposition|standards document|doctrine)/i
+  const leaks: string[] = []
+  for (const l of lessons) {
+    for (const key of Object.keys(l.fields) as (keyof Lesson['fields'])[]) {
+      const content = l.fields[key]?.content ?? ''
+      if (RULE_ID.test(content) || DERIVATION.test(content)) {
+        leaks.push(`${l.id} (${String(key)})`)
+        break // one flag per lesson keeps the detail readable
+      }
+    }
+  }
+  checks.push({
+    name: 'Clean-field separation',
+    status: leaks.length > 0 ? 'flag' : 'pass',
+    detail:
+      leaks.length > 0
+        ? `These lessons explain a decision inside a field instead of stating the field cleanly (rule IDs like "per D1" or wording like "extrapolated from" belong in the Decision Record under the field, not in its content): ${leaks.slice(0, 12).join(', ')}${leaks.length > 12 ? ', …' : ''}. A rerun regenerates the card under the current rules.`
+        : 'Field content is descriptive only — every rationale lives in a Decision Record under its field.',
+  })
+
   return checks
 }
 
