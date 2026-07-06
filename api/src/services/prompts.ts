@@ -429,7 +429,7 @@ Existing usage notes from the uploader: ${artifact?.usageNotes || '(none)'}
 
 Output:
 - usageNotes: an enriched usage-notes paragraph for this artifact — what the document contains, which standards/domains/grades it covers, which harvests it supports (decomposition keys / demand bands / misconceptions / worked problems / representation vocabulary), and any P6/P7 firewall cautions. This text steers the stages that consume the artifact.
-- coverageWarnings: ONLY apparent contradictions between this document and the declared set — it partitions/bounds/places standards in ways that conflict with the set's declared framework, grade, or coding scheme. It is EXPECTED that this document covers only a subset of the standards; absences are NOT warnings (a later cross-document pass checks what nothing covers). One sentence each. At most 3; [] when nothing rises to that bar.`,
+- coverageWarnings: ONLY apparent contradictions between this document and the declared set — it partitions/bounds/places standards in ways that conflict with what the set's declared framework and grade actually SAY. It is EXPECTED that this document covers only a subset of the standards (absences are NOT warnings — a later cross-document pass checks what nothing covers), and EXPECTED that it may use a state-prefixed or re-lettered coding scheme for the same framework (code differences resolve by normalization and are NOT warnings). One sentence each. At most 3; [] when nothing rises to that bar.`,
   }
 }
 
@@ -466,7 +466,7 @@ ${PRECEDENCE}
 Flag EXACTLY two things and nothing else:
 
 1. Contradictions among the documents (kind "conflict"):
-- The standards document is a STATE-ADJUSTED variant of a canonical framework while other documents (items, unpacking, progressions) assume the canonical framework — or vice versa: codes that resolve differently, standards added/removed/re-worded by the state, limits that differ.
+- A state adjustment that materially ALTERS the canonical framework: a standard added, removed, re-worded, re-bounded, or moved across grades, or limits that differ — anywhere the documents leave two competing versions of what a standard says or covers. NOT the mere mixture of state-variant and canonical documents: that mixture is EXPECTED (states rename, re-letter, and lightly edit canonical frameworks), and finding where an edit changes scope is this check's purpose, not a defect to report in itself. NEVER flag coding-scheme differences alone (e.g. "NY-4.MD.3" for "4.MD.3") — codes resolve by normalization, not by a warning.
 - Item alignments that reference standards the parsed tree does not contain, or a different grade/course of the same framework.
 - Unpacking/progression documents that partition or bound standards in ways the standards document's own wording contradicts.
 - Documents disagreeing about grade placement, included sub-parts, or in-document limits.
