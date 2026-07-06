@@ -12,6 +12,7 @@ const Icon = ({ d, box = 20 }: { d: string; box?: number }) => (
 const nav = [
   { to: '/', label: 'Scopes', icon: 'M3 5h14M3 10h14M3 15h9', end: true },
   { to: '/sets', label: 'Standard Sets', icon: 'M10 3l7 3.5-7 3.5-7-3.5L10 3zM3 10.5L10 14l7-3.5M3 14.5L10 18l7-3.5' },
+  { to: '/packets', label: 'Evidence Packets', icon: 'M4 3.5h9l3 3v10a1 1 0 01-1 1H4a1 1 0 01-1-1v-12a1 1 0 011-1zM13 3.5v3h3M6.5 9.5h7M6.5 12.5h7M6.5 15.5h4' },
   { to: '/system', label: 'Engine & Doctrine', icon: 'M10 6.5V3.5M10 16.5v-3M13.5 10h3M3.5 10h3M12.3 7.7l2-2M5.7 14.3l2-2M12.3 12.3l2 2M5.7 5.7l2 2M12 10a2 2 0 11-4 0 2 2 0 014 0z' },
 ]
 
