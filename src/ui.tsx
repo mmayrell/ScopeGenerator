@@ -5,6 +5,14 @@ import type { Citation, ItemRecord } from './types'
 
 // ---------- tiny primitives ----------
 
+/**
+ * Standard codes are always written with capital letters: uppercase code-like
+ * tokens ("4.oa.a.1" → "4.OA.A.1", "k.cc.1" → "K.CC.1") inside free text,
+ * leaving ordinary words untouched. Mirrors capsStandardCodes in api/src/shared/util.ts.
+ */
+export const capsStandardCodes = (text: string): string =>
+  text.replace(/\b(?:\d+[A-Za-z0-9]*|[Kk]|HS[A-Za-z]{0,3})(?:\.[A-Za-z0-9]+)+\b/g, (m) => m.toUpperCase())
+
 export const Mono = ({ children, className = '', title }: { children: ReactNode; className?: string; title?: string }) => (
   <span className={`font-mono text-[0.92em] tracking-tight ${className}`} title={title}>
     {children}

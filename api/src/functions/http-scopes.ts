@@ -6,7 +6,7 @@ import { GENERATE_TOTAL_STAGES } from '../pipeline/generate'
 import { declineMerge, findProtectedPair } from '../pipeline/guardrails'
 import { HttpError } from '../shared/errors'
 import { api, ok, readJson, requireParam } from '../shared/http'
-import { ACTOR, DOCTRINE_VERSIONS, ENGINE_VERSION, newId, today } from '../shared/util'
+import { ACTOR, capsStandardCodes, DOCTRINE_VERSIONS, ENGINE_VERSION, newId, today } from '../shared/util'
 
 // POST /api/scopes  { setId, mode, params } → { id, jobId }
 // Creates the scope doc (status 'generating') and enqueues the generate job.
@@ -19,7 +19,7 @@ api({
     if (!body.setId || !body.mode) throw new HttpError(400, 'setId and mode are required')
     const mode = body.mode
     if (!['course', 'standard', 'topic'].includes(mode)) throw new HttpError(400, `unknown mode: ${mode}`)
-    const params = body.params ?? ''
+    const params = capsStandardCodes(body.params ?? '')
     const set = await getSet(body.setId)
     if (!set.published) throw new HttpError(400, `set ${set.id} is not published`)
 

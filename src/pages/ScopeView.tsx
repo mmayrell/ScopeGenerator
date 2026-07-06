@@ -4,7 +4,7 @@ import { api } from '../api'
 import { fieldMeta } from '../data/meta'
 import { scopeUnsettled, useScopePolling, useStore, type RerunResult } from '../store'
 import type { DecisionEntry, Lesson, Proposal, Scope } from '../types'
-import { Btn, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
+import { Btn, capsStandardCodes, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
 
 const typeTone: Record<Lesson['type'], { label: string; tone: 'accent' | 'cite' | 'night' }> = {
   'new-learning': { label: 'new-learning atom', tone: 'accent' },
@@ -525,7 +525,7 @@ export default function ScopeView() {
         <div className="animate-rise w-full max-w-lg rounded-2xl border border-hairline bg-panel p-6 shadow-(--shadow-lift)">
           <div className="flex flex-wrap items-center gap-2.5">
             <Pill tone="red">generation failed</Pill>
-            <h1 className="font-display text-[18px] font-semibold text-ink">{scope.title}</h1>
+            <h1 className="font-display text-[18px] font-semibold text-ink">{capsStandardCodes(scope.title)}</h1>
           </div>
           <div className="mt-4 rounded-xl border border-rust/25 bg-rust-wash px-4 py-3">
             <div className="font-mono text-[10px] font-semibold tracking-wide text-rust uppercase">error</div>
@@ -565,7 +565,7 @@ export default function ScopeView() {
       {/* unit / lesson rail */}
       <aside className="w-60 shrink-0 overflow-y-auto border-r border-hairline bg-panel/60 px-4 py-6 xl:w-72">
         <Link to="/" className="px-2 text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Scopes</Link>
-        <h1 className="mt-2 px-2 font-display text-[17px] leading-snug font-semibold text-ink">{scope.title}</h1>
+        <h1 className="mt-2 px-2 font-display text-[17px] leading-snug font-semibold text-ink">{capsStandardCodes(scope.title)}</h1>
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5 px-2">
           <Pill tone="neutral">v{scope.version}</Pill>
           <Pill tone={qcFlags.length ? 'amber' : 'green'}>{qcFlags.length ? `QC: ${qcFlags.length} flagged` : 'QC clean'}</Pill>
@@ -675,7 +675,7 @@ export default function ScopeView() {
       {/* delete confirm */}
       <Modal open={confirmDelete} onClose={() => setConfirmDelete(false)} title="Delete Scope?">
         <p className="text-[13px] leading-relaxed text-ink-2">
-          This removes <span className="font-semibold text-ink">{scope.title}</span> and its {scope.history.length} versions for every user ({set?.name}). This is the one non-versioned operation.
+          This removes <span className="font-semibold text-ink">{capsStandardCodes(scope.title)}</span> and its {scope.history.length} versions for every user ({set?.name}). This is the one non-versioned operation.
         </p>
         <div className="mt-5 flex justify-end gap-2">
           <Btn onClick={() => setConfirmDelete(false)}>Cancel</Btn>

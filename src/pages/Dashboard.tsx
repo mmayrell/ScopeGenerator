@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { scopeUnsettled, useScopePolling, useStore } from '../store'
-import { Mono, Pill, Btn } from '../ui'
+import { capsStandardCodes, Mono, Pill, Btn } from '../ui'
 
 export default function Dashboard() {
   const { scopes, sets } = useStore()
@@ -39,7 +39,7 @@ export default function Dashboard() {
                 <div>
                   <div className="flex items-center gap-2.5">
                     <h2 className="font-display text-[18px] font-semibold text-ink group-hover:text-accent-deep">
-                      {s.title}
+                      {capsStandardCodes(s.title)}
                     </h2>
                     <Pill tone="neutral">v{s.version}</Pill>
                     {s.status === 'generating' ? (

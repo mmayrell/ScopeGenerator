@@ -13,3 +13,11 @@ export const sleep = (ms: number): Promise<void> => new Promise((resolve) => set
 
 export const newId = (prefix: string): string =>
   `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+
+/**
+ * Standard codes are always written with capital letters: uppercase code-like
+ * tokens ("4.oa.a.1" → "4.OA.A.1", "k.cc.1" → "K.CC.1") inside free text,
+ * leaving ordinary words untouched. Mirrors capsStandardCodes in src/ui.tsx.
+ */
+export const capsStandardCodes = (text: string): string =>
+  text.replace(/\b(?:\d+[A-Za-z0-9]*|[Kk]|HS[A-Za-z]{0,3})(?:\.[A-Za-z0-9]+)+\b/g, (m) => m.toUpperCase())
