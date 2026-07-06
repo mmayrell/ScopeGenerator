@@ -13,6 +13,36 @@ import type { Citation, ItemRecord } from './types'
 export const capsStandardCodes = (text: string): string =>
   text.replace(/\b(?:\d+[A-Za-z0-9]*|[Kk]|HS[A-Za-z]{0,3})(?:\.[A-Za-z0-9]+)+\b/g, (m) => m.toUpperCase())
 
+// Enumeration markers inside prose: "(1) …", "1. …", or "1) …" preceded by
+// whitespace (or text start) and followed by whitespace. Two digits max, so
+// years ("2017. ") never match; the leading-boundary requirement keeps
+// decimals ("3.5") and standard codes ("4.OA.A.1") untouched.
+const LIST_MARKER = /(^|\s+)(\((\d{1,2})\)|(\d{1,2})([.)])) (?=\S)/g
+
+const markerStyle = (m: RegExpMatchArray): string => (m[3] !== undefined ? 'paren' : `plain${m[5]}`)
+
+/**
+ * Lesson-card fields often pack a numbered list into one prose paragraph
+ * ("… (1) equal groups; (2) arrays; (3) area models"). This puts every number
+ * of a genuine enumeration on its own line. A style only qualifies when
+ * markers 1 AND 2 both appear (a lone "(1) above" reference stays inline).
+ * Render the result with `whitespace-pre-line` (or newline-aware docx runs).
+ */
+export function breakNumberedList(text: string): string {
+  const found = new Map<string, Set<number>>()
+  for (const m of text.matchAll(LIST_MARKER)) {
+    const style = markerStyle(m)
+    found.set(style, (found.get(style) ?? new Set()).add(Number(m[3] ?? m[4])))
+  }
+  const eligible = new Set([...found.entries()].filter(([, ns]) => ns.has(1) && ns.has(2)).map(([s]) => s))
+  if (eligible.size === 0) return text
+  return text.replace(LIST_MARKER, (full, _pre, marker, parenNum, _plainNum, plainSep, offset: number) => {
+    const style = parenNum !== undefined ? 'paren' : `plain${plainSep}`
+    if (!eligible.has(style)) return full
+    return `${offset === 0 ? '' : '\n'}${marker} `
+  })
+}
+
 export const Mono = ({ children, className = '', title }: { children: ReactNode; className?: string; title?: string }) => (
   <span className={`font-mono text-[0.92em] tracking-tight ${className}`} title={title}>
     {children}

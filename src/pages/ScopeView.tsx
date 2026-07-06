@@ -4,7 +4,7 @@ import { api } from '../api'
 import { fieldMeta } from '../data/meta'
 import { scopeUnsettled, useScopePolling, useStore } from '../store'
 import type { DecisionEntry, Lesson, Proposal, Scope } from '../types'
-import { Btn, capsStandardCodes, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
+import { breakNumberedList, Btn, capsStandardCodes, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
 
 const typeTone: Record<Lesson['type'], { label: string; tone: 'accent' | 'cite' | 'night' }> = {
   'new-learning': { label: 'new-learning atom', tone: 'accent' },
@@ -256,8 +256,9 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
                 {field.inferred && <div className="mt-1.5"><Pill tone="amber">inferred — D1</Pill></div>}
               </div>
               <div className="min-w-0">
-                <p className="font-display text-[14px] leading-relaxed text-ink">
-                  {field.content}
+                {/* whitespace-pre-line renders the enumeration breaks from breakNumberedList */}
+                <p className="font-display text-[14px] leading-relaxed whitespace-pre-line text-ink">
+                  {breakNumberedList(field.content)}
                   {/* Standard, Cluster, and Objectives carry the authority and mastery definition directly, not cited evidence — no provenance chips. */}
                   {fm.key !== 'standards' && fm.key !== 'cluster' && fm.key !== 'objectives' && <CiteChips citations={field.citations} />}
                 </p>

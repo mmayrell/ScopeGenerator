@@ -17,7 +17,7 @@ import {
 import { api } from '../api'
 import { fieldMeta } from '../data/meta'
 import type { ItemRecord, Scope, StandardSet } from '../types'
-import { capsStandardCodes } from '../ui'
+import { breakNumberedList, capsStandardCodes } from '../ui'
 
 const INK = '23232B'
 const INK2 = '5A5A66'
@@ -57,10 +57,15 @@ const label = (text: string): Paragraph =>
     children: [new TextRun({ text, bold: true, size: 17, color: INK2, allCaps: true })],
   })
 
+// Newline-aware: docx keeps a raw \n inside w:t, which Word renders as
+// nothing — every line becomes its own run with an explicit break so the
+// enumeration lines from breakNumberedList actually break.
 const body = (text: string): Paragraph =>
   new Paragraph({
     spacing: { after: 60 },
-    children: [new TextRun({ text, size: 21, color: INK })],
+    children: text
+      .split('\n')
+      .map((line, i) => new TextRun({ text: line, break: i > 0 ? 1 : undefined, size: 21, color: INK })),
   })
 
 const caption = (text: string): Paragraph =>
@@ -175,7 +180,7 @@ export async function buildScopeDocxBlob(scope: Scope, sets: StandardSet[]): Pro
       )
       for (const fm of fieldMeta) {
         const field = l.fields[fm.key] ?? { content: '—', citations: [] }
-        children.push(label(`${String(fm.n).padStart(2, '0')}  ${fm.label}`), body(field.content))
+        children.push(label(`${String(fm.n).padStart(2, '0')}  ${fm.label}`), body(breakNumberedList(field.content)))
         if (fm.key === 'releasedItems') {
           for (const rid of l.itemRefs) {
             const entry = itemsById.get(rid)
