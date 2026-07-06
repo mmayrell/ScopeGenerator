@@ -503,6 +503,8 @@ export function ingestLexiconPrompt(set: StandardSet): Prompt {
 
 Build ONE comprehensive glossary of the EXPECTED STUDENT-FACING vocabulary for this set — every term official documentation shows a ${set.gradeSpan} student is expected to recognize, interpret, or produce, within the scope of these standards.
 
+Vocabulary consists ONLY of lexical items — words or fixed mathematical terms — that students are expected to recognize, understand, or use ("perimeter", "equivalent fractions", "line of symmetry"). Vocabulary is NOT concepts, procedures, explanations, rules, strategies, success criteria, learning objectives, or descriptive phrases — "compare two fractions with different numerators", "use the four operations to solve problems", and "round to the nearest ten" are not glossary entries, however student-facing the activity is.
+
 The determination you are making for every candidate term: is it expected STUDENT-FACING vocabulary — not merely a term that appears in educator documentation. A term is supported only when official documentation provides evidence that students are expected to recognize, interpret, or produce it.
 
 Strong evidence (highest confidence):
