@@ -1,74 +1,166 @@
-import { ExemplarAsset, FrameworkDoc, FrameworkSection } from '../domain/types'
-import { dataContainer } from './clients'
-import { getJsonOrUndefined, putJson } from './blobs'
-import { today } from '../shared/util'
+import { FrameworkDoc } from '../domain/types'
 
-// The governing framework the tool runs under, persisted as one blob document.
-// GET returns the stored doc, or the built-in defaults below on first read.
-// PUT replaces it; sections whose content changed get a version bump and a
-// fresh `updated` stamp, and the doc then stays locked as-is until the next edit.
+// The governing framework the tool runs under — the engine and doctrine
+// documents, fixed as compiled here. They are not editable or uploadable:
+// new versions ship with the tool, and every generated scope records the
+// versions it ran under (ENGINE_VERSION / DOCTRINE_VERSIONS in shared/util.ts
+// must stay in step with the versions below).
 
-const FRAMEWORK_BLOB = 'system/framework.json'
+const ENGINE_CONTENT = `## Context
 
-const ENGINE_CONTENT = `## Purpose
+Instructional standards define what students are expected to learn, but they rarely define how instruction should be organized into lessons. Converting standards into an effective curriculum requires determining where one lesson ends and the next begins, which skills should be taught together, which require separate instruction, and how those lessons should build on one another to maximize mastery and transfer.
 
-This BrainLift decides two things and only two things for any standard set the tool is given: where lessons cut (granularity) and what inside each lesson is explicitly modeled (modeling scope). It is written to be standard-set-agnostic — every rule below reads against the selected standard set's own documents: its official standards wording, its released-item corpus, its structured decomposition, and its interpretive documents. No rule names a particular state, framework, or test.
+This BrainLift establishes the instructional design rules used to make those decisions. Grounded in the principles of Direct Instruction, it defines a consistent, evidence-based procedure for decomposing standards into the smallest meaningful teachable units while preserving conceptual coherence and minimizing unnecessary cognitive load. The resulting lesson scope becomes the canonical instructional blueprint used throughout the curriculum generation pipeline.
 
-## The Atom
+The framework makes two foundational instructional decisions:
 
-A lesson teaches exactly one atom, and an atom is defined by its triple:
+- Lesson Granularity (Split vs. Don't Split) — determines whether content should be taught as separate lessons or as variations within a single lesson. Splits are justified only when instruction requires a new strategy, decision, representation, prerequisite, or other meaningful change in student behavior — not simply because problems become harder or use different numbers or contexts.
+- Modeling Scope (Teach vs. Practice) — determines, within each lesson, which examples require explicit modeling and guided instruction and which can be introduced directly through practice because they apply the same mastered strategy under surface-level variation.
 
-- Start cue — what the student sees that signals this routine and no other.
-- Single decision path — one named strategy, executed the same way every time.
-- One observable response form — the output a student produces.
+Together, these decisions transform standards and assessment evidence into a coherent lesson architecture. That architecture serves as the instructional foundation for downstream artifacts — including lesson cards, worked examples, assessments, interventions, adaptive pathways, and future curriculum revisions.
 
-If a candidate lesson needs two routines, two response forms, or an ambiguous cue, it is not one atom. No lesson leaves atomization without satisfying the triple.
+## Alignment to Track Design
 
-## Split Criteria
+Within this curriculum architecture, an atom is the smallest teachable unit — introduced by a clear start cue, guided by a single decision path/strategy, and demonstrated through one observable response form — defined as follows:
 
-Test every candidate boundary against these; a split requires cited evidence from the standard set's own corpus:
+- The tracks/strands described in this architecture control when atoms recur (spacing/interleaving/maintenance).
+- Lessons plug into tracks/strands but are authored independently of scheduling.
+- This guide identifies how a single lesson is built to be durable and transferable.
 
-- New rule or strategy not previously taught.
-- New vocabulary or concept label that needs stabilization before use.
-- New or hidden decision step that changes the routine.
-- Unmastered representation or notation — the first encounter of a normalized lexicon form.
-- High confusability with a look-alike skill.
-- Foundational preskill missing or weak.
-- Demand-band jump — the same content at a categorically higher cognitive demand.
-- Documented error pattern, from the corpus's interpretive documents, the doctrine's error inventories, or user notes.
+## Scope Balance
 
-## Don't-Split Criteria
-
-- Same strategy steps throughout.
-- Quantitative-only or context-only change — bigger numbers or a new surface story are not new learning.
-- Representations already mastered earlier in the sequence.
-- A cumulative goal of choosing among already-mastered routines — that is practice design, not a new atom.
-
-## Precedence and Tie-Breakers
-
-When split and don't-split criteria both genuinely fire, split criteria win. Real ambiguity goes to the tie-breakers, in order:
-
-- Would a novice need new decision cues never before encountered? Split.
-- Can the harder case be rewritten with friendlier numbers or shorter text while the routine stays identical? Don't split.
-- Is there a prerequisite gap that cannot be refreshed quickly without new rules or explicit instruction? Split.
-
-## The Editing Splits Constraint
-
-Error patterns justify a split only when they reveal a new or unstable start cue, a new decision step or rule, or a missing prerequisite. Any other error pattern is fixed inside the atom — with contrast pairs, scaffolds, or re-sequenced practice — or, when the confusion runs between two atoms, with a bridge. This constraint caps every data-driven revision as much as every first generation.
-
-## Bridges
-
-Scan every split pair for confusability. A bridge lesson teaches discrimination, selection, and switching only — recognize which atom applies from the first cue and execute that routine cleanly without blending. Bridges introduce no new rules or methods, are placed only after both parent atoms are independently mastered, and keep confusable material separated in time everywhere else in the sequence.
-
-## Modeling Scope
-
-Inside each atom, partition the cases. Model explicitly (the worked and faded examples) wherever there is: a new rule or misinterpretation risk, an unmastered representation, high load or hidden steps, a shaky preskill, look-alike confusion, a foundational prerequisite, a fossilization-prone error, or a demand jump. Send to extension and ramped practice whatever keeps the same strategy with no new steps: mastered-representation rotation, familiar procedures over varied numbers and contexts, solid preskills, low confusability, no stable error pattern, the same demand band.
-
-Between modeled examples, vary numbers and magnitude, surface contexts, order and format, and previously mastered representations; hold constant the strategy steps, unmastered representations, the demand band, and the reading load.
+Before we decide whether to split a lesson, we need a shared frame for depth vs. breadth — what counts as a new behavior (depth) versus a variation (breadth).
 
 ## The Assessment Alignment Constraint
 
-The selected standard set's released-item corpus — whatever its source, over whatever window its uploads declare — is the primary empirical evidence of what is assessed and how hard. Observed items cap rigor: no atom's ceiling exceeds what the standards document's own wording and limits permit, and no ceiling is set above observed evidence without logging why. Where item evidence is absent for a component, the component stays in scope and its ceiling is inferred from analogous tested components, decomposition bounds, and interpretive worked problems — flagged as inferred everywhere it lands.`
+When designing lessons aligned to state test preparation, instructional scope must be constrained to what is demonstrably assessed.
+
+Rule: if a component of a standard does not appear in the released state tests from the years selected by Alpha, it should be excluded from instruction — even if it introduces a gap due to its role as a prerequisite for future grade levels.
+
+Example: in Grade 4 division, although the standard allows quotients up to four-digit whole numbers, since released STAAR items do not assess this level of complexity, instruction should cap at the highest observed tested difficulty.
+
+This constraint is defined by Alpha Academics and should be treated as a governing design principle across all lesson development.
+
+## Granularity: Split Criteria
+
+Split when any of the following holds — each criterion paired with its canonical example:
+
+- New rule/strategy not previously taught (requires explicit demonstration) — moving from identifying proportional relationships to finding the constant of proportionality needs a split because students must learn a new rule and see clean worked examples with contrasting non-examples before practice.
+- New vocabulary / concept label that must be stabilized before the procedure — for "identify proportional relationships," students may need a separate micro-lesson on what "proportional" means (constant ratio) with examples/non-examples without doing computations.
+- New/hidden decision step changes the routine (requires task analysis and guided practice on the new step) — adding fractions with like denominators needs to be split from adding fractions with unlike denominators because the change requires first finding the least common denominator before adding.
+- Unmastered representation/notation (students can't yet map symbols/graphs/tables to meaning; needs modeling plus scaffolding fades) — representing sample space with a tree diagram needs to be separate from representing sample space in a table, because a new representation changes how information is encoded and must be modeled before scaffolds are faded.
+- High confusability with a look-alike skill (needs discrimination training: side-by-side non-examples) — similarity and congruency must be introduced separately because students require a discrimination rule with contrasted non-examples to prevent persistent mix-ups.
+- Foundational preskill missing/weak (explicit prerequisite skill must be taught prior) — solving two-step equations with negatives needs a split when integer operations haven't been explicitly taught, because the prerequisite must be taught and stabilized before the composite routine.
+- Demand-band jump (e.g. selection vs construction) — from mathematical area calculations to real-world problems.
+- Data-driven error pattern (systematic/high-frequency misconception; needs error-based modeling before independent practice) — in multi-digit multiplication where the multiplier contains one or more zeros (e.g. 3,204 × 203), if item data commonly showed a large spike of answers off by a factor of 10 or 100 because students omit or misplace placeholder zeros and misalign partial products, that would call for a micro-lesson to cover it explicitly. Although the algorithm is nominally the same as the no-zero case (normally "Don't Split: quantitative change only"), the systematic error pattern warrants a separate micro-lesson.
+
+## Granularity: Don't-Split Criteria
+
+- Same strategy steps as taught (no new decisions) — finding area of rectangles and squares by multiplying side lengths.
+- Changes are quantitative only (bigger numbers, benign decimals/fractions) or a change in context — solving one-step equations with different integers/decimals using the same inverse-operation routine.
+- Uses already-mastered representations — identifying functions across tables/graphs/points after each representation has been taught.
+- Cumulative goal that shifts from executing one routine to choosing among multiple mastered routines — mixed word problems where students choose add/subtract/multiply/divide, then solve, justifying the choice.
+
+## Granularity: Tie-Breakers
+
+For edge cases, apply in order:
+
+- Would a novice need new decision cues to start/choose steps they have never been exposed to previously? Yes = Split. (In statistics, if students must select mean absolute deviation vs. range to describe variability, split into three lessons: mean absolute deviation, range, and choosing the appropriate measure for a context and justifying the choice.)
+- Can I rewrite with friendlier numbers/shorter text and the routine stays identical? Yes = Don't Split. (A lesson that includes both 1 cm : 3.2 m and 1 : 4 scale drawings doesn't need to split; both use the same proportion routine and only differ in difficulty.)
+- Is there a prerequisite gap that cannot be refreshed quickly without new rules or explicit instruction/practice? Yes = Split. (In a lesson solving two-digit by one-digit multiplication word problems, if the student hasn't been exposed to the standard algorithm yet, split the lesson to include the explicit instruction and then support the mastery via answer explanations.)
+
+## Bridge Lessons
+
+Sometimes, when a single skill gets split into two atoms, we also need a third, cumulative lesson whose only job is to recombine them.
+
+- In this bridge lesson, students learn to (1) recognize which atom applies from the very first cue in the problem and then (2) execute the correct single routine cleanly — without blending steps from the other atom.
+- Importantly, this lesson does not introduce new rules or methods; it's purely about training discrimination, selection, and switching under mixed practice, using look-alike items that are designed to trigger common confusions.
+- While spaced repetition and cumulative review often address this naturally over time, some topics benefit from a more targeted recombination lesson — especially in areas where students reliably confuse approaches (for example, area vs. perimeter, or deciding between addition vs. multiplication).
+
+## Editing Splits
+
+High-frequency or systematic errors inform what must be taught explicitly, not automatically whether an atom must be split.
+
+Errors justify splitting only when analysis reveals:
+
+- a new or unstable start cue/problem type,
+- a new decision step or rule, or
+- a missing prerequisite that must be taught and stabilized first.
+
+Otherwise, errors should be addressed through improved modeling, contrasts, scaffolding, or sequencing within the same atom.
+
+## Modeling Scope
+
+After granularity is set, we decide the teaching scope inside the atom — what is explicitly modeled vs. left to practice.
+
+Within the atom (lesson), there may be a breadth of content spanning different difficulty levels. Aligned to direct instruction, not all content warrants full modeling. Grounded in learning science (worked-example effect, cognitive load theory, explicit instruction), minimum viable modeling targets only the steps and cases that form or revise schemas and prevent common novice errors. We model the smallest set of exemplars needed to cue decisions, make invisible thinking visible, and enable rapid transfer, then fade support. The rest moves directly to independent practice (Stein et al., 2017).
+
+Building on that principle of minimum viable modeling, vary only surface features between "I Do" and "We Do" to promote transfer, and hold the routine constant so novices attend to the same decision path.
+
+What to vary between "I Do" and "We Do":
+
+- Numbers and magnitude — scale values (small to large), include boundary cases that still use the same steps (e.g. sums crossing 1 but not requiring a new conversion rule if that rule was not taught yet).
+- Surface contexts — swap story frames (recipes, distance, prices) that don't change the mathematical action.
+- Order/format — commuted order (a+b vs b+a), item stems (fill-in/select/short-answer) that preserve the same response mode.
+- Previously mastered representations — tables/graphs/arrays only if those representations are mastered.
+
+What to hold constant between "I Do" and "We Do":
+
+- Strategy steps (no new rules).
+- Unmastered representations (save for a new atom).
+- Cognitive demand band (don't jump from procedural to modeling unless that's the split).
+- Reading load (avoid language complexity that becomes the new barrier).
+
+## Explicit Teaching vs. Extension
+
+Direct Instruction draws a clear line between what must be explicitly taught and what can be treated as extension once the core routine is stable. When a problem introduces a new rule, a new representation, or a likely misinterpretation, instruction should model and secure the strategy before expecting independent transfer (Stein et al., 2017).
+
+Explicit modeling is necessary for:
+
+- New rule/strategy or clear misinterpretation risk.
+- Unmastered representation (first time seeing a form: e.g. mapping, coordinate plane).
+- High cognitive load / multiple hidden steps (teach steps, then fade).
+- Preskill missing or shaky (reteach preskill, then composite skill).
+- Look-alike confusion likely (similar types require discrimination).
+- Foundational prerequisite for later learning (must be stable).
+- Error-prone skill where mistakes fossilize (e.g. place value, fraction operations).
+- Jump in cognitive demand (procedural to application/modeling).
+
+Extension is sufficient for:
+
+- Same strategy as taught; no new steps added.
+- Representation already mastered; rotate representations to show invariance.
+- Single, familiar procedure repeated; vary numbers/contexts only.
+- Preskills solid; current item sits on mastered foundations.
+- Low confusability; include a quick discrimination item but no new modeling.
+- Non-foundational variant of the same atom.
+- Stable error pattern absent; prior accuracy holds in practice.
+- Same demand band (all procedural or all application) within the atom.
+
+## Example: Granularity Build From Released STAAR Questions
+
+To cover STAAR problems involving real-world application of comparing fractions, the released problems include the following question types:
+
+- Finding a fraction greater/less than a given fraction.
+- Identifying which comparison is true from a word problem.
+- Given a fraction model, determine which inequality is true.
+- Identifying true comparisons from tables.
+
+Determining lesson granularity: granularity is driven by the smallest new behavior (atom), or skill, that the lesson can provide. Applying the checklist, one criterion is met — the task has multiple hidden steps / high cognitive load. Some of the problems involve comparing two fractions at a time that are explicitly given to the student, while other problems involve making determinations of which fractions to use in comparison; that carries a significantly higher cognitive load as well as additional steps. This suggests the lesson should be split. The most efficient way to split, so as not to violate the checklist, is to divide the lesson into two:
+
+- Word Problems Involving Identifying Correct Fraction Comparisons.
+- Word Problems Involving Comparing Multiple Fractions.
+
+Determining which problems to model — for each of the two lessons, determine the minimum viable modeling set that aligns to the desired characteristics:
+
+- Lesson 1 (identifying correct fraction comparisons) — model explicitly: EASY, given a fraction model, determine which inequality is true; MEDIUM, identifying correct comparisons from a word problem with two or three fractions; HARD, given a table with 4 or 5 values, determine which comparison is true.
+- Lesson 2 (comparing multiple fractions) — model explicitly: EASY, finding a fraction greater or less than another given fraction; MEDIUM, use a table with qualitative answer choices, requiring multiple comparisons.
+
+Problems that do not require explicit modeling:
+
+- A prompt that looks different but measures the same skill — evaluating which comparisons are true. Students with solid mastery of this skill should be able to answer correctly.
+- A question with slightly different formatting (such as bullets) that is essentially the same as the word problems containing three fractions where students identify the true comparison.
+- A problem whose rigor matches the broader problem set and the underlying skill demands — finding a number less than a given number is already covered in other problems, and it is written in a familiar, already-mastered representation.`
 
 const DOCTRINE_CONTENT = `## Authority
 
@@ -110,76 +202,26 @@ Mastery is always stated as observable behavior — students are able to do a na
 
 At design time, only documented misconceptions are admissible evidence: the doctrine's own error inventories, misconceptions recorded in the standard set's interpretive documents, and user notes. Fossilization-prone errors — the ones that survive if unaddressed — are modeled explicitly with contrast cases rather than left to practice. After deployment, reported student data is admissible the moment a human reports it, at full strength, subject to the Editing Splits constraint on what an error pattern can justify.`
 
-const DEFAULT_REGISTER: ExemplarAsset[] = [
-  {
-    n: 1,
-    asset: 'Example of Lesson Granularity Build from Released Assessment Items',
-    linkedFrom: 'Lesson Granularity & Modeling Scope BrainLift',
-    role: 'Few-shot anchor: Stage 3 atomization',
-    status: 'resolved',
-  },
-  {
-    n: 2,
-    asset: 'Example of Lesson Granularity + Modeling Determination',
-    linkedFrom: 'Lesson Granularity & Modeling Scope BrainLift',
-    role: 'Few-shot anchor: Stages 3–5 (modeling scope, card fill)',
-    status: 'pending',
-  },
-  {
-    n: 3,
-    asset: 'DI Mathematics format library (ch. 9–12 excerpts)',
-    linkedFrom: 'Direct Instruction BrainLift',
-    role: 'Few-shot anchor: Stage 5 approach fields',
-    status: 'resolved',
-  },
-]
-
-export function defaultFramework(): FrameworkDoc {
+/** The fixed framework — read-only; there is no save path. */
+export function getFramework(): FrameworkDoc {
   return {
     engine: {
       kind: 'engine',
-      name: 'Lesson Granularity & Modeling Scope BrainLift',
-      version: 'v2.3',
-      updated: '2026-05-28',
+      name: 'Lesson Granularity & Modeling Scope (v2 for ANY standard set)',
+      description:
+        'Provides the governing principles and decision rules for determining lesson granularity and modeling scope in direct instruction curriculum design.',
+      version: 'v2',
+      updated: '2026-07-06',
       content: ENGINE_CONTENT,
     },
     doctrine: {
       kind: 'doctrine',
       name: 'Direct Instruction BrainLift (Stein et al. 2017)',
+      description:
+        'The controlling method authority for instruction is Stein, Kinder, Silbert & Carnine, Direct Instruction Mathematics (5th edition, 2017), as operationalized here.',
       version: 'v1.8',
       updated: '2026-04-19',
       content: DOCTRINE_CONTENT,
     },
-    register: DEFAULT_REGISTER,
   }
-}
-
-export async function getFramework(): Promise<FrameworkDoc> {
-  return (await getJsonOrUndefined<FrameworkDoc>(dataContainer(), FRAMEWORK_BLOB)) ?? defaultFramework()
-}
-
-/** Bumps vMAJOR.MINOR → vMAJOR.(MINOR+1); passes through anything it can't parse. */
-function bumpVersion(v: string): string {
-  const m = /^v(\d+)\.(\d+)$/.exec(v.trim())
-  return m ? `v${m[1]}.${Number(m[2]) + 1}` : v
-}
-
-/**
- * Persists the framework. A section whose content or name changed gets a version
- * bump and a fresh `updated` stamp (recompilation is part of publishing a new
- * version); the register is stored as sent.
- */
-export async function saveFramework(incoming: FrameworkDoc): Promise<FrameworkDoc> {
-  const current = await getFramework()
-  const stamp = (prev: FrameworkSection, next: FrameworkSection): FrameworkSection =>
-    next.content !== prev.content || next.name !== prev.name
-      ? { ...next, version: bumpVersion(prev.version), updated: today() }
-      : { ...next, version: prev.version, updated: prev.updated }
-  const doc: FrameworkDoc = {
-    engine: stamp(current.engine, { ...incoming.engine, kind: 'engine' }),
-    doctrine: stamp(current.doctrine, { ...incoming.doctrine, kind: 'doctrine' }),
-    register: incoming.register.map((e, i) => ({ ...e, n: i + 1 })),
-  }
-  await putJson(dataContainer(), FRAMEWORK_BLOB, doc)
-  return doc
 }

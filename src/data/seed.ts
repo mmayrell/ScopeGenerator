@@ -453,7 +453,6 @@ const flagship: Lesson = {
   id: 'U3.L3',
   title: 'Multiply Up to a Four-Digit Number by a One-Digit Number, Standard Algorithm',
   type: 'new-learning',
-  locked: true,
   evidenceStatus: 'observed',
   fields: {
     standards: f(
@@ -564,7 +563,7 @@ const l = (
   decisions: Lesson['decisions'],
   itemRefs: string[] = [],
   extra?: Partial<Lesson>,
-): Lesson => ({ id, title, type, locked: false, evidenceStatus, fields, decisions, itemRefs, ...extra })
+): Lesson => ({ id, title, type, evidenceStatus, fields, decisions, itemRefs, ...extra })
 
 const u1l1 = l(
   'U1.L1',
@@ -1245,8 +1244,6 @@ export const seedScope: Scope = {
     { name: 'Neighbor consistency', status: 'pass', detail: 'Boundaries and non-goals consistent with adjacent lessons; split pair U3.L3/U3.L4 + bridge U3.L5 partition cleanly.' },
     { name: 'Ceiling legality', status: 'pass', detail: 'All ceilings within standards-document limits (NBT ≤ 1,000,000; NF denominator list) and P1 evidence.' },
     { name: 'Theme coverage', status: 'pass', detail: 'Critical areas 1 and 2 trace to units U1–U4 and U5. Critical area 3 (geometry) outside this scope’s published evidence — surfaced at request time.' },
-    { name: 'Citation completeness', status: 'flag', detail: 'All fields carry provenance. Surfaced (not buried): 6 lessons rely on anticipated-evidence inference (D1); U5.L1 relies on an unconfirmed ai-proposed alignment (D14).' },
-    { name: 'Decision-record integrity', status: 'pass', detail: 'Field 13 present and non-empty on every card; the U3.L3 contradiction entry cites both sides; the U2.L1 P4 override is logged.' },
     { name: 'Released-items integrity', status: 'pass', detail: 'Field never empty: 6 cards carry captioned observed items; 6 carry a labeled generated ceiling exemplar with inference basis and in-boundary ceiling.' },
   ],
   history: [
@@ -1286,5 +1283,5 @@ export const seedScope: Scope = {
   ],
 }
 
-// systemArtifacts, exemplarRegister, and fieldMeta moved to ./meta.ts — this file
-// now carries seed data only (consumed by the backend seed export, not the app).
+// systemArtifacts and fieldMeta moved to ./meta.ts — this file now carries
+// seed data only (consumed by the backend seed export, not the app).

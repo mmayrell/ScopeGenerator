@@ -21,11 +21,11 @@ The complete product surface from the spec, as a React app running on a client-s
 | §5 Data model | `src/types.ts` — StandardSet, Artifact, ItemRecord, Lesson, DecisionEntry, Citation, Proposal, RerunEvent-shaped history… |
 | §6 Generation pipeline | New scope → staged Stage 2–6 progress, checkpoint framing |
 | §7 Card field rules | `ScopeView` — the fixed 13-field card with per-field provenance popovers, inferred flags, generated ceiling exemplars (never-empty Released items), Decision record with rule IDs |
-| §8 Rerun, locking, versioning | Rerun dialog with guardrail decline + cited criterion + logged override; lock toggles; propose → review → accept revision flow with diff, ripple preview, and iteration rounds; immutable version history |
-| §9 Auto-QC | QC report modal — all ten checks, flags surfaced not buried |
-| §10 Admin experience | Set configuration, review screens (standards tree with limits, item bank with characterizations, alignment-confirmation queue, lexicons), warning acknowledgment, gated publish |
+| §8 Revision & versioning | Propose → review → accept revision flow with diff, ripple preview, and iteration rounds; guardrail decline + cited criterion + logged override; immutable version history |
+| §9 Auto-QC | QC report modal — eight programmatic checks, flags surfaced not buried |
+| §10 Admin experience | Set configuration, review screens (standards tree with limits, item bank with characterizations, alignment-confirmation queue), warning acknowledgment, gated publish |
 | §11 User experience | Scope request (course / standard / topic with mapping confirmation), streaming generation, public-view scopes |
-| §12 / Appendix F | Engine & doctrine page with versions and the Exemplar Asset Register |
+| §12 / Appendix F | Engine & doctrine page — fixed documents with versions and descriptions |
 
 ## Architecture
 

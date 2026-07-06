@@ -2,6 +2,7 @@ import { InvocationContext } from '@azure/functions'
 import { JobMessage, Lesson, Proposal, Scope } from '../domain/types'
 import { getScope, getScopeEvidenceSet, mutateScope, snapshotScope } from '../data/entities'
 import { mutateJob, pushLog } from '../data/jobs'
+import { enqueueJob } from '../data/queue'
 import { generateStructured } from '../services/claude'
 import { applyPrompt, iteratePrompt, proposalPrompt } from '../services/prompts'
 import {
@@ -94,12 +95,23 @@ export async function iterateRunStep(msg: JobMessage, ctx: InvocationContext): P
 
 /**
  * Kind `apply-proposal`: Claude rewrites the targeted lesson fields per the
- * accepted change set; relational fields of adjacent lessons updated; locked
- * lessons queue suggestions. The version was already bumped (and history
- * written) at accept time; the snapshot is refreshed so the immutable version
- * reflects the applied change set.
+ * accepted change set; relational fields of adjacent lessons updated. The
+ * version was already bumped (and history written) at accept time; the
+ * snapshot is refreshed so the immutable version reflects the applied
+ * change set.
  */
+// Each per-unit apply call is unbatched and can realistically run 3-5 minutes
+// (plus SDK backoff); stop starting new calls with this much of the invocation
+// spent and re-enqueue for the rest — a call starting at the budget line still
+// has ~5.5 minutes of the 10-minute functionTimeout to finish.
+const APPLY_TIME_BUDGET_MS = 4.5 * 60 * 1000
+
+/** The unit id a change target names: a lesson ref's unit, or a bare unit ref. */
+const changeUnitId = (target: string): string | undefined =>
+  target.match(/U\d+(?=\.L\d+)/)?.[0] ?? target.match(/\bU\d+\b/)?.[0]
+
 export async function applyProposalRunStep(msg: JobMessage, ctx: InvocationContext): Promise<void> {
+  const started = Date.now()
   const { scope, proposal } = await loadProposal(msg)
   const set = await getScopeEvidenceSet(scope)
 
@@ -109,55 +121,90 @@ export async function applyProposalRunStep(msg: JobMessage, ctx: InvocationConte
     pushLog(r, `Applying proposal ${proposal.id} on ${proposal.report.target}`)
   })
 
+  // Resolve the affected units: the union of the report target (a lesson's
+  // unit, or a unit) and every unit the accepted change set names — a change
+  // target carries either a lesson ref or a bare unit ref. Changes whose
+  // target names neither are logged loudly as skipped; if NOTHING resolves,
+  // fail loudly rather than silently no-op against the wrong unit.
   const targetLessonId = proposal.report.target.match(/U\d+\.L\d+/)?.[0]
   const located = targetLessonId ? findLesson(scope.units, targetLessonId) : undefined
-  const unit = located?.unit ?? scope.units.find((u) => proposal.report.target.startsWith(u.id))
-  // No first-unit fallback: applying against the wrong unit would silently
-  // no-op; failing loudly lets the worker's apply-proposal failure path
-  // surface the error to the user.
-  if (!unit) {
+  const direct = located?.unit ?? scope.units.find((u) => proposal.report.target.startsWith(u.id))
+  const unitIds = new Set<string>(direct ? [direct.id] : [])
+  const skippedTargets: string[] = []
+  for (const c of proposal.changes) {
+    const uid = changeUnitId(c.target)
+    if (uid && scope.units.some((u) => u.id === uid)) unitIds.add(uid)
+    else if (!direct) skippedTargets.push(c.target)
+  }
+  const affected = scope.units.filter((u) => unitIds.has(u.id))
+  if (skippedTargets.length > 0) {
+    await mutateJob(msg.jobId, (r) =>
+      pushLog(r, `Accepted change(s) skipped — target names no unit in this scope: ${skippedTargets.join(' | ')}`),
+    )
+    ctx.warn(`apply-proposal ${msg.jobId}: ${skippedTargets.length} change(s) with unresolvable targets skipped`)
+  }
+  if (affected.length === 0) {
     throw new Error(
-      `apply-proposal: target "${proposal.report.target}" resolves to neither a lesson nor a unit in scope ${scope.id}`,
+      `apply-proposal: target "${proposal.report.target}" and the accepted change set resolve to no unit in scope ${scope.id}`,
     )
   }
 
-  const out = await generateStructured<WireApplyOutput>({
-    ...applyPrompt(scope, set, unit, proposal),
-    schema: APPLY_SCHEMA,
-    effort: 'medium', // interactive latency; fits the 10-min Consumption cap
-  })
+  // A redelivered or re-enqueued attempt must never re-apply a unit — the
+  // change set is not idempotent against its own output. The authoritative
+  // checkpoint is proposal.appliedUnits, written ATOMICALLY with each unit's
+  // rewrite inside the same mutateScope commit (the job row copy is a log).
+  const done = new Set<string>(proposal.appliedUnits ?? [])
+  const remaining = affected.filter((u) => !done.has(u.id))
 
   const validItemIds = new Set(set.items.map((it) => it.id))
-  const explicitTargets = new Set(
-    proposal.changes.map((c) => c.target.match(/U\d+\.L\d+/)?.[0]).filter((t): t is string => !!t),
-  )
-  const updated = await mutateScope(scope.id, (s) => {
-    const p = findProposalOn(s, proposal.id)
-    const freshUnit = s.units.find((u) => u.id === unit.id)
-    if (!freshUnit) throw new Error(`apply-proposal: unit ${unit.id} no longer exists in scope ${s.id}`)
-    const byId = new Map(freshUnit.lessons.map((l) => [l.id, l] as const))
-    for (const wire of out.lessons ?? []) {
-      const existing = byId.get(wire.id)
-      if (!existing) continue // ignore lessons outside the unit
-      // Locked lessons are rewritten only when explicitly targeted by the accepted
-      // change set — "acceptance is the approval the lock requires" (spec §8).
-      if (existing.locked && !explicitTargets.has(existing.id)) continue
-      const rewritten: Lesson = { ...toLesson(wire, validItemIds), id: existing.id, locked: existing.locked }
-      byId.set(existing.id, rewritten)
+  let processed = 0
+  for (const unit of remaining) {
+    if (processed > 0 && Date.now() - started > APPLY_TIME_BUDGET_MS) {
+      await enqueueJob({ jobId: msg.jobId, kind: msg.kind, step: msg.step, scopeId: msg.scopeId, payload: msg.payload })
+      await mutateJob(msg.jobId, (r) =>
+        pushLog(r, `Applied to ${processed} unit(s) this pass — continuing with the remaining ${remaining.length - processed} in a fresh invocation`),
+      )
+      ctx.log(`apply-proposal/run ${msg.jobId}: time budget reached — re-enqueued for remaining units`)
+      return
     }
-    for (const sug of out.lockedSuggestions ?? []) {
-      const existing = byId.get(sug.lessonId)
-      if (existing && existing.locked) {
-        byId.set(sug.lessonId, { ...existing, pendingRelationalUpdate: sug.suggestion })
+    const out = await generateStructured<WireApplyOutput>({
+      ...applyPrompt(scope, set, unit, proposal),
+      schema: APPLY_SCHEMA,
+      effort: 'medium', // interactive latency; fits the 10-min Consumption cap
+      // Bounded below the 64k default: an output large enough to need more
+      // cannot finish streaming inside the invocation anyway, so fail fast
+      // (truncation is terminal in the worker) instead of riding into the
+      // host-timeout kill that records nothing.
+      maxTokens: 40000,
+    })
+
+    await mutateScope(scope.id, (s) => {
+      const p = findProposalOn(s, proposal.id)
+      if ((p.appliedUnits ?? []).includes(unit.id)) return // another attempt won the race
+      const freshUnit = s.units.find((u) => u.id === unit.id)
+      if (!freshUnit) throw new Error(`apply-proposal: unit ${unit.id} no longer exists in scope ${s.id}`)
+      const byId = new Map(freshUnit.lessons.map((l) => [l.id, l] as const))
+      for (const wire of out.lessons ?? []) {
+        const existing = byId.get(wire.id)
+        if (!existing) continue // ignore lessons outside the unit
+        byId.set(existing.id, { ...toLesson(wire, validItemIds), id: existing.id } satisfies Lesson)
       }
-    }
-    freshUnit.lessons = freshUnit.lessons.map((l) => byId.get(l.id) ?? l)
-    p.working = false
+      freshUnit.lessons = freshUnit.lessons.map((l) => byId.get(l.id) ?? l)
+      p.appliedUnits = [...(p.appliedUnits ?? []), unit.id]
+      s.updated = today()
+    })
+    done.add(unit.id)
+    processed++
+    await mutateJob(msg.jobId, (r) => pushLog(r, `Accepted changes applied to ${unit.id}`))
+  }
+
+  const updated = await mutateScope(scope.id, (s) => {
+    findProposalOn(s, proposal.id).working = false
     s.updated = today()
   })
   await snapshotScope(updated) // refresh v<version> written at accept time
 
-  await completeJob(msg.jobId, `Accepted change set applied to ${unit.id}; locked lessons queued ${out.lockedSuggestions?.length ?? 0} suggestion(s)`)
+  await completeJob(msg.jobId, `Accepted change set applied to ${[...done].join(', ') || 'no units'}`)
   ctx.log(`apply-proposal/run ${msg.jobId}: proposal ${proposal.id} applied`)
 }
 

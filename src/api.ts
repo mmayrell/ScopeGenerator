@@ -160,9 +160,6 @@ export const api = {
 
   getScopeJob: (id: string) => request<JobStatus>('GET', `/scopes/${encodeURIComponent(id)}/job`),
 
-  toggleLock: (scopeId: string, lessonId: string) =>
-    request<Scope>('POST', `/scopes/${encodeURIComponent(scopeId)}/lock`, { lessonId }),
-
   rerun: (scopeId: string, target: string, mode: string, override?: boolean) =>
     request<RerunResult>('POST', `/scopes/${encodeURIComponent(scopeId)}/rerun`, { target, mode, override }),
 
@@ -188,8 +185,6 @@ export const api = {
   deleteSet: (id: string) => request<{ ok: true }>('DELETE', `/sets/${encodeURIComponent(id)}`),
 
   getFramework: () => request<FrameworkDoc>('GET', '/framework'),
-
-  saveFramework: (doc: FrameworkDoc) => request<FrameworkDoc>('PUT', '/framework', doc),
 
   /** URL for an item's question screenshot — <img> can't send headers, so the access code rides as a query param. */
   itemImageUrl: (setId: string, itemId: string): string =>

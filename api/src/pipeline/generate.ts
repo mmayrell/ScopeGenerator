@@ -16,6 +16,7 @@ import {
   WireLessonBatch,
 } from '../services/schemas'
 import { today } from '../shared/util'
+import { ensureSetItemsExtracted } from './items'
 import { countLessons, deriveProtectedBoundaries, runQc } from './qc'
 
 // Generation pipeline (contract §Generation pipeline), checkpointed for the
@@ -55,6 +56,10 @@ export async function generatePlanStep(msg: JobMessage, ctx: InvocationContext):
     return
   }
   const scope = await getScope(scopeId)
+  // Released items extract lazily, once per set, ahead of the first plan that
+  // needs them — classified records + cropped screenshots land on the set for
+  // this and every later scope. False = partial work done and re-enqueued.
+  if (!(await ensureSetItemsExtracted(scope, msg, ctx))) return
   const set = await getScopeEvidenceSet(scope)
 
   await mutateJob(msg.jobId, (r) => {
@@ -234,8 +239,10 @@ export async function generateFinalizeStep(msg: JobMessage, ctx: InvocationConte
   scope.version = 1
   scope.updated = today()
   scope.protectedBoundaries = deriveProtectedBoundaries(units)
-  // History entry mirrors src/store.tsx finishGeneration (engine v2.3,
-  // DI BrainLift v1.8, per the seed conventions).
+  // Version labels derive from what THIS scope recorded at creation — a
+  // generation in flight across a deploy must not stamp its history with the
+  // new build's constants while the document says otherwise.
+  const versionLabels = [scope.engineVersion, ...scope.doctrineVersions].map((v) => v.split(' (')[0]).join(', ')
   scope.history = [
     {
       version: 1,
@@ -248,7 +255,7 @@ export async function generateFinalizeStep(msg: JobMessage, ctx: InvocationConte
           : scope.request.mode === 'standard'
             ? 'Single-standard'
             : 'Topic'
-      } generation. Engine v2.3, DI BrainLift v1.8. ${lessons} lessons, ${units.length} unit${units.length === 1 ? '' : 's'}.`,
+      } generation. ${versionLabels}. ${lessons} lessons, ${units.length} unit${units.length === 1 ? '' : 's'}.`,
     },
   ]
 

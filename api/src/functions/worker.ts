@@ -1,6 +1,6 @@
 import { app, InvocationContext } from '@azure/functions'
 import { JobMessage, Proposal, Scope } from '../domain/types'
-import { getSetOrUndefined, mutateScope, saveSet } from '../data/entities'
+import { getSetOrUndefined, mutateScope, mutateSet, snapshotScope } from '../data/entities'
 import { mutateJob, pushLog } from '../data/jobs'
 import { generateCardsStep, generateFinalizeStep, generatePlanStep } from '../pipeline/generate'
 import { extractRunStep } from '../pipeline/ingest'
@@ -126,7 +126,11 @@ async function markFailed(msg: JobMessage, error: string, context: InvocationCon
   }
   if (!msg.scopeId) return
   try {
-    await mutateScope(msg.scopeId, (scope) => settleFailedScope(scope, msg, error))
+    const settled = await mutateScope(msg.scopeId, (scope) => settleFailedScope(scope, msg, error))
+    // A failed apply may have landed some units before dying (per-unit
+    // commits); refresh the accept-time snapshot so the archived version
+    // matches the live document instead of silently diverging from it.
+    if (msg.kind === 'apply-proposal') await snapshotScope(settled)
   } catch (e) {
     context.error(`genjobs-worker: could not settle scope ${msg.scopeId} after job failure`, e)
   }
@@ -196,17 +200,17 @@ function settleFailedScope(scope: Scope, msg: JobMessage, error: string): void {
 async function markIngestFailed(msg: JobMessage, error: string, context: InvocationContext): Promise<void> {
   if (!msg.setId) return
   try {
-    const set = await getSetOrUndefined(msg.setId)
-    if (!set) return
-    set.warnings.push({
-      id: `${set.id}-ingfail-${Date.now()}`,
-      text: `Ingestion failed: ${error}. Fix the uploads and retry.`,
-      kind: 'gap',
-      suggestion: 'Re-upload the affected document and re-run extraction; the pipeline resumes from the failed step.',
-      acknowledged: false,
+    if (!(await getSetOrUndefined(msg.setId))) return
+    await mutateSet(msg.setId, (set) => {
+      set.warnings.push({
+        id: `${set.id}-ingfail-${Date.now()}`,
+        text: `Ingestion failed: ${error}. Fix the uploads and retry.`,
+        kind: 'gap',
+        suggestion: 'Re-upload the affected document and re-run extraction; the pipeline resumes from the failed step.',
+        acknowledged: false,
+      })
+      set.updated = today()
     })
-    set.updated = today()
-    await saveSet(set)
   } catch (e) {
     context.error(`genjobs-worker: could not record ingest failure on set ${msg.setId}`, e)
   }

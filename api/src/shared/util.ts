@@ -1,8 +1,8 @@
 /** Fixed actor string — real user identity is a v1 non-goal (contract §Non-goals). */
 export const ACTOR = 'doreen.mayrell@learnwith.ai'
 
-/** Engine/doctrine version strings recorded on every generated scope (seed conventions). */
-export const ENGINE_VERSION = 'Engine v2.3 (compiled 2026-05-28)'
+/** Engine/doctrine version strings recorded on every generated scope — must stay in step with the fixed documents in data/framework.ts. */
+export const ENGINE_VERSION = 'Engine v2 (adopted 2026-07-06)'
 export const DOCTRINE_VERSIONS = ['DI BrainLift v1.8 (Stein et al. 2017)']
 
 export const today = (): string => new Date().toISOString().slice(0, 10)

@@ -195,25 +195,6 @@ api({
   },
 })
 
-// POST /api/scopes/{id}/lock  { lessonId } → Scope (toggle)
-api({
-  name: 'scope-lock',
-  methods: ['POST'],
-  route: 'scopes/{id}/lock',
-  handler: async (req) => {
-    const id = requireParam(req, 'id')
-    const { lessonId } = await readJson<{ lessonId?: string }>(req)
-    if (!lessonId) throw new HttpError(400, 'lessonId is required')
-    const scope = await mutateScope(id, (s) => {
-      s.units = s.units.map((u) => ({
-        ...u,
-        lessons: u.lessons.map((l) => (l.id === lessonId ? { ...l, locked: !l.locked } : l)),
-      }))
-    })
-    return ok(scope)
-  },
-})
-
 // POST /api/scopes/{id}/rerun  { target, mode, override? } → { ok, message, guardrail?, jobId? }
 // The guardrail check is synchronous and data-driven off scope.protectedBoundaries,
 // replicating the exact decline message/criterion/evidence of src/store.tsx rerun().

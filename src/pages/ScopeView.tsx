@@ -22,24 +22,127 @@ const decisionLabel: Record<DecisionEntry['type'], string> = {
   assumption: 'Thin-Evidence Assumptions',
 }
 
-function LockIcon({ locked }: { locked: boolean }) {
+// ---------- print view (Download PDF) ----------
+
+function PrintScope({ scope }: { scope: Scope }) {
+  const { sets } = useStore()
+  const scopeSetIds = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
+  const scopeSets = sets.filter((st) => scopeSetIds.includes(st.id))
+  const itemsById = new Map(scopeSets.flatMap((st) => st.items.map((it) => [it.id, { it, setId: st.id }] as const)))
+  const lessons = scope.units.reduce((n, u) => n + u.lessons.length, 0)
   return (
-    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-      {locked ? (
-        <path d="M4.5 7V5a3.5 3.5 0 017 0v2M3.5 7h9a1 1 0 011 1v5a1 1 0 01-1 1h-9a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-      ) : (
-        <path d="M4.5 7V5a3.5 3.5 0 016.8-1.2M3.5 7h9a1 1 0 011 1v5a1 1 0 01-1 1h-9a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-      )}
-    </svg>
+    <div className="print-root bg-white px-8 py-6 text-ink">
+      <h1 className="font-display text-[26px] font-semibold">{capsStandardCodes(scope.title)}</h1>
+      <p className="mt-1 text-[11px] text-ink-2">
+        {scopeSets.map((st) => st.name).join(' + ')} · {scope.engineVersion.split(' (')[0]} ·{' '}
+        {(scope.doctrineVersions[0] ?? '').split(' (')[0]} · v{scope.version} · {scope.updated} · {scope.units.length}{' '}
+        units · {lessons} lessons
+      </p>
+
+      {/* Table of contents — anchors survive Save as PDF as clickable links */}
+      <nav className="mt-6">
+        <h2 className="border-b-2 border-ink pb-1.5 font-display text-[17px] font-semibold">Table of Contents</h2>
+        {scope.units.map((u) => (
+          <div key={u.id} className="print-avoid-break mt-3">
+            <p className="text-[11.5px] font-bold">
+              {u.id} · {u.title}
+            </p>
+            <ul className="mt-1 space-y-0.5 pl-4">
+              {u.lessons.map((l) => (
+                <li key={l.id} className="text-[11px] leading-relaxed">
+                  <a href={`#print-${l.id}`} className="text-ink underline decoration-ink/30">
+                    {l.id} — {l.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
+
+      {scope.units.map((u) => (
+        <section key={u.id} className="print-break-before mt-8">
+          <div className="print-avoid-break border-b-2 border-ink pb-1.5">
+            <h2 className="font-display text-[19px] font-semibold">
+              {u.id} · {u.title}
+            </h2>
+            <p className="text-[10.5px] text-ink-2">
+              {u.strand} — {u.rationale}
+            </p>
+          </div>
+          {u.lessons.map((l) => (
+            <div key={l.id} id={`print-${l.id}`} className="mt-5">
+              <div className="print-avoid-break">
+                <h3 className="font-display text-[15px] font-semibold">
+                  {l.id} — {l.title}
+                </h3>
+                <p className="text-[10px] text-ink-2 uppercase">
+                  {l.type} · evidence: {l.evidenceStatus}
+                </p>
+              </div>
+              {fieldMeta.map((fm) => {
+                const field = l.fields[fm.key]
+                return (
+                  <div key={fm.key} className="print-avoid-break mt-2.5">
+                    <div className="text-[10px] font-bold text-ink uppercase">
+                      {String(fm.n).padStart(2, '0')} {fm.label}
+                    </div>
+                    <p className="text-[11px] leading-relaxed">{field.content}</p>
+                    {fm.key === 'releasedItems' && (
+                      <div className="mt-2 space-y-3">
+                        {l.itemRefs.map((rid) => {
+                          const entry = itemsById.get(rid)
+                          if (!entry) return null
+                          return (
+                            <div key={rid} className="print-avoid-break">
+                              <p className="text-[9.5px] font-semibold text-ink-2">
+                                {entry.it.test} · {entry.it.year} · Q{entry.it.itemNumber} — {entry.it.alignmentCode}
+                              </p>
+                              {entry.it.imagePath ? (
+                                <img
+                                  src={api.itemImageUrl(entry.setId, entry.it.id)}
+                                  alt={entry.it.stem}
+                                  className="mt-1 max-h-[340px] max-w-full border border-ink/20"
+                                />
+                              ) : (
+                                <p className="text-[10.5px] italic">{entry.it.stem}</p>
+                              )}
+                            </div>
+                          )
+                        })}
+                        {l.generatedExemplar && (
+                          <div className="print-avoid-break border-l-2 border-ink/30 pl-2">
+                            <p className="text-[9.5px] font-semibold text-ink-2">
+                              Generated exemplar — not a released item
+                            </p>
+                            <p className="text-[10.5px]">{l.generatedExemplar.stem}</p>
+                            <p className="text-[10px] text-ink-2">Answer: {l.generatedExemplar.answer}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          ))}
+        </section>
+      ))}
+    </div>
   )
 }
 
 // ---------- data-informed revision ----------
 
-function RevisionDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Lesson; onClose: () => void }) {
+function RevisionDialog({ scope, onClose }: { scope: Scope; onClose: () => void }) {
   const { submitReport, iterateProposal, resolveProposal, scopes } = useStore()
   const [text, setText] = useState('')
-  const [proposalId, setProposalId] = useState<string | null>(null)
+  // Reconnect to an unresolved proposal (drafting, draft, or mid-apply) —
+  // closing the dialog must never orphan a proposal the user can't reach again.
+  const [proposalId, setProposalId] = useState<string | null>(() => {
+    const open = [...scope.proposals].reverse().find((p) => p.working || p.status === 'drafting' || p.status === 'draft')
+    return open?.id ?? null
+  })
   const [feedback, setFeedback] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -50,7 +153,9 @@ function RevisionDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Less
     setSubmitting(true)
     setSubmitError(null)
     try {
-      const p = await submitReport(scope.id, lesson.id, text)
+      // Scope-level report: the update may touch any number of lessons, so the
+      // target is the whole scope — the drafted change set names the lessons.
+      const p = await submitReport(scope.id, 'scope', text)
       setProposalId(p.id)
     } catch (e) {
       setSubmitError(e instanceof Error ? e.message : 'Could not submit the report.')
@@ -220,7 +325,6 @@ function ProposalView({
 
 function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
   const { sets } = useStore()
-  const [revisionOpen, setRevisionOpen] = useState(false)
   // Items resolve across every set the scope draws on (multi-select), keeping
   // the owning set id for the set-scoped image endpoint.
   const itemsById = useMemo(() => {
@@ -241,14 +345,8 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
             <Pill tone={lesson.evidenceStatus === 'observed' ? 'green' : lesson.evidenceStatus === 'inferred' ? 'amber' : 'neutral'}>
               evidence: {lesson.evidenceStatus}
             </Pill>
-            {lesson.locked && (
-              <Pill tone="night"><LockIcon locked /> locked</Pill>
-            )}
           </div>
           <h2 className="mt-2.5 max-w-2xl font-display text-[24px] leading-snug font-semibold tracking-tight text-ink">{lesson.title}</h2>
-        </div>
-        <div className="flex shrink-0 gap-2 pt-1">
-          <Btn kind="night" onClick={() => setRevisionOpen(true)}>Update with Feedback/Data</Btn>
         </div>
       </header>
 
@@ -335,8 +433,6 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
           </div>
         </section>
       </div>
-
-      {revisionOpen && <RevisionDialog scope={scope} lesson={lesson} onClose={() => setRevisionOpen(false)} />}
     </article>
   )
 }
@@ -351,10 +447,40 @@ export default function ScopeView() {
   const [sel, setSel] = useState<string | null>(null)
   const [qcOpen, setQcOpen] = useState(false)
   const [histOpen, setHistOpen] = useState(false)
+  const [revisionOpen, setRevisionOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [retrying, setRetrying] = useState(false)
   const [genAction, setGenAction] = useState<'pause' | 'resume' | 'cancel' | null>(null)
   const [lookedUp, setLookedUp] = useState(false)
+  const [printing, setPrinting] = useState(false)
+
+  // Download PDF: render the print view, tag <body>, wait for the released-item
+  // screenshots to finish loading (they start fetching only when the print view
+  // mounts — printing before they decode leaves blank boxes in the PDF), then
+  // open the browser's print dialog (Save as PDF). Capped so a dead image
+  // endpoint can't hold the dialog hostage.
+  useEffect(() => {
+    if (!printing) return
+    document.body.classList.add('print-scope')
+    const done = () => setPrinting(false)
+    window.addEventListener('afterprint', done)
+    let cancelled = false
+    const t = setTimeout(() => {
+      const images = [...document.querySelectorAll<HTMLImageElement>('.print-root img')]
+      void Promise.race([
+        Promise.allSettled(images.map((img) => img.decode().catch(() => undefined))),
+        new Promise((resolve) => setTimeout(resolve, 15000)),
+      ]).then(() => {
+        if (!cancelled) window.print()
+      })
+    }, 50)
+    return () => {
+      cancelled = true
+      window.removeEventListener('afterprint', done)
+      clearTimeout(t)
+      document.body.classList.remove('print-scope')
+    }
+  }, [printing])
 
   // While the scope is generating (initial run, rerun, apply-proposal) or a proposal is
   // drafting/iterating, poll its document every 2s until it settles.
@@ -519,9 +645,11 @@ export default function ScopeView() {
         <div className="mt-1.5 px-2 font-mono text-[10px] leading-relaxed text-ink-3">
           {scope.engineVersion.split(' (')[0]} · {(scope.doctrineVersions[0] ?? '—').split(' (')[0]}
         </div>
-        <div className="mt-3 flex gap-1.5 px-2">
+        <div className="mt-3 flex flex-wrap gap-1.5 px-2">
           <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setQcOpen(true)}>QC report</Btn>
           <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setHistOpen(true)}>History</Btn>
+          <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setPrinting(true)}>Download PDF</Btn>
+          <Btn kind="night" className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setRevisionOpen(true)}>Update with Feedback/Data</Btn>
           <Btn kind="danger" className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setConfirmDelete(true)}>Delete</Btn>
         </div>
 
@@ -550,7 +678,6 @@ export default function ScopeView() {
                       {l.type === 'bridge' && <span className="h-1.5 w-1.5 rounded-full bg-night" title="bridge" />}
                       {l.type === 'application-tier' && <span className="h-1.5 w-1.5 rounded-full bg-cite" title="application tier" />}
                       {l.evidenceStatus !== 'observed' && <span className="h-1.5 w-1.5 rounded-full bg-amber-ink" title="inferred evidence" />}
-                      {l.locked && <span className="text-ink-3"><LockIcon locked /></span>}
                     </span>
                   </button>
                 ))}
@@ -612,6 +739,10 @@ export default function ScopeView() {
           )}
         </div>
       </Modal>
+
+      {printing && <PrintScope scope={scope} />}
+
+      {revisionOpen && <RevisionDialog scope={scope} onClose={() => setRevisionOpen(false)} />}
 
       {/* delete confirm */}
       <Modal open={confirmDelete} onClose={() => setConfirmDelete(false)} title="Delete Scope?">

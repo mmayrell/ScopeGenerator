@@ -76,7 +76,7 @@ const CARD_RULES = `The fixed 13-field card (spec §7). EVERY field must be fill
 Citations: { sourceType, label, locator, excerpt } — sourceType one of standards|items|decomposition|interpretive|engine|doctrine|admin-notes|sequence|performance-report; the excerpt quotes the actual evidence supplied. Use sourceType "sequence" for within-course chain references.
 Headings, unit titles, and lesson titles in Title Case. Every field written under faultless communication — it must read one way only.`
 
-const BLAST_RADIUS = `Blast radius (spec §8): "When a lesson splits or merges, the relational fields of adjacent and dependent lessons — Prerequisites, Lesson Boundary, Non-Goals, within-course Progression Placement — auto-regenerate, with the change noted in their Decision records; content fields untouched. Locked lessons are never silently mutated: relational updates queue as suggestions requiring approval."`
+const BLAST_RADIUS = `Blast radius (spec §8): "When a lesson splits or merges, the relational fields of adjacent and dependent lessons — Prerequisites, Lesson Boundary, Non-Goals, within-course Progression Placement — auto-regenerate, with the change noted in their Decision records; content fields untouched."`
 
 const EDITING_SPLITS = `Data-informed revision mapping (spec §8): "The tool maps the report onto framework actions using the engine's Editing Splits logic: splits where the reported errors reveal a new/unstable start cue, a new decision step, or a missing prerequisite; modeling intensification inside the atom where they don't; bridge insertion where the confusion runs between two atoms; ceiling or boundary adjustments where the report shows mis-set difficulty." Guardrails apply inside proposals: a change that collapses a boundary protected by a hard split criterion must carry a guardrail note citing the criterion instead of being silently proposed.`
 
@@ -236,7 +236,7 @@ export function rerunLessonPrompt(
 ${CARD_RULES}
 
 ${jsonBlock('scope_request', scope.request)}
-${jsonBlock('containing_unit', { id: unit.id, title: unit.title, strand: unit.strand, lessons: unit.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type, locked: l.locked })) })}
+${jsonBlock('containing_unit', { id: unit.id, title: unit.title, strand: unit.strand, lessons: unit.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type })) })}
 ${jsonBlock('current_lesson_card', lesson)}
 ${jsonBlock('standard_set_evidence', setEvidence(set))}
 ${jsonBlock('item_bank_subset', evidenceItems)}`,
@@ -259,7 +259,6 @@ export function rerunUnitPrompt(
     codes,
     unit.lessons.flatMap((l) => l.itemRefs),
   )
-  const lockedIds = unit.lessons.filter((l) => l.locked).map((l) => l.id)
   return {
     system: systemCore('rerun: re-atomize one unit at different granularity (Stages 3–6 re-entry, scoped)'),
     user: `Rerun unit "${unit.id} — ${unit.title}" at ${mode === 'split' ? 'MORE granularity (split)' : 'LESS granularity (merge)'} around the target "${target}" (spec §6: "lesson granularity change → Stage 3 scoped to affected atoms, then 4–6 locally").
@@ -272,8 +271,7 @@ ${override ? `An explicit user override of a protected hard-split boundary is in
 
 Rules:
 - Return the unit's complete new lesson list in teaching order, with full 13-field cards for every lesson, renumbering ids as "${unit.id}.L1", "${unit.id}.L2", … .
-- LOCKED lessons ${lockedIds.length > 0 ? `(${lockedIds.join(', ')})` : '(none in this unit)'} must be echoed back byte-for-byte UNCHANGED (same id, same content). For each locked lesson whose relational fields (Prerequisites, Lesson Boundary, Non-Goals, within-course Progression Placement) would need to change, add an entry to lockedSuggestions describing the queued relational update instead of mutating the lesson.
-- Adjacent unlocked lessons: regenerate their relational fields and note the change in their Decision records; content fields untouched unless the split/merge itself demands it.
+- Adjacent lessons: regenerate their relational fields and note the change in their Decision records; content fields untouched unless the split/merge itself demands it.
 - Every field cited; decision entries carry rule ids (P#/A#).
 
 ${CARD_RULES}
@@ -301,12 +299,12 @@ Rules:
 - The PerformanceReport is admissible error-pattern evidence at full strength (P9); cite it as the evidence basis in each change's rationale.
 - Each change: target ("<lessonId> · <Field Title>"), kind (split | merge | modeling | ceiling | bridge | relational), before (the current state, quoted or summarized from the actual card), after (the concrete proposed state), rationale (why the Editing Splits bar is or is not met), rule (e.g. "P9 / A3 (Editing Splits)").
 - If a change would collapse a protected hard-split boundary (see protected_boundaries), keep the change but fill its guardrail field with the pushback text citing the criterion; otherwise guardrail is "".
-- ripple: one entry per affected adjacent/dependent lesson group describing the relational-field regeneration on acceptance, noting that locked lessons receive queued suggestions requiring approval.
+- ripple: one entry per affected adjacent/dependent lesson group describing the relational-field regeneration on acceptance.
 
 ${jsonBlock('performance_report', report)}
 ${jsonBlock('protected_boundaries', scope.protectedBoundaries ?? [])}
 ${jsonBlock('targeted_unit', unit ?? scope.units)}
-${jsonBlock('scope_summary', { title: scope.title, request: scope.request, version: scope.version, units: scope.units.map((u) => ({ id: u.id, title: u.title, lessons: u.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type, locked: l.locked })) })) })}`,
+${jsonBlock('scope_summary', { title: scope.title, request: scope.request, version: scope.version, units: scope.units.map((u) => ({ id: u.id, title: u.title, lessons: u.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type })) })) })}`,
   }
 }
 
@@ -324,7 +322,7 @@ Rules:
 ${jsonBlock('current_proposal', proposal)}
 ${jsonBlock('user_feedback', feedback)}
 ${jsonBlock('protected_boundaries', scope.protectedBoundaries ?? [])}
-${jsonBlock('scope_summary', { title: scope.title, version: scope.version, units: scope.units.map((u) => ({ id: u.id, title: u.title, lessons: u.lessons.map((l) => ({ id: l.id, title: l.title, locked: l.locked })) })) })}`,
+${jsonBlock('scope_summary', { title: scope.title, version: scope.version, units: scope.units.map((u) => ({ id: u.id, title: u.title, lessons: u.lessons.map((l) => ({ id: l.id, title: l.title })) })) })}`,
   }
 }
 
@@ -334,7 +332,6 @@ export function applyPrompt(
   unit: Unit,
   proposal: Proposal,
 ): Prompt {
-  const lockedIds = unit.lessons.filter((l) => l.locked).map((l) => l.id)
   return {
     system: systemCore('data-informed revision: apply an accepted proposal (Stage 5 re-entry, scoped to the change set)'),
     user: `The proposal below was ACCEPTED. Rewrite the targeted lesson fields per the accepted change set, and regenerate the relational fields (Prerequisites, Lesson Boundary, Non-Goals, within-course Progression Placement) of adjacent/dependent lessons in the unit, noting each change in the lesson's Decision record with a citation of sourceType "performance-report".
@@ -342,8 +339,7 @@ export function applyPrompt(
 ${BLAST_RADIUS}
 
 Rules:
-- Return in lessons ONLY the lessons that change (full 13-field cards, unchanged fields carried over verbatim); lessons you omit stay as they are.
-- LOCKED lessons ${lockedIds.length > 0 ? `(${lockedIds.join(', ')})` : '(none in this unit)'} must NOT appear in lessons; put their queued relational updates in lockedSuggestions instead ("acceptance is the approval the lock requires" applies to lessons named as proposal targets — a locked lesson explicitly targeted by an accepted change MAY be rewritten and returned in lessons).
+- Return in lessons ONLY the lessons that change (full 13-field cards, unchanged fields carried over verbatim); lessons you omit stay as they are. Apply only the changes whose targets fall inside this unit — changes targeting other units are handled by sibling calls.
 - Every rewritten field keeps ≥1 citation; the PerformanceReport is citable as sourceType "performance-report".
 
 ${CARD_RULES}
@@ -384,10 +380,15 @@ Output:
   }
 }
 
-export function ingestItemsPrompt(set: StandardSet, artifact: Artifact | undefined): Prompt {
+export function ingestItemsPrompt(
+  set: StandardSet,
+  artifact: Artifact | undefined,
+  pageStart: number,
+  pageEnd: number,
+): Prompt {
   return {
     system: ingestSystem('released-items extraction pipeline (Tier 2 — arbitrary released-item PDFs)'),
-    user: `Extract every assessment item from the attached released-items PDF for the set "${set.name}" (${set.gradeSpan}).
+    user: `Extract every assessment item whose question BEGINS on PDF pages ${pageStart}–${pageEnd} (inclusive, 1-based) of the attached released-items PDF for the set "${set.name}" (${set.gradeSpan}). Items beginning outside that page window are handled by sibling calls — skip them entirely.
 
 Tier-2 pipeline (spec §4.2): document triage → item segmentation → metadata extraction (state/test/year, item numbers, per-item alignment from item maps or inline annotations) → alignment resolution (official where the document supplies it; otherwise ai-proposed) → characterization (item type, response format, representations and problem types in consistent vocabulary terms, demand profile) → opportunistic capture (answer keys, rubrics) → completeness scoring.
 

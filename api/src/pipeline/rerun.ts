@@ -5,7 +5,6 @@ import { mutateJob, pushLog } from '../data/jobs'
 import { generateStructured } from '../services/claude'
 import { rerunLessonPrompt, rerunUnitPrompt } from '../services/prompts'
 import {
-  LockedSuggestion,
   RERUN_LESSON_SCHEMA,
   RERUN_UNIT_SCHEMA,
   toLesson,
@@ -17,8 +16,7 @@ import { findLesson } from './qc'
 /**
  * Worker for kind `rerun` (contract §Other kinds): Claude regenerates the
  * target — the lesson card for `regenerate`, the containing unit's lesson list
- * for `split`/`merge` — honoring locked lessons (pendingRelationalUpdate
- * instead of mutation). New version, snapshot, history entry (log override
+ * for `split`/`merge`. New version, snapshot, history entry (log override
  * when the guardrail was overridden).
  */
 export async function rerunRunStep(msg: JobMessage, ctx: InvocationContext): Promise<void> {
@@ -62,16 +60,9 @@ export async function rerunRunStep(msg: JobMessage, ctx: InvocationContext): Pro
     })
     const regenerated = toLesson(wire.lesson, validItemIds)
     applyChanges = (s) =>
-      replaceLesson(s.units, targetUnit.id, located.lesson.id, (old) =>
-        old.locked
-          ? {
-              ...old,
-              pendingRelationalUpdate: `Regeneration queued while locked — proposed replacement "${regenerated.title}" awaits approval; the lock prevented silent mutation.`,
-            }
-          : { ...regenerated, id: old.id, locked: false },
-      )
+      replaceLesson(s.units, targetUnit.id, located.lesson.id, (old) => ({ ...regenerated, id: old.id }))
   } else if (mode === 'split' || mode === 'merge') {
-    const wire = await generateStructured<{ lessons: WireLesson[]; lockedSuggestions: LockedSuggestion[] }>({
+    const wire = await generateStructured<{ lessons: WireLesson[] }>({
       ...rerunUnitPrompt(set, scope, targetUnit, mode, target, override),
       schema: RERUN_UNIT_SCHEMA,
       effort: 'medium', // interactive latency; fits the 10-min Consumption cap
@@ -82,8 +73,7 @@ export async function rerunRunStep(msg: JobMessage, ctx: InvocationContext): Pro
     applyChanges = (s) => {
       const idx = s.units.findIndex((u) => u.id === targetUnit.id)
       if (idx < 0) throw new Error(`rerun: unit ${targetUnit.id} no longer exists in scope ${s.id}`)
-      const newLessons = mergeHonoringLocks(s.units[idx], wire.lessons, wire.lockedSuggestions, validItemIds)
-      s.units[idx] = { ...s.units[idx], lessons: newLessons }
+      s.units[idx] = { ...s.units[idx], lessons: wire.lessons.map((w) => toLesson(w, validItemIds)) }
     }
   } else {
     throw new Error(`unknown rerun mode: ${mode} — expected split, merge or regenerate`)
@@ -104,7 +94,7 @@ export async function rerunRunStep(msg: JobMessage, ctx: InvocationContext): Pro
       event: `Rerun — ${modeLabel}`,
       detail: override
         ? `Target ${target}. Guardrail override recorded: merge across a protected boundary executed by explicit user override; logged in the RerunEvent and the affected Decision records, flagged in QC.`
-        : `Target ${target}. Stage re-entry per §6: relational fields of adjacent lessons auto-regenerated; locked lessons queued suggestions instead of mutating.`,
+        : `Target ${target}. Stage re-entry per §6: relational fields of adjacent lessons auto-regenerated.`,
     })
     if (override) {
       s.qc = [
@@ -138,43 +128,4 @@ function replaceLesson(
   const unit = units.find((u) => u.id === unitId)
   if (!unit) return
   unit.lessons = unit.lessons.map((l) => (l.id === lessonId ? fn(l) : l))
-}
-
-/**
- * Locked lessons are never silently mutated (spec §8): originals stay in place
- * and receive pendingRelationalUpdate; unlocked lessons come from the rewrite.
- */
-function mergeHonoringLocks(
-  unit: Unit,
-  wireLessons: WireLesson[],
-  suggestions: LockedSuggestion[],
-  validItemIds: Set<string>,
-): Lesson[] {
-  const lockedById = new Map(unit.lessons.filter((l) => l.locked).map((l) => [l.id, l] as const))
-  const suggestionById = new Map(suggestions.map((s) => [s.lessonId, s.suggestion] as const))
-  const result: Lesson[] = []
-  const placedLocked = new Set<string>()
-
-  for (const wire of wireLessons) {
-    const locked = lockedById.get(wire.id)
-    if (locked) {
-      placedLocked.add(locked.id)
-      result.push(withPending(locked, suggestionById.get(locked.id)))
-    } else {
-      result.push(toLesson(wire, validItemIds))
-    }
-  }
-  // Locked lessons the model dropped from its list are reinstated near their
-  // original position — a lock survives any rerun.
-  for (const [id, locked] of lockedById) {
-    if (placedLocked.has(id)) continue
-    const originalIdx = unit.lessons.findIndex((l) => l.id === id)
-    const insertAt = Math.min(Math.max(originalIdx, 0), result.length)
-    result.splice(insertAt, 0, withPending(locked, suggestionById.get(id) ?? 'Relational update queued by rerun — the lock prevented silent mutation; approve to apply.'))
-  }
-  return result
-}
-
-function withPending(lesson: Lesson, suggestion: string | undefined): Lesson {
-  return suggestion ? { ...lesson, pendingRelationalUpdate: suggestion } : { ...lesson }
 }

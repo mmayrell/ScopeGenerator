@@ -1,16 +1,11 @@
 // Static UI/system metadata — not seed data. The app imports this at runtime;
-// src/data/seed.ts stays reserved for the backend seed export.
-import type { ExemplarAsset, Lesson, SystemArtifact } from '../types'
+// src/data/seed.ts stays reserved for the backend seed export. Framework
+// names/versions mirror the fixed documents in api/src/data/framework.ts.
+import type { Lesson, SystemArtifact } from '../types'
 
 export const systemArtifacts: SystemArtifact[] = [
-  { id: 'sys-engine', kind: 'engine', name: 'Lesson Granularity & Modeling Scope BrainLift', version: 'v2.3', published: '2026-05-28', note: 'Compiled procedure A1–A6 recompiled at publish. DOK headings stripped at ingestion (P6).' },
-  { id: 'sys-doctrine', kind: 'doctrine', name: 'Direct Instruction BrainLift (Stein et al. 2017)', version: 'v1.8', published: '2026-04-19', note: 'Controlling method authority (P3). Stein-priority encoded in all doctrine prompts.' },
-]
-
-export const exemplarRegister: ExemplarAsset[] = [
-  { n: 1, asset: 'Example of Lesson Granularity Build from Released STAAR Questions', linkedFrom: 'Lesson Granularity & Modeling Scope BrainLift', role: 'Few-shot anchor: Stage 3 atomization', status: 'resolved' },
-  { n: 2, asset: 'Example of Lesson Granularity + Modeling Determination', linkedFrom: 'Lesson Granularity & Modeling Scope BrainLift', role: 'Few-shot anchor: Stages 3–5 (modeling scope, card fill)', status: 'pending' },
-  { n: 3, asset: 'DI Mathematics format library (ch. 9–12 excerpts)', linkedFrom: 'Direct Instruction BrainLift', role: 'Few-shot anchor: Stage 5 approach fields', status: 'resolved' },
+  { id: 'sys-engine', kind: 'engine', name: 'Lesson Granularity & Modeling Scope (v2 for ANY standard set)', version: 'v2', published: '2026-07-06', note: 'Fixed with the tool. Split, don’t-split, and modeling-scope rules for any standard set.' },
+  { id: 'sys-doctrine', kind: 'doctrine', name: 'Direct Instruction BrainLift (Stein et al. 2017)', version: 'v1.8', published: '2026-04-19', note: 'Controlling method authority. Stein-priority encoded in all doctrine prompts.' },
 ]
 
 export const fieldMeta: { key: keyof Lesson['fields']; n: number; label: string; purpose: string }[] = [

@@ -62,7 +62,7 @@ cannot attach headers to `<img>` requests.
 
 - `api/src/domain/types.ts` is a **verbatim copy** of `src/types.ts`, with the contract edits below.
 - The same edits are applied to `src/types.ts` (frontend):
-  1. `Scope.status`: `'complete' | 'generating' | 'failed'`
+  1. `Scope.status`: `'complete' | 'generating' | 'paused' | 'failed'`
   2. `Proposal.status`: `'drafting' | 'draft' | 'accepted' | 'abandoned'`
   3. `Proposal` gains optional `working?: boolean` (true while Claude is drafting/iterating)
   4. `Scope` gains optional `error?: string` (populated when status === 'failed')
@@ -83,10 +83,13 @@ cannot attach headers to `<img>` requests.
 | `GET /sets/{id}/job` | → `JobStatus` | polled during extraction |
 | `GET /item-image/{setId}/{itemId}` | → `image/png` | question screenshot; auth via header or `?code=` |
 | `POST /sets/{id}/publish` | → `{ set: StandardSet }` | seeded sets (no uploads) publish immediately; uploaded sets 409 unless extraction completed and every warning is resolved. Idempotent |
-| `POST /scopes` | `{ setId, mode, params }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job |
+| `GET /framework` | → `FrameworkDoc` | the fixed engine/doctrine documents (read-only — no PUT; new versions ship with the tool). The payload keeps a legacy `register: []` so pre-removal bundles render an empty exemplar register during deploy skew |
+| `POST /scopes` | `{ setId, setIds?, mode, params }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job |
 | `GET /scopes/{id}` | → `Scope` | |
 | `GET /scopes/{id}/job` | → `JobStatus` (below) | polled by the generation screen |
-| `POST /scopes/{id}/lock` | `{ lessonId }` → `Scope` | toggle |
+| `POST /scopes/{id}/pause-generation` | → `{ jobId }` (202) | cooperative: flags the job; workers halt at the next checkpoint, scope → `paused` |
+| `POST /scopes/{id}/resume-generation` | → `{ jobId }` (202) | re-enqueues the same job; finished checkpoints are skipped. Supersedes provably dead rows (no log progress in 15 min) |
+| `POST /scopes/{id}/cancel-generation` | → `{ jobId }` (202) | settles the scope `failed`; checkpoints are kept, so resume can still revive it |
 | `POST /scopes/{id}/rerun` | `{ target, mode, override? }` → `{ ok, message, guardrail? , jobId? }` | guardrail check is synchronous & data-driven (see Guardrails); on ok, scope → `generating`, enqueue `rerun` job; unknown modes 400 |
 | `POST /scopes/{id}/reports` | `{ target, text }` → `Proposal` (status `drafting`, `working: true`) | enqueues `proposal` job (Claude drafts the change set); UI polls the scope |
 | `POST /scopes/{id}/proposals/{pid}/iterate` | `{ feedback }` → `Proposal` (`working: true`) | enqueues `iterate` job; the round is appended when done |
@@ -166,7 +169,7 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
    Checkpoint to `jobs/<jobId>/unit-<i>.json`; increment `unitsDone` (ETag retry); any completion
    observing all units done enqueues `finalize` (at-least-once; finalize is idempotent).
 3. **`finalize`** (Stage 6): assemble the `Scope` from checkpoints, run **programmatic QC**
-   (the ten checks, each → `QCCheck` pass/flag/fail), write history entry, snapshot `v1.json`,
+   (eight checks, each → `QCCheck` pass/flag/fail), write history entry, snapshot `v1.json`,
    status `complete`. No-ops if the job is already complete (duplicate finalize message).
 
 Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is **kind-aware**:

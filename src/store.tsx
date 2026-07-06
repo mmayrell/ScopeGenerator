@@ -43,7 +43,6 @@ interface Store {
   confirmAlignment: (setId: string, itemId: string) => Promise<void>
   resolveArtifact: (setId: string, artifactId: string) => Promise<void>
   publishSet: (setId: string) => Promise<{ jobId?: string }>
-  toggleLock: (scopeId: string, lessonId: string) => Promise<void>
   rerun: (scopeId: string, target: string, mode: string, override?: boolean) => Promise<RerunResult>
   createScope: (setIds: string[], mode: 'course' | 'standard' | 'topic', params: string) => Promise<string>
   submitReport: (scopeId: string, target: string, text: string) => Promise<Proposal>
@@ -300,16 +299,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [guard, upsertSet],
   )
 
-  const toggleLock = useCallback(
-    (scopeId: string, lessonId: string) =>
-      mutate(async () => {
-        const doc = await api.toggleLock(scopeId, lessonId)
-        bumpScopeSeq(scopeId)
-        upsertScope(doc)
-      }),
-    [mutate, upsertScope, bumpScopeSeq],
-  )
-
   const rerun = useCallback(
     (scopeId: string, target: string, mode: string, override?: boolean): Promise<RerunResult> =>
       guard(() => api.rerun(scopeId, target, mode, override)),
@@ -403,7 +392,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     confirmAlignment,
     resolveArtifact,
     publishSet,
-    toggleLock,
     rerun,
     createScope,
     submitReport,

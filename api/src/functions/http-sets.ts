@@ -1,6 +1,6 @@
 import { Artifact, NewSetUploads, StandardSet } from '../domain/types'
 import { dataContainer, uploadsContainer } from '../data/clients'
-import { deleteSetDocs, getSet, listScopes, listSets, saveSet } from '../data/entities'
+import { deleteSetDocs, getSet, listScopes, listSets, mutateSet, saveSet } from '../data/entities'
 import { createJob, latestJobForSet, mutateJob, pushLog, toJobStatus } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { itemImageBlobPath } from '../pipeline/ingest'
@@ -163,7 +163,7 @@ api({
   methods: ['POST'],
   route: 'sets/{id}/acknowledge-warning',
   handler: async (req) => {
-    const set = await getSet(requireParam(req, 'id'))
+    const id = requireParam(req, 'id')
     const { warningId, resolution, resolvedBy } = await readJson<{
       warningId?: string
       resolution?: string
@@ -173,12 +173,15 @@ api({
     if (resolvedBy && resolvedBy !== 'default' && resolvedBy !== 'custom') {
       throw new HttpError(400, 'resolvedBy must be "default" or "custom"')
     }
-    set.warnings = set.warnings.map((w) =>
-      w.id === warningId
-        ? { ...w, acknowledged: true, resolution: resolution?.trim() || w.resolution, resolvedBy: resolvedBy ?? w.resolvedBy }
-        : w,
-    )
-    await saveSet(set)
+    // mutateSet (ETag), not load+save: extraction workers and concurrent
+    // resolutions write the same set document.
+    const set = await mutateSet(id, (s) => {
+      s.warnings = s.warnings.map((w) =>
+        w.id === warningId
+          ? { ...w, acknowledged: true, resolution: resolution?.trim() || w.resolution, resolvedBy: resolvedBy ?? w.resolvedBy }
+          : w,
+      )
+    })
     return ok(set)
   },
 })
@@ -189,11 +192,12 @@ api({
   methods: ['POST'],
   route: 'sets/{id}/confirm-alignment',
   handler: async (req) => {
-    const set = await getSet(requireParam(req, 'id'))
+    const id = requireParam(req, 'id')
     const { itemId } = await readJson<{ itemId?: string }>(req)
     if (!itemId) throw new HttpError(400, 'itemId is required')
-    set.items = set.items.map((it) => (it.id === itemId ? { ...it, confidence: 'confirmed' } : it))
-    await saveSet(set)
+    const set = await mutateSet(id, (s) => {
+      s.items = s.items.map((it) => (it.id === itemId ? { ...it, confidence: 'confirmed' } : it))
+    })
     return ok(set)
   },
 })
@@ -204,20 +208,21 @@ api({
   methods: ['POST'],
   route: 'sets/{id}/resolve-artifact',
   handler: async (req) => {
-    const set = await getSet(requireParam(req, 'id'))
+    const id = requireParam(req, 'id')
     const { artifactId } = await readJson<{ artifactId?: string }>(req)
     if (!artifactId) throw new HttpError(400, 'artifactId is required')
-    set.artifacts = set.artifacts.map((a) =>
-      a.id === artifactId
-        ? {
-            ...a,
-            reviewStatus: 'reviewed',
-            blockingError: undefined,
-            usageNotes: a.usageNotes || 'Declaration corrected at review.',
-          }
-        : a,
-    )
-    await saveSet(set)
+    const set = await mutateSet(id, (s) => {
+      s.artifacts = s.artifacts.map((a) =>
+        a.id === artifactId
+          ? {
+              ...a,
+              reviewStatus: 'reviewed',
+              blockingError: undefined,
+              usageNotes: a.usageNotes || 'Declaration corrected at review.',
+            }
+          : a,
+      )
+    })
     return ok(set)
   },
 })
@@ -239,8 +244,9 @@ api({
     }
     if (!hasUploads) throw new HttpError(409, 'no uploaded documents to ingest')
     const jobId = await enqueueIngest(set, 'extract', `Extraction queued for ${set.name}`)
-    set.updated = today()
-    await saveSet(set)
+    await mutateSet(set.id, (s) => {
+      s.updated = today()
+    })
     return ok({ jobId }, 202)
   },
 })
@@ -347,9 +353,12 @@ api({
         }
       }
     }
-    set.published = true
-    set.updated = today()
-    await saveSet(set)
-    return ok({ set })
+    // The gates above ran against a fresh read; the flip itself goes through
+    // mutateSet so it can never clobber a concurrent writer's changes.
+    const updated = await mutateSet(set.id, (s) => {
+      s.published = true
+      s.updated = today()
+    })
+    return ok({ set: updated })
   },
 })

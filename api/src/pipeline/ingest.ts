@@ -7,7 +7,7 @@ import {
   StandardSet,
 } from '../domain/types'
 import { uploadsContainer } from '../data/clients'
-import { getSet, saveSet } from '../data/entities'
+import { getSet, mutateSet } from '../data/entities'
 import { getJob, mutateJob, pushLog } from '../data/jobs'
 import { generateStructured } from '../services/claude'
 import {
@@ -39,14 +39,14 @@ const MAX_PDF_PAGES = 100
 export const itemImageBlobPath = (setId: string, itemId: string): string =>
   `sets/${setId}/item-images/${itemId}.png`
 
-interface UploadBlob {
+export interface UploadBlob {
   name: string
   size: number
   role: string
   fileName: string
 }
 
-async function listUploads(setId: string): Promise<UploadBlob[]> {
+export async function listUploads(setId: string): Promise<UploadBlob[]> {
   const container = uploadsContainer()
   const blobs: UploadBlob[] = []
   for await (const blob of container.listBlobsFlat({ prefix: `${setId}/` })) {
@@ -85,10 +85,9 @@ async function splitOversizedUploads(
   blobs: UploadBlob[],
   jobId: string,
   ctx: InvocationContext,
-): Promise<UploadBlob[]> {
+): Promise<{ blobs: UploadBlob[]; set: StandardSet }> {
   const container = uploadsContainer()
   const out = new Map<string, UploadBlob>()
-  let changed = false
   for (const blob of blobs) {
     if (blob.size > MAX_SPLITTABLE_BYTES) {
       out.set(blob.name, blob)
@@ -104,11 +103,13 @@ async function splitOversizedUploads(
     }
     const inspection = await inspectPdf(buffer)
     if (inspection.kind === 'encrypted') {
-      blockArtifact(
-        findArtifact(set, blob.role, blob.fileName),
-        'The PDF is password-protected — pdf processing cannot read it. Remove the password and re-upload (P10 fit validation).',
-      )
-      changed = true
+      set = await mutateSet(set.id, (s) => {
+        blockArtifact(
+          findArtifact(s, blob.role, blob.fileName),
+          'The PDF is password-protected — pdf processing cannot read it. Remove the password and re-upload (P10 fit validation).',
+        )
+        s.updated = today()
+      })
       continue // excluded from processing entirely
     }
     if (inspection.kind === 'unreadable') {
@@ -148,31 +149,27 @@ async function splitOversizedUploads(
         .uploadData(part.data, { blobHTTPHeaders: { blobContentType: 'application/pdf' } })
       partBlobs.push({ name, size: part.data.length, role: blob.role, fileName })
     }
-    // 2. Replace the artifact and PERSIST before deleting the original, so no
-    //    crash window can leave a phantom artifact pointing at a deleted blob.
-    const original = findArtifact(set, blob.role, blob.fileName)
-    if (original) {
+    // 2. Replace the artifact and PERSIST (ETag delta) before deleting the
+    //    original, so no crash window can leave a phantom artifact pointing at
+    //    a deleted blob, and no concurrent write is clobbered.
+    set = await mutateSet(set.id, (s) => {
+      const original = findArtifact(s, blob.role, blob.fileName)
+      if (!original) return
       const partArtifacts: Artifact[] = parts.map((p, i) => ({
         ...original,
         ...(original.meta ? { meta: { ...original.meta } } : {}), // no shared meta reference between parts
         id: `${original.id}-p${i + 1}`,
         fileName: partFileName(blob.fileName, p.from, p.to),
       }))
-      set.artifacts = set.artifacts.flatMap((a) => (a.id === original.id ? partArtifacts : [a]))
-      set.updated = today()
-      await saveSet(set)
-    }
+      s.artifacts = s.artifacts.flatMap((a) => (a.id === original.id ? partArtifacts : [a]))
+      s.updated = today()
+    })
     // 3. Remove the original last.
     await container.getBlobClient(blob.name).deleteIfExists()
 
     for (const pb of partBlobs) out.set(pb.name, pb)
-    changed = true
   }
-  if (changed) {
-    set.updated = today()
-    await saveSet(set)
-  }
-  return [...out.values()]
+  return { blobs: [...out.values()], set }
 }
 
 
@@ -212,7 +209,11 @@ async function settleCancelled(jobId: string): Promise<void> {
  */
 export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): Promise<void> {
   if (!msg.setId) throw new Error('ingest message missing setId')
-  const set = await getSet(msg.setId)
+  // `set` is a local READ copy for prompt assembly; every write goes through
+  // mutateSet (ETag) as a fresh-document delta, so a user resolving artifacts
+  // or acknowledging warnings mid-extraction is never clobbered by a stale
+  // wholesale save. The local copy is refreshed from each mutateSet return.
+  let set = await getSet(msg.setId)
 
   let blobs = await listUploads(msg.setId)
   if (blobs.length === 0) throw new Error(`no uploads found for set ${msg.setId}`)
@@ -225,7 +226,9 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
 
   // Documents over the 100-page limit are split into ≤100-page parts here
   // (items included — scope generation attaches them and faces the same caps).
-  blobs = await splitOversizedUploads(set, blobs, msg.jobId, ctx)
+  const split = await splitOversizedUploads(set, blobs, msg.jobId, ctx)
+  blobs = split.blobs
+  set = split.set
 
   // Released-items documents are NOT item-extracted at ingestion — they are
   // held as artifacts for scope generation. Each gets a cheap counting pass so
@@ -257,20 +260,42 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
   // artifact usage notes. On a RESUME, already-extracted state is kept.
   const priorWarnings = new Map(set.warnings.map((w) => [w.text, w]))
   if (freshStart) {
-    set.items = [] // the item bank is no longer built at ingestion
-    set.warnings = set.warnings.filter(
-      (w) => !w.id.startsWith(`${set.id}-ingw-`) && !w.id.startsWith(`${set.id}-ingfail-`),
-    )
+    set = await mutateSet(set.id, (s) => {
+      s.items = [] // the item bank is rebuilt lazily by the next scope generation
+      // The extraction checkpoints must reset WITH the bank they describe —
+      // stale itemsExtracted flags would make generation skip re-extraction
+      // against the now-empty bank, and every scope would see zero items.
+      for (const a of s.artifacts) {
+        if (a.meta) {
+          delete a.meta.itemsExtracted
+          delete a.meta.itemsExtractedPages
+          delete a.meta.itemsWindowPages
+        }
+      }
+      s.warnings = s.warnings.filter(
+        (w) => !w.id.startsWith(`${s.id}-ingw-`) && !w.id.startsWith(`${s.id}-ingfail-`),
+      )
+      s.updated = today()
+    })
   }
 
   const candidateWarnings: string[] = []
   let blocked = 0
   let stagesDone = 0
 
+  const block = async (blob: UploadBlob, error: string): Promise<void> => {
+    set = await mutateSet(set.id, (s) => {
+      blockArtifact(findArtifact(s, blob.role, blob.fileName), error)
+      s.updated = today()
+    })
+    blocked++
+    stagesDone++
+  }
+
   for (const blob of blobs) {
     if (await stopRequested(msg.jobId)) {
-      set.updated = today()
-      await saveSet(set)
+      // Every finished document already checkpointed via mutateSet — nothing
+      // unpersisted remains; just settle.
       await settleCancelled(msg.jobId)
       ctx.log(`ingest/extract ${msg.jobId}: stopped by user after ${stagesDone} document(s)`)
       return
@@ -287,29 +312,25 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
     })
 
     if (blob.size > MAX_PDF_BYTES) {
-      blockArtifact(artifact, `File is ${(blob.size / 1024 / 1024).toFixed(1)} MB — exceeds the 23 MB ingestion limit (base64 encoding must fit the 32 MB API request cap). Split the document and re-upload (P10 fit validation).`)
-      blocked++
-      stagesDone++
+      await block(blob, `File is ${(blob.size / 1024 / 1024).toFixed(1)} MB — exceeds the 23 MB ingestion limit (base64 encoding must fit the 32 MB API request cap). Split the document and re-upload (P10 fit validation).`)
       continue
     }
     const buffer = await uploadsContainer().getBlobClient(blob.name).downloadToBuffer()
     const inspection = await inspectPdf(buffer)
     if (inspection.kind === 'encrypted') {
-      blockArtifact(artifact, 'The PDF is password-protected — pdf processing cannot read it. Remove the password and re-upload (P10 fit validation).')
-      blocked++
-      stagesDone++
+      await block(blob, 'The PDF is password-protected — pdf processing cannot read it. Remove the password and re-upload (P10 fit validation).')
       continue
     }
     const pages = inspection.kind === 'ok' ? inspection.pages : countPdfPages(buffer)
     if (pages > MAX_PDF_PAGES) {
       // Only reachable when automatic splitting failed (unparseable PDF).
-      blockArtifact(artifact, `Document parses as ${pages} pages — exceeds the 100-page ingestion limit, and automatic splitting could not read it. Split the document manually and re-upload (P10 fit validation).`)
-      blocked++
-      stagesDone++
+      await block(blob, `Document parses as ${pages} pages — exceeds the 100-page ingestion limit, and automatic splitting could not read it. Split the document manually and re-upload (P10 fit validation).`)
       continue
     }
     const base64 = buffer.toString('base64') // no newlines — Buffer.toString('base64') emits none
 
+    // Each branch runs its Claude call against the local read copy, then
+    // persists the document's extraction results as a fresh-document delta.
     if (blob.role === 'standards') {
       const out = await generateStructured<WireIngestStandards>({
         ...ingestStandardsPrompt(set, artifact),
@@ -317,12 +338,17 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
         documents: [base64],
         effort: 'medium',
       })
-      if (out.nodes.length > 0) set.tree = rebuildTree(out.nodes)
-      // The standards document is the identity source for configuration.
-      if (out.setMeta.subject.trim()) set.subject = out.setMeta.subject.trim()
-      if (out.setMeta.grade.trim()) set.gradeSpan = out.setMeta.grade.trim()
-      if (out.setMeta.sourceOrganization.trim()) set.sourceOrganization = out.setMeta.sourceOrganization.trim()
-      enrichArtifact(artifact, out.usageNotes)
+      set = await mutateSet(set.id, (s) => {
+        if (out.nodes.length > 0) s.tree = rebuildTree(out.nodes)
+        // The standards document is the identity source for configuration.
+        if (out.setMeta.subject.trim()) s.subject = out.setMeta.subject.trim()
+        if (out.setMeta.grade.trim()) s.gradeSpan = out.setMeta.grade.trim()
+        if (out.setMeta.sourceOrganization.trim()) s.sourceOrganization = out.setMeta.sourceOrganization.trim()
+        const a = findArtifact(s, blob.role, blob.fileName)
+        enrichArtifact(a, out.usageNotes)
+        if (a) a.reviewStatus = 'reviewed'
+        s.updated = today()
+      })
       candidateWarnings.push(...out.coverageWarnings)
     } else if (blob.role === 'items') {
       const out = await generateStructured<WireItemCount>({
@@ -331,7 +357,14 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
         documents: [base64],
         effort: 'low', // a count, not an extraction
       })
-      if (artifact) artifact.meta = { ...(artifact.meta ?? {}), itemCount: out.itemCount }
+      set = await mutateSet(set.id, (s) => {
+        const a = findArtifact(s, blob.role, blob.fileName)
+        if (a) {
+          a.meta = { ...(a.meta ?? {}), itemCount: out.itemCount }
+          a.reviewStatus = 'reviewed'
+        }
+        s.updated = today()
+      })
       await mutateJob(msg.jobId, (r) => pushLog(r, `${blob.fileName}: ${out.itemCount} items counted`))
     } else if (blob.role === 'unpacking' || blob.role === 'progression') {
       const out = await generateStructured<WireIngestNotes>({
@@ -340,19 +373,21 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
         documents: [base64],
         effort: 'medium',
       })
-      enrichArtifact(artifact, out.usageNotes)
+      set = await mutateSet(set.id, (s) => {
+        const a = findArtifact(s, blob.role, blob.fileName)
+        enrichArtifact(a, out.usageNotes)
+        if (a) a.reviewStatus = 'reviewed'
+        s.updated = today()
+      })
       candidateWarnings.push(...out.coverageWarnings)
     } else {
       ctx.warn(`extract: unknown role segment "${blob.role}" on blob ${blob.name} — skipped`)
       stagesDone++
       continue
     }
-    if (artifact) artifact.reviewStatus = 'reviewed'
     stagesDone++
-    // Checkpoint after each document so a mid-run failure keeps its progress,
-    // then record the document as done so a redelivered attempt skips it.
-    set.updated = today()
-    await saveSet(set)
+    // The document's results are persisted; record it done so a redelivered
+    // attempt skips it.
     doneBlobs.add(blob.name)
     await mutateJob(msg.jobId, (r) => {
       r.doneBlobs = JSON.stringify([...doneBlobs])
@@ -361,8 +396,6 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
   }
 
   if (await stopRequested(msg.jobId)) {
-    set.updated = today()
-    await saveSet(set)
     await settleCancelled(msg.jobId)
     ctx.log(`ingest/extract ${msg.jobId}: stopped by user before the conflict pass`)
     return
@@ -381,22 +414,26 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
     schema: INGEST_CONFLICTS_SCHEMA,
     effort: 'high', // the suggestions steer everything downstream — worth the depth
   })
-  let warningSeq = 0
-  for (const w of conflicts.warnings.slice(0, 6)) {
-    const prior = priorWarnings.get(w.text)
-    set.warnings.push({
-      id: `${set.id}-ingw-${Date.now()}-${warningSeq++}`,
-      text: w.text,
-      kind: w.kind,
-      suggestion: w.suggestion,
-      acknowledged: prior?.acknowledged ?? false,
-      ...(prior?.resolution ? { resolution: prior.resolution } : {}),
-      ...(prior?.resolvedBy ? { resolvedBy: prior.resolvedBy } : {}),
-    } satisfies CoverageWarning)
-  }
-
-  set.updated = today()
-  await saveSet(set)
+  set = await mutateSet(set.id, (s) => {
+    // Text-dedupe against the fresh doc: a redelivered attempt whose earlier
+    // pass already landed these warnings must not double-push them.
+    const existing = new Set(s.warnings.map((w) => w.text))
+    let warningSeq = 0
+    for (const w of conflicts.warnings.slice(0, 6)) {
+      if (existing.has(w.text)) continue
+      const prior = priorWarnings.get(w.text)
+      s.warnings.push({
+        id: `${s.id}-ingw-${Date.now()}-${warningSeq++}`,
+        text: w.text,
+        kind: w.kind,
+        suggestion: w.suggestion,
+        acknowledged: prior?.acknowledged ?? false,
+        ...(prior?.resolution ? { resolution: prior.resolution } : {}),
+        ...(prior?.resolvedBy ? { resolvedBy: prior.resolvedBy } : {}),
+      } satisfies CoverageWarning)
+    }
+    s.updated = today()
+  })
 
   await mutateJob(msg.jobId, (r) => {
     r.status = 'complete'

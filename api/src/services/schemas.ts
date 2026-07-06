@@ -159,14 +159,7 @@ export const UNIT_CARDS_BATCH_SCHEMA = withLessonDefs(obj({ lessons: arr(ref('le
 
 export const RERUN_LESSON_SCHEMA = withLessonDefs(obj({ lesson: ref('lesson') }))
 
-const LOCKED_SUGGESTION = obj({ lessonId: STR, suggestion: STR })
-
-export const RERUN_UNIT_SCHEMA = withLessonDefs(
-  obj({
-    lessons: arr(ref('lesson')),
-    lockedSuggestions: arr(LOCKED_SUGGESTION),
-  }),
-)
+export const RERUN_UNIT_SCHEMA = withLessonDefs(obj({ lessons: arr(ref('lesson')) }))
 
 const PROPOSAL_CHANGE = obj({
   target: STR,
@@ -191,7 +184,6 @@ export const ITERATE_SCHEMA = obj({
 export const APPLY_SCHEMA = withLessonDefs(
   obj({
     lessons: arr(ref('lesson')), // full rewritten lessons for every lesson that changes
-    lockedSuggestions: arr(LOCKED_SUGGESTION),
   }),
 )
 
@@ -323,11 +315,6 @@ export interface WireLessonBatch {
   lessons: WireLesson[]
 }
 
-export interface LockedSuggestion {
-  lessonId: string
-  suggestion: string
-}
-
 export interface WireProposalChange {
   target: string
   kind: ProposalChange['kind']
@@ -350,7 +337,6 @@ export interface WireIterateOutput {
 
 export interface WireApplyOutput {
   lessons: WireLesson[]
-  lockedSuggestions: LockedSuggestion[]
 }
 
 export interface WireStandardNode {
@@ -436,7 +422,6 @@ export function toLesson(w: WireLesson, validItemIds: Set<string>): Lesson {
     id: w.id,
     title: w.title,
     type: w.type,
-    locked: false,
     evidenceStatus: w.evidenceStatus,
     fields,
     itemRefs: w.itemRefs.filter((id) => validItemIds.has(id)),

@@ -24,6 +24,11 @@ export interface Artifact {
     domainGradeTags?: string[]
     itemCount?: number
     tier?: 1 | 2
+    /** Released-items extraction progress (runs lazily before first scope generation). */
+    itemsExtracted?: boolean
+    itemsExtractedPages?: number
+    /** Persisted adaptive window size — survives handoffs so dense documents keep shrinking instead of looping. */
+    itemsWindowPages?: number
   }
 }
 
@@ -149,7 +154,6 @@ export interface Lesson {
   id: string // e.g. U3.L3
   title: string
   type: LessonType
-  locked: boolean
   evidenceStatus: 'observed' | 'inferred' | 'mixed'
   fields: {
     standards: CardField
@@ -168,7 +172,6 @@ export interface Lesson {
   itemRefs: string[] // ItemRecord ids rendered in Released items
   generatedExemplar?: GeneratedExemplar
   decisions: DecisionEntry[]
-  pendingRelationalUpdate?: string // queued suggestion on a locked lesson
 }
 
 export interface Unit {
@@ -219,6 +222,8 @@ export interface Proposal {
   status: 'drafting' | 'draft' | 'accepted' | 'abandoned'
   working?: boolean // true while Claude is drafting/iterating
   rounds: { feedback: string; response: string }[]
+  /** Units whose accepted changes have been applied — written atomically with each unit's rewrite so a redelivered apply never re-applies. */
+  appliedUnits?: string[]
 }
 
 export interface Scope {
@@ -251,27 +256,18 @@ export interface SystemArtifact {
   note: string
 }
 
-export interface ExemplarAsset {
-  n: number
-  asset: string
-  linkedFrom: string
-  role: string
-  status: 'resolved' | 'pending'
-  uploadedFile?: string
-}
-
-/** One governing framework document (engine or doctrine BrainLift). Locked as-is until the user edits. */
+/** One governing framework document (engine or doctrine BrainLift). Fixed as written — not editable or uploadable. */
 export interface FrameworkSection {
   kind: 'engine' | 'doctrine'
   name: string
+  description: string
   version: string
   updated: string
   content: string // rendered as lightweight markdown: '## ' headings, '- ' bullets, blank-line paragraphs
 }
 
-/** The full governing framework the tool runs under, persisted as one document. */
+/** The governing framework the tool runs under. Read-only: new versions ship with the tool. */
 export interface FrameworkDoc {
   engine: FrameworkSection
   doctrine: FrameworkSection
-  register: ExemplarAsset[]
 }

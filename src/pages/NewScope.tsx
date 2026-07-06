@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api'
+import { systemArtifacts } from '../data/meta'
 import { useStore, type JobStatus } from '../store'
 import { Btn, Mono, Pill, Progress, SectionLabel } from '../ui'
 import type { StandardNode } from '../types'
@@ -10,7 +11,7 @@ const stages = [
   { n: 3, name: 'Atomization', detail: 'Breaking each standard into the smallest teachable lessons by identifying prerequisite skills, lesson boundaries, and instructional splits.' },
   { n: 4, name: 'Sequencing & Unit Formation', detail: 'Organizing lessons into a research-based instructional sequence that builds prerequisite knowledge and groups lessons into coherent units.' },
   { n: 5, name: 'Card Generation', detail: 'Filling the fixed 13-field schema, evidence-locked — {content, citations[]} per field; assembling Decision records; generating ceiling exemplars for inferred atoms…' },
-  { n: 6, name: 'Auto-QC', detail: 'Coverage matrix, prerequisite chains, atom-triple format, single-strategy check, ceiling legality, citation completeness, Decision-record integrity…' },
+  { n: 6, name: 'Auto-QC', detail: 'Coverage matrix, prerequisite chains, atom-triple format, single-strategy check, neighbor consistency, ceiling legality, theme coverage, released-items integrity…' },
 ]
 
 // Map the job's human-readable stage label (e.g. "Stage 3–4 — Atomization & sequencing")
@@ -191,7 +192,7 @@ export default function NewScope() {
           {mode === 'course' ? 'Full Course' : mode === 'standard' ? selectedCodes.map(normalizeCodeText).join(', ') : normalizeCodeText(topic)}
         </h1>
         <p className="mt-1 text-[13px] text-ink-2">
-          {selectedSets.map((s) => s.name).join(' + ')} · Engine v2.3 · DI BrainLift v1.8
+          {selectedSets.map((s) => s.name).join(' + ')} · {systemArtifacts.map((a) => `${a.kind === 'engine' ? 'Engine' : 'DI BrainLift'} ${a.version}`).join(' · ')}
         </p>
         <div className="mt-8 flex items-center gap-3">
           <div className="min-w-0 flex-1">

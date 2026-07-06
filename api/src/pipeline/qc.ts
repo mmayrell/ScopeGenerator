@@ -2,8 +2,10 @@ import { Lesson, QCCheck, Unit } from '../domain/types'
 import { PlanOutput } from '../services/schemas'
 
 /**
- * Stage 6 — programmatic auto-QC (spec §9). Produces the ten QCCheck entries,
- * named exactly like the seed scope's, from the assembled units.
+ * Stage 6 — programmatic auto-QC (spec §9), from the assembled units.
+ * Citation completeness and decision-record integrity were removed from the
+ * check list by request — citations and decision records are still demanded
+ * by the card prompts; they just aren't QC gates.
  */
 export function runQc(units: Unit[], plan: PlanOutput): QCCheck[] {
   const lessons = units.flatMap((u) => u.lessons)
@@ -127,51 +129,7 @@ export function runQc(units: Unit[], plan: PlanOutput): QCCheck[] {
         : `All ${units.length} units carry a rationale traceable to the set's theme/emphasis statements or progression streams.`,
   })
 
-  // 8. Citation completeness
-  const uncited: string[] = []
-  let inferredLessons = 0
-  let aiProposedReliance = 0
-  for (const l of lessons) {
-    for (const [key, field] of Object.entries(l.fields)) {
-      if (field.citations.length === 0) uncited.push(`${l.id}.${key}`)
-    }
-    const inferredHere =
-      l.evidenceStatus !== 'observed' ||
-      Object.values(l.fields).some((f) => f.inferred) ||
-      l.decisions.some((d) => d.flags?.includes('inferred'))
-    if (inferredHere) inferredLessons++
-    if (l.decisions.some((d) => d.flags?.includes('ai-proposed'))) aiProposedReliance++
-  }
-  checks.push({
-    name: 'Citation completeness',
-    status: uncited.length > 0 ? 'fail' : inferredLessons > 0 || aiProposedReliance > 0 ? 'flag' : 'pass',
-    detail:
-      uncited.length > 0
-        ? `Fields without provenance: ${uncited.join(', ')}.`
-        : `All fields carry provenance. Surfaced (not buried): ${inferredLessons} lesson${inferredLessons === 1 ? '' : 's'} rely on anticipated-evidence inference (D1); ${aiProposedReliance} rely on unconfirmed ai-proposed alignment (D14).`,
-  })
-
-  // 9. Decision-record integrity
-  const emptyDecisions = lessons.filter((l) => l.decisions.length === 0).map((l) => l.id)
-  const oneSidedContradictions = lessons
-    .filter((l) =>
-      l.decisions.some(
-        (d) => d.type === 'contradiction' && !/no contradictions?/i.test(d.text) && d.citations.length < 2,
-      ),
-    )
-    .map((l) => l.id)
-  checks.push({
-    name: 'Decision-record integrity',
-    status: emptyDecisions.length > 0 ? 'fail' : oneSidedContradictions.length > 0 ? 'flag' : 'pass',
-    detail:
-      emptyDecisions.length > 0
-        ? `Field 13 empty on: ${emptyDecisions.join(', ')}.`
-        : oneSidedContradictions.length > 0
-          ? `Contradiction entries citing fewer than both sides on: ${oneSidedContradictions.join(', ')}.`
-          : 'Field 13 present and non-empty on every card; every contradiction entry cites both sides; overrides are logged.',
-  })
-
-  // 10. Released-items integrity
+  // 8. Released-items integrity
   const emptyReleased = lessons.filter((l) => l.itemRefs.length === 0 && !l.generatedExemplar).map((l) => l.id)
   const withItems = lessons.filter((l) => l.itemRefs.length > 0).length
   const withExemplar = lessons.filter((l) => l.itemRefs.length === 0 && l.generatedExemplar).length

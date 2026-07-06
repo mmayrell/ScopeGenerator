@@ -19,6 +19,10 @@ const scopeSnapshotPath = (id: string, version: number) => `scopes/${id}/v${vers
 
 export async function saveSet(set: StandardSet): Promise<void> {
   await putJson(dataContainer(), setBlobPath(set.id), set)
+  await upsertSetRow(set)
+}
+
+async function upsertSetRow(set: StandardSet): Promise<void> {
   await entitiesTable().upsertEntity(
     {
       partitionKey: 'set',
@@ -30,6 +34,37 @@ export async function saveSet(set: StandardSet): Promise<void> {
     },
     'Replace',
   )
+}
+
+/**
+ * Read–modify–write for an existing set with ETag optimistic concurrency —
+ * the set-document twin of mutateScope below. Needed wherever writers can
+ * race on the same set blob: concurrent scope generations lazily extracting
+ * the same set's released items, extraction workers, and HTTP mutations. A
+ * plain saveSet on a concurrently-edited set silently loses the other
+ * writer's update (in production that destroyed freshly extracted item
+ * records: last writer wins).
+ */
+export async function mutateSet(id: string, fn: (set: StandardSet) => void): Promise<StandardSet> {
+  let lastError: unknown
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const found = await getJsonWithEtag<StandardSet>(dataContainer(), setBlobPath(id))
+    if (!found) throw new HttpError(404, `standard set ${id} not found`)
+    const set = found.doc
+    fn(set)
+    try {
+      await putJsonIfMatch(dataContainer(), setBlobPath(id), set, found.etag)
+    } catch (err) {
+      const status = (err as { statusCode?: number }).statusCode
+      if (status !== 412) throw err
+      lastError = err
+      await sleep(50 + attempt * 50 + Math.floor(Math.random() * 100))
+      continue
+    }
+    await upsertSetRow(set)
+    return set
+  }
+  throw new Error(`standard set ${id}: gave up after 10 optimistic-concurrency retries: ${String(lastError)}`)
 }
 
 export async function getSetOrUndefined(id: string): Promise<StandardSet | undefined> {
