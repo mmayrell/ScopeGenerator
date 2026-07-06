@@ -15,25 +15,34 @@ api({
   methods: ['POST'],
   route: 'scopes',
   handler: async (req) => {
-    const body = await readJson<{ setId?: string; mode?: Scope['request']['mode']; params?: string }>(req)
-    if (!body.setId || !body.mode) throw new HttpError(400, 'setId and mode are required')
+    const body = await readJson<{ setId?: string; setIds?: string[]; mode?: Scope['request']['mode']; params?: string }>(req)
+    const requestedIds = [
+      ...new Set(
+        Array.isArray(body.setIds) && body.setIds.length > 0 ? body.setIds : body.setId ? [body.setId] : [],
+      ),
+    ]
+    if (requestedIds.length === 0 || !body.mode) throw new HttpError(400, 'setIds and mode are required')
     const mode = body.mode
     if (!['course', 'standard', 'topic'].includes(mode)) throw new HttpError(400, `unknown mode: ${mode}`)
     const params = capsStandardCodes(body.params ?? '')
-    const set = await getSet(body.setId)
-    if (!set.published) throw new HttpError(400, `set ${set.id} is not published`)
+    const selectedSets = await Promise.all(requestedIds.map((sid) => getSet(sid)))
+    for (const s of selectedSets) {
+      if (!s.published) throw new HttpError(400, `set ${s.id} is not published`)
+    }
+    const set = selectedSets[0]
 
     const id = `scope-${Date.now()}`
-    // Title logic mirrors src/store.tsx createScope.
+    const gradeSpans = [...new Set(selectedSets.map((s) => s.gradeSpan).filter(Boolean))].join(' + ')
     const title =
       mode === 'course'
-        ? `${set.gradeSpan ?? 'Course'} Mathematics — Full Course`
+        ? `${gradeSpans || 'Course'} Mathematics — Full Course`
         : mode === 'standard'
           ? `Scope — ${params}`
           : `Topic Scope — ${params}`
     const scope: Scope = {
       id,
       setId: set.id,
+      ...(requestedIds.length > 1 ? { setIds: requestedIds } : {}),
       title,
       request: { mode, params },
       engineVersion: ENGINE_VERSION,

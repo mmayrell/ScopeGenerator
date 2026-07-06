@@ -429,7 +429,7 @@ export default function SetDetail() {
           This removes <span className="font-semibold text-ink">{set.name}</span>, its {set.artifacts.length} uploaded
           artifacts, parsed standards, and item bank.{' '}
           {(() => {
-            const n = scopes.filter((sc) => sc.setId === set.id).length
+            const n = scopes.filter((sc) => sc.setId === set.id || sc.setIds?.includes(set.id)).length
             return n > 0
               ? `${n} scope${n > 1 ? 's' : ''} generated from this set will remain viewable, but the set can no longer serve new scope requests.`
               : 'No scopes have been generated from this set.'

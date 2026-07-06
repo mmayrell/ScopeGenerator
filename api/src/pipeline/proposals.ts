@@ -1,6 +1,6 @@
 import { InvocationContext } from '@azure/functions'
 import { JobMessage, Lesson, Proposal, Scope } from '../domain/types'
-import { getScope, getSet, mutateScope, snapshotScope } from '../data/entities'
+import { getScope, getScopeEvidenceSet, mutateScope, snapshotScope } from '../data/entities'
 import { mutateJob, pushLog } from '../data/jobs'
 import { generateStructured } from '../services/claude'
 import { applyPrompt, iteratePrompt, proposalPrompt } from '../services/prompts'
@@ -24,7 +24,7 @@ import { findLesson } from './qc'
  */
 export async function proposalRunStep(msg: JobMessage, ctx: InvocationContext): Promise<void> {
   const { scope, proposal } = await loadProposal(msg)
-  const set = await getSet(scope.setId)
+  const set = await getScopeEvidenceSet(scope)
 
   await mutateJob(msg.jobId, (r) => {
     r.status = 'running'
@@ -101,7 +101,7 @@ export async function iterateRunStep(msg: JobMessage, ctx: InvocationContext): P
  */
 export async function applyProposalRunStep(msg: JobMessage, ctx: InvocationContext): Promise<void> {
   const { scope, proposal } = await loadProposal(msg)
-  const set = await getSet(scope.setId)
+  const set = await getScopeEvidenceSet(scope)
 
   await mutateJob(msg.jobId, (r) => {
     r.status = 'running'

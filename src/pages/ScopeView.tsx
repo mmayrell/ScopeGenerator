@@ -221,8 +221,13 @@ function ProposalView({
 function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
   const { sets } = useStore()
   const [revisionOpen, setRevisionOpen] = useState(false)
-  const set = sets.find((s) => s.id === scope.setId)
-  const itemsById = useMemo(() => new Map(set?.items.map((i) => [i.id, i]) ?? []), [set])
+  // Items resolve across every set the scope draws on (multi-select), keeping
+  // the owning set id for the set-scoped image endpoint.
+  const itemsById = useMemo(() => {
+    const ids = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
+    const scopeSets = sets.filter((st) => ids.includes(st.id))
+    return new Map(scopeSets.flatMap((st) => st.items.map((it) => [it.id, { it, setId: st.id }] as const)))
+  }, [sets, scope.setIds, scope.setId])
   const tt = typeTone[lesson.type]
 
   return (
@@ -269,12 +274,12 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
                 {fm.key === 'releasedItems' && (
                   <div className="mt-4 space-y-3">
                     {lesson.itemRefs.map((rid) => {
-                      const it = itemsById.get(rid)
-                      return it ? (
+                      const entry = itemsById.get(rid)
+                      return entry ? (
                         <ItemShot
                           key={rid}
-                          item={it}
-                          imageUrl={it.imagePath ? api.itemImageUrl(scope.setId, it.id) : undefined}
+                          item={entry.it}
+                          imageUrl={entry.it.imagePath ? api.itemImageUrl(entry.setId, entry.it.id) : undefined}
                         />
                       ) : null
                     })}
@@ -449,7 +454,7 @@ export default function ScopeView() {
         setRetrying(false)
       } catch {
         try {
-          const newId = await createScope(scope.setId, scope.request.mode, scope.request.params)
+          const newId = await createScope(scope.setIds?.length ? scope.setIds : [scope.setId], scope.request.mode, scope.request.params)
           nav(`/scopes/${newId}`)
         } catch {
           setRetrying(false) // failure already surfaced via the store's action-error strip

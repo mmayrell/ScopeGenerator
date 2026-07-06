@@ -46,6 +46,36 @@ export async function listSets(): Promise<StandardSet[]> {
   return listDocs<StandardSet>('set', getSetOrUndefined)
 }
 
+/**
+ * The evidence set for a scope. Multi-select scope requests draw on several
+ * standard sets; prompts and joins treat them as one combined corpus — trees
+ * concatenated as a forest, items/artifacts/warnings unioned, identity fields
+ * joined. Single-set scopes return the set untouched.
+ */
+export async function getScopeEvidenceSet(scope: Scope): Promise<StandardSet> {
+  const ids = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
+  const sets = await Promise.all(ids.map((id) => getSet(id)))
+  if (sets.length === 1) return sets[0]
+  const uniq = (values: string[]) => [...new Set(values.filter(Boolean))]
+  return {
+    ...sets[0],
+    name: sets.map((s) => s.name).join(' + '),
+    subject: uniq(sets.map((s) => s.subject)).join(' / '),
+    gradeSpan: uniq(sets.map((s) => s.gradeSpan)).join(' + '),
+    codingScheme: uniq(sets.map((s) => s.codingScheme)).join(' | '),
+    codingNotes: uniq(sets.map((s) => s.codingNotes)).join(' | '),
+    emphasisSource: uniq(sets.map((s) => s.emphasisSource)).join(' | '),
+    hierarchyLevels: uniq(sets.flatMap((s) => s.hierarchyLevels)),
+    ...(sets.some((s) => s.sourceOrganization)
+      ? { sourceOrganization: uniq(sets.map((s) => s.sourceOrganization ?? '')).join(' / ') }
+      : {}),
+    tree: sets.flatMap((s) => s.tree),
+    artifacts: sets.flatMap((s) => s.artifacts),
+    warnings: sets.flatMap((s) => s.warnings),
+    items: sets.flatMap((s) => s.items),
+  }
+}
+
 /** Removes the set document, its uploaded PDFs, its item screenshots, and its index row. Scopes generated from the set are untouched. */
 export async function deleteSetDocs(id: string): Promise<void> {
   await dataContainer().getBlockBlobClient(setBlobPath(id)).deleteIfExists()

@@ -54,9 +54,9 @@ export default function NewScope() {
   const { sets, createScope, fetchJob, refreshScope } = useStore()
   const nav = useNavigate()
   const published = sets.filter((s) => s.published)
-  const [setId, setSetId] = useState(published[0]?.id ?? '')
+  const [setIds, setSetIds] = useState<string[]>(published[0] ? [published[0].id] : [])
   const [mode, setMode] = useState<'course' | 'standard' | 'topic'>('course')
-  const [standard, setStandard] = useState('')
+  const [selectedCodes, setSelectedCodes] = useState<string[]>([])
   const [topic, setTopic] = useState('')
   const [topicMapped, setTopicMapped] = useState(false)
   const [running, setRunning] = useState<string | null>(null)
@@ -67,8 +67,39 @@ export default function NewScope() {
   const [genAction, setGenAction] = useState<'pause' | 'resume' | 'cancel' | null>(null)
   const navTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  const set = sets.find((s) => s.id === setId)
-  const standards = useMemo(() => (set ? flattenStandards(set.tree) : []), [set])
+  // Selection order (matches the backend's requestedIds order for titles/params).
+  const selectedSets = useMemo(
+    () => setIds.map((id) => published.find((s) => s.id === id)).filter((s): s is (typeof published)[number] => !!s),
+    [published, setIds],
+  )
+  // Union of every selected set's standards, deduped by canonical code.
+  const standards = useMemo(() => {
+    const seen = new Set<string>()
+    const out: { code: string; wording: string }[] = []
+    for (const st of selectedSets) {
+      for (const entry of flattenStandards(st.tree)) {
+        if (seen.has(entry.code)) continue
+        seen.add(entry.code)
+        out.push(entry)
+      }
+    }
+    return out
+  }, [selectedSets])
+
+  const toggleSet = (id: string) =>
+    setSetIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+
+  // Deselecting a set removes its codes from the visible list — prune them from
+  // the selection too, or they would invisibly gate and submit.
+  useEffect(() => {
+    setSelectedCodes((prev) => {
+      const visible = new Set(standards.map((st) => st.code))
+      const pruned = prev.filter((c) => visible.has(c))
+      return pruned.length === prev.length ? prev : pruned
+    })
+  }, [standards])
+  const toggleCode = (code: string) =>
+    setSelectedCodes((prev) => (prev.includes(code) ? prev.filter((x) => x !== code) : [...prev, code]))
 
   useEffect(() => () => clearTimeout(navTimer.current), [])
 
@@ -108,16 +139,17 @@ export default function NewScope() {
   }, [running, failure, fetchJob, refreshScope, nav])
 
   const run = async () => {
+    const gradeSpans = [...new Set(selectedSets.map((s) => s.gradeSpan).filter(Boolean))].join(' + ')
     const params =
       mode === 'course'
-        ? `${set?.gradeSpan} (all published domains)`
+        ? `${gradeSpans} (all published domains)`
         : mode === 'standard'
-          ? normalizeCodeText(standard)
+          ? selectedCodes.map(normalizeCodeText).join(', ')
           : normalizeCodeText(topic)
     setLaunching(true)
     setLaunchError(null)
     try {
-      const id = await createScope(setId, mode, params)
+      const id = await createScope(setIds, mode, params)
       setJob(null)
       setFailure(null)
       setRunning(id)
@@ -156,10 +188,10 @@ export default function NewScope() {
       <div className="mx-auto max-w-2xl px-10 py-16">
         <SectionLabel>Generating scope</SectionLabel>
         <h1 className="mt-1 font-display text-[26px] font-semibold tracking-tight text-ink">
-          {mode === 'course' ? 'Full Course' : normalizeCodeText(mode === 'standard' ? standard : topic)}
+          {mode === 'course' ? 'Full Course' : mode === 'standard' ? selectedCodes.map(normalizeCodeText).join(', ') : normalizeCodeText(topic)}
         </h1>
         <p className="mt-1 text-[13px] text-ink-2">
-          {set?.name} · Engine v2.3 · DI BrainLift v1.8
+          {selectedSets.map((s) => s.name).join(' + ')} · Engine v2.3 · DI BrainLift v1.8
         </p>
         <div className="mt-8 flex items-center gap-3">
           <div className="min-w-0 flex-1">
@@ -298,10 +330,10 @@ export default function NewScope() {
               <label
                 key={s.id}
                 className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-all ${
-                  setId === s.id ? 'border-accent/40 bg-accent-wash/40 shadow-(--shadow-lift)' : 'border-hairline bg-panel hover:border-hairline-2'
+                  setIds.includes(s.id) ? 'border-accent/40 bg-accent-wash/40 shadow-(--shadow-lift)' : 'border-hairline bg-panel hover:border-hairline-2'
                 }`}
               >
-                <input type="radio" checked={setId === s.id} onChange={() => setSetId(s.id)} className="accent-(--color-accent)" />
+                <input type="checkbox" checked={setIds.includes(s.id)} onChange={() => toggleSet(s.id)} className="accent-(--color-accent)" />
                 <div>
                   <div className="text-[13.5px] font-semibold text-ink">{s.name}</div>
                   <div className="text-[11.5px] text-ink-3">{s.artifacts.length} artifacts · published {s.updated}</div>
@@ -340,9 +372,9 @@ export default function NewScope() {
               {standards.map((s) => (
                 <label
                   key={s.code}
-                  className={`flex cursor-pointer items-baseline gap-2.5 rounded-lg px-2.5 py-1.5 ${standard === s.code ? 'bg-accent-wash' : 'hover:bg-ink/[0.03]'}`}
+                  className={`flex cursor-pointer items-baseline gap-2.5 rounded-lg px-2.5 py-1.5 ${selectedCodes.includes(s.code) ? 'bg-accent-wash' : 'hover:bg-ink/[0.03]'}`}
                 >
-                  <input type="radio" checked={standard === s.code} onChange={() => setStandard(s.code)} className="translate-y-px accent-(--color-accent)" />
+                  <input type="checkbox" checked={selectedCodes.includes(s.code)} onChange={() => toggleCode(s.code)} className="translate-y-px accent-(--color-accent)" />
                   <Mono className="shrink-0 text-[12px] font-semibold text-accent-deep">{s.code}</Mono>
                   <span className="truncate text-[12px] text-ink-2">{s.wording}</span>
                 </label>
@@ -382,7 +414,7 @@ export default function NewScope() {
         <div className="flex items-center justify-end border-t border-hairline pt-5">
           <Btn
             kind="primary"
-            disabled={launching || !setId || (mode === 'standard' && !standard) || (mode === 'topic' && !topicMapped)}
+            disabled={launching || setIds.length === 0 || (mode === 'standard' && selectedCodes.length === 0) || (mode === 'topic' && !topicMapped)}
             onClick={() => void run()}
           >
             {launching ? 'Starting…' : 'Run generation'}

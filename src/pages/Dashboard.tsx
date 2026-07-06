@@ -26,7 +26,10 @@ export default function Dashboard() {
 
       <div className="mt-8 space-y-3">
         {scopes.map((s) => {
-          const set = sets.find((x) => x.id === s.setId)
+          const setNames = (s.setIds?.length ? s.setIds : [s.setId])
+            .map((sid) => sets.find((x) => x.id === sid)?.name)
+            .filter(Boolean)
+            .join(' + ')
           const lessons = s.units.reduce((n, u) => n + u.lessons.length, 0)
           const qcFlags = s.qc.filter((q) => q.status !== 'pass').length
           return (
@@ -60,7 +63,7 @@ export default function Dashboard() {
                     )}
                   </div>
                   <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-ink-3">
-                    <span>{set?.name}</span>
+                    <span>{setNames}</span>
                     <span className="text-hairline-2">·</span>
                     <span className="capitalize">{s.request.mode} scope</span>
                     <span className="text-hairline-2">·</span>

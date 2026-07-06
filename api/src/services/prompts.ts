@@ -151,7 +151,7 @@ export function planPrompt(set: StandardSet, scope: Scope): Prompt {
     scope.request.mode === 'course'
       ? `Whole-course scope: cover every published content standard of the set that has evidence, over the full grade span (${set.gradeSpan}).`
       : scope.request.mode === 'standard'
-        ? `Single-standard scope: only the standard "${scope.request.params}" and its skill chain (preskills, bridges, application tiers directly serving it).`
+        ? `Standard scope: exactly the selected standard(s) "${scope.request.params}" and their skill chains (preskills, bridges, application tiers directly serving them). When several standards are selected, produce ONE coherent scope — a single sequenced set of units covering all of them together, ordered per the sequencing rules across the whole selection, never one disconnected mini-scope per standard.`
         : `Topic scope: the request "${scope.request.params}" — map it onto the set's hierarchy and include exactly the standards that constitute that topic.`
 
   return {

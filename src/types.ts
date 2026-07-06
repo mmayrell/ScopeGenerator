@@ -224,6 +224,8 @@ export interface Proposal {
 export interface Scope {
   id: string
   setId: string
+  /** All sets the scope draws evidence from (multi-select requests); setId is the first. */
+  setIds?: string[]
   title: string
   request: { mode: 'course' | 'standard' | 'topic'; params: string }
   engineVersion: string

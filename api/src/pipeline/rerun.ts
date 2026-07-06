@@ -1,6 +1,6 @@
 import { InvocationContext } from '@azure/functions'
 import { JobMessage, Lesson, Scope, Unit } from '../domain/types'
-import { getScope, getSet, mutateScope, snapshotScope } from '../data/entities'
+import { getScope, getScopeEvidenceSet, mutateScope, snapshotScope } from '../data/entities'
 import { mutateJob, pushLog } from '../data/jobs'
 import { generateStructured } from '../services/claude'
 import { rerunLessonPrompt, rerunUnitPrompt } from '../services/prompts'
@@ -29,7 +29,7 @@ export async function rerunRunStep(msg: JobMessage, ctx: InvocationContext): Pro
   const override = payload.override === true
 
   const scope = await getScope(msg.scopeId)
-  const set = await getSet(scope.setId)
+  const set = await getScopeEvidenceSet(scope)
   const validItemIds = new Set(set.items.map((it) => it.id))
 
   await mutateJob(msg.jobId, (r) => {

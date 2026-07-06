@@ -2,7 +2,7 @@ import { InvocationContext } from '@azure/functions'
 import { JobMessage, Lesson, Unit } from '../domain/types'
 import { getJsonOrUndefined, putJson } from '../data/blobs'
 import { dataContainer } from '../data/clients'
-import { getScope, getSet, mutateScope, saveScope, snapshotScope } from '../data/entities'
+import { getScope, getScopeEvidenceSet, mutateScope, saveScope, snapshotScope } from '../data/entities'
 import { completeUnit, getJob, mutateJob, pushLog } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { generateStructured } from '../services/claude'
@@ -55,7 +55,7 @@ export async function generatePlanStep(msg: JobMessage, ctx: InvocationContext):
     return
   }
   const scope = await getScope(scopeId)
-  const set = await getSet(scope.setId)
+  const set = await getScopeEvidenceSet(scope)
 
   await mutateJob(msg.jobId, (r) => {
     r.status = 'running'
@@ -115,7 +115,7 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
   let unit = await getJsonOrUndefined<Unit>(dataContainer(), unitPath(msg.jobId, unitIndex))
   if (!unit) {
     const scope = await getScope(scopeId)
-    const set = await getSet(scope.setId)
+    const set = await getScopeEvidenceSet(scope)
     const validItemIds = new Set(set.items.map((it) => it.id))
     const batches: PlanLessonSkeleton[][] = []
     for (let b = 0; b < skeleton.lessons.length; b += CARDS_LESSON_BATCH) {
