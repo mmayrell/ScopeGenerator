@@ -11,34 +11,35 @@ export interface CatalogStandard extends PacketStandard {
 
 /**
  * Administration years with genuine released/sample grade 3–8 math materials
- * per framework, AI-researched against the official sources (state education
- * agencies and their testing portals) and cross-checked. Policy: only the past
- * ten years, and never before 2017.
+ * per framework — AI-researched against the official sources (NYSED/MCAS,
+ * TEA, VDOE, FLDOE releases) and adversarially cross-checked per year.
+ * Policy: only the past ten years, and never before 2017. 2020 is absent
+ * everywhere (COVID cancellations — no releases exist).
  */
 export const FRAMEWORKS: { key: PacketFramework; label: string; blurb: string; years: number[] }[] = [
   {
     key: 'ccss',
     label: 'Pure Common Core',
-    blurb: 'CCSS-M · NY State released questions, SBAC / MCAS materials',
-    years: [2025, 2024, 2023, 2022, 2021, 2019, 2018, 2017],
+    blurb: 'CCSS-M · NY State released questions (annual), MCAS released items, SBAC samples',
+    years: [2026, 2025, 2024, 2023, 2022, 2021, 2019, 2018, 2017],
   },
   {
     key: 'teks',
     label: 'Texas (TEKS)',
-    blurb: 'STAAR released tests (TEA)',
+    blurb: 'STAAR released tests (TEA; redesigned 2023)',
     years: [2025, 2024, 2023, 2022, 2021, 2019, 2018, 2017],
   },
   {
     key: 'sol',
     label: 'Virginia (SOL)',
-    blurb: '2023 standards · VDOE released tests and practice items',
-    years: [2025, 2024, 2023, 2022, 2019, 2018, 2017],
+    blurb: '2023 standards · VDOE practice item sets (no full released tests since 2014)',
+    years: [2025, 2018],
   },
   {
     key: 'best',
     label: 'Florida B.E.S.T.',
-    blurb: 'FAST sample and released items (B.E.S.T. began 2022–23)',
-    years: [2025, 2024, 2023, 2022],
+    blurb: 'FAST released tests and sample items (first administration spring 2023)',
+    years: [2026, 2025, 2024, 2023],
   },
 ]
 

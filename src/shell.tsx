@@ -2,6 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { useStore } from './store'
 import { systemArtifacts } from './data/meta'
 import { Btn } from './ui'
+import lwaiLogo from './assets/lwai-logo.png'
 
 const Icon = ({ d, box = 20 }: { d: string; box?: number }) => (
   <svg width="15" height="15" viewBox={`0 0 ${box} ${box}`} fill="none" className="shrink-0">
@@ -24,14 +25,13 @@ export default function Shell() {
     <div className="flex h-screen overflow-hidden">
       <aside className="flex w-[60px] shrink-0 flex-col bg-night text-white/80 lg:w-60">
         <div className="px-3.5 pt-6 pb-5 lg:px-5">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent font-display text-[15px] font-bold text-white">
-              S
-            </div>
-            <div className="hidden lg:block">
-              <div className="font-display text-[15px] leading-5 font-semibold text-white">Scope Generator</div>
-              <div className="font-mono text-[10px] tracking-wide text-white/40">evidence-locked scoping</div>
-            </div>
+          {/* Collapsed rail: the Einstein mark (left square of the wordmark). */}
+          <img src={lwaiLogo} alt="LearnWith.AI" className="h-8 w-8 object-cover object-left lg:hidden" />
+          {/* Expanded: full LearnWith.AI wordmark over the product name. */}
+          <div className="hidden lg:block">
+            <img src={lwaiLogo} alt="LearnWith.AI" className="h-9 w-auto" />
+            <div className="mt-2.5 font-display text-[15px] leading-5 font-semibold text-white">LWAI Scope Generator</div>
+            <div className="font-mono text-[10px] tracking-wide text-white/40">evidence-locked scoping</div>
           </div>
         </div>
         <nav className="flex flex-col gap-0.5 px-2.5 lg:px-3">

@@ -16,6 +16,13 @@ import { newId, nowIso } from '../shared/util'
 const FRAMEWORKS: PacketFramework[] = ['ccss', 'teks', 'sol', 'best']
 /** Hunts are batched web-search calls (~4 standards each); cap the fan-out so one packet can't queue hours of work. */
 const MAX_STANDARDS = 120
+/**
+ * Field caps: an oversized title breaks the Azure Table index row AFTER the
+ * blob is written (orphaned blob), and megabyte standard texts would reach
+ * every hunt prompt. Generous relative to real catalog data (longest official
+ * wording ≈ 2.2k chars).
+ */
+const cap = (v: unknown, max: number): string => String(v ?? '').slice(0, max)
 
 interface CreatePacketBody {
   title?: string
@@ -52,6 +59,7 @@ api({
     }
 
     const now = nowIso()
+    const jobId = newId('job')
     const packet: EvidencePacket = {
       id: newId('packet'),
       title: (body.title ?? '').trim() || 'Mathematics Released Item Repository',
@@ -64,12 +72,12 @@ api({
       status: 'hunting',
       items: [],
       doneBatches: [],
+      huntJobId: jobId, // ownership token — only this job may mutate the hunt
       created: now,
       updated: now,
     }
     await savePacket(packet)
 
-    const jobId = newId('job')
     try {
       // BOTH writes inside the try: a createJob failure (not just enqueue)
       // would otherwise strand the packet at 'hunting' with no job row and no
@@ -195,8 +203,12 @@ api({
       }
     }
 
+    // The job we are about to dispatch owns the hunt from here — stamped on
+    // the packet so any superseded execution abandons at its next checkpoint.
+    const resumeJobId = job ? job.jobId : newId('job')
     const resumed = await mutatePacket(id, (p) => {
       p.status = 'hunting'
+      p.huntJobId = resumeJobId
       delete p.error
       p.updated = nowIso()
     })
@@ -220,11 +232,11 @@ api({
         await enqueueJob({ jobId: job.jobId, kind: 'packet', step: 'hunt', packetId: id })
         return ok({ jobId: job.jobId }, 202)
       }
-      // No job row at all (a create-path dispatch failure) — dispatch fresh.
-      const jobId = newId('job')
-      await createJob({ jobId, kind: 'packet', packetId: id, totalStages: 1, stage: 'Queued', detail })
-      await enqueueJob({ jobId, kind: 'packet', step: 'hunt', packetId: id })
-      return ok({ jobId }, 202)
+      // No job row at all (a create-path dispatch failure) — dispatch fresh
+      // under the id already stamped as the hunt owner.
+      await createJob({ jobId: resumeJobId, kind: 'packet', packetId: id, totalStages: 1, stage: 'Queued', detail })
+      await enqueueJob({ jobId: resumeJobId, kind: 'packet', step: 'hunt', packetId: id })
+      return ok({ jobId: resumeJobId }, 202)
     } catch (e) {
       // A 'hunting' packet with no live message would look stuck; settle it
       // back to 'failed' so Retry stays available and honest.

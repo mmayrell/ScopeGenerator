@@ -390,8 +390,8 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
           <SectionLabel>Administration Years</SectionLabel>
           <p className="mt-0.5 text-[11.5px] text-ink-3">
             {years.length === 0
-              ? 'Any listed year — the agent prefers the most recent it can find. '
-              : `The agent will prefer ${[...years].sort((a, b) => b - a).join(', ')}. `}
+              ? 'All listed years included. '
+              : `The agent hunts all of: ${[...years].sort((a, b) => b - a).join(', ')}. `}
             <SelectAll
               anySelected={years.length > 0}
               onAll={() => setYears(yearsOf(framework))}

@@ -22,11 +22,23 @@ import { newId, nowIso } from '../shared/util'
  * in-flight call always has room to finish.
  */
 const TIME_BUDGET_MS = 3.5 * 60 * 1000
+/**
+ * Hard abort for the in-flight call: a web-search turn can legally stretch
+ * (pause_turn resumes, parse retries, SDK backoff) past the 10-minute host
+ * cap, and a host kill skips ALL settlement. Aborting at 8.5 minutes leaves
+ * room to log, re-enqueue, and return cleanly.
+ */
+const EXECUTION_DEADLINE_MS = 8.5 * 60 * 1000
 /** Standards per hunt call — keeps each web-search turn focused and bounded. */
 const BATCH_SIZE = 4
 const MAX_SEARCHES_PER_BATCH = 8
 const MAX_ITEMS_PER_STANDARD = 4
 const HUNT_MAX_TOKENS = 24000
+
+const isTruncation = (e: unknown): boolean =>
+  /truncated \(max_tokens/i.test(e instanceof Error ? e.message : String(e))
+const isAbort = (e: unknown): boolean =>
+  /abort/i.test((e as { name?: string }).name ?? '') || /abort/i.test(e instanceof Error ? e.message : String(e))
 
 interface HuntBatch {
   key: string
@@ -76,6 +88,15 @@ export async function huntPacketStep(msg: JobMessage, context: InvocationContext
     await settleJobQuietly(msg.jobId, 'Packet already settled — nothing to do')
     return
   }
+  // Ownership: a retry re-dispatches under a NEW job id and stamps it on the
+  // packet. A superseded execution (stale redelivery, pre-retry continuation)
+  // must abandon instead of mutating the packet — its stale cancel flag would
+  // otherwise clobber the hunt the user explicitly restarted.
+  const ownsHunt = (p: EvidencePacket): boolean => !p.huntJobId || p.huntJobId === msg.jobId
+  if (!ownsHunt(packet)) {
+    await settleJobQuietly(msg.jobId, 'Superseded by a newer hunt job — nothing to do')
+    return
+  }
 
   const batches = huntBatchesOf(packet)
   const done = new Set(packet.doneBatches)
@@ -100,14 +121,20 @@ export async function huntPacketStep(msg: JobMessage, context: InvocationContext
       await settleJobQuietly(msg.jobId, current ? 'Packet settled by another run — stopping' : 'Packet was deleted — stopping')
       return
     }
+    if (!ownsHunt(current)) {
+      await settleJobQuietly(msg.jobId, 'Superseded by a newer hunt job — stopping')
+      return
+    }
     for (const key of current.doneBatches) done.add(key)
     if (done.has(batch.key)) continue
 
-    // Honor a stop request at every checkpoint.
+    // Honor a stop request at every checkpoint. Only the OWNING job may
+    // cancel the packet — a superseded job's stale stop flag settles that job
+    // alone (the ownership guard above already returned for that case).
     const job = await getJob(msg.jobId)
     if (job.cancelRequested === true) {
       await mutatePacket(packetId, (p) => {
-        if (p.status === 'hunting') p.status = 'cancelled'
+        if (p.status === 'hunting' && ownsHunt(p)) p.status = 'cancelled'
         p.updated = nowIso()
       })
       await mutateJob(msg.jobId, (r) => {
@@ -132,29 +159,82 @@ export async function huntPacketStep(msg: JobMessage, context: InvocationContext
 
     const label = `Grade ${batch.grade} · ${batch.domainName}`
     context.log(`packet/hunt ${packetId}: searching ${label} (${batch.standards.map((s) => s.code).join(', ')})`)
-    const found = await huntBatch(packet, batch)
+
+    // Bound the paid call to the execution deadline; on abort, hand off to a
+    // fresh execution instead of letting the host kill skip settlement.
+    const controller = new AbortController()
+    const abortTimer = setTimeout(
+      () => controller.abort(),
+      Math.max(5_000, started + EXECUTION_DEADLINE_MS - Date.now()),
+    )
+    let found: HuntedItem[]
+    let truncatedTwice = false
+    try {
+      try {
+        found = await huntBatch(packet, batch, controller.signal)
+      } catch (e) {
+        if (isTruncation(e)) {
+          // Web output is nondeterministic — one concise re-hunt usually fits.
+          // A second truncation records the batch as searched (its standards
+          // stay documentation gaps) instead of failing the whole packet via
+          // the worker's fail-fast on max_tokens.
+          context.warn(`packet/hunt ${packetId}: ${label} truncated — retrying concisely`)
+          try {
+            found = await huntBatch(packet, batch, controller.signal, true)
+          } catch (e2) {
+            if (!isTruncation(e2)) throw e2
+            found = []
+            truncatedTwice = true
+          }
+        } else {
+          throw e
+        }
+      }
+    } catch (e) {
+      if (isAbort(e)) {
+        await mutateJob(msg.jobId, (r) =>
+          pushLog(r, `${label}: search ran long and was cut at the execution deadline — continuing in a new execution`),
+        )
+        await enqueueJob({ jobId: msg.jobId, kind: 'packet', step: 'hunt', packetId })
+        return
+      }
+      throw e
+    } finally {
+      clearTimeout(abortTimer)
+    }
 
     done.add(batch.key)
+    let owned = true
     await mutatePacket(packetId, (p) => {
+      if (p.status !== 'hunting' || !ownsHunt(p)) {
+        owned = false
+        return
+      }
       mergeItems(p, found)
       if (!p.doneBatches.includes(batch.key)) p.doneBatches.push(batch.key)
       p.updated = nowIso()
     })
+    if (!owned) {
+      await settleJobQuietly(msg.jobId, 'Superseded by a newer hunt job — stopping (batch results discarded)')
+      return
+    }
     const covered = new Set(found.map((i) => i.standardCode)).size
     await mutateJob(msg.jobId, (r) => {
       r.stagesDone = Math.min(done.size, batches.length)
       pushLog(
         r,
-        found.length === 0
-          ? `${label}: no released items found online (documentation gap)`
-          : `${label}: found ${found.length} released item${found.length === 1 ? '' : 's'} covering ${covered} standard${covered === 1 ? '' : 's'}`,
+        truncatedTwice
+          ? `${label}: transcriptions were too long twice — batch skipped; its standards remain documentation gaps`
+          : found.length === 0
+            ? `${label}: no released items found online (documentation gap)`
+            : `${label}: found ${found.length} released item${found.length === 1 ? '' : 's'} covering ${covered} standard${covered === 1 ? '' : 's'}`,
       )
     })
   }
 
-  // All batches searched — settle.
+  // All batches searched — settle (only while this job still owns the hunt).
   const settled = await mutatePacket(packetId, (p) => {
-    if (p.status === 'hunting') p.status = 'complete'
+    if (p.status === 'hunting' && ownsHunt(p)) p.status = 'complete'
     p.updated = nowIso()
   })
   const coveredCodes = new Set(settled.items.map((i) => i.standardCode))
@@ -210,22 +290,24 @@ function mergeItems(packet: EvidencePacket, found: HuntedItem[]): void {
 // ---------------------------------------------------------------------------
 
 /** Where genuine released items live for each framework — search guidance, not a restriction. */
+// Search guidance grounded in AI-verified research of the official release
+// pages (what actually exists 2017–2026), cross-checked per year.
 const FRAMEWORK_HUNTS: Record<EvidencePacket['framework'], { programs: string; hint: string }> = {
   ccss: {
     programs: 'Common Core–aligned state assessments',
-    hint: 'Smarter Balanced (SBAC) released and practice items, PARCC released items, New York State released test questions (EngageNY / NYSED), and Massachusetts MCAS released items (CCSS-aligned).',
+    hint: 'New York State Testing Program released questions (nysedregents.org/ei/ei-math.html — released annually 2017–2026 except 2020, with item maps and scoring keys), Massachusetts MCAS released items (doe.mass.edu/mcas/release.html, 2019 onward), and Smarter Balanced (SBAC) official sample items (sampleitems.smarterbalanced.org — genuine but not tied to an administration year; use year 0).',
   },
   teks: {
     programs: 'STAAR (State of Texas Assessments of Academic Readiness)',
-    hint: 'Texas Education Agency released STAAR tests and answer keys (tea.texas.gov), including the released practice tests on the Cambium/TEA platform.',
+    hint: 'Texas Education Agency released STAAR tests and answer keys (tea.texas.gov released-test-questions pages: 2017–2019 and 2021–2022 as PDFs; 2023 onward the redesigned tests live on the official Cambium practice site linked from texasassessment.gov).',
   },
   sol: {
-    programs: 'Virginia SOL (Standards of Learning) assessments',
-    hint: 'Virginia Department of Education released SOL tests and practice items (doe.virginia.gov). Note: 2023 SOL codes are new — released tests from 2010–2022 are coded under the 2016 standards; map them only when the content genuinely matches the 2023 standard.',
+    programs: 'Virginia SOL (Standards of Learning) official practice item sets',
+    hint: 'IMPORTANT: VDOE has released NO full grade 3–8 math SOL tests since spring 2014 (those align to the superseded 2009 standards — do not use them). The genuine current materials are the official SOL Practice Items aligned to the 2023 Mathematics SOL, published 2025 on doe.virginia.gov (online TestNav sets plus grade-by-grade printable multiple-choice PDFs with keys). The 2018-era practice sets align to the 2016 standards — map one to a 2023 code only when the content genuinely matches, and say so in notes.',
   },
   best: {
     programs: 'Florida FAST assessments (B.E.S.T. standards)',
-    hint: 'Florida Department of Education / Cambium FAST sample test materials and B.E.S.T. sample items (flfast.org, fldoe.org). B.E.S.T. is new — official sample items may be the only released evidence.',
+    hint: 'FLDOE/Cambium FAST released tests and Test Release Support Documents (flfast.org — spring 2023 onward, with answer keys and B.E.S.T. benchmark codes) plus official B.E.S.T. sample items. Anything before 2023 is the old FSA program aligned to the superseded MAFS standards — do not use it.',
   },
 }
 
@@ -294,12 +376,20 @@ Binding rules:
 8. NEVER transcribe items from tests administered before 2017. If the only findable materials for a standard predate 2017, report the standard as a gap instead.
 9. Find up to ${MAX_ITEMS_PER_STANDARD} strong items per standard — prefer breadth (every standard covered) over depth.`
 
-async function huntBatch(packet: EvidencePacket, batch: HuntBatch): Promise<HuntedItem[]> {
+async function huntBatch(
+  packet: EvidencePacket,
+  batch: HuntBatch,
+  signal?: AbortSignal,
+  concise = false,
+): Promise<HuntedItem[]> {
   const hunt = FRAMEWORK_HUNTS[packet.framework]
+  // Selected years are a hard filter with NO preference among them — the agent
+  // hunts all of them equally and must not substitute other years.
   const yearsLine =
     packet.years.length > 0
-      ? `Prefer administrations from these years: ${packet.years.join(', ')} — an item from another year (2017 or later) still beats a gap.`
-      : 'Any administration year from 2017 onward is acceptable; prefer the most recent.'
+      ? `Only transcribe items from tests administered in these years: ${packet.years.join(', ')}. Cover every listed year you can find items for — no year is preferred over another. Do NOT include items from any other year; if a standard's only findable items fall outside these years, report it as a gap.`
+      : 'Any administration year from 2017 onward is acceptable — no year is preferred over another.'
+  const perStandard = concise ? 2 : MAX_ITEMS_PER_STANDARD
   const user = `Find released assessment items for these ${packet.frameworkLabel} standards.
 
 Assessment program(s) to hunt: ${hunt.programs}.
@@ -309,7 +399,11 @@ ${yearsLine}
 Grade ${batch.grade} — ${batch.domainName}:
 ${batch.standards.map((s) => `- ${s.code}: ${s.text}`).join('\n')}
 
-Search the web for released tests, released item documents, and official sample items assessing these specific standards. Transcribe every genuine item you find (up to ${MAX_ITEMS_PER_STANDARD} per standard), and report standards with no findable released evidence as gaps.`
+Search the web for released tests, released item documents, and official sample items assessing these specific standards. Transcribe every genuine item you find (up to ${perStandard} per standard), and report standards with no findable released evidence as gaps.${
+    concise
+      ? '\n\nIMPORTANT: your previous reply overflowed the output budget. Be concise this time: at most 2 items per standard, prefer short selected-response items, keep notes to one short sentence, and skip any item whose stem would need more than a short paragraph to transcribe.'
+      : ''
+  }`
 
   const result = await generateStructured<{
     items?: unknown[]
@@ -322,13 +416,25 @@ Search the web for released tests, released item documents, and official sample 
     effort: 'medium',
     webSearch: true,
     maxSearches: MAX_SEARCHES_PER_BATCH,
+    ...(signal ? { signal } : {}),
   })
 
-  return sanitizeItems(result.items ?? [], batch)
+  return sanitizeItems(result.items ?? [], batch, packet.years)
 }
 
+/**
+ * XML 1.0 forbids C0 control characters (except tab/newline/CR) — one stray
+ * escaped \u000b in a transcription would permanently corrupt the packet's
+ * Word export. Newlines are kept: multi-part stems legitimately use them.
+ */
+const cleanText = (v: unknown): string =>
+  String(v ?? '')
+    // eslint-disable-next-line no-control-regex
+    .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, ' ')
+    .trim()
+
 /** The hunt reply is unconstrained (web search) — validate structurally and drop anything off-batch or unusable. */
-function sanitizeItems(raw: unknown[], batch: HuntBatch): HuntedItem[] {
+function sanitizeItems(raw: unknown[], batch: HuntBatch, years: number[]): HuntedItem[] {
   const codes = new Map(batch.standards.map((s) => [normCode(s.code), s.code]))
   const perStandard = new Map<string, number>()
   const out: HuntedItem[] = []
@@ -337,33 +443,37 @@ function sanitizeItems(raw: unknown[], batch: HuntBatch): HuntedItem[] {
     const r = value as Record<string, unknown>
     const code = codes.get(normCode(String(r.standardCode ?? '')))
     if (!code) continue // hallucinated or off-batch standard
-    const stem = String(r.stem ?? '').trim()
-    const sourceUrl = String(r.sourceUrl ?? '').trim()
+    const stem = cleanText(r.stem)
+    const sourceUrl = cleanText(r.sourceUrl)
     if (stem.length < 10 || !/^https?:\/\//i.test(sourceUrl)) continue
     const itemType = String(r.itemType ?? '')
     const yearNum = Math.trunc(Number(r.year))
     // Policy: no tests administered before 2017 (year 0 = source did not say).
     if (Number.isFinite(yearNum) && yearNum > 0 && yearNum < 2017) continue
+    // Selected years are a HARD filter (no preference): drop items outside
+    // them, including items whose source states no year — an unverifiable
+    // year cannot satisfy the filter.
+    if (years.length > 0 && !years.includes(yearNum)) continue
     const count = perStandard.get(code) ?? 0
     if (count >= MAX_ITEMS_PER_STANDARD) continue
     perStandard.set(code, count + 1)
     out.push({
       id: newId('hunted'),
       standardCode: code,
-      program: String(r.program ?? '').trim(),
+      program: cleanText(r.program),
       year: Number.isFinite(yearNum) && yearNum > 1990 && yearNum < 2100 ? yearNum : 0,
-      itemNumber: String(r.itemNumber ?? '').trim(),
+      itemNumber: cleanText(r.itemNumber),
       itemType:
         itemType === 'constructed-response' || itemType === 'multi-part' ? itemType : 'selected-response',
       stem,
       choices: Array.isArray(r.choices)
-        ? r.choices.map((c) => String(c).trim()).filter((c) => c.length > 0)
+        ? r.choices.map((c) => cleanText(c)).filter((c) => c.length > 0)
         : [],
-      answer: String(r.answer ?? '').trim(),
+      answer: cleanText(r.answer),
       sourceUrl,
-      sourceName: String(r.sourceName ?? '').trim(),
+      sourceName: cleanText(r.sourceName),
       alignment: r.alignment === 'official' ? 'official' : 'ai-inferred',
-      notes: String(r.notes ?? '').trim(),
+      notes: cleanText(r.notes),
     })
   }
   return out

@@ -326,6 +326,7 @@ export interface EvidencePacket {
   error?: string
   items: HuntedItem[]
   doneBatches: string[] // hunt-batch keys already searched (backend checkpointing)
+  huntJobId?: string // the job that currently owns the hunt (backend ownership token)
   created: string
   updated: string
 }

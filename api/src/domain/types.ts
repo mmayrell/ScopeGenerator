@@ -357,6 +357,13 @@ export interface EvidencePacket {
   items: HuntedItem[]
   /** Hunt-batch keys already searched — checkpointing across 10-minute executions. */
   doneBatches: string[]
+  /**
+   * The job that currently owns the hunt. A retry re-dispatches with a new
+   * job id; a superseded execution (stale cancel, redelivered message) must
+   * abandon at its next checkpoint instead of mutating the packet. Optional
+   * only for packets created before the field existed.
+   */
+  huntJobId?: string
   created: string
   updated: string
 }

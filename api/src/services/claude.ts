@@ -38,6 +38,14 @@ export interface GenerateStructuredOptions {
   webSearch?: boolean
   /** Max server-side searches per call (webSearch only; default 8). */
   maxSearches?: number
+  /**
+   * Hard deadline for the whole call. Queue workers MUST pass one for
+   * long-running web-search calls: an unbounded call launched late in an
+   * execution blows the 10-minute Consumption cap and the host kill skips all
+   * settlement. Aborting throws (AbortError) — the caller decides whether to
+   * re-enqueue or fail.
+   */
+  signal?: AbortSignal
 }
 
 const EFFORT_LEVELS = ['low', 'medium', 'high', 'xhigh', 'max'] as const
@@ -174,26 +182,39 @@ async function callOnce(
   // resumes by sending the paused assistant content back verbatim.
   let message: MinimalMessage
   for (let resume = 0; ; resume++) {
+    const requestOptions = opts.signal ? { signal: opts.signal } : undefined
     if (model.startsWith('claude-fable')) {
       // Fable: thinking is always on — the `thinking` parameter is OMITTED entirely
       // (an explicit disabled/enabled config returns a 400).
-      const stream = client.beta.messages.stream({
-        ...request,
-        betas: ['server-side-fallback-2026-06-01'],
-        fallbacks: [{ model: 'claude-opus-4-8' }],
-      } as never)
+      const stream = client.beta.messages.stream(
+        {
+          ...request,
+          betas: ['server-side-fallback-2026-06-01'],
+          fallbacks: [{ model: 'claude-opus-4-8' }],
+        } as never,
+        requestOptions,
+      )
       message = (await stream.finalMessage()) as unknown as MinimalMessage
     } else {
-      const stream = client.messages.stream({
-        ...request,
-        thinking: { type: 'adaptive' },
-      } as never)
+      const stream = client.messages.stream(
+        {
+          ...request,
+          thinking: { type: 'adaptive' },
+        } as never,
+        requestOptions,
+      )
       message = (await stream.finalMessage()) as unknown as MinimalMessage
     }
     if (message.stop_reason !== 'pause_turn' || resume >= 3) break
     messages.push({ role: 'assistant', content: message.content })
   }
 
+  if (message.stop_reason === 'pause_turn') {
+    // Resume cap exhausted with the turn still paused: the text so far is an
+    // INCOMPLETE turn — returning it as success would either parse-retry (a
+    // full re-hunt) or, worse, checkpoint a partial batch as done.
+    throw new Error('Claude web-search turn did not finish (pause_turn resume limit reached) — retry the batch.')
+  }
   if (message.stop_reason === 'refusal') {
     const category = message.stop_details?.category
     throw new Error(
