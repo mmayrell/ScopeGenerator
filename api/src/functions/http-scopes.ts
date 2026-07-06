@@ -116,10 +116,18 @@ api({
   route: 'scopes/{id}/resume-generation',
   handler: async (req) => {
     const id = requireParam(req, 'id')
+    await getScope(id) // 404 before any state is touched — a deleted scope must not strand the job row
     const job = await latestJobForScope(id)
     if (!job || job.kind !== 'generate') throw new HttpError(409, 'no generation job to resume')
-    if (job.status === 'queued' || job.status === 'running') return ok({ jobId: job.jobId }, 202)
     if (job.status === 'complete') throw new HttpError(409, 'this generation already completed')
+    if (job.status === 'queued' || job.status === 'running') {
+      // A queued/running row does not prove a live message (a failed resume or
+      // a poisoned message leaves the row active forever). Only trust it while
+      // the job shows recent progress; otherwise fall through and re-enqueue —
+      // every step is idempotent, so a duplicate message is harmless.
+      const lastAt = job.log.length > 0 ? Date.parse(job.log[job.log.length - 1].at) : Date.parse(job.created)
+      if (Date.now() - lastAt < 15 * 60 * 1000) return ok({ jobId: job.jobId }, 202)
+    }
     await mutateJob(job.jobId, (r) => {
       r.status = 'queued'
       r.stage = 'Queued'
