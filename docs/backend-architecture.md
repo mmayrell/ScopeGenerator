@@ -285,7 +285,10 @@ proceeds and logs (RerunEvent detail + QC flag), per spec §8.
 ## Claude integration (backend `api/src/services/claude.ts`)
 
 - SDK: `@anthropic-ai/sdk` (latest). Client constructed from `ANTHROPIC_API_KEY`.
-- **Model**: `process.env.CLAUDE_MODEL ?? 'claude-fable-5'`.
+- **Model**: `process.env.CLAUDE_MODEL ?? 'claude-fable-5'`. One scoped per-call override exists:
+  packet hunts pass `model: 'claude-opus-4-8'` — Fable's dual-use gating consistently refused
+  fetch-enabled hunt turns (a 'bio'-category false positive on grade-school math that the
+  server-side fallback inherited), and Opus 4.8 is the fallback model anyway.
 - One helper: `generateStructured<T>({ system, user, schema, maxTokens = 64000, effort = 'high' })`:
   - Always **streams** (`.stream(...)` + `finalMessage()`) — calls can run minutes.
   - `output_config: { format: { type: 'json_schema', schema }, effort }`; `CLAUDE_EFFORT` env

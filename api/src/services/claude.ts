@@ -47,6 +47,13 @@ export interface GenerateStructuredOptions {
    */
   fetchDomains?: string[]
   /**
+   * Per-call model override. Default (unset) is CLAUDE_MODEL. Used by the
+   * packet hunts: Fable's dual-use gating consistently refused fetch-enabled
+   * hunts (category 'bio' on grade-school math — a false positive its
+   * server-side fallback inherited), so hunts run directly on Opus 4.8.
+   */
+  model?: string
+  /**
    * Hard deadline for the whole call. Queue workers MUST pass one for
    * long-running web-search calls: an unbounded call launched late in an
    * execution blows the 10-minute Consumption cap and the host kill skips all
@@ -115,7 +122,7 @@ export async function generateStructured<T>(opts: GenerateStructuredOptions): Pr
   // straight through (extraction died on exactly that: 'Overloaded' on every
   // attempt within one window).
   const client = new Anthropic({ apiKey, maxRetries: 6 })
-  const model = process.env.CLAUDE_MODEL ?? 'claude-fable-5'
+  const model = opts.model ?? process.env.CLAUDE_MODEL ?? 'claude-fable-5'
 
   let constrained = !opts.webSearch
   // Per-call variant ladder starting at the shared hint: the guard must judge

@@ -466,6 +466,10 @@ Search the web for released tests, released item documents, and official sample 
     webSearch: true,
     maxSearches: concise ? 3 : MAX_SEARCHES_PER_BATCH,
     fetchDomains: hunt.domains,
+    // Fable's dual-use gating refused every fetch-enabled hunt (false
+    // positive on grade-school math); Opus 4.8 — the same model Fable's
+    // server-side fallback targets — runs these turns without the gating.
+    model: 'claude-opus-4-8',
     ...(signal ? { signal } : {}),
   })
 
