@@ -462,6 +462,10 @@ const flagship: Lesson = {
     cluster: f('“Use place value understanding and properties of operations to perform multi-digit arithmetic.”', [
       C.cluster45,
     ]),
+    objectives: f(
+      'Objectives: 1) Multiply a whole number of up to four digits by a one-digit whole number using the standard algorithm. 2) Regroup correctly at every place, including factors that contain one or more zeros.',
+      [],
+    ),
     emphasis: f('Major (emphasis source: sub-claim A).', [C.subclaimA]),
     progression: f(
       'Cross-grade: builds on Grade 3 single-digit products and multiplying by multiples of ten; leads to Grade 5 fluency with the standard algorithm for multi-digit × multi-digit. Within-course: follows U3.L2 (place-value products with multiples of ten); precedes U3.L4 (two-digit × two-digit) and U3.L6 (area-model interpretation of the algorithm).',

@@ -104,6 +104,7 @@ const LESSON = obj({
   fields: obj({
     standards: ref('cardField'),
     cluster: ref('cardField'),
+    objectives: ref('cardField'),
     emphasis: ref('cardField'),
     progression: ref('cardField'),
     prerequisites: ref('cardField'),

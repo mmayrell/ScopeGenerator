@@ -10,7 +10,7 @@ const stages = [
   { n: 2, name: 'Scope Resolution', detail: 'Determining exactly what each standard teaches by resolving scope, organizing evidence, and mapping assessment items to instructional components.' },
   { n: 3, name: 'Atomization', detail: 'Breaking each standard into the smallest teachable lessons by identifying prerequisite skills, lesson boundaries, and instructional splits.' },
   { n: 4, name: 'Sequencing & Unit Formation', detail: 'Organizing lessons into a research-based instructional sequence that builds prerequisite knowledge and groups lessons into coherent units.' },
-  { n: 5, name: 'Card Generation', detail: 'Filling the fixed 13-field schema, evidence-locked — {content, citations[]} per field; assembling Decision records; generating ceiling exemplars for inferred atoms…' },
+  { n: 5, name: 'Card Generation', detail: 'Filling the fixed 14-field schema, evidence-locked — {content, citations[]} per field; assembling Decision records; generating ceiling exemplars for inferred atoms…' },
   { n: 6, name: 'Auto-QC', detail: 'Coverage matrix, prerequisite chains, atom-triple format, single-strategy check, neighbor consistency, ceiling legality, theme coverage, released-items integrity…' },
 ]
 

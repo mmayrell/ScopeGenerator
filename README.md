@@ -1,6 +1,6 @@
 # Scope Generator
 
-An implementation of the **Scope Generation Tool** system specification (v2 draft): the tool that turns a standard set's evidence corpus into a fully scoped course — strand-coherent units of atomized lessons, each specified by a fixed 13-field card, generated under Direct Instruction doctrine, with every field evidence-locked to its sources and every consequential decision reasoned on the card itself.
+An implementation of the **Scope Generation Tool** system specification (v2 draft): the tool that turns a standard set's evidence corpus into a fully scoped course — strand-coherent units of atomized lessons, each specified by a fixed 14-field card, generated under Direct Instruction doctrine, with every field evidence-locked to its sources and every consequential decision reasoned on the card itself.
 
 ## Running it
 
@@ -20,9 +20,9 @@ The complete product surface from the spec, as a React app running on a client-s
 | §4 Artifact roles & ingestion | Standard set detail → Artifacts (roles, usage notes, tiers, coverage declarations, blocking errors) |
 | §5 Data model | `src/types.ts` — StandardSet, Artifact, ItemRecord, Lesson, DecisionEntry, Citation, Proposal, RerunEvent-shaped history… |
 | §6 Generation pipeline | New scope → staged Stage 2–6 progress, checkpoint framing |
-| §7 Card field rules | `ScopeView` — the fixed 13-field card with per-field provenance popovers, inferred flags, generated ceiling exemplars (never-empty Released items), Decision record with rule IDs |
+| §7 Card field rules | `ScopeView` — the fixed 14-field card with per-field provenance popovers, inferred flags, generated ceiling exemplars (never-empty Released items), Decision record with rule IDs |
 | §8 Revision & versioning | Propose → review → accept revision flow with diff, ripple preview, and iteration rounds; guardrail decline + cited criterion + logged override; immutable version history |
-| §9 Auto-QC | QC report modal — eight programmatic checks, flags surfaced not buried |
+| §9 Auto-QC | QC report modal — ten programmatic checks (incl. objective integrity and released-item coverage), flags surfaced not buried |
 | §10 Admin experience | Set configuration, review screens (standards tree with limits, item bank with characterizations, alignment-confirmation queue), warning acknowledgment, gated publish |
 | §11 User experience | Scope request (course / standard / topic with mapping confirmation), streaming generation, public-view scopes |
 | §12 / Appendix F | Engine & doctrine page — fixed documents with versions and descriptions |
@@ -30,9 +30,9 @@ The complete product surface from the spec, as a React app running on a client-s
 ## Architecture
 
 - **`src/types.ts`** — the §5 data model, UI-agnostic.
-- **`src/data/seed.ts`** — demo corpus: standards trees with in-document limits, item records with vision characterizations and P2 scope classes, lexicons, the full-course scope with 12 complete cards.
+- **`src/data/seed.ts`** — demo corpus: standards trees with in-document limits, item records with vision characterizations and P2 scope classes, lexicons, the full-course scope with 12 demo cards (the flagship card carries the full 14-field shape; the rest predate the Objectives field).
 - **`src/store.tsx`** — a context store exposing the domain actions (publish gating, alignment confirmation, lock, guardrailed rerun, proposal lifecycle). This is the seam where a real backend slots in: every action maps 1:1 to an API call, and the generation simulation in `NewScope` maps to the real queued pipeline job with per-stage checkpoints.
-- **`src/pages/`** — Dashboard, SetsList, SetDetail (admin), NewScope (request + staged run), ScopeView (units → 13-field cards), System (engine/doctrine).
+- **`src/pages/`** — Dashboard, SetsList, SetDetail (admin), NewScope (request + staged run), ScopeView (units → 14-field cards), System (engine/doctrine).
 - **`src/ui.tsx`** — primitives: citation chips + provenance popover, released-item renderer, generated-exemplar renderer (with the mandatory *Generated exemplar — not a released item* label), modals.
 
 Stack: Vite · React 19 · TypeScript · Tailwind v4 · React Router. No backend required; all state is in-memory.

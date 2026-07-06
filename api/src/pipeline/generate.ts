@@ -36,7 +36,7 @@ const unitPath = (jobId: string, i: number) => `jobs/${jobId}/unit-${i}.json`
 const unitBatchPath = (jobId: string, i: number, b: number) => `jobs/${jobId}/unit-${i}-batch-${b}.json`
 
 // Cards generate at most this many lessons per Claude call: a 10-lesson unit's
-// full 13-field cards overflowed the 48k output budget in production (the
+// full lesson cards overflowed the 48k output budget in production (the
 // truncation error is terminal, so every queue retry repeated the identical
 // oversized call). Batches also keep each call well inside the 10-minute
 // Consumption timeout.

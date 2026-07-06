@@ -67,7 +67,23 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
         : `Start cue · single decision path · one response form present on all ${lessons.length} New Learning fields.`,
   })
 
-  // 4. Single-strategy check (heuristic)
+  // 4. Objective integrity — the objective set is the smallest complete set
+  // that guarantees mastery; every Assessment Evidence statement must trace to
+  // an objective. The minimal-complete judgment itself is enforced in the card
+  // prompt; this check gates what is programmatically verifiable.
+  const missingObjectives = lessons
+    .filter((l) => !l.fields.objectives || l.fields.objectives.content.trim().length === 0)
+    .map((l) => l.id)
+  checks.push({
+    name: 'Objective integrity',
+    status: missingObjectives.length > 0 ? 'flag' : 'pass',
+    detail:
+      missingObjectives.length > 0
+        ? `These lessons are missing their Objectives field — the minimal-complete list of observable objectives that define mastery: ${missingObjectives.join(', ')}.${missingObjectives.length === lessons.length ? ' (Scopes generated before the Objectives field existed flag here until regenerated.)' : ''}`
+        : `Every card lists its mastery objectives; the set must be minimal-complete, every Assessment Evidence statement traces to an objective, and no objective exists solely to constrain format, method, or representation.`,
+  })
+
+  // 5. Single-strategy check (heuristic)
   const strategyViolations = lessons
     .filter((l) => {
       const t = l.fields.approach.content
@@ -86,7 +102,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
         : 'No Instructional Approach names two computation strategies.',
   })
 
-  // 5. Neighbor consistency
+  // 6. Neighbor consistency
   const badNeighborRefs: string[] = []
   for (const l of lessons) {
     const refs = [
@@ -105,7 +121,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
         : 'Boundaries and non-goals reference only lessons that exist in this scope; split pairs and bridges partition cleanly.',
   })
 
-  // 6. Ceiling legality
+  // 7. Ceiling legality
   const ceilingViolations = lessons
     .filter((l) => l.fields.ceiling.content.trim().length === 0 || l.fields.ceiling.citations.length === 0)
     .map((l) => l.id)
@@ -118,7 +134,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
         : 'All ceilings are stated with cited evidence within standards-document limits and P1 evidence.',
   })
 
-  // 7. Theme coverage
+  // 8. Theme coverage
   const unratedUnits = units.filter((u) => u.rationale.trim().length === 0).map((u) => u.id)
   checks.push({
     name: 'Theme coverage',
@@ -129,7 +145,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
         : `All ${units.length} units carry a rationale traceable to the set's theme/emphasis statements or progression streams.`,
   })
 
-  // 8. Released-items integrity
+  // 9. Released-items integrity
   const hasExemplars = (l: Lesson) => !!l.generatedExemplar || (l.generatedExemplars?.length ?? 0) > 0
   const emptyReleased = lessons.filter((l) => l.itemRefs.length === 0 && !hasExemplars(l)).map((l) => l.id)
   const withItems = lessons.filter((l) => l.itemRefs.length > 0).length
@@ -143,7 +159,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
         : `Field never empty: ${withItems} card${withItems === 1 ? '' : 's'} carry captioned observed items; ${withExemplar} carry labeled generated assessment exemplars with inference basis and in-boundary ceiling.`,
   })
 
-  // 9. Released-item coverage — the released test is the model for our
+  // 10. Released-item coverage — the released test is the model for our
   // assessments: every in-boundary item in the evidence set must attach to a
   // lesson. Rigor-signal-only and adjacent-grade items are exempt by design.
   const inBoundary = evidenceItems.filter((it) => it.scopeClass === 'in-boundary')

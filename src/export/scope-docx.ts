@@ -174,7 +174,7 @@ export async function buildScopeDocxBlob(scope: Scope, sets: StandardSet[]): Pro
         }),
       )
       for (const fm of fieldMeta) {
-        const field = l.fields[fm.key]
+        const field = l.fields[fm.key] ?? { content: '—', citations: [] }
         children.push(label(`${String(fm.n).padStart(2, '0')}  ${fm.label}`), body(field.content))
         if (fm.key === 'releasedItems') {
           for (const rid of l.itemRefs) {

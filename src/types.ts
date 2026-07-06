@@ -160,6 +160,8 @@ export interface Lesson {
   fields: {
     standards: CardField
     cluster: CardField
+    /** Minimal-complete mastery objectives (field 3). Optional only for scopes generated before the field existed. */
+    objectives?: CardField
     emphasis: CardField
     progression: CardField
     prerequisites: CardField

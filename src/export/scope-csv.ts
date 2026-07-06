@@ -41,7 +41,7 @@ export function buildScopeCsv(scope: Scope, sets: StandardSet[]): string {
   for (const u of scope.units) {
     for (const l of u.lessons) {
       const fields: Record<string, string> = {}
-      for (const fm of fieldMeta) fields[fm.key] = l.fields[fm.key].content
+      for (const fm of fieldMeta) fields[fm.key] = l.fields[fm.key]?.content ?? ''
       // Item refs whose source set was deleted can no longer resolve — list
       // them explicitly so downstream tooling can tell "never had items" from
       // "items lost with their set".

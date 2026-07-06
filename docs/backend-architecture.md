@@ -164,12 +164,12 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
    Checkpoint to `jobs/<jobId>/plan.json`; set `totalUnits`; enqueue one `cards` message per unit.
 2. **`cards`** (Stage 5, parallel per unit): one Claude call per unit (effort `medium`,
    max_tokens 48000 — sized to fit the 10-minute consumption cap). Output (structured): full `Unit`
-   with 13-field `Lesson`s — every field `{ content, citations[] }`, decision entries with rule IDs,
-   `generatedExemplar` for lessons with no in-boundary items (never-empty Released Items, spec §7.12).
+   with 14-field `Lesson`s — every field `{ content, citations[] }`, decision entries with rule IDs,
+   `generatedExemplar` for lessons with no in-boundary items (never-empty Released Items, spec §7.13).
    Checkpoint to `jobs/<jobId>/unit-<i>.json`; increment `unitsDone` (ETag retry); any completion
    observing all units done enqueues `finalize` (at-least-once; finalize is idempotent).
 3. **`finalize`** (Stage 6): assemble the `Scope` from checkpoints, run **programmatic QC**
-   (nine checks incl. released-item coverage, each → `QCCheck` pass/flag/fail), write history
+   (ten checks incl. objective integrity and released-item coverage, each → `QCCheck` pass/flag/fail), write history
    entry, snapshot `v1.json`, status `complete`. No-ops on duplicate finalize messages.
 
 Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is **kind-aware**:

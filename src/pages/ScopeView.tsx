@@ -211,7 +211,7 @@ function ProposalView({
   )
 }
 
-// ---------- the 13-field card ----------
+// ---------- the 14-field card ----------
 
 function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
   const { sets } = useStore()
@@ -240,10 +240,11 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
         </div>
       </header>
 
-      {/* fields 1–12 */}
+      {/* fields 1–13 */}
       <div className="mt-7 overflow-hidden rounded-2xl border border-hairline bg-panel shadow-(--shadow-lift)">
         {fieldMeta.map((fm) => {
-          const field = lesson.fields[fm.key]
+          // Scopes generated before a field existed (e.g. Objectives) lack it.
+          const field = lesson.fields[fm.key] ?? { content: '—', citations: [] }
           return (
             <section key={fm.key} className="group grid grid-cols-1 gap-2 border-b border-hairline px-6 py-4.5 last:border-0 hover:bg-paper/40 xl:grid-cols-[200px_1fr] xl:gap-6">
               <div className="pt-0.5">
@@ -257,8 +258,8 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
               <div className="min-w-0">
                 <p className="font-display text-[14px] leading-relaxed text-ink">
                   {field.content}
-                  {/* Standards and Cluster carry official wording, not cited evidence — no provenance chips. */}
-                  {fm.key !== 'standards' && fm.key !== 'cluster' && <CiteChips citations={field.citations} />}
+                  {/* Standard, Cluster, and Objectives carry the authority and mastery definition directly, not cited evidence — no provenance chips. */}
+                  {fm.key !== 'standards' && fm.key !== 'cluster' && fm.key !== 'objectives' && <CiteChips citations={field.citations} />}
                 </p>
                 {fm.key === 'releasedItems' && (
                   <div className="mt-4 space-y-3">
@@ -291,11 +292,11 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
           )
         })}
 
-        {/* field 13 — decision record */}
+        {/* field 14 — decision record */}
         <section className="grid grid-cols-1 gap-3 bg-night px-6 py-5 xl:grid-cols-[200px_1fr] xl:gap-6">
           <div className="pt-0.5">
             <div className="flex items-baseline gap-2">
-              <Mono className="text-[10.5px] text-white/40">13</Mono>
+              <Mono className="text-[10.5px] text-white/40">14</Mono>
               <span className="text-[12.5px] font-semibold text-white">Decision Record</span>
             </div>
             <div className="mt-1 text-[11px] leading-snug text-white/45">The why, auditable — every consequential decision, reasoned on the card itself</div>
