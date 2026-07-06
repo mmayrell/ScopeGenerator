@@ -37,10 +37,16 @@ function jobPct(job: JobStatus | null): number {
 
 function flattenStandards(nodes: StandardNode[], out: { code: string; wording: string }[] = []) {
   for (const n of nodes) {
-    if (n.wording) out.push({ code: n.norm, wording: n.wording })
+    // Canonical code, not the normalized join code — codes are written with capitals.
+    if (n.wording) out.push({ code: n.code, wording: n.wording })
     if (n.children) flattenStandards(n.children, out)
   }
   return out
+}
+
+/** Standard codes are written with capital letters ("4.oa.a.1" → "4.OA.A.1"); free text passes through. */
+function normalizeCodeText(text: string): string {
+  return /^[a-z0-9]+([.\-–][a-z0-9]+)+$/i.test(text.trim()) ? text.trim().toUpperCase() : text
 }
 
 export default function NewScope() {
@@ -99,7 +105,12 @@ export default function NewScope() {
   }, [running, failure, fetchJob, refreshScope, nav])
 
   const run = async () => {
-    const params = mode === 'course' ? `${set?.gradeSpan} (all published domains)` : mode === 'standard' ? standard : topic
+    const params =
+      mode === 'course'
+        ? `${set?.gradeSpan} (all published domains)`
+        : mode === 'standard'
+          ? normalizeCodeText(standard)
+          : normalizeCodeText(topic)
     setLaunching(true)
     setLaunchError(null)
     try {
@@ -121,7 +132,7 @@ export default function NewScope() {
       <div className="mx-auto max-w-2xl px-10 py-16">
         <SectionLabel>Generating scope</SectionLabel>
         <h1 className="mt-1 font-display text-[26px] font-semibold tracking-tight text-ink">
-          {mode === 'course' ? 'Full Course' : mode === 'standard' ? standard : topic}
+          {mode === 'course' ? 'Full Course' : normalizeCodeText(mode === 'standard' ? standard : topic)}
         </h1>
         <p className="mt-1 text-[13px] text-ink-2">
           {set?.name} · Engine v2.3 · DI BrainLift v1.8

@@ -370,7 +370,7 @@ P11 — Content Standards Only (spec §3, verbatim): "The standards parser analy
 
 Limit capture (spec §4.1): capture "all in-document limits: footnotes, parenthetical constraints, 'including/excluding' clauses, stated assessment boundaries" and attach each to the level it belongs to — dropping them silently corrupts the boundary authority. Flag fluency language per P8. Capture grade/course-level emphasis or theme statements as labels on grouping nodes where present.
 
-Dual coding: emit a canonical ID per the set's official scheme AND a normalized join code per the set's normalization conventions (declared coding scheme: ${set.codingScheme || 'detect from the document'}).
+Dual coding: emit a canonical ID per the set's official scheme AND a normalized join code per the set's normalization conventions (declared coding scheme: ${set.codingScheme || 'detect from the document'}). Both keep CAPITAL letters ("4.OA.A.1", never "4.oa.a.1") — normalization merges structural differences, it never lowercases.
 
 User usage notes for this artifact (precedence level 5 — steering below the boundary): ${artifact?.usageNotes || '(none)'}
 
