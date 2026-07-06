@@ -137,8 +137,13 @@ export default function NewScope() {
         <p className="mt-1 text-[13px] text-ink-2">
           {set?.name} · Engine v2.3 · DI BrainLift v1.8
         </p>
-        <div className="mt-8">
-          <Progress pct={complete ? 100 : jobPct(job)} />
+        <div className="mt-8 flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <Progress pct={complete ? 100 : jobPct(job)} />
+          </div>
+          <Mono className="shrink-0 text-[12.5px] font-semibold text-ink-2">
+            {Math.round(complete ? 100 : jobPct(job))}%
+          </Mono>
         </div>
         {job && (
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-ink-3">
