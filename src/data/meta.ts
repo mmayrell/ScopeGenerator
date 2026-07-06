@@ -9,12 +9,12 @@ export const systemArtifacts: SystemArtifact[] = [
 ]
 
 export const fieldMeta: { key: keyof Lesson['fields']; n: number; label: string; purpose: string }[] = [
-  { key: 'standards', n: 1, label: 'Standard(s)', purpose: 'Anchors the atom to its exact authority' },
+  { key: 'standards', n: 1, label: 'Standard', purpose: 'Anchors the atom to its exact authority and the objectives that prove mastery' },
   { key: 'cluster', n: 2, label: 'Cluster', purpose: 'Keeps the standard in context' },
-  { key: 'emphasis', n: 3, label: 'Major / Supporting / Additional Work', purpose: 'Determines instructional weight in sequencing' },
+  { key: 'emphasis', n: 3, label: 'Major / Supporting', purpose: 'Determines instructional weight in sequencing' },
   { key: 'progression', n: 4, label: 'Progression Placement', purpose: 'Situates the atom in the vertical story' },
   { key: 'prerequisites', n: 5, label: 'Prerequisites', purpose: 'What must already be secure before this lesson' },
-  { key: 'boundary', n: 6, label: 'Lesson Boundary', purpose: 'The atom’s edges' },
+  { key: 'boundary', n: 6, label: 'Assessment Boundary', purpose: 'The atom’s edges' },
   { key: 'newLearning', n: 7, label: 'New Learning', purpose: 'The one thing this lesson teaches' },
   { key: 'approach', n: 8, label: 'Instructional Approach', purpose: 'How students are taught to do the problems' },
   { key: 'nonGoals', n: 9, label: 'Non-Goals', purpose: 'Drift protection — what not to accidentally teach yet' },

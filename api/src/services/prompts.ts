@@ -76,7 +76,7 @@ const CARD_RULES = `The fixed 13-field card (spec §7). EVERY field must be fill
 Citations: { sourceType, label, locator, excerpt } — sourceType one of standards|items|decomposition|interpretive|engine|doctrine|admin-notes|sequence|performance-report; the excerpt quotes the actual evidence supplied. Use sourceType "sequence" for within-course chain references.
 Headings, unit titles, and lesson titles in Title Case. Every field written under faultless communication — it must read one way only.`
 
-const BLAST_RADIUS = `Blast radius (spec §8): "When a lesson splits or merges, the relational fields of adjacent and dependent lessons — Prerequisites, Lesson Boundary, Non-Goals, within-course Progression Placement — auto-regenerate, with the change noted in their Decision records; content fields untouched."`
+const BLAST_RADIUS = `Blast radius (spec §8): "When a lesson splits or merges, the relational fields of adjacent and dependent lessons — Prerequisites, Assessment Boundary, Non-Goals, within-course Progression Placement — auto-regenerate, with the change noted in their Decision records; content fields untouched."`
 
 const EDITING_SPLITS = `Data-informed revision mapping (spec §8): "The tool maps the report onto framework actions using the engine's Editing Splits logic: splits where the reported errors reveal a new/unstable start cue, a new decision step, or a missing prerequisite; modeling intensification inside the atom where they don't; bridge insertion where the confusion runs between two atoms; ceiling or boundary adjustments where the report shows mis-set difficulty." Guardrails apply inside proposals: a change that collapses a boundary protected by a hard split criterion must carry a guardrail note citing the criterion instead of being silently proposed.`
 
@@ -210,7 +210,7 @@ export function cardsPrompt(
 
   return {
     system: systemCore('Stage 5: card generation for one unit'),
-    user: `Generate complete 13-field lesson cards for the ${batch.length} lesson(s) of unit "${unit.id} — ${unit.title}" listed in batch_lessons, following the approved plan skeleton exactly (same lesson ids, same order, same types). Output ONLY the batch_lessons lessons — the unit's remaining lessons are produced by sibling calls; the full unit_skeleton is supplied so relational fields (Prerequisites, Progression Placement, Lesson Boundary, Non-Goals) can reference them by lesson id.
+    user: `Generate complete 13-field lesson cards for the ${batch.length} lesson(s) of unit "${unit.id} — ${unit.title}" listed in batch_lessons, following the approved plan skeleton exactly (same lesson ids, same order, same types). Output ONLY the batch_lessons lessons — the unit's remaining lessons are produced by sibling calls; the full unit_skeleton is supplied so relational fields (Prerequisites, Progression Placement, Assessment Boundary, Non-Goals) can reference them by lesson id.
 
 ${CARD_RULES}
 
@@ -344,7 +344,7 @@ export function applyPrompt(
 ): Prompt {
   return {
     system: systemCore('data-informed revision: apply an accepted proposal (Stage 5 re-entry, scoped to the change set)'),
-    user: `The proposal below was ACCEPTED. Rewrite the targeted lesson fields per the accepted change set, and regenerate the relational fields (Prerequisites, Lesson Boundary, Non-Goals, within-course Progression Placement) of adjacent/dependent lessons in the unit, noting each change in the lesson's Decision record with a citation of sourceType "performance-report".
+    user: `The proposal below was ACCEPTED. Rewrite the targeted lesson fields per the accepted change set, and regenerate the relational fields (Prerequisites, Assessment Boundary, Non-Goals, within-course Progression Placement) of adjacent/dependent lessons in the unit, noting each change in the lesson's Decision record with a citation of sourceType "performance-report".
 
 ${BLAST_RADIUS}
 
