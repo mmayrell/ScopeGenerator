@@ -93,7 +93,6 @@ export interface StandardSet {
   sourceOrganization?: string
   published: boolean
   archived?: boolean
-  ingesting?: boolean
   artifacts: Artifact[]
   warnings: CoverageWarning[]
   tree: StandardNode[]

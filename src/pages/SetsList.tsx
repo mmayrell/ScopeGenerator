@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { api } from '../api'
+import { api, type JobStatus } from '../api'
 import { FRAMEWORKS, frameworkLabelOf } from '../packets'
 import { useStore, type NewSetFile, type NewSetUploads, type UploadSlotValue } from '../store'
 import type { LibraryFile, LibraryRole, PacketFramework } from '../types'
@@ -369,9 +369,68 @@ function slotFor(role: LibraryRole, filled: NewSetFile[]): UploadSlotValue {
   return names.length === 0 ? emptySlot : { files: names, notes: LIBRARY_NOTE[role] }
 }
 
+/**
+ * Live extraction state for the unpublished sets on the list. The old pill
+ * read `set.ingesting`, which nothing ever set — so a freshly created set
+ * looked completely inert for the minutes its extraction ran in the
+ * background (and users reasonably concluded extraction never started).
+ * This polls each draft set's latest job and keeps polling while any is
+ * queued/running, so the list always tells the truth.
+ */
+function useDraftSetJobs(sets: { id: string; published: boolean }[]): Record<string, JobStatus> {
+  const [jobs, setJobs] = useState<Record<string, JobStatus>>({})
+  const draftIds = sets.filter((s) => !s.published).map((s) => s.id).join(',')
+  useEffect(() => {
+    if (!draftIds) return
+    let alive = true
+    let timer: number | undefined
+    const tick = async () => {
+      const entries = await Promise.all(
+        draftIds.split(',').map(async (id) => {
+          try {
+            return [id, await api.getSetJob(id)] as const
+          } catch {
+            return [id, undefined] as const // no job yet (or legacy set) — nothing to show
+          }
+        }),
+      )
+      if (!alive) return
+      const next: Record<string, JobStatus> = {}
+      for (const [id, job] of entries) if (job) next[id] = job
+      setJobs(next)
+      // Keep watching while anything is still working (or a brand-new set's
+      // job row hasn't appeared yet); a settled board stops polling.
+      const anyPending = entries.some(([, j]) => !j || j.status === 'queued' || j.status === 'running')
+      if (anyPending) timer = window.setTimeout(() => void tick(), 5000)
+    }
+    void tick()
+    return () => {
+      alive = false
+      window.clearTimeout(timer)
+    }
+  }, [draftIds])
+  return jobs
+}
+
+function setStatusPill(published: boolean, job: JobStatus | undefined) {
+  if (published) return <Pill tone="green">published</Pill>
+  if (job && (job.status === 'queued' || job.status === 'running')) {
+    return (
+      <Pill tone="accent">
+        <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-accent" />
+        {job.status === 'queued' ? 'extraction queued' : `extracting ${job.stagesDone}/${job.totalStages}`}
+      </Pill>
+    )
+  }
+  if (job?.status === 'failed') return <Pill tone="red">extraction failed</Pill>
+  if (job?.status === 'cancelled') return <Pill tone="amber">extraction stopped</Pill>
+  return <Pill tone="amber">draft</Pill>
+}
+
 export default function SetsList() {
   const { sets } = useStore()
   const [newOpen, setNewOpen] = useState(false)
+  const jobs = useDraftSetJobs(sets)
   return (
     <div className="mx-auto max-w-5xl px-10 py-10">
       <div className="flex items-end justify-between">
@@ -393,6 +452,8 @@ export default function SetsList() {
         {sets.map((st) => {
           const blocking = st.artifacts.filter((a) => a.reviewStatus === 'blocked').length
           const unack = st.warnings.filter((w) => !w.acknowledged).length
+          const job = jobs[st.id]
+          const working = !!job && (job.status === 'queued' || job.status === 'running')
           return (
             <Link
               key={st.id}
@@ -401,18 +462,13 @@ export default function SetsList() {
             >
               <div className="flex items-center gap-3">
                 <h2 className="font-display text-[17px] font-semibold text-ink group-hover:text-accent-deep">{st.name}</h2>
-                {st.ingesting ? (
-                  <Pill tone="accent">
-                    <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-accent" /> ingesting
-                  </Pill>
-                ) : st.published ? (
-                  <Pill tone="green">published</Pill>
-                ) : (
-                  <Pill tone="amber">draft</Pill>
-                )}
+                {setStatusPill(st.published, job)}
                 {blocking > 0 && <Pill tone="red">{blocking} blocking error</Pill>}
-                {unack > 0 && <Pill tone="amber">{unack} warnings to acknowledge</Pill>}
+                {!working && unack > 0 && <Pill tone="amber">{unack} warnings to acknowledge</Pill>}
               </div>
+              {working && (
+                <p className="mt-1.5 text-[11.5px] text-ink-3">{job.stage}{job.log.length > 0 ? ` — ${job.log[job.log.length - 1].detail}` : ''}</p>
+              )}
             </Link>
           )
         })}
