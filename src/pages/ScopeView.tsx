@@ -60,13 +60,13 @@ function RevisionDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Less
   }
 
   return (
-    <Modal open onClose={onClose} title="Update from Student Data" wide>
+    <Modal open onClose={onClose} title="Update from Feedback or Student Data" wide>
       {!proposal ? (
         <div className="space-y-4">
           <p className="text-[12.5px] leading-relaxed text-ink-2">
-            Describe the instructional evidence—what lessons were involved, what feedback, observations, or student
-            performance revealed, and any recurring patterns, misconceptions, or outcomes. Your report will be analyzed
-            to generate evidence-based recommendations. All proposed changes are reviewed before anything is applied.
+            Describe what prompted this update, including the lessons involved and any key findings or recurring
+            patterns. Your report will be analyzed to generate evidence-based recommendations. All proposed changes are
+            reviewed before anything is applied.
           </p>
           <textarea
             value={text}
@@ -219,7 +219,7 @@ function ProposalView({
 // ---------- the 13-field card ----------
 
 function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
-  const { toggleLock, sets } = useStore()
+  const { sets } = useStore()
   const [revisionOpen, setRevisionOpen] = useState(false)
   const set = sets.find((s) => s.id === scope.setId)
   const itemsById = useMemo(() => new Map(set?.items.map((i) => [i.id, i]) ?? []), [set])
@@ -243,10 +243,6 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
           <h2 className="mt-2.5 max-w-2xl font-display text-[24px] leading-snug font-semibold tracking-tight text-ink">{lesson.title}</h2>
         </div>
         <div className="flex shrink-0 gap-2 pt-1">
-          <Btn onClick={() => void toggleLock(scope.id, lesson.id)}>
-            <LockIcon locked={!lesson.locked} />
-            {lesson.locked ? 'Unlock' : 'Lock'}
-          </Btn>
           <Btn kind="night" onClick={() => setRevisionOpen(true)}>Update with Feedback/Data</Btn>
         </div>
       </header>
