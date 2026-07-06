@@ -37,7 +37,9 @@ async function enqueueIngest(set: StandardSet, step: 'extract' | 'lexicon', deta
     kind: 'ingest',
     setId: set.id,
     totalStages: 1,
-    stage: 'Queued',
+    // The 'Lexicon' prefix is how the frontend detects the job phase (banner
+    // copy and the retry route), so it must be present from creation.
+    stage: step === 'lexicon' ? 'Lexicon — Queued' : 'Queued',
     detail,
   })
   try {
@@ -125,7 +127,7 @@ api({
       warnings: [],
       tree: [],
       items: [],
-      lexicons: { representations: [], problemTypes: [] },
+      lexicon: [],
       updated: today(),
     }
     await saveSet(set)
@@ -247,7 +249,8 @@ api({
 })
 
 // POST /api/sets/{id}/build-lexicon → { jobId } — runs only after every
-// conflict/gap is resolved; builds the exhaustive cited lexicons and publishes.
+// conflict/gap is resolved; builds the exhaustive cited glossary and publishes.
+// Re-posting on a built set rebuilds the glossary from scratch.
 api({
   name: 'set-build-lexicon',
   methods: ['POST'],
@@ -262,6 +265,15 @@ api({
     if (unresolved > 0) throw new HttpError(409, `resolve the remaining ${unresolved} conflict(s)/gap(s) first`)
     const unconfirmed = set.items.filter((it) => it.confidence === 'ai-proposed').length
     if (unconfirmed > 0) throw new HttpError(409, `confirm the remaining ${unconfirmed} AI-proposed alignment(s) first`)
+    // Seeded sets have no uploaded blobs — a rebuild there would overwrite the
+    // curated glossary with a zero-document pass.
+    let hasUploads = false
+    for await (const blob of uploadsContainer().listBlobsFlat({ prefix: `${set.id}/` })) {
+      void blob
+      hasUploads = true
+      break
+    }
+    if (!hasUploads) throw new HttpError(409, 'no uploaded documents to build the glossary from')
     const jobId = await enqueueIngest(set, 'lexicon', `Lexicon build queued for ${set.name}`)
     set.updated = today()
     await saveSet(set)
@@ -353,7 +365,7 @@ api({
     }
     if (hasUploads) {
       const unresolved = set.warnings.filter((w) => !w.acknowledged).length
-      if (set.tree.length === 0 || unresolved > 0 || set.lexicons.representations.length === 0) {
+      if (set.tree.length === 0 || unresolved > 0 || set.lexicon.length === 0) {
         throw new HttpError(409, 'complete the ingest flow first: extraction → resolve conflicts → build lexicon')
       }
     }

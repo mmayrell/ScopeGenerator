@@ -368,26 +368,19 @@ export const seedSets: StandardSet[] = [
     ],
     tree: ccssG4Tree,
     items,
-    lexicons: {
-      representations: [
-        { term: 'area model', aliases: ['rectangular area model', 'open array'], source: 'UA Progressions NBT p.15' },
-        { term: 'rectangular array', aliases: ['array'], source: 'CCSS glossary' },
-        { term: 'number line', aliases: ['number line diagram'], source: 'CCSS glossary' },
-        { term: 'base-ten blocks', aliases: ['place-value blocks'], source: 'item vision pass, NY 2022' },
-        { term: 'place-value chart', aliases: [], source: 'UA Progressions NBT p.6' },
-        { term: 'tape diagram', aliases: ['bar model', 'strip diagram'], source: 'CCSS glossary' },
-        { term: 'fraction strip', aliases: ['fraction bar'], source: 'UA Progressions NF p.3' },
-        { term: 'equation form', aliases: ['number sentence'], source: 'CCSS glossary' },
-      ],
-      problemTypes: [
-        { term: 'bare computation', aliases: ['naked number'], source: 'Evidence Statements clarifications' },
-        { term: 'thin-context', aliases: ['one-step contextual'], source: 'item vision pass' },
-        { term: 'multi-step word problem', aliases: ['multistep contextual'], source: 'CCSS glossary situation tables' },
-        { term: 'comparison', aliases: ['compare problem'], source: 'CCSS glossary situation tables' },
-        { term: 'equal groups', aliases: [], source: 'CCSS glossary situation tables' },
-        { term: 'area/arrays', aliases: [], source: 'CCSS glossary situation tables' },
-      ],
-    },
+    lexicon: [
+      { term: 'area model', aliases: ['rectangular area model', 'open array'], source: 'UA Progressions NBT p.15' },
+      { term: 'base-ten blocks', aliases: ['place-value blocks'], source: 'item vision pass, NY 2022' },
+      { term: 'comparison', aliases: ['compare problem'], source: 'CCSS glossary situation tables' },
+      { term: 'equal groups', aliases: [], source: 'CCSS glossary situation tables' },
+      { term: 'equation', aliases: ['number sentence'], source: 'CCSS glossary' },
+      { term: 'fraction strip', aliases: ['fraction bar'], source: 'UA Progressions NF p.3' },
+      { term: 'multi-step word problem', aliases: ['multistep contextual'], source: 'CCSS glossary situation tables' },
+      { term: 'number line', aliases: ['number line diagram'], source: 'CCSS glossary' },
+      { term: 'place-value chart', aliases: [], source: 'UA Progressions NBT p.6' },
+      { term: 'rectangular array', aliases: ['array'], source: 'CCSS glossary' },
+      { term: 'tape diagram', aliases: ['bar model', 'strip diagram'], source: 'CCSS glossary' },
+    ],
   },
   {
     id: 'set-teks-g6',
@@ -456,7 +449,7 @@ export const seedSets: StandardSet[] = [
     ],
     tree: teksG6Tree,
     items: [],
-    lexicons: { representations: [], problemTypes: [] },
+    lexicon: [],
   },
 ]
 

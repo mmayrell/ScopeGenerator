@@ -80,7 +80,7 @@ cannot attach headers to `<img>` requests.
 | `POST /sets/{id}/confirm-alignment` | `{ itemId }` → `StandardSet` | |
 | `POST /sets/{id}/resolve-artifact` | `{ artifactId }` → `StandardSet` | |
 | `POST /sets/{id}/ingest` | → `{ jobId }` (202) | extraction phase: standards tree + item bank (with question screenshots) + cross-document scope-conflict pass. Called automatically after the uploads land at creation; also the retry path. Idempotent with in-flight ingest jobs |
-| `POST /sets/{id}/build-lexicon` | → `{ jobId }` (202) | 409 until the tree exists, no artifact is blocked, every warning is resolved, and every AI-proposed alignment is confirmed. Builds the exhaustive cited lexicons; **publishes the set on success** |
+| `POST /sets/{id}/build-lexicon` | → `{ jobId }` (202) | 409 until the tree exists, no artifact is blocked, every warning is resolved, and every AI-proposed alignment is confirmed. Builds the exhaustive cited glossary (re-posting on a built set rebuilds it); **publishes the set on success** |
 | `GET /sets/{id}/job` | → `JobStatus` | polled during extraction/lexicon builds |
 | `GET /item-image/{setId}/{itemId}` | → `image/png` | question screenshot; auth via header or `?code=` |
 | `POST /sets/{id}/publish` | → `{ set: StandardSet }` | seeded sets (no uploads) publish immediately; uploaded sets 409 unless the full ingest flow completed (they normally auto-publish at lexicon build). Idempotent |
@@ -157,7 +157,7 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
 (`host.json`: `functionTimeout: "00:10:00"`):
 
 1. **`plan`** (Stages 2–4): one Claude call (effort `high`). Input: the published set's tree (with
-   limits), items (with scope classes/demand profiles), lexicons, artifact usage notes, and the
+   limits), items (with scope classes/demand profiles), the vocabulary glossary (`lexicon`), artifact usage notes, and the
    request (course/standard/topic). Output (structured): ordered units with lesson skeletons.
    Checkpoint to `jobs/<jobId>/plan.json`; set `totalUnits`; enqueue one `cards` message per unit.
 2. **`cards`** (Stage 5, parallel per unit): one Claude call per unit (effort `medium`,
@@ -212,8 +212,8 @@ Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is
   usage-notes enrichment; then one cross-document conflict pass consolidates warnings, each with an
   AI-suggested resolution (strict canonical Common Core is always the suggestion for CC-variant
   conflicts). Does NOT publish.
-- `ingest` (`lexicon`, Stage 1b): gated on all warnings resolved; two exhaustive Claude passes build
-  the representations and problem-types lexicons, every term cited to standard + artifact + page;
+- `ingest` (`lexicon`, Stage 1b): gated on all warnings resolved; one exhaustive Claude pass builds
+  the student-facing vocabulary glossary, every term cited to standard + artifact + page;
   publishes the set on success. Legacy `run` messages route to `extract`.
 - previous single-step `ingest` (`run`) description, for history: for each uploaded PDF, Claude document call
   (base64 PDF content block) extracts: standards → `StandardNode` tree with limits + lexicon seeds;

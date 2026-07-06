@@ -418,9 +418,11 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
 
 /**
  * Kind `ingest`, step `lexicon` (runs only after the user resolved every
- * conflict/gap): two exhaustive Claude passes over the full document corpus
- * build the representations and problem-types lexicons, every term cited to
- * its governing standard + artifact + PDF page. Publishes the set on success.
+ * conflict/gap): one exhaustive Claude pass over the full document corpus
+ * builds the student-facing vocabulary glossary, every term cited to its
+ * governing standard + artifact + PDF page. Always rebuilds from scratch
+ * (idempotent overwrite), so the same step serves first builds, redelivered
+ * attempts, and user-requested rebuilds. Publishes the set on success.
  */
 export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): Promise<void> {
   if (!msg.setId) throw new Error('ingest message missing setId')
@@ -442,9 +444,10 @@ export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): P
 
   await mutateJob(msg.jobId, (r) => {
     r.status = 'running'
-    r.totalStages = 2
-    r.stage = 'Lexicon — Representations'
-    pushLog(r, `Building exhaustive lexicons from ${documents.length} document(s), steered by the recorded resolutions`)
+    r.totalStages = 1
+    r.stagesDone = 0 // a redelivered old-code attempt may have left stagesDone at 1 of 2
+    r.stage = 'Lexicon — Glossary'
+    pushLog(r, `Building the vocabulary glossary from ${documents.length} document(s), steered by the recorded resolutions`)
   })
 
   const toTerms = (out: WireIngestLexicon): LexiconTerm[] => {
@@ -471,38 +474,21 @@ export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): P
     return
   }
 
-  // Resumable: a redelivered attempt skips the representations pass its
-  // predecessor already persisted.
-  if (set.lexicons.representations.length === 0) {
-    const representations = await generateStructured<WireIngestLexicon>({
-      ...ingestLexiconPrompt(set, 'representations'),
-      schema: INGEST_LEXICON_SCHEMA,
-      documents,
-      effort: 'high', // exhaustiveness is the requirement
-    })
-    set.lexicons.representations = toTerms(representations)
-    set.updated = today()
-    await saveSet(set)
-  }
-
-  await mutateJob(msg.jobId, (r) => {
-    r.stagesDone = 1
-    r.stage = 'Lexicon — Problem Types'
-    pushLog(r, `${set.lexicons.representations.length} representation term(s) built`)
+  const glossary = await generateStructured<WireIngestLexicon>({
+    ...ingestLexiconPrompt(set),
+    schema: INGEST_LEXICON_SCHEMA,
+    documents,
+    effort: 'high', // exhaustiveness is the requirement
   })
 
+  // A stop requested while the call was in flight discards the result — on a
+  // rebuild that is the point of stopping (keep the existing glossary), and a
+  // stopped first build must not publish.
   if (await stopRequested(msg.jobId)) {
     await settleCancelled(msg.jobId, 'lexicon')
     return
   }
-
-  const problemTypes = await generateStructured<WireIngestLexicon>({
-    ...ingestLexiconPrompt(set, 'problemTypes'),
-    schema: INGEST_LEXICON_SCHEMA,
-    documents,
-    effort: 'high',
-  })
-  set.lexicons.problemTypes = toTerms(problemTypes)
+  set.lexicon = toTerms(glossary)
 
   // Publish once the lexicon lands — unless a blocking fit-validation error
   // remains (P10: blocking errors halt publish until resolved).
@@ -518,11 +504,11 @@ export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): P
     pushLog(
       r,
       blocked === 0
-        ? `Lexicons built (${set.lexicons.representations.length} representations, ${set.lexicons.problemTypes.length} problem types); set published`
-        : `Lexicons built, but ${blocked} blocking artifact error(s) hold publish until resolved`,
+        ? `Glossary built (${set.lexicon.length} terms); set published`
+        : `Glossary built, but ${blocked} blocking artifact error(s) hold publish until resolved`,
     )
   })
-  ctx.log(`ingest/lexicon ${msg.jobId}: ${set.lexicons.representations.length}+${set.lexicons.problemTypes.length} terms from ${documentNames.length} docs, published=${set.published}`)
+  ctx.log(`ingest/lexicon ${msg.jobId}: ${set.lexicon.length} glossary terms from ${documentNames.length} docs, published=${set.published}`)
 }
 
 function findArtifact(set: StandardSet, role: string, fileName: string): Artifact | undefined {

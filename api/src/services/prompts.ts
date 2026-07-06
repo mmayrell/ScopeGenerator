@@ -50,7 +50,7 @@ const POLICIES = `Governing policies (spec §3, key excerpts verbatim):
 - P9/A3 (Editing Splits bar): "an error pattern justifies a split only when it reveals a new/unstable start cue, a new decision step or rule, or a missing prerequisite — otherwise it intensifies modeling inside the atom, or seeds a bridge where the confusion is between two atoms."`
 
 const APPENDIX_A = `Compiled granularity procedure (spec Appendix A — run per component; all decisions emit DecisionEntries):
-- A1 Decompose: candidate atoms from decomposition keys (fallback: standard sub-parts), informed by clarifications and the problem-type lexicon.
+- A1 Decompose: candidate atoms from decomposition keys (fallback: standard sub-parts), informed by clarifications, the set glossary, and the problem-type vocabulary on the item records.
 - A2 Split Test (criteria verbatim): "new rule/strategy not previously taught · new vocabulary/concept label needing stabilization · new/hidden decision step changing the routine · unmastered representation/notation (first encounter of a normalized lexicon form) · high confusability with a look-alike skill · foundational preskill missing/weak · demand-band jump · documented error pattern (per P9)". Don't-split criteria: "same strategy steps · quantitative-only or context-only change · already-mastered representations · cumulative choose-among-mastered-routines goal."
 - A3 Precedence & Tie-Breakers: "When split and don't-split criteria both genuinely fire, split criteria win." Tie-breakers in order: (1) new decision cues never before encountered → split; (2) can be rewritten with friendlier numbers/shorter text with the routine identical → don't split; (3) prerequisite gap that can't be refreshed quickly → split. The Editing Splits constraint caps error-pattern splits.
 - A4 Bridges: "discrimination/selection/switching only, no new rules"; seeded also by integrative keys; placed after both parents independently mastered; confusables separated in time.
@@ -113,7 +113,7 @@ function setEvidence(set: StandardSet): Record<string, unknown> {
     codingNotes: set.codingNotes,
     emphasisSource: set.emphasisSource,
     tree: set.tree,
-    lexicons: set.lexicons,
+    lexicon: set.lexicon,
     artifactUsageNotes: set.artifacts.map((a) => ({
       role: a.role,
       fileName: a.fileName,
@@ -306,7 +306,7 @@ ${jsonBlock('performance_report', report)}
 ${jsonBlock('protected_boundaries', scope.protectedBoundaries ?? [])}
 ${jsonBlock('targeted_unit', unit ?? scope.units)}
 ${jsonBlock('scope_summary', { title: scope.title, request: scope.request, version: scope.version, units: scope.units.map((u) => ({ id: u.id, title: u.title, lessons: u.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type, locked: l.locked })) })) })}
-${jsonBlock('set_lexicons', set.lexicons)}`,
+${jsonBlock('set_lexicon', set.lexicon)}`,
   }
 }
 
@@ -350,7 +350,7 @@ ${CARD_RULES}
 
 ${jsonBlock('accepted_proposal', proposal)}
 ${jsonBlock('targeted_unit', unit)}
-${jsonBlock('set_lexicons', set.lexicons)}
+${jsonBlock('set_lexicon', set.lexicon)}
 ${jsonBlock('item_bank_subset', itemsForCodes(set, [], unit.lessons.flatMap((l) => l.itemRefs)))}`,
   }
 }
@@ -402,7 +402,7 @@ Rules:
 - completeness: 0–1 score per record.
 - demandProfile: concrete difficulty parameters (number sizes, step counts, representation load, context complexity).
 
-Known lexicons to reuse for representations/problemTypes terms:${jsonBlock('lexicons', set.lexicons)}
+Known glossary vocabulary to reuse for representations/problemTypes terms:${jsonBlock('lexicon', set.lexicon)}
 Set standards tree (for P2 classification):${jsonBlock('tree', set.tree)}
 User usage notes for this artifact (declares source description, window, coverage): ${artifact?.usageNotes || '(none)'}
 
@@ -487,38 +487,38 @@ Output warnings: [{ text, kind, suggestion }] — text is one sentence naming th
 }
 
 /**
- * Lexicon build (runs only after every conflict/gap is resolved). Exhaustive
- * per vocabulary, every term cited to its governing standard + artifact + page.
+ * Lexicon build (runs only after every conflict/gap is resolved). One
+ * comprehensive glossary of student-facing, grade-appropriate vocabulary,
+ * every term cited to its governing standard + artifact + page.
  */
-export function ingestLexiconPrompt(set: StandardSet, kind: 'representations' | 'problemTypes'): Prompt {
+export function ingestLexiconPrompt(set: StandardSet): Prompt {
   const resolutions = set.warnings
     .filter((w) => w.acknowledged && w.resolution)
     .map((w) => `${w.text} → RESOLVED: ${w.resolution}`)
-  const kindText =
-    kind === 'representations'
-      ? `REPRESENTATIONS — every visual, physical, and symbolic representation appropriate to this set's standards: models, diagrams, number lines, charts, arrays, area models, manipulatives, notation forms, graph types. Include every representation named or implied by the standards wording, appearing in the released items, and used by the unpacking/progression documents.`
-      : `PROBLEM TYPES — every problem structure and task format appropriate to this set's standards: computation formats, word-problem situation types, comparison structures, multi-step patterns, response formats. Include every type named or implied by the standards wording, appearing in the released items, and used by the unpacking/progression documents.`
   return {
     system: ingestSystem(
-      'lexicon builder. The lexicons are the controlled vocabularies every later stage speaks — a vision pass term and a progression term must resolve to the same normalized entry or the split logic misfires.',
+      'glossary builder. The glossary is the controlled vocabulary every later stage speaks — a vision pass term and a progression term must resolve to the same normalized entry or the split logic misfires.',
     ),
-    user: `Build the ${kind} lexicon for the set "${set.name}" (${set.gradeSpan}). The attached PDFs are the set's uploaded documents, in artifact-list order.
+    user: `Build the vocabulary glossary for the set "${set.name}" (${set.gradeSpan}). The attached PDFs are the set's uploaded documents, in artifact-list order.
 
-Build an EXHAUSTIVE list of ${kindText}
+Build ONE comprehensive glossary of the STUDENT-FACING, GRADE-APPROPRIATE mathematical vocabulary for this set — every term a ${set.gradeSpan} student is expected to read, hear, say, or use in instruction and on assessments within the scope of these standards: concept and operation names, comparison and reasoning words students themselves use, geometry, measurement, fraction, place-value, and data/graph vocabulary, the names of representations and tools students are taught by name (number line, area model, array, tape diagram, protractor), and notation students must read.
 
 Rules:
-- Exhaustive means exhaustive: a term used anywhere in the corpus that a lesson author could reach for must appear, normalized, with its aliases collected onto one entry. Aim for completeness over brevity — a thin lexicon misfires the split logic downstream.
-- term: the normalized form. aliases: every variant/synonym the documents use.
+- The admission test for every candidate term: would it reasonably appear in a ${set.gradeSpan} student's math glossary, word wall, or textbook — AND is it inside the scope of this set's standards? Both must hold.
+- STUDENT-FACING is a hard filter. A term that appears only in teacher guides, standards wording, item specifications, or evidence statements does not belong, however central it is to the framework. Excluded: "valid chain of reasoning with equals signs", "multiplicative comparison structure", "assessment boundary", "additive reasoning". Included: "equal groups", "compare", "equation", "remainder".
+- GRADE-APPROPRIATE is a hard filter: exclude vocabulary above the grade's expectations. Below-grade terms still in everyday use at this grade stay ("addition" is still ${set.gradeSpan} vocabulary).
+- Exhaustive within those filters: sweep the standards wording, the released items (item stems and answer choices are the strongest evidence of what students actually face), the unpacking and progression documents, and every glossary or reference sheet in the corpus. A qualifying term used anywhere in the corpus must appear, once, normalized, with its aliases collected onto one entry. Aim for completeness over brevity — a thin glossary misfires the split logic downstream.
+- term: the normalized student-facing form. aliases: every variant/synonym the documents use.
 - standard: the single most-governing standard code for the term (normalized join code, e.g. "4.NF.3") — shown as the term's citation.
 - artifact: the file name of the uploaded document that best evidences the term. page: the 1-based PDF page in that document where it appears. These are revealed on hover — they must be real locations, not guesses.
 - source: one short phrase of context (e.g. "standards glossary", "item stems 2022–2024", "progression worked examples").
-- Respect the user's recorded gap/conflict resolutions below — terms from scope the resolutions excluded do not belong in the lexicon.
+- Respect the user's recorded gap/conflict resolutions below — terms from scope the resolutions excluded do not belong in the glossary.
 
 Recorded resolutions:${jsonBlock('resolutions', resolutions)}
 Parsed standards tree (digest):${jsonBlock('tree', flattenTreeDigest(set.tree).slice(0, 400))}
 Artifact list (index order matches the attached documents):${jsonBlock('artifacts', set.artifacts.map((a) => a.fileName))}
 
-Output terms: [{ term, aliases, standard, artifact, page, source }], normalized, deduplicated, ordered by the standards sequence.`,
+Output terms: [{ term, aliases, standard, artifact, page, source }], normalized, deduplicated, in alphabetical order by term.`,
   }
 }
 

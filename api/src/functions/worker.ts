@@ -104,7 +104,8 @@ async function markFailed(msg: JobMessage, error: string, context: InvocationCon
   try {
     await mutateJob(msg.jobId, (r) => {
       r.status = 'failed'
-      r.stage = 'Failed'
+      // Keep the 'Lexicon' prefix — the frontend routes retry by it.
+      r.stage = r.stage.startsWith('Lexicon') ? 'Lexicon — Failed' : 'Failed'
       r.error = error
       pushLog(r, `Failed after ${MAX_DEQUEUE_COUNT} attempts: ${error}`)
     })

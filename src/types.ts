@@ -104,7 +104,7 @@ export interface StandardSet {
   warnings: CoverageWarning[]
   tree: StandardNode[]
   items: ItemRecord[]
-  lexicons: { representations: LexiconTerm[]; problemTypes: LexiconTerm[] }
+  lexicon: LexiconTerm[]
   updated: string
 }
 

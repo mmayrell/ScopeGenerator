@@ -183,6 +183,7 @@ export default function SetDetail() {
   const [flowError, setFlowError] = useState<string | null>(null)
   const [resolvingAll, setResolvingAll] = useState(false)
   const [stopping, setStopping] = useState(false)
+  const [lexStarting, setLexStarting] = useState(false)
   const nav = useNavigate()
   const set = sets.find((s) => s.id === id)
   const setId = set?.id
@@ -223,12 +224,16 @@ export default function SetDetail() {
   if (!set) return <div className="p-10 text-ink-3">Standard set not found.</div>
 
   const startLexicon = async () => {
+    if (lexStarting) return
+    setLexStarting(true)
     setFlowError(null)
     try {
       await api.buildLexicon(set.id)
       setJob(await api.getSetJob(set.id))
     } catch (e) {
       setFlowError(e instanceof Error ? e.message : 'Could not start the lexicon build.')
+    } finally {
+      setLexStarting(false)
     }
   }
 
@@ -262,7 +267,9 @@ export default function SetDetail() {
   const blocking = set.artifacts.filter((a) => a.reviewStatus === 'blocked')
   const unack = set.warnings.filter((w) => !w.acknowledged)
   const aiQueue = set.items.filter((it) => it.confidence === 'ai-proposed')
-  const lexiconBuilt = set.lexicons.representations.length > 0 || set.lexicons.problemTypes.length > 0
+  // `?? []` guards the deploy-skew window where the API still serves the legacy shape.
+  const lexicon = set.lexicon ?? []
+  const lexiconBuilt = lexicon.length > 0
   const canPublish = blocking.length === 0 && unack.length === 0
   // Uploaded sets publish automatically when the lexicon lands; the button is
   // for seeded sets and for a held auto-publish (blocked artifact at build time).
@@ -301,7 +308,7 @@ export default function SetDetail() {
       tab: 'Alignment Issues',
     },
     {
-      label: 'Build\nLexicons',
+      label: 'Build\nLexicon',
       state: lexActive ? 'active' : lexiconBuilt ? 'done' : job?.status === 'failed' && jobPhase === 'lexicon' ? 'error' : 'pending',
       tab: 'Lexicon',
     },
@@ -395,7 +402,7 @@ export default function SetDetail() {
           </div>
           <div className="mt-2.5 flex items-center gap-2 text-[12.5px] text-ink-2">
             <span className="stage-pulse h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-            <span className="font-medium">{job.stage}</span>
+            <span className="font-medium">{jobPhase === 'lexicon' ? 'Lexicon building in progress' : job.stage}</span>
           </div>
         </div>
       )}
@@ -427,14 +434,15 @@ export default function SetDetail() {
       {readyForLexicon && (
         <div className="animate-rise mt-6 flex items-center justify-between gap-4 rounded-2xl border border-verdant/25 bg-verdant-wash/60 p-5">
           <div>
-            <SectionLabel>Conflicts Resolved — Build the Lexicons</SectionLabel>
+            <SectionLabel>Conflicts Resolved — Build the Lexicon</SectionLabel>
             <p className="mt-1 max-w-xl text-[12.5px] leading-relaxed text-ink-2">
-              AI reads every uploaded document under your recorded resolutions and builds exhaustive representation and
-              problem-type vocabularies — every term cited to its governing standard, source document, and page.
+              AI reads every uploaded document under your recorded resolutions and builds one comprehensive glossary of
+              student-facing, grade-appropriate vocabulary — every term cited to its governing standard, source
+              document, and page.
             </p>
           </div>
-          <Btn kind="primary" onClick={() => void startLexicon()} className="shrink-0">
-            Build Lexicon
+          <Btn kind="primary" disabled={lexStarting} onClick={() => void startLexicon()} className="shrink-0">
+            {lexStarting ? 'Starting…' : 'Build Lexicon'}
           </Btn>
         </div>
       )}
@@ -705,65 +713,75 @@ export default function SetDetail() {
           </div>
         )}
 
-        {tab === 'Lexicon' && set.lexicons.representations.length === 0 && set.lexicons.problemTypes.length === 0 && (
+        {tab === 'Lexicon' && !lexiconBuilt && (
           <div className="max-w-4xl rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
             <div className="py-6 text-center">
               <p className="text-[13.5px] leading-relaxed text-ink-2">
                 {extractActive
-                  ? 'AI extraction is running — once it completes, resolve the scope conflicts and confirm the AI-proposed alignments; the lexicons generate after that.'
+                  ? 'AI extraction is running — once it completes, resolve the scope conflicts and confirm the AI-proposed alignments; the lexicon generates after that.'
                   : lexActive
-                    ? 'AI is building the lexicons now — exhaustive terminology and representations, every term cited to its standard, document, and page.'
+                    ? 'AI is building the lexicon now — one comprehensive glossary of student-facing vocabulary, every term cited to its standard, document, and page.'
                     : extractionDone && resolveOutstanding > 0
                       ? `Extraction is complete — resolve the remaining ${[
                           unack.length > 0 ? `${unack.length} conflict${unack.length === 1 ? '' : 's'}` : '',
                           aiQueue.length > 0 ? `${aiQueue.length} alignment check${aiQueue.length === 1 ? '' : 's'}` : '',
                         ]
                           .filter(Boolean)
-                          .join(' and ')} in the Alignment Issues tab to generate the lexicons.`
+                          .join(' and ')} in the Alignment Issues tab to generate the lexicon.`
                       : readyForLexicon
-                        ? 'All checks are resolved — the lexicons are ready to generate.'
-                        : 'The lexicons generate after extraction and the alignment checks.'}
+                        ? 'All checks are resolved — the lexicon is ready to generate.'
+                        : 'The lexicon generates after extraction and the alignment checks.'}
               </p>
               {readyForLexicon && (
                 <div className="mt-4 flex justify-center">
-                  <Btn kind="primary" onClick={() => void startLexicon()}>Build Lexicon</Btn>
+                  <Btn kind="primary" disabled={lexStarting} onClick={() => void startLexicon()}>
+                    {lexStarting ? 'Starting…' : 'Build Lexicon'}
+                  </Btn>
                 </div>
               )}
             </div>
           </div>
         )}
 
-        {tab === 'Lexicon' && (set.lexicons.representations.length > 0 || set.lexicons.problemTypes.length > 0) && (
-          <div className="grid max-w-4xl grid-cols-2 gap-4">
-            {(['representations', 'problemTypes'] as const).map((k) => (
-              <div key={k} className="rounded-xl border border-hairline bg-panel p-4 shadow-(--shadow-lift)">
-                <SectionLabel>{k === 'representations' ? 'Representations' : 'Problem types'}</SectionLabel>
+        {tab === 'Lexicon' && lexiconBuilt && (
+          <div className="max-w-4xl rounded-xl border border-hairline bg-panel p-4 shadow-(--shadow-lift)">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <SectionLabel>Glossary — {lexicon.length} Terms</SectionLabel>
                 <p className="mt-1 text-[11.5px] leading-relaxed text-ink-3">
-                  Shared controlled vocabulary — keeps the vision pass and the split logic reading the same term as the same thing.
+                  Student-facing, grade-appropriate vocabulary drawn from every uploaded document — the shared
+                  controlled vocabulary every later stage speaks.
                 </p>
-                <div className="mt-3 space-y-2">
-                  {set.lexicons[k].length === 0 && <p className="text-[12.5px] text-ink-3">Not yet seeded.</p>}
-                  {set.lexicons[k].map((t) => (
-                    <div key={t.term} className="flex items-baseline justify-between gap-3 border-b border-hairline pb-1.5 last:border-0">
-                      <div>
-                        <Mono className="text-[12.5px] font-medium text-ink">{t.term}</Mono>
-                        {t.aliases.length > 0 && <span className="ml-2 text-[11.5px] text-ink-3">aka {t.aliases.join(', ')}</span>}
-                      </div>
-                      {t.standard ? (
-                        <Mono
-                          className="shrink-0 cursor-help text-[10.5px] text-ink-3"
-                          title={`${t.artifact ?? t.source}${t.page ? ` · p. ${t.page}` : ''}`}
-                        >
-                          {t.standard}
-                        </Mono>
-                      ) : (
-                        <span className="shrink-0 text-[10.5px] text-ink-3">{t.source}</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
               </div>
-            ))}
+              {/* Mirror the build-lexicon endpoint's gates — otherwise the button 409s. */}
+              {!jobActive && blocking.length === 0 && unack.length === 0 && aiQueue.length === 0 && (
+                <Btn disabled={lexStarting} onClick={() => void startLexicon()} className="shrink-0">
+                  {lexStarting ? 'Starting…' : 'Rebuild'}
+                </Btn>
+              )}
+            </div>
+            <div className="mt-3 space-y-2">
+              {[...lexicon]
+                .sort((a, b) => a.term.localeCompare(b.term))
+                .map((t) => (
+                  <div key={t.term} className="flex items-baseline justify-between gap-3 border-b border-hairline pb-1.5 last:border-0">
+                    <div>
+                      <Mono className="text-[12.5px] font-medium text-ink">{t.term}</Mono>
+                      {t.aliases.length > 0 && <span className="ml-2 text-[11.5px] text-ink-3">aka {t.aliases.join(', ')}</span>}
+                    </div>
+                    {t.standard ? (
+                      <Mono
+                        className="shrink-0 cursor-help text-[10.5px] text-ink-3"
+                        title={`${t.artifact ?? t.source}${t.page ? ` · p. ${t.page}` : ''}`}
+                      >
+                        {t.standard}
+                      </Mono>
+                    ) : (
+                      <span className="shrink-0 text-[10.5px] text-ink-3">{t.source}</span>
+                    )}
+                  </div>
+                ))}
+            </div>
           </div>
         )}
       </div>
