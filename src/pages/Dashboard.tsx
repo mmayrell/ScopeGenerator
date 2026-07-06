@@ -13,7 +13,7 @@ export default function Dashboard() {
         <div>
           <h1 className="font-display text-[28px] font-semibold tracking-tight text-ink">Scopes</h1>
           <p className="mt-1 text-[13.5px] text-ink-2">
-            Every saved scope is public view; rerun, lock, and revision rights stay with the creator and admins.
+            Scopes can be written for an entire course or subset of standards.
           </p>
         </div>
         <Btn kind="primary" onClick={() => nav('/scopes/new')}>
