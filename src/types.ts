@@ -261,7 +261,12 @@ export interface Scope {
   /** All sets the scope draws evidence from (multi-select requests); setId is the first. */
   setIds?: string[]
   title: string
-  request: { mode: 'course' | 'standard' | 'topic'; params: string }
+  request: {
+    mode: 'course' | 'standard' | 'topic'
+    params: string
+    /** Granular track scoping — atomize to the most granular DI skill level with synthesis tracks (user toggle). */
+    granular?: boolean
+  }
   engineVersion: string
   doctrineVersions: string[]
   status: 'complete' | 'generating' | 'paused' | 'failed'

@@ -84,7 +84,7 @@ cannot attach headers to `<img>` requests.
 | `GET /item-image/{setId}/{itemId}` | → `image/png` | question screenshot; auth via header or `?code=` |
 | `POST /sets/{id}/publish` | → `{ set: StandardSet }` | seeded sets (no uploads) publish immediately; uploaded sets 409 unless extraction completed and every warning is resolved. Idempotent |
 | `GET /framework` | → `FrameworkDoc` | the fixed engine/doctrine documents (read-only — no PUT; new versions ship with the tool). The payload keeps a legacy `register: []` so pre-removal bundles render an empty exemplar register during deploy skew |
-| `POST /scopes` | `{ setId, setIds?, mode, params }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job |
+| `POST /scopes` | `{ setId, setIds?, mode, params, granular? }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job. Optional `granular: true` = Granular Track Scoping (stored on `Scope.request.granular`): atomization drops to the most granular DI skill level — one rule/decision/response pattern per track; number-form, representation, and distinct-error-pattern changes each split — with synthesis tracks (type `bridge`) where the student decides which mastered procedure applies, and NO prior-grade prerequisite tracks (assumed mastered). Applies to plan, cards, and unit-rerun prompts |
 | `GET /scopes/{id}` | → `Scope` | |
 | `GET /scopes/{id}/job` | → `JobStatus` (below) | polled by the generation screen |
 | `POST /scopes/{id}/pause-generation` | → `{ jobId }` (202) | cooperative: flags the job; workers halt at the next checkpoint, scope → `paused` |

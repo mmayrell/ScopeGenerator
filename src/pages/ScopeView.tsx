@@ -527,7 +527,14 @@ export default function ScopeView() {
         setRetrying(false)
       } catch {
         try {
-          const newId = await createScope(scope.setIds?.length ? scope.setIds : [scope.setId], scope.request.mode, scope.request.params)
+          // Carry the full request — dropping granular here would silently
+          // regenerate the user's granular scope at default granularity.
+          const newId = await createScope(
+            scope.setIds?.length ? scope.setIds : [scope.setId],
+            scope.request.mode,
+            scope.request.params,
+            scope.request.granular,
+          )
           nav(`/scopes/${newId}`)
         } catch {
           setRetrying(false) // failure already surfaced via the store's action-error strip
@@ -582,6 +589,7 @@ export default function ScopeView() {
         <h1 className="mt-2 px-2 font-display text-[17px] leading-snug font-semibold text-ink">{capsStandardCodes(scope.title)}</h1>
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5 px-2">
           <Pill tone="neutral">v{scope.version}</Pill>
+          {scope.request.granular && <Pill tone="night">granular tracks</Pill>}
           <Pill tone={qcFlags.length ? 'amber' : 'green'}>{qcFlags.length ? `QC: ${qcFlags.length} flagged` : 'QC clean'}</Pill>
           {scope.proposals.some((p) => p.working || p.status === 'drafting') && (
             <Pill tone="accent">

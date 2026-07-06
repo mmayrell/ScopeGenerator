@@ -15,7 +15,13 @@ api({
   methods: ['POST'],
   route: 'scopes',
   handler: async (req) => {
-    const body = await readJson<{ setId?: string; setIds?: string[]; mode?: Scope['request']['mode']; params?: string }>(req)
+    const body = await readJson<{
+      setId?: string
+      setIds?: string[]
+      mode?: Scope['request']['mode']
+      params?: string
+      granular?: boolean
+    }>(req)
     const requestedIds = [
       ...new Set(
         Array.isArray(body.setIds) && body.setIds.length > 0 ? body.setIds : body.setId ? [body.setId] : [],
@@ -44,7 +50,7 @@ api({
       setId: set.id,
       ...(requestedIds.length > 1 ? { setIds: requestedIds } : {}),
       title,
-      request: { mode, params },
+      request: { mode, params, ...(body.granular === true ? { granular: true } : {}) },
       engineVersion: ENGINE_VERSION,
       doctrineVersions: DOCTRINE_VERSIONS,
       status: 'generating',

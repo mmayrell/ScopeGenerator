@@ -163,9 +163,9 @@ export const api = {
   cancelGeneration: (scopeId: string) =>
     request<{ scope: Scope }>('POST', `/scopes/${encodeURIComponent(scopeId)}/cancel-generation`),
 
-  createScope: (setIds: string[], mode: 'course' | 'standard' | 'topic', params: string) =>
+  createScope: (setIds: string[], mode: 'course' | 'standard' | 'topic', params: string, granular?: boolean) =>
     // setId rides along for deploy-skew compatibility (an older API requires it).
-    request<{ id: string; jobId: string }>('POST', '/scopes', { setId: setIds[0], setIds, mode, params }),
+    request<{ id: string; jobId: string }>('POST', '/scopes', { setId: setIds[0], setIds, mode, params, granular }),
 
   getScope: (id: string) => request<Scope>('GET', `/scopes/${encodeURIComponent(id)}`),
 
