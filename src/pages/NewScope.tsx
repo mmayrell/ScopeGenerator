@@ -237,7 +237,7 @@ export default function NewScope() {
                 <input type="radio" checked={setId === s.id} onChange={() => setSetId(s.id)} className="accent-(--color-accent)" />
                 <div>
                   <div className="text-[13.5px] font-semibold text-ink">{s.name}</div>
-                  <div className="text-[11.5px] text-ink-3">{s.items.length} items · {s.artifacts.length} artifacts · published {s.updated}</div>
+                  <div className="text-[11.5px] text-ink-3">{s.artifacts.length} artifacts · published {s.updated}</div>
                 </div>
               </label>
             ))}

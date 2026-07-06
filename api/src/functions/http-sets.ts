@@ -332,6 +332,20 @@ api({
       if (set.tree.length === 0 || unresolved > 0) {
         throw new HttpError(409, 'complete the ingest flow first: extraction → resolve alignment issues')
       }
+      // A non-empty tree is not proof extraction completed: the tree persists
+      // at the first per-document checkpoint, while warnings only land in the
+      // final conflict pass — so a mid-flight or stopped-early extraction
+      // would otherwise pass the gate. (Legacy lexicon job rows are exempt:
+      // extraction had already completed before a lexicon step could run.)
+      const latest = await latestJobForSet(set.id)
+      if (latest && latest.kind === 'ingest' && !latest.stage.startsWith('Lexicon')) {
+        if (latest.status === 'queued' || latest.status === 'running') {
+          throw new HttpError(409, 'extraction is still running — wait for it to complete')
+        }
+        if (latest.status === 'cancelled' || latest.status === 'failed') {
+          throw new HttpError(409, 'the last extraction did not complete — resume it before publishing')
+        }
+      }
     }
     set.published = true
     set.updated = today()

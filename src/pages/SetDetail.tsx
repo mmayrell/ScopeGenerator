@@ -268,7 +268,10 @@ export default function SetDetail() {
   const extractionDone = set.tree.length > 0
   const resolveOutstanding = unack.length + aiQueue.length
   const showPublish = !set.published && !jobActive && extractionDone
-  const readyToPublish = showPublish && canPublish && aiQueue.length === 0
+  // A cancelled/failed extraction leaves a tree but skipped the conflict pass —
+  // the server rejects publish there, so don't offer it (Resume/Retry shows instead).
+  const readyToPublish =
+    showPublish && canPublish && aiQueue.length === 0 && job?.status !== 'cancelled' && job?.status !== 'failed'
   type StepState = 'done' | 'active' | 'error' | 'pending'
   const steps: { label: string; state: StepState; tab: (typeof tabs)[number] }[] = [
     { label: 'Uploaded\nDocuments', state: 'done', tab: 'Artifacts' },

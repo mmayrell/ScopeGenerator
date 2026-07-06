@@ -106,12 +106,6 @@ export default function Dashboard() {
               </span>
               {st.published ? <Pill tone="green">published</Pill> : <Pill tone="amber">draft</Pill>}
             </div>
-            <div className="mt-1.5 text-[12px] text-ink-3">
-              {st.artifacts.length} artifacts · {st.items.length} items ingested ·{' '}
-              {st.warnings.filter((w) => !w.acknowledged).length > 0
-                ? `${st.warnings.filter((w) => !w.acknowledged).length} unacknowledged warnings`
-                : 'gaps acknowledged'}
-            </div>
           </Link>
         ))}
       </div>
