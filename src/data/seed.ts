@@ -487,7 +487,7 @@ const flagship: Lesson = {
       [C.es451, C.stein],
     ),
     approach: f(
-      'Single strategy: standard algorithm (Stein). Model explicitly: two-digit × one-digit with one regrouping; three-digit × one-digit with consecutive regroupings; a multiplicand with an internal zero (e.g., 306 × 4) — fossilization-prone placeholder handling. Vary numbers/magnitude and surface contexts between I Do and We Do; hold the steps, the demand band, and the reading load constant. Extension / practice-only: four-digit cases and context swaps — same steps, larger numbers.',
+      'Single strategy: standard algorithm (Stein). Model explicitly: two-digit × one-digit with one regrouping; three-digit × one-digit with consecutive regroupings; a multiplicand with an internal zero (e.g., 306 × 4) — fossilization-prone placeholder handling. Vary numbers/magnitude and surface contexts across the modeled cases; hold the steps, the demand band, and the reading load constant. Extension / practice-only: four-digit cases and context swaps — same steps, larger numbers.',
       [C.stein, C.steinZero, C.engineA5],
     ),
     nonGoals: f(
@@ -1270,7 +1270,7 @@ export const seedScope: Scope = {
           target: 'U3.L4 · Instructional Approach',
           kind: 'modeling',
           before: 'Model explicitly: the placeholder zero in the second row; a second row whose product itself ends in zero…',
-          after: 'Model explicitly: the placeholder zero in the second row; a second row whose product itself ends in zero — now with side-by-side aligned/misaligned contrast pairs and a column-grid scaffold faded across We Do…',
+          after: 'Model explicitly: the placeholder zero in the second row; a second row whose product itself ends in zero — now with side-by-side aligned/misaligned contrast pairs and a column-grid scaffold faded across the guided cases…',
           rationale: 'Reported errors reveal no new start cue, decision step, or missing prerequisite — Editing Splits bar not met; intensify modeling inside the atom (contrasts, scaffolds).',
           rule: 'P9 / A3 (Editing Splits)',
         },
