@@ -5,9 +5,9 @@ import { Btn, Mono, Pill, Progress, SectionLabel } from '../ui'
 import type { StandardNode } from '../types'
 
 const stages = [
-  { n: 2, name: 'Scope Resolution', detail: 'Resolving request to StandardRecords, decomposition keys, item subset; classifying items per P2; building the component evidence map…' },
-  { n: 3, name: 'Atomization', detail: 'Running the compiled procedure A1–A6 over the evidence map: split tests, tie-breakers, preskill splits, bridge candidates, modeling-scope pass…' },
-  { n: 4, name: 'Sequencing & Unit Formation', detail: 'Doctrine-sourced ordering: preskills before composites, algorithm before representations, confusables separated in time, strand-coherent units…' },
+  { n: 2, name: 'Scope Resolution', detail: 'Determining exactly what each standard teaches by resolving scope, organizing evidence, and mapping assessment items to instructional components.' },
+  { n: 3, name: 'Atomization', detail: 'Breaking each standard into the smallest teachable lessons by identifying prerequisite skills, lesson boundaries, and instructional splits.' },
+  { n: 4, name: 'Sequencing & Unit Formation', detail: 'Organizing lessons into a research-based instructional sequence that builds prerequisite knowledge and groups lessons into coherent units.' },
   { n: 5, name: 'Card Generation', detail: 'Filling the fixed 13-field schema, evidence-locked — {content, citations[]} per field; assembling Decision records; generating ceiling exemplars for inferred atoms…' },
   { n: 6, name: 'Auto-QC', detail: 'Coverage matrix, prerequisite chains, atom-triple format, single-strategy check, ceiling legality, citation completeness, Decision-record integrity…' },
 ]
