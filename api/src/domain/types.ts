@@ -154,6 +154,8 @@ export interface GeneratedExemplar {
   answer: string
   demandProfile: string
   basis: string
+  /** Full selected-response choice set — distractors encode the atom's documented error patterns. */
+  choices?: string[]
 }
 
 export interface Lesson {
@@ -176,7 +178,10 @@ export interface Lesson {
     releasedItems: CardField
   }
   itemRefs: string[] // ItemRecord ids rendered in Released items
+  /** Legacy single exemplar (pre-plural scopes); new generations fill generatedExemplars. */
   generatedExemplar?: GeneratedExemplar
+  /** State-test-quality assessment exemplars for atoms with no directly aligned released item. */
+  generatedExemplars?: GeneratedExemplar[]
   decisions: DecisionEntry[]
 }
 

@@ -35,7 +35,6 @@ const obj = (properties: Record<string, Schema>): Schema => ({
   required: Object.keys(properties),
   additionalProperties: false,
 })
-const nullable = (schema: Schema): Schema => ({ anyOf: [schema, { type: 'null' }] })
 
 const SOURCE_TYPES = [
   'standards',
@@ -94,6 +93,7 @@ const EXEMPLAR = obj({
   answer: STR,
   demandProfile: STR,
   basis: STR,
+  choices: arr(STR), // full selected-response set (distractors encode error patterns); [] for constructed-response
 })
 
 const LESSON = obj({
@@ -116,7 +116,7 @@ const LESSON = obj({
     releasedItems: ref('cardField'),
   }),
   itemRefs: arr(STR),
-  generatedExemplar: nullable(ref('exemplar')),
+  generatedExemplars: arr(ref('exemplar')), // 1-3 for atoms with no directly aligned item; [] otherwise
   decisions: arr(ref('decision')),
 })
 
@@ -284,7 +284,7 @@ export interface WireLesson {
   evidenceStatus: 'observed' | 'inferred' | 'mixed'
   fields: Record<keyof Lesson['fields'], WireCardField>
   itemRefs: string[]
-  generatedExemplar: GeneratedExemplar | null
+  generatedExemplars: (GeneratedExemplar & { choices: string[] })[]
   decisions: WireDecision[]
 }
 
@@ -418,6 +418,12 @@ export function toLesson(w: WireLesson, validItemIds: Set<string>): Lesson {
     citations: d.citations as Citation[],
     ...(d.flags.length > 0 ? { flags: d.flags } : {}),
   }))
+  const exemplars = (w.generatedExemplars ?? [])
+    .filter((e) => e.stem.trim().length > 0)
+    .map(({ stem, answer, demandProfile, basis, choices }) => {
+      const cleaned = choices.map((c) => c.trim()).filter((c) => c.length > 0)
+      return { stem, answer, demandProfile, basis, ...(cleaned.length > 0 ? { choices: cleaned } : {}) }
+    })
   return {
     id: w.id,
     title: w.title,
@@ -425,7 +431,7 @@ export function toLesson(w: WireLesson, validItemIds: Set<string>): Lesson {
     evidenceStatus: w.evidenceStatus,
     fields,
     itemRefs: w.itemRefs.filter((id) => validItemIds.has(id)),
-    ...(w.generatedExemplar ? { generatedExemplar: w.generatedExemplar } : {}),
+    ...(exemplars.length > 0 ? { generatedExemplars: exemplars } : {}),
     decisions,
   }
 }

@@ -183,13 +183,21 @@ export async function buildScopeDocxBlob(scope: Scope, sets: StandardSet[]): Pro
             children.push(caption(`${entry.it.test} · ${entry.it.year} · Q${entry.it.itemNumber} — ${entry.it.alignmentCode}`))
             children.push(...itemVisual(entry.it, images.get(rid)))
           }
-          if (l.generatedExemplar) {
+          for (const ex of l.generatedExemplars ?? (l.generatedExemplar ? [l.generatedExemplar] : [])) {
+            children.push(caption('Generated exemplar — not a released item'), body(ex.stem))
+            ;(ex.choices ?? []).forEach((choice, i) => {
+              children.push(
+                new Paragraph({
+                  indent: { left: 360 },
+                  spacing: { after: 20 },
+                  children: [new TextRun({ text: `${String.fromCharCode(65 + i)}. ${choice}`, size: 20, color: INK })],
+                }),
+              )
+            })
             children.push(
-              caption('Generated exemplar — not a released item'),
-              body(l.generatedExemplar.stem),
               new Paragraph({
                 spacing: { after: 60 },
-                children: [new TextRun({ text: `Answer: ${l.generatedExemplar.answer}`, size: 19, color: INK2 })],
+                children: [new TextRun({ text: `Answer: ${ex.answer}`, size: 19, color: INK2 })],
               }),
             )
           }

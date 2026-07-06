@@ -46,6 +46,7 @@ export function buildScopeCsv(scope: Scope, sets: StandardSet[]): string {
       // them explicitly so downstream tooling can tell "never had items" from
       // "items lost with their set".
       const unresolvedItemRefs = l.itemRefs.filter((rid) => !itemsById.has(rid))
+      const exemplars = l.generatedExemplars ?? (l.generatedExemplar ? [l.generatedExemplar] : [])
       const lessonJson = {
         fields,
         releasedItems: l.itemRefs
@@ -60,7 +61,7 @@ export function buildScopeCsv(scope: Scope, sets: StandardSet[]): string {
             ...(it.choices ? { choices: it.choices } : {}),
           })),
         ...(unresolvedItemRefs.length > 0 ? { unresolvedItemRefs } : {}),
-        ...(l.generatedExemplar ? { generatedExemplar: l.generatedExemplar } : {}),
+        ...(exemplars.length > 0 ? { generatedExemplars: exemplars } : {}),
       }
       rows.push(
         [

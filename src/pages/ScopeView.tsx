@@ -272,13 +272,17 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
                         />
                       ) : null
                     })}
-                    {lesson.generatedExemplar && (
-                      <GeneratedShot
-                        stem={lesson.generatedExemplar.stem}
-                        answer={lesson.generatedExemplar.answer}
-                        demandProfile={lesson.generatedExemplar.demandProfile}
-                        basis={lesson.generatedExemplar.basis}
-                      />
+                    {(lesson.generatedExemplars ?? (lesson.generatedExemplar ? [lesson.generatedExemplar] : [])).map(
+                      (ex, i) => (
+                        <GeneratedShot
+                          key={i}
+                          stem={ex.stem}
+                          answer={ex.answer}
+                          demandProfile={ex.demandProfile}
+                          basis={ex.basis}
+                          choices={ex.choices}
+                        />
+                      ),
                     )}
                   </div>
                 )}

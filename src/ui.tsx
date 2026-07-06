@@ -231,11 +231,13 @@ export function GeneratedShot({
   answer,
   demandProfile,
   basis,
+  choices,
 }: {
   stem: string
   answer: string
   demandProfile: string
   basis: string
+  choices?: string[]
 }) {
   return (
     <figure className="overflow-hidden rounded-xl border border-amber-ink/25 bg-panel shadow-(--shadow-lift)">
@@ -250,6 +252,16 @@ export function GeneratedShot({
       </div>
       <div className="bg-[#fdfcfa] px-4 py-3.5">
         <p className="font-display text-[14px] leading-relaxed text-ink">{stem}</p>
+        {choices && choices.filter((c) => c.trim()).length > 0 && (
+          <ol className="mt-2.5 space-y-1">
+            {choices.filter((c) => c.trim()).map((c, i) => (
+              <li key={i} className="flex items-start gap-2 font-display text-[13.5px] leading-relaxed text-ink">
+                <Mono className="mt-px shrink-0 text-[11px] text-ink-3">{String.fromCharCode(65 + i)}</Mono>
+                <span>{c}</span>
+              </li>
+            ))}
+          </ol>
+        )}
         <p className="mt-2 text-[12.5px] text-ink-2">
           <span className="font-semibold text-ink">Answer:</span> {answer}
         </p>

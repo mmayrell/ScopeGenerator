@@ -130,16 +130,17 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
   })
 
   // 8. Released-items integrity
-  const emptyReleased = lessons.filter((l) => l.itemRefs.length === 0 && !l.generatedExemplar).map((l) => l.id)
+  const hasExemplars = (l: Lesson) => !!l.generatedExemplar || (l.generatedExemplars?.length ?? 0) > 0
+  const emptyReleased = lessons.filter((l) => l.itemRefs.length === 0 && !hasExemplars(l)).map((l) => l.id)
   const withItems = lessons.filter((l) => l.itemRefs.length > 0).length
-  const withExemplar = lessons.filter((l) => l.itemRefs.length === 0 && l.generatedExemplar).length
+  const withExemplar = lessons.filter((l) => l.itemRefs.length === 0 && hasExemplars(l)).length
   checks.push({
     name: 'Released-items integrity',
     status: emptyReleased.length > 0 ? 'fail' : 'pass',
     detail:
       emptyReleased.length > 0
         ? `These lessons show neither a released test item nor a labeled generated example — the Released Items field must never be empty: ${emptyReleased.join(', ')}.`
-        : `Field never empty: ${withItems} card${withItems === 1 ? '' : 's'} carry captioned observed items; ${withExemplar} carry a labeled generated ceiling exemplar with inference basis and in-boundary ceiling.`,
+        : `Field never empty: ${withItems} card${withItems === 1 ? '' : 's'} carry captioned observed items; ${withExemplar} carry labeled generated assessment exemplars with inference basis and in-boundary ceiling.`,
   })
 
   // 9. Released-item coverage — the released test is the model for our
