@@ -326,7 +326,6 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
       if (out.setMeta.subject.trim()) set.subject = out.setMeta.subject.trim()
       if (out.setMeta.grade.trim()) set.gradeSpan = out.setMeta.grade.trim()
       if (out.setMeta.sourceOrganization.trim()) set.sourceOrganization = out.setMeta.sourceOrganization.trim()
-      if (out.setMeta.publicationYear.trim()) set.publicationYear = out.setMeta.publicationYear.trim()
       enrichArtifact(artifact, out.usageNotes)
       candidateWarnings.push(...out.coverageWarnings)
     } else if (blob.role === 'items') {

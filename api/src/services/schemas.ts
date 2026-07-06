@@ -220,7 +220,7 @@ export const INGEST_STANDARDS_SCHEMA = obj({
   ),
   representations: arr(LEXICON_TERM),
   problemTypes: arr(LEXICON_TERM),
-  setMeta: obj({ subject: STR, grade: STR, sourceOrganization: STR, publicationYear: STR }),
+  setMeta: obj({ subject: STR, grade: STR, sourceOrganization: STR }),
   coverageWarnings: arr(STR),
   usageNotes: STR,
 })
@@ -395,7 +395,7 @@ export interface WireIngestStandards {
   nodes: WireStandardNode[]
   representations: { term: string; aliases: string[]; source: string }[]
   problemTypes: { term: string; aliases: string[]; source: string }[]
-  setMeta: { subject: string; grade: string; sourceOrganization: string; publicationYear: string }
+  setMeta: { subject: string; grade: string; sourceOrganization: string }
   coverageWarnings: string[]
   usageNotes: string
 }

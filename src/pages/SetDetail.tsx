@@ -565,7 +565,6 @@ export default function SetDetail() {
                   { label: 'Subject', value: set.subject },
                   { label: 'Grade', value: set.gradeSpan },
                   { label: 'Source Organization', value: set.sourceOrganization },
-                  { label: 'Publication Year', value: set.publicationYear },
                 ] as { label: string; value?: string; pill?: 'green' | 'amber' | 'neutral' }[]
               ).map((row) => (
                 <div key={row.label} className="flex items-baseline justify-between gap-6 border-b border-hairline pb-2.5 last:border-0 last:pb-0">

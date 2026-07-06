@@ -95,9 +95,8 @@ export interface StandardSet {
   codingScheme: string
   codingNotes: string
   emphasisSource: string
-  /** Source organization and publication year, extracted from the standards document. */
+  /** Source organization, extracted from the standards document. */
   sourceOrganization?: string
-  publicationYear?: string
   published: boolean
   archived?: boolean
   ingesting?: boolean
