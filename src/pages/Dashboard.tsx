@@ -4,10 +4,32 @@ import { scopeUnsettled, useScopePolling, useStore } from '../store'
 import { capsStandardCodes, Modal, Mono, Pill, Btn } from '../ui'
 import type { Scope } from '../types'
 
+// Creation moment: scope ids embed their epoch-ms timestamp; seeded ids fall
+// back to the updated date (day precision).
+const createdAt = (s: Scope): number => {
+  const m = /^scope-(\d{12,})/.exec(s.id)
+  if (m) return Number(m[1])
+  const t = Date.parse(s.updated)
+  return Number.isNaN(t) ? 0 : t
+}
+
+const generatedLabel = (s: Scope): string | null => {
+  if (!/^scope-\d{12,}/.test(s.id)) return null
+  return new Date(createdAt(s)).toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+}
+
 export default function Dashboard() {
   const { scopes, sets, deleteScope } = useStore()
   const nav = useNavigate()
   const [confirmDelete, setConfirmDelete] = useState<Scope | null>(null)
+  // Newest generation first — repeated runs of the same request share a title,
+  // so recency is the distinguishing signal.
+  const ordered = [...scopes].sort((a, b) => createdAt(b) - createdAt(a))
   // Keep in-flight scopes fresh while they're on screen.
   useScopePolling(scopes.filter(scopeUnsettled).map((s) => s.id))
   return (
@@ -28,7 +50,7 @@ export default function Dashboard() {
       </div>
 
       <div className="mt-8 space-y-3">
-        {scopes.map((s) => {
+        {ordered.map((s) => {
           const setNames = (s.setIds?.length ? s.setIds : [s.setId])
             .map((sid) => sets.find((x) => x.id === sid)?.name)
             .filter(Boolean)
@@ -77,7 +99,9 @@ export default function Dashboard() {
                 </div>
                 <div className="text-right text-[11.5px] text-ink-3">
                   <Mono>{s.engineVersion.split(' (')[0]}</Mono>
-                  <div className="mt-0.5">updated {s.updated}</div>
+                  <div className="mt-0.5">
+                    {generatedLabel(s) ? `generated ${generatedLabel(s)}` : `updated ${s.updated}`}
+                  </div>
                   <button
                     onClick={(e) => {
                       e.preventDefault()
