@@ -501,13 +501,27 @@ export function ingestLexiconPrompt(set: StandardSet): Prompt {
     ),
     user: `Build the vocabulary glossary for the set "${set.name}" (${set.gradeSpan}). The attached PDFs are the set's uploaded documents, in artifact-list order.
 
-Build ONE comprehensive glossary of the STUDENT-FACING, GRADE-APPROPRIATE mathematical vocabulary for this set — every term a ${set.gradeSpan} student is expected to read, hear, say, or use in instruction and on assessments within the scope of these standards: concept and operation names, comparison and reasoning words students themselves use, geometry, measurement, fraction, place-value, and data/graph vocabulary, the names of representations and tools students are taught by name (number line, area model, array, tape diagram, protractor), and notation students must read.
+Build ONE comprehensive glossary of the EXPECTED STUDENT-FACING vocabulary for this set — every term official documentation shows a ${set.gradeSpan} student is expected to recognize, interpret, or produce, within the scope of these standards.
+
+The determination you are making for every candidate term: is it expected STUDENT-FACING vocabulary — not merely a term that appears in educator documentation. A term is supported only when official documentation provides evidence that students are expected to recognize, interpret, or produce it.
+
+Strong evidence (highest confidence):
+- The term appears in released assessment items presented directly to students (stems, answer choices, directions).
+- The term appears in official student glossaries, reference sheets, or vocabulary lists.
+- Official assessment frameworks, evidence statements, or item specifications explicitly identify the term as student-facing terminology.
+- Official progression or support documents explicitly state that students should learn or use the term.
+
+NEVER sufficient as sole evidence:
+- The wording of the standards.
+- Explanatory narrative written for educators.
+- Curriculum guidance or implementation notes.
+- Examples intended for teachers.
+- General educational knowledge.
+A term backed only by these sources is educator vocabulary, not student vocabulary — "isometric grid" (progression narrative), "valid chain of reasoning with equals signs" (evidence-statement phrasing), and "multiplicative comparison structure" (framework analysis) are all excluded this way. If no official evidence exists that students are expected to know the term, do not include it.
 
 Rules:
-- The admission test for every candidate term: would it reasonably appear in a ${set.gradeSpan} student's math glossary, word wall, or textbook — AND is it inside the scope of this set's standards? Both must hold.
-- STUDENT-FACING is a hard filter. A term that appears only in teacher guides, standards wording, item specifications, or evidence statements does not belong, however central it is to the framework. Excluded: "valid chain of reasoning with equals signs", "multiplicative comparison structure", "assessment boundary", "additive reasoning". Included: "equal groups", "compare", "equation", "remainder".
 - GRADE-APPROPRIATE is a hard filter: exclude vocabulary above the grade's expectations. Below-grade terms still in everyday use at this grade stay ("addition" is still ${set.gradeSpan} vocabulary).
-- Exhaustive within those filters: sweep the standards wording, the released items (item stems and answer choices are the strongest evidence of what students actually face), the unpacking and progression documents, and every glossary or reference sheet in the corpus. A qualifying term used anywhere in the corpus must appear, once, normalized, with its aliases collected onto one entry. Aim for completeness over brevity — a thin glossary misfires the split logic downstream.
+- Exhaustive within the evidence rules: sweep every released item, every student glossary/reference sheet, and every explicit students-should-know statement in the corpus. A term with qualifying evidence anywhere must appear, once, normalized, with its aliases collected onto one entry. Aim for completeness over brevity — a thin glossary misfires the split logic downstream.
 - term: the normalized student-facing form. aliases: every variant/synonym the documents use.
 - standard: the single most-governing standard code for the term (normalized join code, e.g. "4.NF.3") — shown as the term's citation.
 - artifact: the file name of the uploaded document that best evidences the term. page: the 1-based PDF page in that document where it appears. These are revealed on hover — they must be real locations, not guesses.
