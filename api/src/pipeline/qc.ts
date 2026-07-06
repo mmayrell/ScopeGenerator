@@ -1,4 +1,4 @@
-import { Lesson, QCCheck, Unit } from '../domain/types'
+import { ItemRecord, Lesson, QCCheck, Unit } from '../domain/types'
 import { PlanOutput } from '../services/schemas'
 
 /**
@@ -7,7 +7,7 @@ import { PlanOutput } from '../services/schemas'
  * check list by request — citations and decision records are still demanded
  * by the card prompts; they just aren't QC gates.
  */
-export function runQc(units: Unit[], plan: PlanOutput): QCCheck[] {
+export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord[] = []): QCCheck[] {
   const lessons = units.flatMap((u) => u.lessons)
   const lessonIds = lessons.map((l) => l.id)
   const idSet = new Set(lessonIds)
@@ -140,6 +140,26 @@ export function runQc(units: Unit[], plan: PlanOutput): QCCheck[] {
       emptyReleased.length > 0
         ? `Released Items empty (no observed item and no generated exemplar) on: ${emptyReleased.join(', ')}.`
         : `Field never empty: ${withItems} card${withItems === 1 ? '' : 's'} carry captioned observed items; ${withExemplar} carry a labeled generated ceiling exemplar with inference basis and in-boundary ceiling.`,
+  })
+
+  // 9. Released-item coverage — the released test is the model for our
+  // assessments: every in-boundary item in the evidence set must attach to a
+  // lesson. Rigor-signal-only and adjacent-grade items are exempt by design.
+  const inBoundary = evidenceItems.filter((it) => it.scopeClass === 'in-boundary')
+  const referenced = new Set(lessons.flatMap((l) => l.itemRefs))
+  const uncovered = inBoundary.filter((it) => !referenced.has(it.id))
+  checks.push({
+    name: 'Released-item coverage',
+    status: uncovered.length > 0 ? 'flag' : 'pass',
+    detail:
+      inBoundary.length === 0
+        ? 'The evidence set carries no in-boundary released items — nothing to cover.'
+        : uncovered.length > 0
+          ? `${uncovered.length} of ${inBoundary.length} in-boundary released items are not attached to any lesson: ${uncovered
+              .slice(0, 12)
+              .map((it) => `${it.test} ${it.year} Q${it.itemNumber}`)
+              .join('; ')}${uncovered.length > 12 ? '; …' : ''}.`
+          : `All ${inBoundary.length} in-boundary released items attach to a lesson — the released test is fully modeled.`,
   })
 
   return checks

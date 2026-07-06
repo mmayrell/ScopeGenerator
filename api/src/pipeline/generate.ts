@@ -229,7 +229,8 @@ export async function generateFinalizeStep(msg: JobMessage, ctx: InvocationConte
   }
 
   const scope = await getScope(scopeId)
-  const qc = runQc(units, plan)
+  const evidenceSet = await getScopeEvidenceSet(scope)
+  const qc = runQc(units, plan, evidenceSet.items)
   const lessons = countLessons(units)
 
   scope.units = units

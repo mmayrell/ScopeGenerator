@@ -187,6 +187,7 @@ Output: ordered units with lesson skeletons.
 - Unit ids "U1", "U2", … in teaching order; lesson ids "<unitId>.L1", "<unitId>.L2", … in teaching order.
 - Each unit: id, title (Title Case), rationale (traceable to theme/emphasis statements or progression streams, strand-coherent), strand, lessons.
 - Each lesson skeleton: id, title (Title Case), type (new-learning | bridge | application-tier), evidenceStatus (observed | inferred | mixed), standardCodes (canonical and/or normalized codes this lesson serves), itemRefs (ids of in-boundary items from the item bank that attach to this atom — never contradiction-class or adjacent-grade items), planningNotes (the atomization reasoning to hand to card generation: which split criteria fired, single strategy expectation, ceiling inputs, contradiction events, inference basis when evidenceStatus is inferred).
+- Released-item coverage is MANDATORY: every in-boundary item in the item bank whose standard is in scope must be attached to exactly one lesson skeleton's itemRefs — the released test is the model for our assessments, and an unattached in-boundary item is a planning defect. Rigor-signal-only and adjacent-grade items are never attached.
 - scopeDecisions: terse records of scope-level calls (P1 contradictions, P2 classifications, D1 inferences, partition used), each tagged with its rule id (P#/A#/D#).`,
   }
 }

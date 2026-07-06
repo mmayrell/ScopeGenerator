@@ -169,8 +169,8 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
    Checkpoint to `jobs/<jobId>/unit-<i>.json`; increment `unitsDone` (ETag retry); any completion
    observing all units done enqueues `finalize` (at-least-once; finalize is idempotent).
 3. **`finalize`** (Stage 6): assemble the `Scope` from checkpoints, run **programmatic QC**
-   (eight checks, each → `QCCheck` pass/flag/fail), write history entry, snapshot `v1.json`,
-   status `complete`. No-ops if the job is already complete (duplicate finalize message).
+   (nine checks incl. released-item coverage, each → `QCCheck` pass/flag/fail), write history
+   entry, snapshot `v1.json`, status `complete`. No-ops on duplicate finalize messages.
 
 Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is **kind-aware**:
 - `generate`: job `failed`, scope status `failed` + `error` (UI offers delete/retry).
