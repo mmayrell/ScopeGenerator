@@ -134,8 +134,17 @@ api({
       // a poisoned message leaves the row active forever). Only trust it while
       // the job shows recent progress; otherwise fall through and re-enqueue —
       // every step is idempotent, so a duplicate message is harmless.
+      // NEVER trust a cancel-flagged job: cancel-then-retry hits this branch
+      // while the worker is still winding down (the row stays queued/running
+      // and 'Cancelled by user' is a fresh log entry) — an early return here
+      // would leave the flag set and the scope failed, making Retry a silent
+      // no-op. Fall through instead: the flag is cleared and a fresh plan
+      // message enqueued; if the old run is still mid-call, its checkpoints
+      // make the duplicate harmless.
       const lastAt = job.log.length > 0 ? Date.parse(job.log[job.log.length - 1].at) : Date.parse(job.created)
-      if (Date.now() - lastAt < 15 * 60 * 1000) return ok({ jobId: job.jobId }, 202)
+      if (job.cancelRequested !== true && Date.now() - lastAt < 15 * 60 * 1000) {
+        return ok({ jobId: job.jobId }, 202)
+      }
     }
     await mutateJob(job.jobId, (r) => {
       r.status = 'queued'
