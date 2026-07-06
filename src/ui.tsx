@@ -92,7 +92,10 @@ const sourceTone: Record<Citation['sourceType'], { label: string; cls: string }>
   'performance-report': { label: 'Report', cls: 'text-rust bg-rust-wash border-rust/25' },
 }
 
-export function CiteChips({ citations }: { citations: Citation[] }) {
+export function CiteChips({ citations: rawCitations }: { citations: Citation[] }) {
+  // One chip per source: the same document cited twice on one field reads as
+  // an error, not as extra provenance — the first citation's popover stands in.
+  const citations = rawCitations.filter((c, i) => rawCitations.findIndex((o) => o.label === c.label) === i)
   const [open, setOpen] = useState<number | null>(null)
   const ref = useRef<HTMLSpanElement>(null)
   useEffect(() => {

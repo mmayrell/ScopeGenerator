@@ -1,10 +1,13 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { scopeUnsettled, useScopePolling, useStore } from '../store'
-import { capsStandardCodes, Mono, Pill, Btn } from '../ui'
+import { capsStandardCodes, Modal, Mono, Pill, Btn } from '../ui'
+import type { Scope } from '../types'
 
 export default function Dashboard() {
-  const { scopes, sets } = useStore()
+  const { scopes, sets, deleteScope } = useStore()
   const nav = useNavigate()
+  const [confirmDelete, setConfirmDelete] = useState<Scope | null>(null)
   // Keep in-flight scopes fresh while they're on screen.
   useScopePolling(scopes.filter(scopeUnsettled).map((s) => s.id))
   return (
@@ -75,6 +78,19 @@ export default function Dashboard() {
                 <div className="text-right text-[11.5px] text-ink-3">
                   <Mono>{s.engineVersion.split(' (')[0]}</Mono>
                   <div className="mt-0.5">updated {s.updated}</div>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setConfirmDelete(s)
+                    }}
+                    className="mt-1.5 ml-auto flex cursor-pointer rounded-md p-1 text-ink-3 transition-colors hover:bg-rust/10 hover:text-rust"
+                    title="Delete scope"
+                  >
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+                      <path d="M2.5 4h11M6.5 4V2.8a.8.8 0 01.8-.8h1.4a.8.8 0 01.8.8V4M5 4l.5 9a1 1 0 001 .95h3a1 1 0 001-.95L11 4M6.7 6.8v4.4M9.3 6.8v4.4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </Link>
@@ -86,6 +102,26 @@ export default function Dashboard() {
           </p>
         )}
       </div>
+
+      <Modal open={confirmDelete !== null} onClose={() => setConfirmDelete(null)} title="Delete Scope?">
+        <p className="text-[13px] leading-relaxed text-ink-2">
+          This removes <span className="font-semibold text-ink">{capsStandardCodes(confirmDelete?.title ?? '')}</span> and
+          all its versions for every user. This is the one non-versioned operation.
+        </p>
+        <div className="mt-5 flex justify-end gap-2">
+          <Btn onClick={() => setConfirmDelete(null)}>Cancel</Btn>
+          <Btn
+            kind="danger"
+            onClick={() => {
+              const target = confirmDelete
+              setConfirmDelete(null)
+              if (target) void deleteScope(target.id)
+            }}
+          >
+            Delete
+          </Btn>
+        </div>
+      </Modal>
 
       <div className="mt-12 flex items-end justify-between">
         <div>

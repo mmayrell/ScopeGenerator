@@ -43,7 +43,7 @@ const POLICIES = `Governing policies (spec §3, key excerpts verbatim):
 - P2 (Item Scope Classification, content-based never code-based): classes are in-boundary | contradiction/rigor-signal-only | adjacent-grade.
 - P3 (Single Strategy, Algorithm First, Stein Controlling): "Don't give students multiple strategies — give them the single best one; representations and manipulatives come after direct instruction of the algorithm, framed as applications of it, never as parallel computation paths." An Instructional Approach naming two computation strategies fails QC automatically.
 - P4: "Decomposition clarifications and interpretive limits supply the default parameter bounds … Observed in-boundary item evidence overrides these defaults in either direction. … Every override and every pin is logged in the Decision record."
-- D1 (Absence Policy): components without item evidence stay in scope; anticipated-evidence inference constructs the plausible ceiling, "flagged inferred on the card and fully reasoned in the Decision record", culminating in a generated ceiling exemplar (§7.12).
+- D1 (Assessment Alignment Constraint — engine, governing): "Instructional scope must be constrained to what is demonstrably assessed. If a component of a standard does not appear in the released assessment evidence supplied, it is EXCLUDED from instruction — even if it introduces a gap due to its role as a prerequisite for future grade levels." Instruction caps at the highest observed tested difficulty. Every exclusion and every cap is logged as a scope decision. For components that ARE assessed but whose evidence does not pin every parameter, the ceiling is inferred from the closest observed evidence — flagged inferred on the card, reasoned in the Decision record, culminating in a generated ceiling exemplar (§7.12).
 - D2: below-grade items are prerequisite evidence + rigor calibration; above-grade items citable only in Non-Goals/Progression Placement; neither generates new-learning atoms.
 - P7 (Interpretive Stance Firewall): interpretive documents are "mined for sequencing, placement, prerequisites, boundaries, representation vocabulary, documented misconceptions, and worked problems — never for instructional stance." Method preferences conflicting with doctrine: Stein prevails, conflict logged.
 - P8 (Assessment Evidence Format): "Every card states mastery as observable behavior — 'Students are able to: …' — never 'students will understand.' … no accuracy percentages, no rates, no problem counts." Fluency triggers flag the requirement; the rate itself is the app's.
@@ -51,7 +51,7 @@ const POLICIES = `Governing policies (spec §3, key excerpts verbatim):
 
 const APPENDIX_A = `Compiled granularity procedure (spec Appendix A — run per component; all decisions emit DecisionEntries):
 - A1 Decompose: candidate atoms from decomposition keys (fallback: standard sub-parts), informed by clarifications and the problem-type vocabulary on the item records.
-- A2 Split Test (criteria verbatim): "new rule/strategy not previously taught · new vocabulary/concept label needing stabilization · new/hidden decision step changing the routine · unmastered representation/notation (first encounter of a normalized representation form) · high confusability with a look-alike skill · foundational preskill missing/weak · demand-band jump · documented error pattern (per P9)". Don't-split criteria: "same strategy steps · quantitative-only or context-only change · already-mastered representations · cumulative choose-among-mastered-routines goal."
+- A2 Split Test (criteria verbatim): "new rule/strategy not previously taught · new vocabulary/concept label needing stabilization · new/hidden decision step changing the routine · unmastered representation/notation (first encounter of a normalized representation form) · high confusability with a look-alike skill · foundational preskill missing/weak · demand-band jump (some lessons split for rigor) · objective overload (more objectives than one lesson can explicitly model — every objective a lesson claims must be modeled in it) · documented error pattern (per P9)". Don't-split criteria: "same strategy steps · quantitative-only or context-only change · already-mastered representations · cumulative choose-among-mastered-routines goal."
 - A3 Precedence & Tie-Breakers: "When split and don't-split criteria both genuinely fire, split criteria win." Tie-breakers in order: (1) new decision cues never before encountered → split; (2) can be rewritten with friendlier numbers/shorter text with the routine identical → don't split; (3) prerequisite gap that can't be refreshed quickly → split. The Editing Splits constraint caps error-pattern splits.
 - A4 Bridges: "discrimination/selection/switching only, no new rules"; seeded also by integrative keys; placed after both parents independently mastered; confusables separated in time.
 - A5 Modeling Scope: explicit modeling for new rules/misinterpretation risk, unmastered representations, high load/hidden steps, shaky preskills, look-alike confusion, fossilization-prone errors, demand jumps; extension for same-strategy/no-new-steps variation.
@@ -59,9 +59,9 @@ const APPENDIX_A = `Compiled granularity procedure (spec Appendix A — run per 
 
 const SEQUENCING = `Sequencing & unit formation (spec Stage 4, doctrine-sourced ordering): "preskills before composites; easier before difficult; algorithm before required representations; confusables separated in time, bridges only after both parents independently mastered; within a concept cluster, the sacrificial first instance. Units are strand-coherent, traceable to the set's theme/emphasis statements or progression streams." Granularity and unit count are purely logic-driven; no calendar constraint.`
 
-const CARD_RULES = `The fixed 13-field card (spec §7). EVERY field must be filled and EVERY field carries AT LEAST ONE citation drawn from the supplied evidence (uncited fields are rejected before QC):
-1 standards — canonical ID(s) + normalized code(s) plus every governing decomposition key for this atom (or the sub-part partition used).
-2 cluster — the standard's immediate parent grouping heading text verbatim; its job is context; no paraphrase.
+const CARD_RULES = `The fixed 13-field card (spec §7). EVERY field must be filled. Fields 3–13 carry AT LEAST ONE citation drawn from the supplied evidence (uncited fields are rejected before QC); fields 1 and 2 carry NO citations (citations: []) — they quote the authority directly. Never cite the same source twice on one field.
+1 standards — the PARENT standard (canonical ID + normalized code) and, when the lesson teaches only part of it, the exact substandard/subpart taught (lettered sub-part or governing decomposition key). Then "Objectives:" — a numbered list of ALL objectives this lesson teaches, each an observable behavior the lesson explicitly models. The list must be exactly what the atom claims: if the objectives exceed what one lesson can model, the granularity is wrong — the atom should have split (A2 objective overload); never absorb extra objectives into one card. No citations on this field.
+2 cluster — the cluster's official wording quoted VERBATIM from the standards document; its job is context; never paraphrase. No citations on this field.
 3 emphasis — the designation under the set's emphasis source, "not designated where none exists — never guessed."
 4 progression — two required layers: cross-grade (from interpretive documents) and within-course (the atoms immediately before and after in this skill's chain, by lesson reference).
 5 prerequisites — each prerequisite tagged taught-in-course (lesson ref) or prior-grade.
@@ -82,8 +82,18 @@ const EDITING_SPLITS = `Data-informed revision mapping (spec §8): "The tool map
 
 const OUTPUT_DISCIPLINE = `Respond with a single JSON object matching the required schema exactly. No prose outside the JSON, no markdown fences.`
 
+// The engine's foundational POVs (Lesson Granularity & Modeling Scope, v2 for
+// ANY standard set) — binding on every generation stage; nothing below may
+// contradict them.
+const ENGINE_CORE = `The governing engine's POVs are BINDING — no rule below overrides them:
+- Lesson Granularity (Split vs. Don't Split): splits are justified only when instruction requires a new strategy, decision, representation, prerequisite, or other meaningful change in student behavior — not simply because problems become harder or use different numbers or contexts. A demand-band jump IS such a change: some lessons split for rigor.
+- Modeling Scope (Teach vs. Practice): every objective a lesson claims must be explicitly modeled in that lesson. A lesson that accumulates more objectives than one lesson can model MUST split — objective overload is a split trigger, exactly like a new decision step.
+- The Assessment Alignment Constraint: instructional scope is constrained to what is demonstrably assessed. A component of a standard that does not appear in the supplied released assessment evidence is excluded from instruction — even when that introduces a prerequisite gap — and instruction caps at the highest observed tested difficulty.`
+
 const systemCore = (role: string): string =>
   `You are the ScopeGenerator pipeline engine — ${role}. You turn a standard set's evidence corpus into strand-coherent units of atomized lessons under Direct Instruction doctrine (Stein, Kinder, Silbert & Carnine, Direct Instruction Mathematics, 5th ed., 2017 — the controlling method authority) and the Lesson Granularity & Modeling Scope framework.
+
+${ENGINE_CORE}
 
 ${PRECEDENCE}
 
@@ -149,7 +159,7 @@ function itemsForCodes(set: StandardSet, codes: string[], itemRefs: string[]): I
 export function planPrompt(set: StandardSet, scope: Scope): Prompt {
   const requestDescription =
     scope.request.mode === 'course'
-      ? `Whole-course scope: cover every published content standard of the set that has evidence, over the full grade span (${set.gradeSpan}).`
+      ? `Whole-course scope: cover every published content standard of the set that has in-boundary released-item evidence, over the full grade span (${set.gradeSpan}) — D1 governs component-level exclusion.`
       : scope.request.mode === 'standard'
         ? `Standard scope: exactly the selected standard(s) "${scope.request.params}" and their skill chains (preskills, bridges, application tiers directly serving them). When several standards are selected, produce ONE coherent scope — a single sequenced set of units covering all of them together, ordered per the sequencing rules across the whole selection, never one disconnected mini-scope per standard.`
         : `Topic scope: the request "${scope.request.params}" — map it onto the set's hierarchy and include exactly the standards that constitute that topic.`
@@ -160,7 +170,7 @@ export function planPrompt(set: StandardSet, scope: Scope): Prompt {
     ),
     user: `Run Stages 2–4 for the scope request below.
 
-Stage 2 — Scope Resolution: resolve the request to standards + governing decomposition keys (or the sub-part fallback), classify every supplied item per P2 against the governing standard's wording (contradiction detection per P1), and build the component evidence map (evidence status observed | inferred per component).
+Stage 2 — Scope Resolution: resolve the request to standards + governing decomposition keys (or the sub-part fallback), classify every supplied item per P2 against the governing standard's wording (contradiction detection per P1), and build the component evidence map. Apply D1 (Assessment Alignment Constraint) here: components with NO in-boundary item evidence are EXCLUDED from the scope — log each exclusion in scopeDecisions with its basis — and every component's difficulty caps at the highest observed tested difficulty. Components that are assessed but under-pinned stay in scope with evidence status inferred.
 
 Stage 3 — Atomization:
 ${APPENDIX_A}
@@ -205,7 +215,7 @@ export function cardsPrompt(
 ${CARD_RULES}
 
 Additional requirements:
-- evidence-locking is mandatory: generation returns { content, citations[] } per field; uncited fields are rejected pre-QC (spec §6 Stage 5).
+- evidence-locking is mandatory: generation returns { content, citations[] } per field; uncited fields 3–13 are rejected pre-QC (spec §6 Stage 5); fields 1–2 return citations: [].
 - decision entries must carry rule ids (P#/A#/D#) and quote both sides on every contradiction.
 - for lessons whose skeleton has no in-boundary itemRefs (evidenceStatus inferred), produce the generated ceiling exemplar per D1/§7.12 and label it exactly "Generated exemplar — not a released item" in the releasedItems content.
 - bridge and application-tier lessons use §7.14 semantics: bridge newLearning = the selection/discrimination behavior, approach = mixed look-alike practice with no new rules modeled; application-tier newLearning = executing the mastered routine in the new demand band, boundary/ceiling inherited from the parent atom plus the triggering demand statement's scope.
@@ -231,7 +241,7 @@ export function rerunLessonPrompt(
   const evidenceItems = itemsForCodes(set, codes, lesson.itemRefs)
   return {
     system: systemCore('rerun: regenerate one lesson card in place (Stage 5 re-entry)'),
-    user: `Regenerate the lesson card "${lesson.id} — ${lesson.title}" in place at the same granularity (spec §6 rerun re-entry: "regenerate-in-place → Stage 5 for that card"). Keep the lesson id, type, and position in the chain; produce a fresh, fully cited 13-field card.
+    user: `Regenerate the lesson card "${lesson.id} — ${lesson.title}" in place at the same granularity (spec §6 rerun re-entry: "regenerate-in-place → Stage 5 for that card"). Keep the lesson id, type, and position in the chain; produce a fresh 13-field card cited per the card rules (fields 3–13 cited; fields 1–2 citations: []).
 
 ${CARD_RULES}
 
@@ -261,7 +271,7 @@ export function rerunUnitPrompt(
   )
   return {
     system: systemCore('rerun: re-atomize one unit at different granularity (Stages 3–6 re-entry, scoped)'),
-    user: `Rerun unit "${unit.id} — ${unit.title}" at ${mode === 'split' ? 'MORE granularity (split)' : 'LESS granularity (merge)'} around the target "${target}" (spec §6: "lesson granularity change → Stage 3 scoped to affected atoms, then 4–6 locally").
+    user: `Rerun unit "${unit.id} — ${unit.title}" at ${mode === 'split' ? 'MORE granularity (split)' : 'LESS granularity (merge)'} around the target "${target}" (spec §6: "lesson granularity change → Stage 3 scoped to affected atoms, then 4–6 locally").${mode === 'split' ? ' A split still requires an A2 criterion to genuinely fire around the target (new strategy/decision/representation/prerequisite, demand-band jump, or objective overload — never merely harder numbers). If none fires, keep the granularity unchanged and record the refusal with its basis in the affected Decision records.' : ''}
 
 ${APPENDIX_A}
 
@@ -272,7 +282,7 @@ ${override ? `An explicit user override of a protected hard-split boundary is in
 Rules:
 - Return the unit's complete new lesson list in teaching order, with full 13-field cards for every lesson, renumbering ids as "${unit.id}.L1", "${unit.id}.L2", … .
 - Adjacent lessons: regenerate their relational fields and note the change in their Decision records; content fields untouched unless the split/merge itself demands it.
-- Every field cited; decision entries carry rule ids (P#/A#).
+- Fields 3–13 cited (fields 1–2 carry citations: []); decision entries carry rule ids (P#/A#).
 
 ${CARD_RULES}
 
@@ -340,7 +350,7 @@ ${BLAST_RADIUS}
 
 Rules:
 - Return in lessons ONLY the lessons that change (full 13-field cards, unchanged fields carried over verbatim); lessons you omit stay as they are. Apply only the changes whose targets fall inside this unit — changes targeting other units are handled by sibling calls.
-- Every rewritten field keeps ≥1 citation; the PerformanceReport is citable as sourceType "performance-report".
+- Every rewritten field 3–13 keeps ≥1 citation (fields 1–2 stay citations: []); the PerformanceReport is citable as sourceType "performance-report".
 
 ${CARD_RULES}
 

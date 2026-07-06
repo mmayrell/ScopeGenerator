@@ -367,7 +367,8 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
               <div className="min-w-0">
                 <p className="font-display text-[14px] leading-relaxed text-ink">
                   {field.content}
-                  <CiteChips citations={field.citations} />
+                  {/* Standards and Cluster carry official wording, not cited evidence — no provenance chips. */}
+                  {fm.key !== 'standards' && fm.key !== 'cluster' && <CiteChips citations={field.citations} />}
                 </p>
                 {fm.key === 'releasedItems' && (
                   <div className="mt-4 space-y-3">
