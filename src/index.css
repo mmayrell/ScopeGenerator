@@ -91,20 +91,17 @@ body {
   animation: pulse-dot 1.1s ease-in-out infinite;
 }
 
-/* Download PDF: while body.print-scope is set, printing shows only .print-root. */
+/* Download PDF: .print-root is portaled to <body>; while body.print-scope is
+   set, printing hides the app and lets the print view paginate in NORMAL flow.
+   (Never isolate it with visibility + position:absolute — Chromium's print
+   fragmentation emits corrupt PDFs when forced page breaks sit inside
+   absolutely-positioned content.) */
 @media print {
-  body.print-scope * {
-    visibility: hidden;
-  }
-  body.print-scope .print-root,
-  body.print-scope .print-root * {
-    visibility: visible;
+  body.print-scope > *:not(.print-root) {
+    display: none !important;
   }
   body.print-scope .print-root {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+    display: block;
   }
   .print-avoid-break {
     break-inside: avoid;

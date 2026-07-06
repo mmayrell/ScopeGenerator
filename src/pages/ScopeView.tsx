@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api } from '../api'
 import { fieldMeta } from '../data/meta'
@@ -30,7 +31,11 @@ function PrintScope({ scope }: { scope: Scope }) {
   const scopeSets = sets.filter((st) => scopeSetIds.includes(st.id))
   const itemsById = new Map(scopeSets.flatMap((st) => st.items.map((it) => [it.id, { it, setId: st.id }] as const)))
   const lessons = scope.units.reduce((n, u) => n + u.lessons.length, 0)
-  return (
+  // Portal to <body>: the print view must be normal document flow — inside the
+  // app shell it can only be isolated with visibility + absolute positioning,
+  // and Chromium's print fragmentation produces corrupt PDFs when forced page
+  // breaks live inside absolutely-positioned content.
+  return createPortal(
     <div className="print-root bg-white px-8 py-6 text-ink">
       <h1 className="font-display text-[26px] font-semibold">{capsStandardCodes(scope.title)}</h1>
       <p className="mt-1 text-[11px] text-ink-2">
@@ -128,7 +133,8 @@ function PrintScope({ scope }: { scope: Scope }) {
           ))}
         </section>
       ))}
-    </div>
+    </div>,
+    document.body,
   )
 }
 
