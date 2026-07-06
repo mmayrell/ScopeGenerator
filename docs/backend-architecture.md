@@ -100,7 +100,7 @@ cannot attach headers to `<img>` requests.
 | `GET /packets/{id}` | → `EvidencePacket` | full doc including hunted items — poll this while `hunting` (the doc fills in per finished batch) |
 | `GET /packets/{id}/job` | → `JobStatus` | hunt progress (stages = search batches) |
 | `POST /packets/{id}/stop` | → `{ jobId }` | sets `cancelRequested`; the hunt halts at its next checkpoint, packet → `cancelled`, found items kept. 409 with no active hunt |
-| `POST /packets/{id}/retry` | → `{ jobId }` (202) | resumes a failed/stopped/stalled hunt: packet → `hunting`, re-dispatch; `doneBatches` on the doc make finished batches skip. Reuses a provably-live active job (log progress < 15 min, no stop flag) |
+| `POST /packets/{id}/retry` | → `{ jobId }` (202) | resumes a failed/stopped/stalled hunt: packet → `hunting` with `huntJobId` stamped, then re-dispatches the SAME job id (stop flag cleared) — never a fresh row that a stale execution could wedge; `doneBatches` make finished batches skip. A provably-live active job (log progress < 15 min, no stop flag) is reused as-is |
 | `DELETE /packets/{id}` | → `{ ok: true }` | flags any active hunt job to stop, then removes the doc and index row |
 | `GET /library` | → `{ files: LibraryFile[] }` | Reference Library — the four document sets (standards/progression/items/unpacking) filed per framework (`ccss`/`teks`/`sol`/`best`) and grade (3–8). Listing derives from a blob prefix walk (no index doc) |
 | `PUT /library/{framework}/{grade}/{role}/{fileName}` | raw bytes (`application/pdf`) → `{ file: LibraryFile }` (201) | stores to `uploads` container under `library/...`; same name replaces the document. Every path segment is validated |
@@ -149,7 +149,9 @@ all units done reports it; finalize itself is idempotent).
 - `scopes/<scopeId>/v<version>.json` — immutable snapshot written whenever a new version is created
 - `packets/<packetId>.json` — current `EvidencePacket` (standalone web-hunting tool). Mutations go
   through `mutatePacket` (blob ETag If-Match + retry); the hunt checkpoints into the doc itself
-  (`items` merged per batch, `doneBatches` keys)
+  (`items` merged per batch, `doneBatches` keys). `huntJobId` is the ownership token: only the
+  stamped job may cancel/complete the packet or merge items — superseded executions settle their
+  own job row and abandon
 - `jobs/<jobId>/plan.json`, `jobs/<jobId>/unit-<i>.json` — pipeline checkpoints
 
 **Blob container `uploads`**: `<setId>/<role>/<fileName>` — uploaded PDFs;

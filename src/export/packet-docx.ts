@@ -25,18 +25,46 @@ const ACCENT = '3F3FA8'
 const AMBER = '9A6B15'
 const GREEN = '2E6B4F'
 
-const para = (text: string, opts?: { size?: number; color?: string; bold?: boolean; italics?: boolean; before?: number; after?: number }): Paragraph =>
+// XML 1.0 forbids C0 control characters — docx does not filter them, so one
+// stray byte in a transcription would make Word declare the whole file
+// corrupt. The backend sanitizer strips them at ingestion; this guards
+// packets persisted before it existed. Built via RegExp() so no literal
+// control bytes live in this source file.
+// eslint-disable-next-line no-control-regex
+const CONTROL_CHARS = new RegExp('[\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F]', 'g')
+const xmlSafe = (text: string): string => text.replace(CONTROL_CHARS, ' ')
+
+interface RunOpts {
+  size?: number
+  color?: string
+  bold?: boolean
+  italics?: boolean
+}
+
+/**
+ * Newline-aware runs: docx keeps a raw \n inside w:t, which Word renders as
+ * nothing — multi-part stems (Part A / Part B) would silently run together.
+ * Each line becomes a run with an explicit line break.
+ */
+const textRuns = (text: string, opts?: RunOpts): TextRun[] =>
+  xmlSafe(text)
+    .split('\n')
+    .map(
+      (line, i) =>
+        new TextRun({
+          text: line,
+          break: i > 0 ? 1 : undefined,
+          size: opts?.size ?? 21,
+          color: opts?.color ?? INK,
+          bold: opts?.bold,
+          italics: opts?.italics,
+        }),
+    )
+
+const para = (text: string, opts?: RunOpts & { before?: number; after?: number }): Paragraph =>
   new Paragraph({
     spacing: { before: opts?.before ?? 0, after: opts?.after ?? 60 },
-    children: [
-      new TextRun({
-        text,
-        size: opts?.size ?? 21,
-        color: opts?.color ?? INK,
-        bold: opts?.bold,
-        italics: opts?.italics,
-      }),
-    ],
+    children: textRuns(text, opts),
   })
 
 const heading1 = (text: string, pageBreak = false): Paragraph =>
@@ -44,7 +72,7 @@ const heading1 = (text: string, pageBreak = false): Paragraph =>
     heading: HeadingLevel.HEADING_1,
     pageBreakBefore: pageBreak,
     spacing: { after: 80 },
-    children: [new TextRun({ text, bold: true, color: ACCENT })],
+    children: [new TextRun({ text: xmlSafe(text), bold: true, color: ACCENT })],
   })
 
 const summaryCell = (text: string, header = false): TableCell =>
@@ -52,7 +80,7 @@ const summaryCell = (text: string, header = false): TableCell =>
     children: [
       new Paragraph({
         spacing: { before: 30, after: 30 },
-        children: [new TextRun({ text, size: 18, bold: header, color: header ? INK2 : INK })],
+        children: [new TextRun({ text: xmlSafe(text), size: 18, bold: header, color: header ? INK2 : INK })],
       }),
     ],
   })
@@ -71,7 +99,7 @@ export async function buildPacketDocxBlob(packet: EvidencePacket): Promise<Blob>
     para('Released Item Repository', { size: 18, color: INK2, after: 40 }),
     new Paragraph({
       spacing: { after: 120 },
-      children: [new TextRun({ text: capsStandardCodes(packet.title), bold: true, size: 52, color: INK })],
+      children: [new TextRun({ text: xmlSafe(capsStandardCodes(packet.title)), bold: true, size: 52, color: INK })],
     }),
     para(
       `Released assessment items for ${packet.frameworkLabel} (${gradesLabel(packet.grades)}), located on the public web by a research agent and transcribed faithfully — organized by grade, domain, and standard, with a link to every source.`,
@@ -83,7 +111,7 @@ export async function buildPacketDocxBlob(packet: EvidencePacket): Promise<Blob>
     ),
     para(`Generated ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, { size: 18, color: INK2, after: 30 }),
     ...(packet.years.length > 0
-      ? [para(`Preferred administration years: ${packet.years.join(', ')}`, { size: 18, color: INK2, after: 30 })]
+      ? [para(`Administration years hunted (hard filter): ${[...packet.years].sort((a, b) => b - a).join(', ')}`, { size: 18, color: INK2, after: 30 })]
       : []),
     para(
       'Every item is a text facsimile transcribed from the linked source document — verify against the source before classroom use. Alignments marked "ai-inferred" are the agent\'s judgment and are never official.',
@@ -191,7 +219,7 @@ function itemBlock(item: HuntedItem): Paragraph[] {
     new Paragraph({
       spacing: { before: 120, after: 40 },
       children: [
-        new TextRun({ text: header, bold: true, size: 18, color: INK2 }),
+        new TextRun({ text: xmlSafe(header), bold: true, size: 18, color: INK2 }),
         new TextRun({
           text: `   ${item.alignment === 'official' ? 'alignment: official' : 'alignment: ai-inferred (not official)'}`,
           size: 16,
@@ -206,7 +234,7 @@ function itemBlock(item: HuntedItem): Paragraph[] {
       new Paragraph({
         indent: { left: 360 },
         spacing: { after: 20 },
-        children: [new TextRun({ text: `${choiceLetter(i)}. ${choice}`, size: 19, color: INK })],
+        children: textRuns(`${choiceLetter(i)}. ${choice}`, { size: 19, color: INK }),
       }),
     )
   })
@@ -219,7 +247,7 @@ function itemBlock(item: HuntedItem): Paragraph[] {
         spacing: { after: 30 },
         children: [
           new TextRun({ text: 'Answer: ', bold: true, size: 18, color: GREEN }),
-          new TextRun({ text: item.answer, size: 18, color: INK }),
+          ...textRuns(item.answer, { size: 18, color: INK }),
         ],
       }),
     )
@@ -227,11 +255,11 @@ function itemBlock(item: HuntedItem): Paragraph[] {
   const metaRuns: (TextRun | ExternalHyperlink)[] = [
     new TextRun({ text: `${item.itemType} · source: `, size: 16, color: INK2 }),
     new ExternalHyperlink({
-      link: item.sourceUrl,
-      children: [new TextRun({ text: item.sourceName || item.sourceUrl, size: 16, color: ACCENT, underline: {} })],
+      link: xmlSafe(item.sourceUrl),
+      children: [new TextRun({ text: xmlSafe(item.sourceName || item.sourceUrl), size: 16, color: ACCENT, underline: {} })],
     }),
   ]
-  if (item.notes) metaRuns.push(new TextRun({ text: ` · ${item.notes}`, size: 16, color: INK2 }))
+  if (item.notes) metaRuns.push(new TextRun({ text: xmlSafe(` · ${item.notes}`), size: 16, color: INK2 }))
   out.push(new Paragraph({ spacing: { after: 140 }, children: metaRuns }))
   return out
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { NotFoundError, api, type JobStatus } from '../api'
+import { NotFoundError, UnauthorizedError, api, clearAccessCode, type JobStatus } from '../api'
 import {
   FRAMEWORKS,
   GRADE_RANGE,
@@ -53,6 +53,20 @@ const Chip = ({ on, disabled, title, children, onClick }: { on: boolean; disable
 
 /** Mirrors the backend cap (http-packets MAX_STANDARDS) so the error surfaces before launch. */
 const MAX_STANDARDS = 120
+
+/**
+ * This standalone page calls the API directly (not through the store), so it
+ * must honor the app-wide 401 rule itself: clear the stored code and reload —
+ * the boot gate re-opens and re-prompts.
+ */
+const errText = (e: unknown, fallback: string): string => {
+  if (e instanceof UnauthorizedError) {
+    clearAccessCode()
+    window.location.reload()
+    return 'Access code rejected — enter it again.'
+  }
+  return e instanceof Error ? e.message : fallback
+}
 
 const when = (iso: string): string =>
   new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
@@ -111,7 +125,7 @@ function PacketList({ onNew, onOpen }: { onNew: () => void; onOpen: (id: string)
           setError(null)
           return
         }
-        setError(e instanceof Error ? e.message : 'Could not load repositories.')
+        setError(errText(e, 'Could not load repositories.'))
       })
   }, [])
   useEffect(load, [load])
@@ -135,47 +149,36 @@ function PacketList({ onNew, onOpen }: { onNew: () => void; onOpen: (id: string)
 
       <div className="mt-8 space-y-3">
         {(packets ?? []).map((p) => (
-          <button
-            key={p.id}
-            onClick={() => onOpen(p.id)}
-            className="block w-full cursor-pointer rounded-2xl border border-hairline bg-panel p-5 text-left shadow-(--shadow-lift) transition-colors hover:border-hairline-2"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-display text-[16px] font-semibold text-ink">{capsStandardCodes(p.title)}</span>
-                  {statusPill(p.status)}
-                </div>
-                <p className="mt-1 text-[12px] text-ink-3">
-                  {p.frameworkLabel} · {gradesLabel(p.grades)} · {p.standardCount} standard{p.standardCount === 1 ? '' : 's'} ·{' '}
-                  {p.itemCount} item{p.itemCount === 1 ? '' : 's'} found · created {when(p.created)}
-                </p>
-                {p.status === 'failed' && p.error && (
-                  <p className="mt-1 text-[11.5px] leading-relaxed text-rust">{p.error}</p>
-                )}
+          // The delete control is a SIBLING of the card button (positioned over
+          // it) — interactive content inside a <button> is invalid and hides
+          // the control from assistive tech.
+          <div key={p.id} className="relative">
+            <button
+              onClick={() => onOpen(p.id)}
+              className="block w-full cursor-pointer rounded-2xl border border-hairline bg-panel p-5 pr-12 text-left shadow-(--shadow-lift) transition-colors hover:border-hairline-2"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-display text-[16px] font-semibold text-ink">{capsStandardCodes(p.title)}</span>
+                {statusPill(p.status)}
               </div>
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setConfirmDelete(p)
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.stopPropagation()
-                    setConfirmDelete(p)
-                  }
-                }}
-                className="mt-0.5 flex cursor-pointer rounded-md p-1 text-ink-3 transition-colors hover:bg-rust/10 hover:text-rust"
-                title="Delete repository"
-              >
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-                  <path d="M2.5 4h11M6.5 4V2.8a.8.8 0 01.8-.8h1.4a.8.8 0 01.8.8V4M5 4l.5 9a1 1 0 001 .95h3a1 1 0 001-.95L11 4M6.7 6.8v4.4M9.3 6.8v4.4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-            </div>
-          </button>
+              <p className="mt-1 text-[12px] text-ink-3">
+                {p.frameworkLabel} · {gradesLabel(p.grades)} · {p.standardCount} standard{p.standardCount === 1 ? '' : 's'} ·{' '}
+                {p.itemCount} item{p.itemCount === 1 ? '' : 's'} found · created {when(p.created)}
+              </p>
+              {p.status === 'failed' && p.error && (
+                <p className="mt-1 text-[11.5px] leading-relaxed text-rust">{p.error}</p>
+              )}
+            </button>
+            <button
+              onClick={() => setConfirmDelete(p)}
+              className="absolute top-5 right-4 flex cursor-pointer rounded-md p-1 text-ink-3 transition-colors hover:bg-rust/10 hover:text-rust"
+              title="Delete repository"
+            >
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+                <path d="M2.5 4h11M6.5 4V2.8a.8.8 0 01.8-.8h1.4a.8.8 0 01.8.8V4M5 4l.5 9a1 1 0 001 .95h3a1 1 0 001-.95L11 4M6.7 6.8v4.4M9.3 6.8v4.4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
         ))}
         {packets !== null && packets.length === 0 && (
           <div className="rounded-2xl border border-hairline bg-panel p-6 text-[13px] leading-relaxed text-ink-3">
@@ -266,7 +269,13 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
       })
       onLaunched(packet.id)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not start the hunt.')
+      // Deploy-skew: a backend without the packets endpoints yet 404s — say
+      // so instead of surfacing a bare 'not found'.
+      setError(
+        e instanceof NotFoundError
+          ? 'The backend is still rolling out this feature — try again in a couple of minutes.'
+          : errText(e, 'Could not start the hunt.'),
+      )
       setLaunching(false)
     }
   }
@@ -470,12 +479,15 @@ function Detail({ id, onBack }: { id: string; onBack: () => void }) {
       return p.status
     } catch (e) {
       if (e instanceof NotFoundError) {
-        // Deleted elsewhere — stop polling for good.
+        // Deleted elsewhere — drop the stale render (a kept 'hunting' packet
+        // would show a live agent panel with a working Stop button) and stop
+        // polling for good.
+        setPacket(null)
         setError('This repository was deleted.')
         lastStatus.current = null
         return 'failed' as const
       }
-      setError(e instanceof Error ? e.message : 'Could not load the repository.')
+      setError(errText(e, 'Could not load the repository.'))
       return lastStatus.current === 'hunting' ? ('hunting' as const) : ('failed' as const)
     }
   }, [id])
@@ -501,7 +513,7 @@ function Detail({ id, onBack }: { id: string; onBack: () => void }) {
     try {
       await api.stopPacket(id)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not stop the hunt.')
+      setError(errText(e, 'Could not stop the hunt.'))
     } finally {
       setStopping(false)
     }
@@ -516,7 +528,7 @@ function Detail({ id, onBack }: { id: string; onBack: () => void }) {
       setPacket((prev) => (prev ? { ...prev, status: 'hunting' } : prev))
       setPollNonce((n) => n + 1)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not restart the hunt.')
+      setError(errText(e, 'Could not restart the hunt.'))
     } finally {
       setRetrying(false)
     }

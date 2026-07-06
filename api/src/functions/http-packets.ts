@@ -47,11 +47,11 @@ api({
     const standards: PacketStandard[] = rawStandards
       .filter((s) => typeof s?.code === 'string' && s.code.length > 0)
       .map((s) => ({
-        code: String(s.code),
+        code: cap(s.code, 60),
         grade: Math.trunc(Number(s.grade ?? 0)),
-        domain: String(s.domain ?? ''),
-        domainName: String(s.domainName ?? s.domain ?? ''),
-        text: String(s.text ?? ''),
+        domain: cap(s.domain, 40),
+        domainName: cap(s.domainName ?? s.domain, 120),
+        text: cap(s.text, 3000),
       }))
     if (standards.length === 0) throw new HttpError(400, 'at least one standard is required')
     if (standards.length > MAX_STANDARDS) {
@@ -62,9 +62,9 @@ api({
     const jobId = newId('job')
     const packet: EvidencePacket = {
       id: newId('packet'),
-      title: (body.title ?? '').trim() || 'Mathematics Released Item Repository',
+      title: cap(body.title, 200).trim() || 'Mathematics Released Item Repository',
       framework: body.framework as PacketFramework,
-      frameworkLabel: (body.frameworkLabel ?? '').trim() || body.framework.toUpperCase(),
+      frameworkLabel: cap(body.frameworkLabel, 80).trim() || body.framework.toUpperCase(),
       grades: [...new Set(standards.map((s) => s.grade))].sort((a, b) => a - b),
       // Policy: never hunt tests administered before 2017.
       years: (body.years ?? []).map((y) => Math.trunc(Number(y))).filter((y) => y >= 2017 && y < 2100),

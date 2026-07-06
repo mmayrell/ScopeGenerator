@@ -73,6 +73,20 @@ export async function listPackets(): Promise<EvidencePacket[]> {
     if (entity.rowKey) ids.push(String(entity.rowKey))
   }
   const docs = await Promise.all(ids.map((id) => getPacketOrUndefined(id)))
+  // Self-healing sweep: a checkpoint's index upsert can race a DELETE and
+  // re-insert the row after the blob is gone; without cleanup the ghost row
+  // costs a wasted blob probe on every list, forever.
+  await Promise.all(
+    ids
+      .filter((_, i) => docs[i] === undefined)
+      .map(async (id) => {
+        try {
+          await entitiesTable().deleteEntity('packet', id)
+        } catch {
+          /* best-effort — the next list retries */
+        }
+      }),
+  )
   return docs.filter((d): d is EvidencePacket => d !== undefined)
 }
 
