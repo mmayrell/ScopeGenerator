@@ -456,7 +456,7 @@ const flagship: Lesson = {
   evidenceStatus: 'observed',
   fields: {
     standards: f(
-      '4.NBT.B.5 (canonical) / 4.NBT.5 (normalized); governing key: 4.NBT.5-1 (up to four digits × one digit). Sibling key 4.NBT.5-2 (two-digit × two-digit) is a separate atom (U3.L4).',
+      '4.NBT.B.5; governing key: 4.NBT.5-1 (up to four digits × one digit). Sibling key 4.NBT.5-2 (two-digit × two-digit) is a separate atom (U3.L4).',
       [C.std45, C.es451],
     ),
     cluster: f('“Use place value understanding and properties of operations to perform multi-digit arithmetic.”', [
@@ -575,7 +575,7 @@ const u1l1 = l(
   'new-learning',
   'observed',
   {
-    standards: f('4.NBT.A.1 / 4.NBT.1; governing key 4.NBT.1-1.', [
+    standards: f('4.NBT.A.1; governing key 4.NBT.1-1.', [
       cite('standards', 'CCSS 4.NBT.A.1', 'p. 29', '“…a digit in one place represents ten times what it represents in the place to its right.”'),
     ]),
     cluster: f('“Generalize place value understanding for multi-digit whole numbers.”', [
@@ -643,7 +643,7 @@ const u1l2 = l(
   'new-learning',
   'observed',
   {
-    standards: f('4.NBT.A.2 / 4.NBT.2; governing keys 4.NBT.2-1 (read/write), 4.NBT.2-2 (compare).', [
+    standards: f('4.NBT.A.2; governing keys 4.NBT.2-1 (read/write), 4.NBT.2-2 (compare).', [
       cite('standards', 'CCSS 4.NBT.A.2', 'p. 29', 'Read and write multi-digit whole numbers… Compare two multi-digit numbers…'),
     ]),
     cluster: f('“Generalize place value understanding for multi-digit whole numbers.”', [
@@ -711,7 +711,7 @@ const u1l3 = l(
   'new-learning',
   'observed',
   {
-    standards: f('4.NBT.A.3 / 4.NBT.3; governing key 4.NBT.3-1.', [
+    standards: f('4.NBT.A.3; governing key 4.NBT.3-1.', [
       cite('standards', 'CCSS 4.NBT.A.3', 'p. 29', '“Use place value understanding to round multi-digit whole numbers to any place.”'),
     ]),
     cluster: f('“Generalize place value understanding for multi-digit whole numbers.”', [
@@ -766,7 +766,7 @@ const u2l1 = l(
   'new-learning',
   'observed',
   {
-    standards: f('4.NBT.B.4 / 4.NBT.4; governing keys 4.NBT.4-1 (add), 4.NBT.4-2 (subtract).', [
+    standards: f('4.NBT.B.4; governing keys 4.NBT.4-1 (add), 4.NBT.4-2 (subtract).', [
       cite('standards', 'CCSS 4.NBT.B.4', 'p. 29', '“Fluently add and subtract multi-digit whole numbers using the standard algorithm.”'),
     ]),
     cluster: f('“Use place value understanding and properties of operations to perform multi-digit arithmetic.”', [C.cluster45]),
@@ -814,7 +814,7 @@ const u3l1 = l(
   'new-learning',
   'observed',
   {
-    standards: f('4.NBT.B.5 / 4.NBT.5; preskill slice of governing key 4.NBT.5-1 (place-value products).', [C.std45, C.es451]),
+    standards: f('4.NBT.B.5; preskill slice of governing key 4.NBT.5-1 (place-value products).', [C.std45, C.es451]),
     cluster: f('“Use place value understanding and properties of operations to perform multi-digit arithmetic.”', [C.cluster45]),
     emphasis: f('Major (emphasis source: sub-claim A).', [C.subclaimA]),
     progression: f(
@@ -861,7 +861,7 @@ const u3l2 = l(
   'new-learning',
   'observed',
   {
-    standards: f('4.NBT.B.5 / 4.NBT.5; governing key 4.NBT.5-1 (place-value strategies component).', [C.std45, C.es451]),
+    standards: f('4.NBT.B.5; governing key 4.NBT.5-1 (place-value strategies component).', [C.std45, C.es451]),
     cluster: f('“Use place value understanding and properties of operations to perform multi-digit arithmetic.”', [C.cluster45]),
     emphasis: f('Major (emphasis source: sub-claim A).', [C.subclaimA]),
     progression: f(
@@ -906,7 +906,7 @@ const u3l4 = l(
   'new-learning',
   'observed',
   {
-    standards: f('4.NBT.B.5 / 4.NBT.5; governing key 4.NBT.5-2 (two-digit × two-digit).', [C.std45, C.es452]),
+    standards: f('4.NBT.B.5; governing key 4.NBT.5-2 (two-digit × two-digit).', [C.std45, C.es452]),
     cluster: f('“Use place value understanding and properties of operations to perform multi-digit arithmetic.”', [C.cluster45]),
     emphasis: f('Major (emphasis source: sub-claim A).', [C.subclaimA]),
     progression: f(
@@ -946,7 +946,7 @@ const u3l5 = l(
   'bridge',
   'observed',
   {
-    standards: f('4.NBT.B.5 / 4.NBT.5; bridge over keys 4.NBT.5-1 and 4.NBT.5-2.', [C.std45, C.es451, C.es452]),
+    standards: f('4.NBT.B.5; bridge over keys 4.NBT.5-1 and 4.NBT.5-2.', [C.std45, C.es451, C.es452]),
     cluster: f('“Use place value understanding and properties of operations to perform multi-digit arithmetic.”', [C.cluster45]),
     emphasis: f('Major (emphasis source: sub-claim A; inherited from parent atoms).', [C.subclaimA]),
     progression: f('Within-course: after both U3.L3 and U3.L4 are independently mastered; precedes U3.L6. Cross-grade: discrimination behavior itself is course-internal.', [seqCite('U3.L3 + U3.L4 → U3.L5')]),
@@ -980,7 +980,7 @@ const u3l6 = l(
   'application-tier',
   'observed',
   {
-    standards: f('4.NBT.B.5 / 4.NBT.5; the “illustrate and explain” clause, routed here as a post-mastery application atom (P3).', [C.std45illustrate]),
+    standards: f('4.NBT.B.5; the “illustrate and explain” clause, routed here as a post-mastery application atom (P3).', [C.std45illustrate]),
     cluster: f('“Use place value understanding and properties of operations to perform multi-digit arithmetic.”', [C.cluster45]),
     emphasis: f('Major (emphasis source: sub-claim A; inherited from parent).', [C.subclaimA]),
     progression: f('Cross-grade: the area model reappears in Grade 5 fraction multiplication and Grade 6 distributive work. Within-course: after U3.L5; closes the multiplication chain.', [C.progNBT, seqCite('U3.L5 → U3.L6')]),
@@ -1014,7 +1014,7 @@ const u3l7 = l(
   'application-tier',
   'observed',
   {
-    standards: f('4.OA.A.3 / 4.OA.3 (governing) applied over 4.NBT.5 computation; integrative key Int-4.c.', [
+    standards: f('4.OA.A.3 (governing) applied over 4.NBT.5 computation; integrative key Int-4.c.', [
       cite('standards', 'CCSS 4.OA.A.3', 'p. 29', '“Solve multistep word problems… using the four operations…”'),
     ]),
     cluster: f('“Use the four operations with whole numbers to solve problems.”', [cite('standards', 'CCSS 4.OA.A', 'p. 29', 'Cluster heading, verbatim.')]),
@@ -1050,7 +1050,7 @@ const u4l1 = l(
   'new-learning',
   'observed',
   {
-    standards: f('4.NBT.B.6 / 4.NBT.6; governing key 4.NBT.6-1.', [
+    standards: f('4.NBT.B.6; governing key 4.NBT.6-1.', [
       cite('standards', 'CCSS 4.NBT.B.6', 'p. 29', '“Find whole-number quotients and remainders with up to four-digit dividends and one-digit divisors…”'),
     ]),
     cluster: f('“Use place value understanding and properties of operations to perform multi-digit arithmetic.”', [C.cluster45]),
@@ -1094,7 +1094,7 @@ const u5l1 = l(
   'new-learning',
   'mixed',
   {
-    standards: f('4.NF.A.1 / 4.NF.1; governing key 4.NF.1-1.', [
+    standards: f('4.NF.A.1; governing key 4.NF.1-1.', [
       cite('standards', 'CCSS 4.NF.A.1', 'p. 30', '“Explain why a fraction a/b is equivalent to a fraction (n × a)/(n × b) by using visual fraction models…”'),
     ]),
     cluster: f('“Extend understanding of fraction equivalence and ordering.”', [cite('standards', 'CCSS 4.NF.A', 'p. 30', 'Cluster heading, verbatim.')]),
@@ -1139,7 +1139,7 @@ const u5l2 = l(
   'new-learning',
   'inferred',
   {
-    standards: f('4.NF.A.2 / 4.NF.2; governing key 4.NF.2-1.', [
+    standards: f('4.NF.A.2; governing key 4.NF.2-1.', [
       cite('standards', 'CCSS 4.NF.A.2', 'p. 30', '“Compare two fractions with different numerators and different denominators… Record the results with >, =, <, and justify…”'),
     ]),
     cluster: f('“Extend understanding of fraction equivalence and ordering.”', [cite('standards', 'CCSS 4.NF.A', 'p. 30', 'Cluster heading, verbatim.')]),
