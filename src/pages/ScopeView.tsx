@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api } from '../api'
 import { fieldMeta } from '../data/meta'
-import { scopeUnsettled, useScopePolling, useStore, type RerunResult } from '../store'
+import { scopeUnsettled, useScopePolling, useStore } from '../store'
 import type { DecisionEntry, Lesson, Proposal, Scope } from '../types'
 import { Btn, capsStandardCodes, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
 
@@ -31,119 +31,6 @@ function LockIcon({ locked }: { locked: boolean }) {
         <path d="M4.5 7V5a3.5 3.5 0 016.8-1.2M3.5 7h9a1 1 0 011 1v5a1 1 0 01-1 1h-9a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
       )}
     </svg>
-  )
-}
-
-// ---------- rerun dialog ----------
-
-function RerunDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Lesson; onClose: () => void }) {
-  const { rerun, refreshScope } = useStore()
-  const [target, setTarget] = useState(lesson.id)
-  const [mode, setMode] = useState('split')
-  const [result, setResult] = useState<RerunResult | null>(null)
-  const [busy, setBusy] = useState(false)
-
-  const submit = async (override = false) => {
-    setBusy(true)
-    try {
-      setResult(await rerun(scope.id, target, mode, override))
-    } catch (e) {
-      setResult({ ok: false, message: e instanceof Error ? e.message : 'Rerun failed.' })
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  // An accepted rerun flipped the scope to 'generating' server-side; pick that up when
-  // the dialog closes so the page starts polling until the rerun settles.
-  const close = () => {
-    if (result?.ok) void refreshScope(scope.id)
-    onClose()
-  }
-
-  const reentry: Record<string, string> = {
-    split: 'Stage 3 scoped to the affected atoms, then Stages 4–6 locally.',
-    merge: 'Stage 3 scoped to the affected atoms, then Stages 4–6 locally — guardrails apply.',
-    regenerate: 'Stage 5 re-runs for this card only; granularity untouched.',
-  }
-
-  return (
-    <Modal open onClose={close} title="Rerun — A Negotiation with the Framework">
-      {result ? (
-        <div className="space-y-4">
-          {result.ok ? (
-            <div className="rounded-xl border border-verdant/25 bg-verdant-wash px-4 py-3 text-[13px] leading-relaxed text-verdant">{result.message}</div>
-          ) : (
-            <>
-              <div className="rounded-xl border border-rust/25 bg-rust-wash px-4 py-3 text-[13px] leading-relaxed text-rust">{result.message}</div>
-              {result.guardrail ? (
-                // Only a guardrail decline earns the override affordance — a plain failure
-                // (transport/server error) must never invite a guardrail bypass.
-                <>
-                  <div className="rounded-xl border border-hairline bg-paper p-4">
-                    <SectionLabel>Cited criterion</SectionLabel>
-                    <Mono className="mt-1 block text-[12.5px] font-semibold text-ink">{result.guardrail.criterion}</Mono>
-                    <p className="mt-2 border-l-2 border-hairline-2 pl-3 font-display text-[13px] leading-relaxed text-ink-2 italic">{result.guardrail.evidence}</p>
-                  </div>
-                  <div className="flex items-center justify-between gap-4">
-                    <p className="text-[11.5px] leading-snug text-ink-3">
-                      Explicit override is allowed — logged in the RerunEvent, recorded in the affected Decision records, flagged in QC.
-                    </p>
-                    <Btn kind="danger" disabled={busy} onClick={() => void submit(true)}>{busy ? 'Running…' : 'Override & execute'}</Btn>
-                  </div>
-                </>
-              ) : (
-                <div className="flex justify-end">
-                  <Btn disabled={busy} onClick={() => void submit()}>{busy ? 'Running…' : 'Try again'}</Btn>
-                </div>
-              )}
-            </>
-          )}
-          <div className="flex justify-end border-t border-hairline pt-4">
-            <Btn onClick={close}>Close</Btn>
-          </div>
-        </div>
-      ) : (
-        <div className="space-y-5">
-          <div>
-            <SectionLabel>Target</SectionLabel>
-            <div className="mt-2 flex gap-2">
-              {[lesson.id, lesson.id.split('.')[0], 'whole scope'].map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setTarget(t)}
-                  className={`cursor-pointer rounded-lg border px-3 py-1.5 text-[12.5px] font-medium transition-all ${target === t ? 'border-accent/40 bg-accent-wash text-accent-deep' : 'border-hairline bg-panel text-ink-2 hover:border-hairline-2'}`}
-                >
-                  {t === lesson.id ? `Lesson ${t}` : t === 'whole scope' ? 'Whole scope' : `Unit ${t}`}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <SectionLabel>Mode</SectionLabel>
-            <div className="mt-2 space-y-2">
-              {[
-                { m: 'split', label: 'More granular (split)', note: 'Re-tests the split criteria at finer grain.' },
-                { m: 'merge', label: 'Less granular (merge)', note: 'A merge that collapses a boundary protected by a hard split criterion is declined with the cited criterion.' },
-                { m: 'regenerate', label: 'Regenerate in place', note: 'Same granularity; rewrites the card.' },
-              ].map((o) => (
-                <label key={o.m} className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-all ${mode === o.m ? 'border-accent/40 bg-accent-wash/40' : 'border-hairline bg-panel hover:border-hairline-2'}`}>
-                  <input type="radio" checked={mode === o.m} onChange={() => setMode(o.m)} className="mt-0.5 accent-(--color-accent)" />
-                  <span>
-                    <span className="block text-[13px] font-semibold text-ink">{o.label}</span>
-                    <span className="mt-0.5 block text-[11.5px] leading-snug text-ink-3">{o.note}</span>
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center justify-between border-t border-hairline pt-4">
-            <span className="max-w-72 text-[11.5px] leading-snug text-ink-3">Re-entry: {reentry[mode]} Every rerun produces a new immutable version.</span>
-            <Btn kind="primary" disabled={busy} onClick={() => void submit()}>{busy ? 'Running…' : 'Run'}</Btn>
-          </div>
-        </div>
-      )}
-    </Modal>
   )
 }
 
@@ -334,7 +221,6 @@ function ProposalView({
 
 function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
   const { toggleLock, sets } = useStore()
-  const [rerunOpen, setRerunOpen] = useState(false)
   const [revisionOpen, setRevisionOpen] = useState(false)
   const set = sets.find((s) => s.id === scope.setId)
   const itemsById = useMemo(() => new Map(set?.items.map((i) => [i.id, i]) ?? []), [set])
@@ -362,8 +248,7 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
             <LockIcon locked={!lesson.locked} />
             {lesson.locked ? 'Unlock' : 'Lock'}
           </Btn>
-          <Btn onClick={() => setRerunOpen(true)}>Rerun</Btn>
-          <Btn kind="night" onClick={() => setRevisionOpen(true)}>Update from data</Btn>
+          <Btn kind="night" onClick={() => setRevisionOpen(true)}>Update with Feedback/Data</Btn>
         </div>
       </header>
 
@@ -451,7 +336,6 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
         </section>
       </div>
 
-      {rerunOpen && <RerunDialog scope={scope} lesson={lesson} onClose={() => setRerunOpen(false)} />}
       {revisionOpen && <RevisionDialog scope={scope} lesson={lesson} onClose={() => setRevisionOpen(false)} />}
     </article>
   )
