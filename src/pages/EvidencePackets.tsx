@@ -27,10 +27,35 @@ const Chip = ({ on, children, onClick }: { on: boolean; children: React.ReactNod
   </button>
 )
 
+// The four frameworks the repository organizes around. A published set files
+// under one of them by its declared identity (scheme, source organization,
+// name); everything not recognizably state-specific is pure Common Core.
+const FRAMEWORKS = [
+  { id: 'ccss', label: 'Pure Common Core' },
+  { id: 'teks', label: 'Texas (TEKS)' },
+  { id: 'sol', label: 'Virginia (SOL)' },
+  { id: 'best', label: 'Florida B.E.S.T.' },
+] as const
+type FrameworkId = (typeof FRAMEWORKS)[number]['id']
+
+const frameworkOf = (set: { name: string; codingScheme: string; codingNotes: string; sourceOrganization?: string }): FrameworkId => {
+  const hay = `${set.name} ${set.codingScheme} ${set.codingNotes} ${set.sourceOrganization ?? ''}`.toLowerCase()
+  if (/teks|texas|staar|§?\s*111\./.test(hay)) return 'teks'
+  if (/\bsol\b|virginia/.test(hay)) return 'sol'
+  if (/b\.?e\.?s\.?t\b|florida|ma\.k12/.test(hay)) return 'best'
+  return 'ccss'
+}
+
+const gradeOrder = (g: string): number => {
+  const m = /(\d+)/.exec(g)
+  return m ? Number(m[1]) : /k/i.test(g) ? 0 : 99
+}
+
 export default function EvidencePackets() {
   const { sets } = useStore()
   const published = useMemo(() => sets.filter((s) => s.published), [sets])
-  const [setIds, setSetIds] = useState<string[]>(published[0] ? [published[0].id] : [])
+  const [framework, setFramework] = useState<FrameworkId>('ccss')
+  const [grades, setGrades] = useState<string[]>([])
   const [domainCodes, setDomainCodes] = useState<string[]>([])
   const [standardKeys, setStandardKeys] = useState<string[]>([])
   const [years, setYears] = useState<number[]>([])
@@ -39,6 +64,26 @@ export default function EvidencePackets() {
   const [exporting, setExporting] = useState(false)
   const [exportError, setExportError] = useState<string | null>(null)
 
+  const frameworkSets = useMemo(() => published.filter((s) => frameworkOf(s) === framework), [published, framework])
+  const availableGrades = useMemo(
+    () => [...new Set(frameworkSets.map((s) => s.gradeSpan))].sort((a, b) => gradeOrder(a) - gradeOrder(b)),
+    [frameworkSets],
+  )
+  // Default to the first grade the framework offers; prune grades whose sets
+  // disappeared (unpublish) so they can't linger as invisible filters.
+  useEffect(() => {
+    setGrades((prev) => {
+      const visible = new Set(availableGrades)
+      const pruned = prev.filter((g) => visible.has(g))
+      if (pruned.length > 0) return pruned.length === prev.length ? prev : pruned
+      return availableGrades.length > 0 ? [availableGrades[0]] : []
+    })
+  }, [availableGrades])
+
+  const setIds = useMemo(
+    () => frameworkSets.filter((s) => grades.includes(s.gradeSpan)).map((s) => s.id),
+    [frameworkSets, grades],
+  )
   const chosenSets = useMemo(() => published.filter((s) => setIds.includes(s.id)), [published, setIds])
   const allStandards = useMemo(() => chosenSets.flatMap(packetStandardsOf), [chosenSets])
   const domains = useMemo(() => {
@@ -248,14 +293,44 @@ export default function EvidencePackets() {
 
       <div className="mt-8 space-y-7">
         <div>
-          <SectionLabel>Standard Sets</SectionLabel>
+          <SectionLabel>Standard Set</SectionLabel>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            {published.map((s) => (
-              <Chip key={s.id} on={setIds.includes(s.id)} onClick={() => { setSetIds((p) => toggle(p, s.id)); setDomainCodes([]); setStandardKeys([]); setYears([]) }}>
-                {s.name}
+            {FRAMEWORKS.map((fw) => {
+              const count = published.filter((s) => frameworkOf(s) === fw.id).length
+              return (
+                <Chip
+                  key={fw.id}
+                  on={framework === fw.id}
+                  onClick={() => {
+                    setFramework(fw.id)
+                    setGrades([])
+                    setDomainCodes([])
+                    setStandardKeys([])
+                    setYears([])
+                  }}
+                >
+                  {fw.label}
+                  {count > 0 && <span className="ml-1.5 text-[10.5px] opacity-60">{count}</span>}
+                </Chip>
+              )
+            })}
+          </div>
+        </div>
+
+        <div>
+          <SectionLabel>Grade Level</SectionLabel>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {availableGrades.map((g) => (
+              <Chip key={g} on={grades.includes(g)} onClick={() => { setGrades((p) => toggle(p, g)); setDomainCodes([]); setStandardKeys([]); setYears([]) }}>
+                {g}
               </Chip>
             ))}
-            {published.length === 0 && <p className="text-[12.5px] text-ink-3">No published sets yet — publish a standard set first.</p>}
+            {availableGrades.length === 0 && (
+              <p className="text-[12.5px] text-ink-3">
+                No published sets for {FRAMEWORKS.find((f) => f.id === framework)?.label} yet — create and publish a
+                standard set with this framework's documents to enable it.
+              </p>
+            )}
           </div>
         </div>
 
@@ -263,11 +338,15 @@ export default function EvidencePackets() {
           <SectionLabel>Domains</SectionLabel>
           <p className="mt-0.5 text-[11.5px] text-ink-3">{domainCodes.length === 0 ? 'All domains included — narrow if needed.' : `${domainCodes.length} selected.`}</p>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            {domains.map((d) => (
-              <Chip key={d.code} on={domainCodes.includes(d.code)} onClick={() => { setDomainCodes((p) => toggle(p, d.code)); setStandardKeys([]) }}>
-                {d.label}
-              </Chip>
-            ))}
+            {domains.map((d) => {
+              const labelCollides = domains.some((o) => o.code !== d.code && o.label === d.label)
+              return (
+                <Chip key={d.code} on={domainCodes.includes(d.code)} onClick={() => { setDomainCodes((p) => toggle(p, d.code)); setStandardKeys([]) }}>
+                  {d.label}
+                  {labelCollides && <Mono className="ml-1.5 text-[10px] opacity-60">{d.code}</Mono>}
+                </Chip>
+              )
+            })}
             {domains.length === 0 && <p className="text-[12.5px] text-ink-3">Select a standard set to see its domains.</p>}
           </div>
         </div>
