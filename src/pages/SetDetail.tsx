@@ -430,8 +430,7 @@ export default function SetDetail() {
             <SectionLabel>Conflicts Resolved — Build the Lexicons</SectionLabel>
             <p className="mt-1 max-w-xl text-[12.5px] leading-relaxed text-ink-2">
               AI reads every uploaded document under your recorded resolutions and builds exhaustive representation and
-              problem-type vocabularies — every term cited to its governing standard, source document, and page. The
-              set publishes when the build lands.
+              problem-type vocabularies — every term cited to its governing standard, source document, and page.
             </p>
           </div>
           <Btn kind="primary" onClick={() => void startLexicon()} className="shrink-0">
@@ -476,61 +475,6 @@ export default function SetDetail() {
         </div>
       </Modal>
 
-      {/* coverage warnings */}
-      {set.warnings.length > 0 && (
-        <div className="mt-6 space-y-2">
-          {unack.length > 1 && (
-            <div className="flex items-center justify-end gap-3">
-              <span className="text-[11.5px] text-ink-3">
-                {unack.length} to resolve — or apply every suggested default at once
-              </span>
-              <Btn
-                disabled={resolvingAll}
-                onClick={() => {
-                  setResolvingAll(true)
-                  void (async () => {
-                    for (const w of set.warnings.filter((x) => !x.acknowledged)) {
-                      // Re-check against the server so a resolution applied
-                      // concurrently (or by a prior loop iteration's refresh)
-                      // is never overwritten with the default.
-                      try {
-                        const fresh = await api.getSet(set.id)
-                        const current = fresh.warnings.find((x) => x.id === w.id)
-                        if (!current || current.acknowledged) continue
-                      } catch {
-                        /* on read failure, fall through and resolve */
-                      }
-                      await acknowledgeWarning(
-                        set.id,
-                        w.id,
-                        w.suggestion?.trim() || defaultResolution(w.text),
-                        'default',
-                      )
-                    }
-                  })().finally(() => setResolvingAll(false))
-                }}
-              >
-                {resolvingAll ? 'Resolving…' : 'Use Default for All'}
-              </Btn>
-            </div>
-          )}
-          {set.warnings.map((w) => (
-            <WarningRow
-              key={w.id}
-              warning={w}
-              disabled={resolvingAll}
-              onResolve={(resolution, resolvedBy) => acknowledgeWarning(set.id, w.id, resolution, resolvedBy)}
-            />
-          ))}
-          {set.warnings.some((w) => w.acknowledged) && (
-            <p className="px-1 text-[11.5px] text-ink-3">
-              Recorded resolutions steer the stages that consume each gap and are surfaced to users whenever a scope
-              request lands inside one.
-            </p>
-          )}
-        </div>
-      )}
-
       {/* tabs */}
       <div className="mt-8 flex gap-1 border-b border-hairline">
         {tabs.map((t) => (
@@ -542,8 +486,8 @@ export default function SetDetail() {
             }`}
           >
             {t}
-            {t === 'Alignment Issues' && aiQueue.length > 0 && (
-              <span className="ml-1.5 rounded-full bg-amber-wash px-1.5 py-px font-mono text-[10px] text-amber-ink">{aiQueue.length}</span>
+            {t === 'Alignment Issues' && resolveOutstanding > 0 && (
+              <span className="ml-1.5 rounded-full bg-amber-wash px-1.5 py-px font-mono text-[10px] text-amber-ink">{resolveOutstanding}</span>
             )}
             {tab === t && <span className="absolute inset-x-1 -bottom-px h-[2px] rounded-full bg-accent" />}
           </button>
@@ -674,15 +618,70 @@ export default function SetDetail() {
 
         {tab === 'Alignment Issues' && (
           <div className="max-w-4xl space-y-3">
-            {aiQueue.length === 0 ? (
+            {set.warnings.length > 0 && (
+              <div className="space-y-2">
+                {unack.length > 1 && (
+                  <div className="flex items-center justify-end gap-3">
+                    <span className="text-[11.5px] text-ink-3">
+                      {unack.length} to resolve — or apply every suggested default at once
+                    </span>
+                    <Btn
+                      disabled={resolvingAll}
+                      onClick={() => {
+                        setResolvingAll(true)
+                        void (async () => {
+                          for (const w of set.warnings.filter((x) => !x.acknowledged)) {
+                            // Re-check against the server so a resolution applied
+                            // concurrently (or by a prior loop iteration's refresh)
+                            // is never overwritten with the default.
+                            try {
+                              const fresh = await api.getSet(set.id)
+                              const current = fresh.warnings.find((x) => x.id === w.id)
+                              if (!current || current.acknowledged) continue
+                            } catch {
+                              /* on read failure, fall through and resolve */
+                            }
+                            await acknowledgeWarning(
+                              set.id,
+                              w.id,
+                              w.suggestion?.trim() || defaultResolution(w.text),
+                              'default',
+                            )
+                          }
+                        })().finally(() => setResolvingAll(false))
+                      }}
+                    >
+                      {resolvingAll ? 'Resolving…' : 'Use Default for All'}
+                    </Btn>
+                  </div>
+                )}
+                {set.warnings.map((w) => (
+                  <WarningRow
+                    key={w.id}
+                    warning={w}
+                    disabled={resolvingAll}
+                    onResolve={(resolution, resolvedBy) => acknowledgeWarning(set.id, w.id, resolution, resolvedBy)}
+                  />
+                ))}
+                {set.warnings.some((w) => w.acknowledged) && (
+                  <p className="px-1 text-[11.5px] text-ink-3">
+                    Recorded resolutions steer the stages that consume each gap and are surfaced to users whenever a
+                    scope request lands inside one.
+                  </p>
+                )}
+              </div>
+            )}
+            {set.warnings.length === 0 && aiQueue.length === 0 ? (
               jobActive ? (
                 <div className="rounded-xl border border-hairline bg-panel p-5 shadow-(--shadow-lift)">
                   <p className="py-6 text-center text-[13.5px] text-ink-2">
                     AI extraction is running — scoping conflicts will populate once it completes.
                   </p>
                 </div>
+              ) : set.tree.length === 0 ? (
+                <p className="py-6 text-[13px] text-ink-3">Alignment issues populate after AI extraction.</p>
               ) : (
-                <p className="py-6 text-[13px] text-ink-3">No AI-proposed alignments awaiting confirmation.</p>
+                <p className="py-6 text-[13px] text-ink-3">No alignment issues — the documents agree.</p>
               )
             ) : (
               aiQueue.map((it) => (
@@ -720,7 +719,7 @@ export default function SetDetail() {
                           aiQueue.length > 0 ? `${aiQueue.length} alignment check${aiQueue.length === 1 ? '' : 's'}` : '',
                         ]
                           .filter(Boolean)
-                          .join(' and ')} above to generate the lexicons.`
+                          .join(' and ')} in the Alignment Issues tab to generate the lexicons.`
                       : readyForLexicon
                         ? 'All checks are resolved — the lexicons are ready to generate.'
                         : 'The lexicons generate after extraction and the alignment checks.'}
