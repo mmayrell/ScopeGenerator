@@ -474,6 +474,14 @@ export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): P
     return
   }
 
+  // A rebuild replaces the glossary wholesale: clear the old list up front so
+  // the UI never shows stale terms while (or after) the new build runs.
+  if (set.lexicon.length > 0) {
+    set.lexicon = []
+    set.updated = today()
+    await saveSet(set)
+  }
+
   const glossary = await generateStructured<WireIngestLexicon>({
     ...ingestLexiconPrompt(set),
     schema: INGEST_LEXICON_SCHEMA,
@@ -481,9 +489,8 @@ export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): P
     effort: 'high', // exhaustiveness is the requirement
   })
 
-  // A stop requested while the call was in flight discards the result — on a
-  // rebuild that is the point of stopping (keep the existing glossary), and a
-  // stopped first build must not publish.
+  // A stop requested while the call was in flight discards the result (the
+  // glossary stays empty until the next build) and must not publish.
   if (await stopRequested(msg.jobId)) {
     await settleCancelled(msg.jobId, 'lexicon')
     return

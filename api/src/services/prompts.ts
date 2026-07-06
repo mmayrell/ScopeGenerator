@@ -527,8 +527,8 @@ Rules:
 - GRADE-APPROPRIATE is a hard filter: exclude vocabulary above the grade's expectations. Below-grade terms still in everyday use at this grade stay ("addition" is still ${set.gradeSpan} vocabulary).
 - Exhaustive within the evidence rules: sweep every released item, every student glossary/reference sheet, and every explicit students-should-know statement in the corpus. A term with qualifying evidence anywhere must appear, once, normalized, with its aliases collected onto one entry. Exhaustive and conservative are compatible: sweep everything, but the conservatism above governs what counts as a term — completeness never justifies admitting a borderline one.
 - term: the normalized student-facing form. aliases: every variant/synonym the documents use.
-- standard: the single most-governing standard code for the term (normalized join code, e.g. "4.NF.3") — shown as the term's citation.
-- artifact: the file name of the uploaded document that best evidences the term. page: the 1-based PDF page in that document where it appears. These are revealed on hover — they must be real locations, not guesses.
+- standard: the standard where the term is INTRODUCED FOR THE FIRST TIME — the earliest standard in the set's instructional sequence whose content brings the word into student use (normalized join code, e.g. "4.NF.1"). Not the standard that uses it most; the one that introduces it.
+- artifact: the file name of the uploaded document that best evidences the term. page: the 1-based PDF page in that document where it appears. They must be real locations, not guesses.
 - source: one short phrase of context (e.g. "standards glossary", "item stems 2022–2024", "progression worked examples").
 - Respect the user's recorded gap/conflict resolutions below — terms from scope the resolutions excluded do not belong in the glossary.
 

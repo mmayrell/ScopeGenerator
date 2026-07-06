@@ -770,12 +770,7 @@ export default function SetDetail() {
                       {t.aliases.length > 0 && <span className="ml-2 text-[11.5px] text-ink-3">aka {t.aliases.join(', ')}</span>}
                     </div>
                     {t.standard ? (
-                      <Mono
-                        className="shrink-0 cursor-help text-[10.5px] text-ink-3"
-                        title={`${t.artifact ?? t.source}${t.page ? ` · p. ${t.page}` : ''}`}
-                      >
-                        {t.standard}
-                      </Mono>
+                      <Mono className="shrink-0 text-[10.5px] text-ink-3">{t.standard}</Mono>
                     ) : (
                       <span className="shrink-0 text-[10.5px] text-ink-3">{t.source}</span>
                     )}
