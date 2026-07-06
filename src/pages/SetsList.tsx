@@ -1,22 +1,48 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { api } from '../api'
+import { FRAMEWORKS, frameworkLabelOf } from '../packets'
 import { useStore, type NewSetFile, type NewSetUploads, type UploadSlotValue } from '../store'
+import type { LibraryFile, LibraryRole, PacketFramework } from '../types'
 import { Btn, Modal, Mono, Pill, SectionLabel } from '../ui'
 
-const slots: { key: keyof NewSetUploads; label: string; note: string }[] = [
+const slots: { key: LibraryRole; label: string; note: string }[] = [
   { key: 'standards', label: 'Official Standard Document', note: 'The boundary authority and structure source — wording, limits, hierarchy.' },
   { key: 'progression', label: 'Progression Document', note: 'How topics develop across grades — placement, prerequisites, representations.' },
   { key: 'items', label: 'Released Items Document', note: 'The primary empirical evidence of what is assessed and how hard.' },
   { key: 'unpacking', label: 'Unpacking Document', note: 'Structured decomposition — the candidate-atom partition and default bounds.' },
 ]
 
+const GRADES = [3, 4, 5, 6, 7, 8]
+
 const emptySlot: UploadSlotValue = { files: [], notes: '' }
 const empty: NewSetUploads = { standards: emptySlot, progression: emptySlot, items: emptySlot, unpacking: emptySlot }
+
+/** Default usage note for a slot filled from the Reference Library — gives extraction provenance. */
+const LIBRARY_NOTE: Record<LibraryRole, string> = {
+  standards: 'Official standards document from the Reference Library.',
+  progression: 'Progression document from the Reference Library.',
+  items: 'Released-items document from the Reference Library.',
+  unpacking: 'Unpacking document from the Reference Library.',
+}
+
+const Pick = ({ on, children, onClick }: { on: boolean; children: React.ReactNode; onClick: () => void }) => (
+  <button
+    onClick={onClick}
+    className={`cursor-pointer rounded-lg border px-2.5 py-1.5 text-[12px] font-medium transition-colors ${
+      on ? 'border-accent/40 bg-accent-wash text-accent-deep' : 'border-hairline bg-panel text-ink-2 hover:border-hairline-2'
+    }`}
+  >
+    {children}
+  </button>
+)
 
 function UploadSlot({
   label,
   note,
   value,
+  fromLibrary,
+  missingNote,
   onAdd,
   onRemove,
   onNotes,
@@ -24,6 +50,8 @@ function UploadSlot({
   label: string
   note: string
   value: UploadSlotValue
+  fromLibrary: boolean
+  missingNote: string | null
   onAdd: (files: File[]) => void
   onRemove: (name: string) => void
   onNotes: (notes: string) => void
@@ -31,10 +59,13 @@ function UploadSlot({
   const inputRef = useRef<HTMLInputElement>(null)
   const files = value.files
   return (
-    <div className="rounded-xl border border-hairline bg-panel p-4">
+    <div className={`rounded-xl border bg-panel p-4 ${missingNote ? 'border-amber-ink/40' : 'border-hairline'}`}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="text-[13px] font-semibold text-ink">{label}</div>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="text-[13px] font-semibold text-ink">{label}</div>
+            {fromLibrary && files.length > 0 && <Pill tone="green">from Reference Library</Pill>}
+          </div>
           <div className="mt-0.5 text-[11.5px] leading-snug text-ink-3">{note}</div>
         </div>
         <Btn onClick={() => inputRef.current?.click()} className="shrink-0">
@@ -56,6 +87,11 @@ function UploadSlot({
           e.target.value = ''
         }}
       />
+      {missingNote && (
+        <div className="animate-rise mt-3 rounded-lg border border-amber-ink/30 bg-amber-wash px-3 py-2 text-[11.5px] leading-snug text-amber-ink">
+          {missingNote}
+        </div>
+      )}
       {files.length > 0 && (
         <ul className="mt-3 space-y-1.5">
           {files.map((f) => (
@@ -92,25 +128,109 @@ function UploadSlot({
 function NewSetModal({ onClose }: { onClose: () => void }) {
   const { createSet } = useStore()
   const nav = useNavigate()
+  const [framework, setFramework] = useState<PacketFramework | null>(null)
+  const [grade, setGrade] = useState<number | null>(null)
   const [name, setName] = useState('')
+  const [nameEdited, setNameEdited] = useState(false)
   const [uploads, setUploads] = useState<NewSetUploads>(empty)
   const [realFiles, setRealFiles] = useState<NewSetFile[]>([])
   const [creating, setCreating] = useState(false)
   const [createError, setCreateError] = useState<string | null>(null)
+  // Which roles the Reference Library filled for the current framework/grade,
+  // and which it lacks (force a manual upload for those).
+  const [libraryRoles, setLibraryRoles] = useState<Set<LibraryRole>>(new Set())
+  const [missingRoles, setMissingRoles] = useState<Set<LibraryRole>>(new Set())
+  const [loadingLibrary, setLoadingLibrary] = useState(false)
+  const [libraryError, setLibraryError] = useState<string | null>(null)
 
-  const add = (key: keyof NewSetUploads, files: File[]) => {
+  const add = (key: LibraryRole, files: File[]) => {
     setUploads((u) => ({ ...u, [key]: { ...u[key], files: [...new Set([...u[key].files, ...files.map((f) => f.name)])] } }))
     setRealFiles((prev) => [
       ...prev.filter((x) => !(x.role === key && files.some((f) => f.name === x.file.name))),
       ...files.map((file) => ({ role: key, file })),
     ])
+    // A manual upload clears both the library badge and the missing-note for this slot.
+    setLibraryRoles((prev) => {
+      const next = new Set(prev)
+      next.delete(key)
+      return next
+    })
+    setMissingRoles((prev) => {
+      const next = new Set(prev)
+      next.delete(key)
+      return next
+    })
   }
-  const remove = (key: keyof NewSetUploads, name: string) => {
-    setUploads((u) => ({ ...u, [key]: { ...u[key], files: u[key].files.filter((f) => f !== name) } }))
-    setRealFiles((prev) => prev.filter((x) => !(x.role === key && x.file.name === name)))
+  const remove = (key: LibraryRole, fileName: string) => {
+    setUploads((u) => ({ ...u, [key]: { ...u[key], files: u[key].files.filter((f) => f !== fileName) } }))
+    setRealFiles((prev) => prev.filter((x) => !(x.role === key && x.file.name === fileName)))
   }
-  const setNotes = (key: keyof NewSetUploads, notes: string) =>
+  const setNotes = (key: LibraryRole, notes: string) =>
     setUploads((u) => ({ ...u, [key]: { ...u[key], notes } }))
+
+  // Prepopulate from the Reference Library whenever framework + grade are both
+  // chosen. Each library document is downloaded into a real File so it rides
+  // the exact same upload+ingest path as a hand-picked PDF; roles the library
+  // lacks are flagged and left empty so the create gate forces an upload.
+  useEffect(() => {
+    if (framework === null || grade === null) return
+    let alive = true
+    setLoadingLibrary(true)
+    setLibraryError(null)
+    // Reset every slot — switching target replaces the whole document set.
+    setUploads(empty)
+    setRealFiles([])
+    setLibraryRoles(new Set())
+    setMissingRoles(new Set())
+    ;(async () => {
+      let files: LibraryFile[]
+      try {
+        files = (await api.listLibrary()).files.filter((f) => f.framework === framework && f.grade === grade)
+      } catch (e) {
+        if (!alive) return
+        setLibraryError(e instanceof Error ? e.message : 'Could not read the Reference Library.')
+        setMissingRoles(new Set(slots.map((s) => s.key)))
+        setLoadingLibrary(false)
+        return
+      }
+      const found = new Set<LibraryRole>()
+      const filled: NewSetFile[] = []
+      for (const slot of slots) {
+        const doc = files.find((f) => f.role === slot.key)
+        if (!doc) continue
+        try {
+          const res = await fetch(api.libraryFileUrl(framework, grade, slot.key, doc.fileName))
+          if (!res.ok) throw new Error(String(res.status))
+          const blob = await res.blob()
+          filled.push({ role: slot.key, file: new File([blob], doc.fileName, { type: 'application/pdf' }) })
+          found.add(slot.key)
+        } catch {
+          /* download failed — treat as missing so the user re-supplies it */
+        }
+      }
+      if (!alive) return
+      setRealFiles(filled)
+      setUploads({
+        standards: slotFor('standards', filled),
+        progression: slotFor('progression', filled),
+        items: slotFor('items', filled),
+        unpacking: slotFor('unpacking', filled),
+      })
+      setLibraryRoles(found)
+      setMissingRoles(new Set(slots.map((s) => s.key).filter((k) => !found.has(k))))
+      setLoadingLibrary(false)
+    })()
+    return () => {
+      alive = false
+    }
+  }, [framework, grade])
+
+  // Keep the name in sync with the target until the user types their own.
+  useEffect(() => {
+    if (!nameEdited && framework !== null && grade !== null) {
+      setName(`${frameworkLabelOf(framework)} — Grade ${grade}`)
+    }
+  }, [framework, grade, nameEdited])
 
   const create = async () => {
     setCreating(true)
@@ -125,34 +245,102 @@ function NewSetModal({ onClose }: { onClose: () => void }) {
     }
   }
 
-  const complete = name.trim().length > 1 && slots.every((s) => uploads[s.key].files.length > 0)
+  const targetChosen = framework !== null && grade !== null
+  const complete = targetChosen && name.trim().length > 1 && !loadingLibrary && slots.every((s) => uploads[s.key].files.length > 0)
+  const missingCount = missingRoles.size
 
   return (
     <Modal open onClose={onClose} title="New Standard Set" wide>
       <div className="space-y-5">
         <div>
-          <SectionLabel>Standard Set Name</SectionLabel>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. CCSS Mathematics — Grade 5"
-            className="mt-2 w-full rounded-xl border border-hairline bg-panel px-3.5 py-2.5 text-[13.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
-          />
+          <SectionLabel>Standards Framework</SectionLabel>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {FRAMEWORKS.map((fw) => (
+              <Pick key={fw.key} on={framework === fw.key} onClick={() => setFramework(fw.key)}>
+                {fw.label}
+              </Pick>
+            ))}
+          </div>
         </div>
 
-        <div className="space-y-3">
-          {slots.map((s) => (
-            <UploadSlot
-              key={s.key}
-              label={s.label}
-              note={s.note}
-              value={uploads[s.key]}
-              onAdd={(files) => add(s.key, files)}
-              onRemove={(f) => remove(s.key, f)}
-              onNotes={(notes) => setNotes(s.key, notes)}
-            />
-          ))}
+        <div>
+          <SectionLabel>Grade Level</SectionLabel>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {GRADES.map((g) => (
+              <Pick key={g} on={grade === g} onClick={() => setGrade(g)}>
+                Grade {g}
+              </Pick>
+            ))}
+          </div>
         </div>
+
+        {!targetChosen ? (
+          <div className="rounded-xl border border-dashed border-hairline-2 px-4 py-6 text-center text-[12.5px] text-ink-3">
+            Choose a framework and grade — the four documents are prefilled from the Reference Library, and anything
+            missing is flagged for upload.
+          </div>
+        ) : (
+          <>
+            <div>
+              <SectionLabel>Standard Set Name</SectionLabel>
+              <input
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value)
+                  setNameEdited(true)
+                }}
+                placeholder="e.g. CCSS Mathematics — Grade 5"
+                className="mt-2 w-full rounded-xl border border-hairline bg-panel px-3.5 py-2.5 text-[13.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
+              />
+            </div>
+
+            {/* While prefilling, hide the slots entirely: the prefill replaces
+                the whole document set on completion, so any file added during
+                the download window would be silently overwritten. No slots =
+                no interaction window to lose. */}
+            {loadingLibrary ? (
+              <div className="flex items-center gap-2.5 rounded-xl border border-accent/25 bg-accent-wash/40 px-4 py-6 text-[12.5px] text-ink-2">
+                <span className="stage-pulse h-2 w-2 shrink-0 rounded-full bg-accent" />
+                Prefilling documents from the Reference Library…
+              </div>
+            ) : (
+              <>
+                {libraryError && (
+                  <div className="rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] leading-relaxed text-rust">
+                    {libraryError} Upload the four documents manually below.
+                  </div>
+                )}
+                {!libraryError && missingCount > 0 && (
+                  <div className="rounded-xl border border-amber-ink/30 bg-amber-wash px-4 py-2.5 text-[12.5px] leading-relaxed text-amber-ink">
+                    The Reference Library has no {[...missingRoles].map((r) => slots.find((s) => s.key === r)!.label).join(', ')} for{' '}
+                    {frameworkLabelOf(framework!)}, Grade {grade}. Upload {missingCount === 1 ? 'it' : 'them'} below to continue —
+                    and consider adding {missingCount === 1 ? 'it' : 'them'} to the Reference Library so the next set is complete.
+                  </div>
+                )}
+
+                <div className="space-y-3">
+                  {slots.map((s) => (
+                    <UploadSlot
+                      key={s.key}
+                      label={s.label}
+                      note={s.note}
+                      value={uploads[s.key]}
+                      fromLibrary={libraryRoles.has(s.key)}
+                      missingNote={
+                        missingRoles.has(s.key) && uploads[s.key].files.length === 0
+                          ? `Not in the Reference Library for ${frameworkLabelOf(framework!)}, Grade ${grade} — upload it here.`
+                          : null
+                      }
+                      onAdd={(files) => add(s.key, files)}
+                      onRemove={(f) => remove(s.key, f)}
+                      onNotes={(notes) => setNotes(s.key, notes)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
+        )}
 
         {createError && (
           <div className="animate-rise rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] leading-relaxed text-rust">
@@ -162,10 +350,9 @@ function NewSetModal({ onClose }: { onClose: () => void }) {
 
         <div className="flex items-center justify-between border-t border-hairline pt-4">
           <span className="max-w-80 text-[11.5px] leading-snug text-ink-3">
-            One or more PDFs per role, each with your notes on how the documents should be used. AI extraction starts
-            as soon as you create the set; released-items documents are held for scope generation. PDFs must not
-            exceed 100 pages — a document over the 100-page ingestion limit is split and re-uploaded automatically as
-            multiple parts (pages 1–100, 101–200, …), using as many documents as it needs.
+            Documents prefill from the Reference Library; add or replace any of them. AI extraction starts as soon as
+            you create the set; released-items documents are held for scope generation. PDFs over the 100-page ingestion
+            limit are split and re-uploaded automatically as multiple parts.
           </span>
           <Btn kind="primary" disabled={!complete || creating} onClick={() => void create()}>
             {creating ? 'Creating…' : 'Create Standard Set'}
@@ -174,6 +361,12 @@ function NewSetModal({ onClose }: { onClose: () => void }) {
       </div>
     </Modal>
   )
+}
+
+/** Metadata slot (filenames + default note) for the files prefilled into one role. */
+function slotFor(role: LibraryRole, filled: NewSetFile[]): UploadSlotValue {
+  const names = filled.filter((f) => f.role === role).map((f) => f.file.name)
+  return names.length === 0 ? emptySlot : { files: names, notes: LIBRARY_NOTE[role] }
 }
 
 export default function SetsList() {
