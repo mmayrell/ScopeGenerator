@@ -526,7 +526,9 @@ A term backed only by these sources is educator vocabulary, not student vocabula
 Rules:
 - GRADE-APPROPRIATE is a hard filter: exclude vocabulary above the grade's expectations. Below-grade terms still in everyday use at this grade stay ("addition" is still ${set.gradeSpan} vocabulary).
 - Exhaustive within the evidence rules: sweep every released item, every student glossary/reference sheet, and every explicit students-should-know statement in the corpus. A term with qualifying evidence anywhere must appear, once, normalized, with its aliases collected onto one entry. Exhaustive and conservative are compatible: sweep everything, but the conservatism above governs what counts as a term — completeness never justifies admitting a borderline one.
-- term: the normalized student-facing form. aliases: every variant/synonym the documents use.
+- term: the normalized student-facing form.
+- definition: a concise student-appropriate definition of the term — one sentence in language a ${set.gradeSpan} student reads, the way a student glossary would define it (e.g. "perimeter: the distance around the outside of a shape"). Define the term itself, not the standard's expectations about it.
+- aliases: every variant/synonym the documents use (kept as data for term normalization; not displayed).
 - standard: the standard where the term is INTRODUCED FOR THE FIRST TIME — the earliest standard in the set's instructional sequence whose content brings the word into student use (normalized join code, e.g. "4.NF.1"). Not the standard that uses it most; the one that introduces it.
 - artifact: the file name of the uploaded document that best evidences the term. page: the 1-based PDF page in that document where it appears. They must be real locations, not guesses.
 - source: one short phrase of context (e.g. "standards glossary", "item stems 2022–2024", "progression worked examples").
@@ -536,7 +538,7 @@ Recorded resolutions:${jsonBlock('resolutions', resolutions)}
 Parsed standards tree (digest):${jsonBlock('tree', flattenTreeDigest(set.tree).slice(0, 400))}
 Artifact list (index order matches the attached documents):${jsonBlock('artifacts', set.artifacts.map((a) => a.fileName))}
 
-Output terms: [{ term, aliases, standard, artifact, page, source }], normalized, deduplicated, in alphabetical order by term.`,
+Output terms: [{ term, definition, aliases, standard, artifact, page, source }], normalized, deduplicated, in alphabetical order by term.`,
   }
 }
 

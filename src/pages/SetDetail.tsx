@@ -766,7 +766,7 @@ export default function SetDetail() {
                   <div key={t.term} className="flex items-baseline justify-between gap-3 border-b border-hairline pb-1.5 last:border-0">
                     <div>
                       <Mono className="text-[12.5px] font-medium text-ink">{t.term}</Mono>
-                      {t.aliases.length > 0 && <span className="ml-2 text-[11.5px] text-ink-3">aka {t.aliases.join(', ')}</span>}
+                      {t.definition && <span className="ml-2 text-[12px] leading-relaxed text-ink-2">{t.definition}</span>}
                     </div>
                     {t.standard ? (
                       <Mono className="shrink-0 text-[10.5px] text-ink-3">{t.standard}</Mono>

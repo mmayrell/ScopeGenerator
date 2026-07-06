@@ -62,9 +62,11 @@ export interface LexiconTerm {
   term: string
   aliases: string[]
   source: string
-  /** Governing standard code shown as the term's citation (grey, right-aligned). */
+  /** Student-appropriate definition shown next to the term. */
+  definition?: string
+  /** Standard code where the term is first introduced, shown as the citation. */
   standard?: string
-  /** Cited artifact file name + PDF page, revealed on hover. */
+  /** Cited artifact file name + PDF page. */
   artifact?: string
   page?: number
 }

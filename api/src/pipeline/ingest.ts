@@ -461,6 +461,7 @@ export async function lexiconRunStep(msg: JobMessage, ctx: InvocationContext): P
         term: t.term.trim(),
         aliases: t.aliases,
         source: t.source,
+        ...(t.definition.trim() ? { definition: t.definition.trim() } : {}),
         ...(t.standard.trim() ? { standard: t.standard.trim() } : {}),
         ...(t.artifact.trim() ? { artifact: t.artifact.trim() } : {}),
         ...(t.page >= 1 ? { page: t.page } : {}),

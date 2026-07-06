@@ -273,6 +273,7 @@ export const INGEST_LEXICON_SCHEMA = obj({
   terms: arr(
     obj({
       term: STR,
+      definition: STR,
       aliases: arr(STR),
       standard: STR,
       artifact: STR,
@@ -441,7 +442,7 @@ export interface WireIngestConflicts {
 }
 
 export interface WireIngestLexicon {
-  terms: { term: string; aliases: string[]; standard: string; artifact: string; page: number; source: string }[]
+  terms: { term: string; definition: string; aliases: string[]; standard: string; artifact: string; page: number; source: string }[]
 }
 
 function toCardField(w: WireCardField) {
