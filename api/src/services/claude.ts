@@ -87,6 +87,18 @@ function isUnsupportedWebSearchVariant(e: unknown): boolean {
   return status === 400 && /web_search/i.test(msg)
 }
 
+// web_fetch rides along with web_search: search returns snippets, and
+// transcribing released items faithfully requires opening the found page or
+// PDF itself. If the model/API rejects the fetch tool (400 naming web_fetch),
+// drop it process-wide and continue search-only rather than failing hunts.
+let webFetchSupported = true
+
+function isUnsupportedWebFetch(e: unknown): boolean {
+  const msg = e instanceof Error ? e.message : String(e)
+  const status = (e as { status?: number }).status
+  return status === 400 && /web_fetch/i.test(msg)
+}
+
 export async function generateStructured<T>(opts: GenerateStructuredOptions): Promise<T> {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not configured')
@@ -117,6 +129,10 @@ export async function generateStructured<T>(opts: GenerateStructuredOptions): Pr
       if (opts.webSearch && variant < WEB_SEARCH_VARIANTS.length - 1 && isUnsupportedWebSearchVariant(e)) {
         variant++
         webSearchVariant = Math.max(webSearchVariant, variant)
+        continue
+      }
+      if (opts.webSearch && webFetchSupported && isUnsupportedWebFetch(e)) {
+        webFetchSupported = false
         continue
       }
       throw e
@@ -170,9 +186,15 @@ async function callOnce(
       : { effort: resolveEffort(opts.effort) },
   }
   if (opts.webSearch) {
-    request.tools = [
+    const tools: unknown[] = [
       { type: WEB_SEARCH_VARIANTS[webSearchVariantIndex], name: 'web_search', max_uses: opts.maxSearches ?? 8 },
     ]
+    // Fetch lets the model open the pages/PDFs its searches surface — search
+    // snippets alone cannot carry a faithful item transcription.
+    if (webFetchSupported) {
+      tools.push({ type: 'web_fetch_20250910', name: 'web_fetch', max_uses: opts.maxSearches ?? 8 })
+    }
+    request.tools = tools
   }
 
   // The SDK's parameter types evolve with the API (output_config, fallbacks,

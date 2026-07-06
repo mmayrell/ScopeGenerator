@@ -108,6 +108,15 @@ export async function huntPacketStep(msg: JobMessage, context: InvocationContext
     pushLog(r, `Web hunt: ${batches.length - done.size} of ${batches.length} search batches remaining`)
   })
 
+  // Deadline-cut escalation state rides the queue message: cuts count how many
+  // executions were cut mid-search on the SAME batch. One cut → lean re-hunt
+  // (fewer searches, concise output); three cuts → skip the batch honestly.
+  // Without this, a batch whose searches always outrun the window would hand
+  // off to fresh executions forever, burning paid searches every round.
+  const payload = (msg.payload ?? {}) as { cuts?: unknown; cutKey?: unknown }
+  const priorCutKey = typeof payload.cutKey === 'string' ? payload.cutKey : ''
+  const priorCuts = Math.trunc(Number(payload.cuts ?? 0)) || 0
+
   const started = Date.now()
   for (const batch of batches) {
     if (done.has(batch.key)) continue
@@ -158,49 +167,72 @@ export async function huntPacketStep(msg: JobMessage, context: InvocationContext
     }
 
     const label = `Grade ${batch.grade} · ${batch.domainName}`
-    context.log(`packet/hunt ${packetId}: searching ${label} (${batch.standards.map((s) => s.code).join(', ')})`)
-
-    // Bound the paid call to the execution deadline; on abort, hand off to a
-    // fresh execution instead of letting the host kill skip settlement.
-    const controller = new AbortController()
-    const abortTimer = setTimeout(
-      () => controller.abort(),
-      Math.max(5_000, started + EXECUTION_DEADLINE_MS - Date.now()),
-    )
+    const cuts = priorCutKey === batch.key ? priorCuts : 0
+    let skippedAfterCuts = false
     let found: HuntedItem[]
-    let truncatedTwice = false
-    try {
+
+    if (cuts >= 3) {
+      // Three executions could not finish this batch even in lean mode —
+      // record it searched-and-skipped so the rest of the packet proceeds.
+      found = []
+      skippedAfterCuts = true
+    } else {
+      const lean = cuts >= 1
+      context.log(
+        `packet/hunt ${packetId}: searching ${label}${lean ? ' (lean — prior execution was cut)' : ''} (${batch.standards.map((s) => s.code).join(', ')})`,
+      )
+
+      // Bound the paid call to the execution deadline; on abort, hand off to a
+      // fresh execution instead of letting the host kill skip settlement.
+      const controller = new AbortController()
+      const abortTimer = setTimeout(
+        () => controller.abort(),
+        Math.max(5_000, started + EXECUTION_DEADLINE_MS - Date.now()),
+      )
+      let truncatedTwice = false
       try {
-        found = await huntBatch(packet, batch, controller.signal)
-      } catch (e) {
-        if (isTruncation(e)) {
-          // Web output is nondeterministic — one concise re-hunt usually fits.
-          // A second truncation records the batch as searched (its standards
-          // stay documentation gaps) instead of failing the whole packet via
-          // the worker's fail-fast on max_tokens.
-          context.warn(`packet/hunt ${packetId}: ${label} truncated — retrying concisely`)
-          try {
-            found = await huntBatch(packet, batch, controller.signal, true)
-          } catch (e2) {
-            if (!isTruncation(e2)) throw e2
-            found = []
-            truncatedTwice = true
+        try {
+          found = await huntBatch(packet, batch, controller.signal, lean)
+        } catch (e) {
+          if (isTruncation(e)) {
+            // Web output is nondeterministic — one concise re-hunt usually fits.
+            // A second truncation records the batch as searched (its standards
+            // stay documentation gaps) instead of failing the whole packet via
+            // the worker's fail-fast on max_tokens.
+            context.warn(`packet/hunt ${packetId}: ${label} truncated — retrying concisely`)
+            try {
+              found = await huntBatch(packet, batch, controller.signal, true)
+            } catch (e2) {
+              if (!isTruncation(e2)) throw e2
+              found = []
+              truncatedTwice = true
+            }
+          } else {
+            throw e
           }
-        } else {
-          throw e
         }
+      } catch (e) {
+        if (isAbort(e)) {
+          await mutateJob(msg.jobId, (r) =>
+            pushLog(
+              r,
+              `${label}: search ran long and was cut at the execution deadline — continuing in a new execution${cuts + 1 >= 3 ? ' (final attempt used — the batch will be skipped)' : cuts + 1 >= 1 ? ' with a leaner search' : ''}`,
+            ),
+          )
+          await enqueueJob({
+            jobId: msg.jobId,
+            kind: 'packet',
+            step: 'hunt',
+            packetId,
+            payload: { cuts: cuts + 1, cutKey: batch.key },
+          })
+          return
+        }
+        throw e
+      } finally {
+        clearTimeout(abortTimer)
       }
-    } catch (e) {
-      if (isAbort(e)) {
-        await mutateJob(msg.jobId, (r) =>
-          pushLog(r, `${label}: search ran long and was cut at the execution deadline — continuing in a new execution`),
-        )
-        await enqueueJob({ jobId: msg.jobId, kind: 'packet', step: 'hunt', packetId })
-        return
-      }
-      throw e
-    } finally {
-      clearTimeout(abortTimer)
+      if (truncatedTwice) skippedAfterCuts = true
     }
 
     done.add(batch.key)
@@ -223,8 +255,8 @@ export async function huntPacketStep(msg: JobMessage, context: InvocationContext
       r.stagesDone = Math.min(done.size, batches.length)
       pushLog(
         r,
-        truncatedTwice
-          ? `${label}: transcriptions were too long twice — batch skipped; its standards remain documentation gaps`
+        skippedAfterCuts
+          ? `${label}: the search could not finish within the execution window — batch skipped; its standards remain documentation gaps`
           : found.length === 0
             ? `${label}: no released items found online (documentation gap)`
             : `${label}: found ${found.length} released item${found.length === 1 ? '' : 's'} covering ${covered} standard${covered === 1 ? '' : 's'}`,
@@ -366,20 +398,22 @@ const HUNT_SCHEMA: Record<string, unknown> = {
 const HUNT_SYSTEM = `You are an assessment-evidence researcher for a mathematics curriculum design team. Your job is to use web search to find GENUINE released or officially published sample assessment items for specific academic standards, and to transcribe them faithfully.
 
 Binding rules:
-1. NEVER invent, paraphrase, or reconstruct an item from memory. Report only items you actually located in a source found through your searches in this conversation. A fabricated "released item" is worse than no item.
-2. If you cannot find a genuine item for a standard, list that standard in "gaps" with a short note on what you searched. Absence of released evidence is a documentation gap, not a failure — reporting a gap honestly is a correct outcome.
-3. Transcribe faithfully: the exact stem wording, every answer choice in order, and the correct answer ONLY when the source publishes a key ('' otherwise). Write mathematical notation in plain text or Unicode (3/4, 2^3, ×, ÷, °).
-4. Items built around a graphic (number line, figure, graph, table): if the item still works with the graphic described, include it and describe the graphic inside square brackets in the stem, noting this in "notes". If the item is meaningless without seeing the graphic, skip it — do not guess its content.
-5. sourceUrl must be the real URL of the page or PDF where the item appears, taken from your search results — never constructed from memory. sourceName is that document's title.
-6. alignment is "official" ONLY when the source document (or the agency's item map/blueprint) explicitly labels the item with the standard code. If YOU judged the alignment from the item's content, it is "ai-inferred".
-7. year is the administration or publication year of the source (a number, e.g. 2022); use 0 only when the source genuinely does not say. itemNumber is the question's number or label in the source ('' if unknown).
-8. NEVER transcribe items from tests administered before 2017. If the only findable materials for a standard predate 2017, report the standard as a gap instead.
-9. Find up to ${MAX_ITEMS_PER_STANDARD} strong items per standard — prefer breadth (every standard covered) over depth.`
+1. NEVER invent, paraphrase, or reconstruct an item from memory. Report only items you actually read in a source document you opened in this conversation. A fabricated "released item" is worse than no item.
+2. Work search-then-fetch: use web_search to locate released-test documents, then web_fetch to OPEN the most promising page or PDF and transcribe items from the document itself. Search snippets alone are NOT sufficient evidence to transcribe from. Budget: locate with 1-2 searches, then spend your remaining uses fetching the best documents.
+3. If you cannot find (and open) a genuine item for a standard, list that standard in "gaps" with a short note on what you searched. Absence of released evidence is a documentation gap, not a failure — reporting a gap honestly is a correct outcome.
+4. Transcribe faithfully: the exact stem wording, every answer choice in order, and the correct answer ONLY when the source publishes a key ('' otherwise). Write mathematical notation in plain text or Unicode (3/4, 2^3, ×, ÷, °).
+5. Items built around a graphic (number line, figure, graph, table): if the item still works with the graphic described, include it and describe the graphic inside square brackets in the stem, noting this in "notes". If the item is meaningless without seeing the graphic, skip it — do not guess its content.
+6. sourceUrl must be the real URL of the page or PDF you opened — never constructed from memory. sourceName is that document's title.
+7. alignment is "official" ONLY when the source document (or the agency's item map/blueprint) explicitly labels the item with the standard code. If YOU judged the alignment from the item's content, it is "ai-inferred".
+8. year is the administration or publication year of the source (a number, e.g. 2022); use 0 only when the source genuinely does not say. itemNumber is the question's number or label in the source ('' if unknown).
+9. NEVER transcribe items from tests administered before 2017. If the only findable materials for a standard predate 2017, report the standard as a gap instead.
+10. Find up to ${MAX_ITEMS_PER_STANDARD} strong items per standard — prefer breadth (every standard covered) over depth. Work decisively: pick sources fast, transcribe, and answer — a smaller honest result beats an exhaustive search that never finishes.`
 
 async function huntBatch(
   packet: EvidencePacket,
   batch: HuntBatch,
   signal?: AbortSignal,
+  /** Lean mode (after a truncation or a deadline cut): fewer tool uses, tighter output. */
   concise = false,
 ): Promise<HuntedItem[]> {
   const hunt = FRAMEWORK_HUNTS[packet.framework]
@@ -399,9 +433,9 @@ ${yearsLine}
 Grade ${batch.grade} — ${batch.domainName}:
 ${batch.standards.map((s) => `- ${s.code}: ${s.text}`).join('\n')}
 
-Search the web for released tests, released item documents, and official sample items assessing these specific standards. Transcribe every genuine item you find (up to ${perStandard} per standard), and report standards with no findable released evidence as gaps.${
+Search the web for released tests, released item documents, and official sample items assessing these specific standards; open the best documents with web_fetch and transcribe from them. Transcribe every genuine item you find (up to ${perStandard} per standard), and report standards with no findable released evidence as gaps.${
     concise
-      ? '\n\nIMPORTANT: your previous reply overflowed the output budget. Be concise this time: at most 2 items per standard, prefer short selected-response items, keep notes to one short sentence, and skip any item whose stem would need more than a short paragraph to transcribe.'
+      ? '\n\nIMPORTANT: a previous attempt ran out of time or output budget. Work lean this time: ONE search, fetch ONE document, transcribe at most 2 short items per standard, keep notes to one short sentence, and skip any item whose stem would need more than a short paragraph.'
       : ''
   }`
 
@@ -412,10 +446,10 @@ Search the web for released tests, released item documents, and official sample 
     system: HUNT_SYSTEM,
     user,
     schema: HUNT_SCHEMA,
-    maxTokens: HUNT_MAX_TOKENS,
-    effort: 'medium',
+    maxTokens: concise ? 12000 : HUNT_MAX_TOKENS,
+    effort: concise ? 'low' : 'medium',
     webSearch: true,
-    maxSearches: MAX_SEARCHES_PER_BATCH,
+    maxSearches: concise ? 3 : MAX_SEARCHES_PER_BATCH,
     ...(signal ? { signal } : {}),
   })
 

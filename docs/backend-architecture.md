@@ -251,7 +251,14 @@ standards for CCSS / TEKS / Virginia 2023 SOL / Florida B.E.S.T., official wordi
 and `POST /packets` carries the selected standards verbatim; the backend hunts the public web.
 
 - **Batching** (`api/src/pipeline/packets.ts`): standards group by (grade, domain), chunked to ≤4
-  per batch. One batch = one Claude call with the **server-side `web_search` tool** (≤8 searches).
+  per batch. One batch = one Claude call with the **server-side `web_search` + `web_fetch` tools**
+  (≤8 uses each): search locates released-test documents, fetch OPENS the page/PDF so items are
+  transcribed from the document itself, never from search snippets.
+- **Deadline escalation**: the in-flight call is aborted at 8.5 minutes (a host kill at 10:00 would
+  skip settlement). The re-enqueued message carries `{cuts, cutKey}`: after one cut the batch
+  re-runs lean (1 search + 1 fetch, effort low, ≤2 items/standard); after three cuts the batch is
+  skipped honestly (logged; its standards stay documentation gaps) so a slow batch can never loop
+  forever burning paid searches.
 - **Checkpointing**: after each batch, items merge into the packet doc via `mutatePacket` (dedup key
   `standardCode|sourceUrl|itemNumber|stem-prefix`) and the batch key lands in `doneBatches`. A
   3.5-minute launch budget re-enqueues the same message before the 10-minute cap; redelivered or
