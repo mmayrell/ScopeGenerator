@@ -136,8 +136,9 @@ function PacketList({ onNew, onOpen }: { onNew: () => void; onOpen: (id: string)
         <div>
           <h1 className="font-display text-[28px] font-semibold tracking-tight text-ink">Released Item Repository Generator</h1>
           <p className="mt-1 max-w-2xl text-[13.5px] text-ink-2">
-            A research agent hunts the public web for genuine released assessment items on the standards you pick —
-            transcribed faithfully, with a link to every source. Separate from your standard sets and scopes.
+            A research agent searches official released assessment repositories for authentic assessment items aligned
+            to selected standards. For each item, it provides a faithful screenshot and cites the official source,
+            publication year, and question number, with a direct link to the original document.
           </p>
         </div>
         <Btn kind="primary" onClick={onNew}>New Repository</Btn>

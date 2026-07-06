@@ -18,7 +18,7 @@ const SLOTS: { role: LibraryRole; label: string; note: string }[] = [
   { role: 'unpacking', label: 'Unpacking Document', note: 'Structured decomposition — the candidate-atom partition and default bounds.' },
 ]
 
-const Chip = ({ on, children, badge, onClick }: { on: boolean; children: React.ReactNode; badge?: number; onClick: () => void }) => (
+const Chip = ({ on, children, onClick }: { on: boolean; children: React.ReactNode; onClick: () => void }) => (
   <button
     onClick={onClick}
     className={`cursor-pointer rounded-lg border px-2.5 py-1.5 text-[12px] font-medium transition-colors ${
@@ -26,7 +26,6 @@ const Chip = ({ on, children, badge, onClick }: { on: boolean; children: React.R
     }`}
   >
     {children}
-    {badge !== undefined && badge > 0 && <span className="ml-1.5 text-[10.5px] opacity-60">{badge}</span>}
   </button>
 )
 
@@ -59,17 +58,6 @@ export default function ReferenceLibrary() {
     void refresh()
   }, [refresh])
 
-  const countOf = useMemo(() => {
-    const map = new Map<string, number>()
-    for (const f of files ?? []) {
-      const fwKey = f.framework
-      const gradeKey = `${f.framework}|${f.grade}`
-      map.set(fwKey, (map.get(fwKey) ?? 0) + 1)
-      map.set(gradeKey, (map.get(gradeKey) ?? 0) + 1)
-    }
-    return map
-  }, [files])
-
   const current = useMemo(
     () => (files ?? []).filter((f) => f.framework === framework && f.grade === grade),
     [files, framework, grade],
@@ -91,7 +79,7 @@ export default function ReferenceLibrary() {
         <SectionLabel>Standards Framework</SectionLabel>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {FRAMEWORKS.map((fw) => (
-            <Chip key={fw.key} on={framework === fw.key} badge={countOf.get(fw.key)} onClick={() => setFramework(fw.key)}>
+            <Chip key={fw.key} on={framework === fw.key} onClick={() => setFramework(fw.key)}>
               {fw.label}
             </Chip>
           ))}
@@ -102,7 +90,7 @@ export default function ReferenceLibrary() {
         <SectionLabel>Grade Level</SectionLabel>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {GRADES.map((g) => (
-            <Chip key={g} on={grade === g} badge={countOf.get(`${framework}|${g}`)} onClick={() => setGrade(g)}>
+            <Chip key={g} on={grade === g} onClick={() => setGrade(g)}>
               Grade {g}
             </Chip>
           ))}
