@@ -642,15 +642,16 @@ export default function ScopeView() {
 
       {/* card area */}
       <div className="min-w-0 flex-1 overflow-y-auto px-6 py-8 xl:px-10">
-        {/* unit context strip */}
+        {/* unit heading */}
         {(() => {
           const unit = scope.units.find((u) => u.lessons.some((l) => l.id === lesson.id))
-          return unit ? (
-            <div className="mb-6 rounded-xl border border-hairline bg-panel/70 px-4 py-2.5 text-[12px] leading-relaxed text-ink-2">
-              <span className="font-semibold text-ink">{unit.id} · {unit.title}</span>
-              <span className="text-ink-3"> — {unit.rationale}</span>
-            </div>
-          ) : null
+          if (!unit) return null
+          const n = /(\d+)/.exec(unit.id)?.[1] ?? unit.id
+          return (
+            <h1 className="mb-6 font-display text-[30px] leading-tight font-semibold tracking-tight text-ink">
+              Unit {n}: {unit.title}
+            </h1>
+          )
         })()}
         <LessonCard scope={scope} lesson={lesson} />
         <div className="h-16" />
