@@ -1,6 +1,6 @@
 import { Proposal, Scope } from '../domain/types'
 import { deleteScopeDocs, getScope, getSet, mutateScope, saveScope, snapshotScope } from '../data/entities'
-import { createJob, latestJobForScope, toJobStatus } from '../data/jobs'
+import { createJob, latestJobForScope, mutateJob, pushLog, toJobStatus } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { GENERATE_TOTAL_STAGES } from '../pipeline/generate'
 import { declineMerge, findProtectedPair } from '../pipeline/guardrails'
@@ -82,6 +82,86 @@ api({
       return ok({ ok: true })
     }
     return ok(await getScope(id))
+  },
+})
+
+// POST /api/scopes/{id}/pause-generation → { jobId } (202) — flags the active
+// generate job; the worker pauses at its next checkpoint (an in-flight Claude
+// call finishes first). All checkpoints are kept for resume.
+api({
+  name: 'scope-pause-generation',
+  methods: ['POST'],
+  route: 'scopes/{id}/pause-generation',
+  handler: async (req) => {
+    const id = requireParam(req, 'id')
+    const job = await latestJobForScope(id)
+    if (!job || job.kind !== 'generate' || (job.status !== 'queued' && job.status !== 'running')) {
+      throw new HttpError(409, 'no generation is running for this scope')
+    }
+    await mutateJob(job.jobId, (r) => {
+      r.cancelRequested = true
+      pushLog(r, 'Pause requested — the worker pauses at its next checkpoint')
+    })
+    return ok({ jobId: job.jobId }, 202)
+  },
+})
+
+// POST /api/scopes/{id}/resume-generation → { jobId } (202) — continues a
+// paused (or failed) generation. Reuses the SAME job id so the plan/unit/batch
+// checkpoints under jobs/<jobId>/ are found; the plan step re-fans-out
+// idempotently (unit blobs short-circuit, completeUnit dedupes via unitsMask).
+api({
+  name: 'scope-resume-generation',
+  methods: ['POST'],
+  route: 'scopes/{id}/resume-generation',
+  handler: async (req) => {
+    const id = requireParam(req, 'id')
+    const job = await latestJobForScope(id)
+    if (!job || job.kind !== 'generate') throw new HttpError(409, 'no generation job to resume')
+    if (job.status === 'queued' || job.status === 'running') return ok({ jobId: job.jobId }, 202)
+    if (job.status === 'complete') throw new HttpError(409, 'this generation already completed')
+    await mutateJob(job.jobId, (r) => {
+      r.status = 'queued'
+      r.stage = 'Queued'
+      r.cancelRequested = false
+      delete r.error
+      pushLog(r, 'Resumed — continuing from the checkpoints')
+    })
+    await mutateScope(id, (s) => {
+      s.status = 'generating'
+      delete s.error
+      s.updated = today()
+    })
+    await enqueueJob({ jobId: job.jobId, kind: 'generate', step: 'plan', scopeId: id })
+    return ok({ jobId: job.jobId }, 202)
+  },
+})
+
+// POST /api/scopes/{id}/cancel-generation → { scope } — abandons the run: the
+// active job (if any) is flagged to stop, and the scope settles 'failed' so it
+// can be retried or deleted. Checkpoints remain, so resume-generation can
+// still revive it.
+api({
+  name: 'scope-cancel-generation',
+  methods: ['POST'],
+  route: 'scopes/{id}/cancel-generation',
+  handler: async (req) => {
+    const id = requireParam(req, 'id')
+    const job = await latestJobForScope(id)
+    if (job && job.kind === 'generate' && (job.status === 'queued' || job.status === 'running')) {
+      await mutateJob(job.jobId, (r) => {
+        r.cancelRequested = true
+        pushLog(r, 'Cancelled by user')
+      })
+    }
+    const scope = await mutateScope(id, (s) => {
+      if (s.status === 'generating' || s.status === 'paused') {
+        s.status = 'failed'
+        s.error = 'Generation cancelled by user.'
+        s.updated = today()
+      }
+    })
+    return ok({ scope })
   },
 })
 

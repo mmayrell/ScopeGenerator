@@ -177,15 +177,15 @@ function RevisionDialog({ scope, lesson, onClose }: { scope: Scope; lesson: Less
       {!proposal ? (
         <div className="space-y-4">
           <p className="text-[12.5px] leading-relaxed text-ink-2">
-            Describe what the data showed — which lessons, what error patterns or outcomes. Your report becomes the cited
-            evidence (a PerformanceReport); the tool maps it onto framework actions using the engine’s Editing Splits
-            logic and returns a proposal. <span className="text-ink-3">Nothing mutates until you accept.</span>
+            Describe the instructional results—what lessons were involved, what student performance revealed, and any
+            recurring error patterns. Your report will be analyzed to generate evidence-based recommendations. All
+            proposed changes are reviewed before anything is applied.
           </p>
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={5}
-            placeholder="e.g. About a third of students stall at the start of these problems — they can’t identify which routine to begin with; the errors look like a missing prerequisite, not slips…"
+            placeholder="Describe the instructional results"
             className="w-full rounded-xl border border-hairline bg-panel px-3.5 py-3 text-[13px] leading-relaxed outline-none placeholder:text-ink-3 focus:border-accent/40"
           />
           {submitError && (
@@ -469,6 +469,7 @@ export default function ScopeView() {
   const [histOpen, setHistOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [retrying, setRetrying] = useState(false)
+  const [genAction, setGenAction] = useState<'pause' | 'resume' | 'cancel' | null>(null)
   const [lookedUp, setLookedUp] = useState(false)
 
   // While the scope is generating (initial run, rerun, apply-proposal) or a proposal is
@@ -499,12 +500,61 @@ export default function ScopeView() {
   }
   const set = sets.find((s) => s.id === scope.setId)
 
+  const genControl = async (action: 'pause' | 'resume' | 'cancel') => {
+    setGenAction(action)
+    try {
+      if (action === 'pause') await api.pauseGeneration(scope.id)
+      else if (action === 'resume') await api.resumeGeneration(scope.id)
+      else await api.cancelGeneration(scope.id)
+      await refreshScope(scope.id)
+    } catch {
+      /* surfaced via the store's action-error strip */
+    } finally {
+      setGenAction(null)
+    }
+  }
+
   if (scope.status === 'generating') {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
           <div className="stage-pulse mx-auto h-2.5 w-2.5 rounded-full bg-accent" />
           <p className="mt-3 text-[13px] text-ink-2">Generation in progress — units stream in as stages complete.</p>
+          <div className="mt-4 flex justify-center gap-2">
+            <Btn disabled={genAction !== null} onClick={() => void genControl('pause')}>
+              {genAction === 'pause' ? 'Pausing…' : 'Pause'}
+            </Btn>
+            <Btn kind="danger" disabled={genAction !== null} onClick={() => void genControl('cancel')}>
+              {genAction === 'cancel' ? 'Cancelling…' : 'Cancel'}
+            </Btn>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (scope.status === 'paused') {
+    return (
+      <div className="flex h-full items-center justify-center px-10">
+        <div className="animate-rise w-full max-w-lg rounded-2xl border border-hairline bg-panel p-6 shadow-(--shadow-lift)">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Pill tone="amber">generation paused</Pill>
+            <h1 className="font-display text-[18px] font-semibold text-ink">{capsStandardCodes(scope.title)}</h1>
+          </div>
+          <p className="mt-3 text-[12.5px] leading-relaxed text-ink-2">
+            Progress is checkpointed — resuming continues exactly where the run left off.
+          </p>
+          <div className="mt-4 flex items-center justify-between border-t border-hairline pt-4">
+            <Link to="/" className="text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Scopes</Link>
+            <div className="flex gap-2">
+              <Btn kind="danger" disabled={genAction !== null} onClick={() => void genControl('cancel')}>
+                {genAction === 'cancel' ? 'Cancelling…' : 'Cancel generation'}
+              </Btn>
+              <Btn kind="primary" disabled={genAction !== null} onClick={() => void genControl('resume')}>
+                {genAction === 'resume' ? 'Resuming…' : 'Resume'}
+              </Btn>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -514,10 +564,17 @@ export default function ScopeView() {
     const retry = async () => {
       setRetrying(true)
       try {
-        const newId = await createScope(scope.setId, scope.request.mode, scope.request.params)
-        nav(`/scopes/${newId}`)
+        // Resume the same job first — its checkpoints skip all finished work.
+        await api.resumeGeneration(scope.id)
+        await refreshScope(scope.id)
+        setRetrying(false)
       } catch {
-        setRetrying(false) // failure already surfaced via the store's action-error strip
+        try {
+          const newId = await createScope(scope.setId, scope.request.mode, scope.request.params)
+          nav(`/scopes/${newId}`)
+        } catch {
+          setRetrying(false) // failure already surfaced via the store's action-error strip
+        }
       }
     }
     return (
@@ -532,7 +589,7 @@ export default function ScopeView() {
             <p className="mt-1 text-[12.5px] leading-relaxed text-rust">{scope.error ?? 'The generation job failed.'}</p>
           </div>
           <p className="mt-3 text-[11.5px] leading-relaxed text-ink-3">
-            The run is checkpointed server-side; retry starts a fresh generation with the same request. Delete removes this failed scope.
+            The run is checkpointed server-side; retry resumes from the checkpoints, skipping everything already generated. Delete removes this failed scope.
           </p>
           <div className="mt-4 flex items-center justify-between border-t border-hairline pt-4">
             <Link to="/" className="text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Scopes</Link>

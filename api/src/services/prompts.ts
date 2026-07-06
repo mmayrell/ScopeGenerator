@@ -9,7 +9,7 @@ import {
   StandardSet,
   Unit,
 } from '../domain/types'
-import { PlanOutput, PlanUnit } from './schemas'
+import { PlanLessonSkeleton, PlanOutput, PlanUnit } from './schemas'
 
 /**
  * Prompt assembly (spec §6: "Every stage prompt is assembled from: relevant
@@ -186,9 +186,10 @@ export function cardsPrompt(
   scope: Scope,
   plan: PlanOutput,
   unit: PlanUnit,
+  batch: PlanLessonSkeleton[],
 ): Prompt {
-  const codes = unit.lessons.flatMap((l) => l.standardCodes)
-  const refs = unit.lessons.flatMap((l) => l.itemRefs)
+  const codes = batch.flatMap((l) => l.standardCodes)
+  const refs = batch.flatMap((l) => l.itemRefs)
   const evidenceItems = itemsForCodes(set, codes, refs)
   const planOverview = plan.units.map((u) => ({
     id: u.id,
@@ -199,7 +200,7 @@ export function cardsPrompt(
 
   return {
     system: systemCore('Stage 5: card generation for one unit'),
-    user: `Generate the full unit "${unit.id} — ${unit.title}" with complete 13-field lesson cards, following the approved plan skeleton exactly (same lesson ids, same order, same types).
+    user: `Generate complete 13-field lesson cards for the ${batch.length} lesson(s) of unit "${unit.id} — ${unit.title}" listed in batch_lessons, following the approved plan skeleton exactly (same lesson ids, same order, same types). Output ONLY the batch_lessons lessons — the unit's remaining lessons are produced by sibling calls; the full unit_skeleton is supplied so relational fields (Prerequisites, Progression Placement, Lesson Boundary, Non-Goals) can reference them by lesson id.
 
 ${CARD_RULES}
 
@@ -213,6 +214,7 @@ Additional requirements:
 ${jsonBlock('scope_request', scope.request)}
 ${jsonBlock('plan_overview', planOverview)}
 ${jsonBlock('unit_skeleton', unit)}
+${jsonBlock('batch_lessons', batch)}
 ${jsonBlock('scope_decisions_from_plan', plan.scopeDecisions)}
 ${jsonBlock('standard_set_evidence', setEvidence(set))}
 ${jsonBlock('item_bank_subset', evidenceItems)}`,

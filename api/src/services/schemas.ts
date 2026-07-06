@@ -6,7 +6,6 @@ import {
   Lesson,
   LessonType,
   ProposalChange,
-  Unit,
 } from '../domain/types'
 
 /**
@@ -154,15 +153,9 @@ export const PLAN_SCHEMA = obj({
   scopeDecisions: arr(STR),
 })
 
-export const UNIT_CARDS_SCHEMA = withLessonDefs(
-  obj({
-    id: STR,
-    title: STR,
-    rationale: STR,
-    strand: STR,
-    lessons: arr(ref('lesson')),
-  }),
-)
+// Cards generate in bounded lesson batches (unit metadata comes from the plan
+// skeleton) so a large unit can never overflow the output-token budget.
+export const UNIT_CARDS_BATCH_SCHEMA = withLessonDefs(obj({ lessons: arr(ref('lesson')) }))
 
 export const RERUN_LESSON_SCHEMA = withLessonDefs(obj({ lesson: ref('lesson') }))
 
@@ -326,11 +319,7 @@ export interface PlanOutput {
   scopeDecisions: string[]
 }
 
-export interface WireUnitCards {
-  id: string
-  title: string
-  rationale: string
-  strand: string
+export interface WireLessonBatch {
   lessons: WireLesson[]
 }
 
@@ -453,16 +442,6 @@ export function toLesson(w: WireLesson, validItemIds: Set<string>): Lesson {
     itemRefs: w.itemRefs.filter((id) => validItemIds.has(id)),
     ...(w.generatedExemplar ? { generatedExemplar: w.generatedExemplar } : {}),
     decisions,
-  }
-}
-
-export function toUnit(w: WireUnitCards, validItemIds: Set<string>): Unit {
-  return {
-    id: w.id,
-    title: w.title,
-    rationale: w.rationale,
-    strand: w.strand,
-    lessons: w.lessons.map((l) => toLesson(l, validItemIds)),
   }
 }
 

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { api } from '../api'
 import { useStore, type JobStatus } from '../store'
 import { Btn, Mono, Pill, Progress, SectionLabel } from '../ui'
 import type { StandardNode } from '../types'
@@ -63,6 +64,7 @@ export default function NewScope() {
   const [failure, setFailure] = useState<string | null>(null)
   const [launchError, setLaunchError] = useState<string | null>(null)
   const [launching, setLaunching] = useState(false)
+  const [genAction, setGenAction] = useState<'pause' | 'resume' | 'cancel' | null>(null)
   const navTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   const set = sets.find((s) => s.id === setId)
@@ -92,6 +94,7 @@ export default function NewScope() {
           setFailure(j.error ?? 'Generation failed.')
           void refreshScope(running) // the scope stays visible, marked failed
         }
+        // 'cancelled' = paused: keep polling — resume flips the job back to queued.
       } catch {
         // transient poll failure — keep polling; a 401 re-opens the access gate via the store
       }
@@ -125,9 +128,30 @@ export default function NewScope() {
     }
   }
 
+  const genControl = async (action: 'pause' | 'resume' | 'cancel') => {
+    if (!running) return
+    setGenAction(action)
+    try {
+      if (action === 'pause') await api.pauseGeneration(running)
+      else if (action === 'resume') await api.resumeGeneration(running)
+      else {
+        await api.cancelGeneration(running)
+        await refreshScope(running)
+        nav('/')
+        return
+      }
+      setJob(await fetchJob(running))
+    } catch (e) {
+      setLaunchError(e instanceof Error ? e.message : 'Could not update the generation job.')
+    } finally {
+      setGenAction(null)
+    }
+  }
+
   if (running) {
     const [lo, hi] = activeStageRange(job)
     const complete = job?.status === 'complete'
+    const paused = job?.status === 'cancelled'
     return (
       <div className="mx-auto max-w-2xl px-10 py-16">
         <SectionLabel>Generating scope</SectionLabel>
@@ -144,7 +168,34 @@ export default function NewScope() {
           <Mono className="shrink-0 text-[12.5px] font-semibold text-ink-2">
             {Math.round(complete ? 100 : jobPct(job))}%
           </Mono>
+          {!complete && !failure && (
+            paused ? (
+              <>
+                <Btn kind="primary" disabled={genAction !== null} onClick={() => void genControl('resume')} className="shrink-0">
+                  {genAction === 'resume' ? 'Resuming…' : 'Resume'}
+                </Btn>
+                <Btn kind="danger" disabled={genAction !== null} onClick={() => void genControl('cancel')} className="shrink-0">
+                  {genAction === 'cancel' ? 'Cancelling…' : 'Cancel'}
+                </Btn>
+              </>
+            ) : (
+              <>
+                <Btn disabled={genAction !== null} onClick={() => void genControl('pause')} className="shrink-0">
+                  {genAction === 'pause' ? 'Pausing…' : 'Pause'}
+                </Btn>
+                <Btn kind="danger" disabled={genAction !== null} onClick={() => void genControl('cancel')} className="shrink-0">
+                  {genAction === 'cancel' ? 'Cancelling…' : 'Cancel'}
+                </Btn>
+              </>
+            )
+          )}
         </div>
+        {paused && (
+          <div className="animate-rise mt-3 rounded-xl border border-amber-ink/25 bg-amber-wash px-4 py-2.5 text-[12.5px] leading-relaxed text-amber-ink">
+            <span className="font-mono text-[10px] font-semibold uppercase">paused</span> — progress is
+            checkpointed; resume continues exactly where the run left off.
+          </div>
+        )}
         {job && (
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-ink-3">
             <Mono className="text-ink-2">{job.stage}</Mono>

@@ -143,6 +143,15 @@ export const api = {
 
   stopIngest: (setId: string) => request<{ jobId: string }>('POST', `/sets/${encodeURIComponent(setId)}/stop-ingest`),
 
+  pauseGeneration: (scopeId: string) =>
+    request<{ jobId: string }>('POST', `/scopes/${encodeURIComponent(scopeId)}/pause-generation`),
+
+  resumeGeneration: (scopeId: string) =>
+    request<{ jobId: string }>('POST', `/scopes/${encodeURIComponent(scopeId)}/resume-generation`),
+
+  cancelGeneration: (scopeId: string) =>
+    request<{ scope: Scope }>('POST', `/scopes/${encodeURIComponent(scopeId)}/cancel-generation`),
+
   createScope: (setId: string, mode: 'course' | 'standard' | 'topic', params: string) =>
     request<{ id: string; jobId: string }>('POST', '/scopes', { setId, mode, params }),
 

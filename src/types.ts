@@ -228,7 +228,7 @@ export interface Scope {
   request: { mode: 'course' | 'standard' | 'topic'; params: string }
   engineVersion: string
   doctrineVersions: string[]
-  status: 'complete' | 'generating' | 'failed'
+  status: 'complete' | 'generating' | 'paused' | 'failed'
   error?: string // populated when status === 'failed'
   version: number
   units: Unit[]
