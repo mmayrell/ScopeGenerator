@@ -2,7 +2,7 @@ import { InvocationContext } from '@azure/functions'
 import { JobMessage, Lesson, Unit } from '../domain/types'
 import { getJsonOrUndefined, putJson } from '../data/blobs'
 import { dataContainer } from '../data/clients'
-import { getScope, getScopeEvidenceSet, mutateScope, saveScope, snapshotScope } from '../data/entities'
+import { getScope, getScopeEvidenceSet, getScopeSourceSets, mutateScope, saveScope, snapshotScope } from '../data/entities'
 import { completeUnit, getJob, mutateJob, pushLog } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { generateStructured } from '../services/claude'
@@ -17,6 +17,7 @@ import {
 } from '../services/schemas'
 import { today } from '../shared/util'
 import { ensureSetItemsExtracted } from './items'
+import { loadScopeUploadDocs } from './scope-uploads'
 import { countLessons, deriveProtectedBoundaries, runQc } from './qc'
 
 // Generation pipeline (contract §Generation pipeline), checkpointed for the
@@ -61,6 +62,8 @@ export async function generatePlanStep(msg: JobMessage, ctx: InvocationContext):
   // this and every later scope. False = partial work done and re-enqueued.
   if (!(await ensureSetItemsExtracted(scope, msg, ctx))) return
   const set = await getScopeEvidenceSet(scope)
+  const sourceSets = await getScopeSourceSets(scope) // [] unless multi-set (cross-framework union)
+  const userDocs = await loadScopeUploadDocs(scope, ctx) // user-attached released-question PDFs (topic requests)
 
   await mutateJob(msg.jobId, (r) => {
     r.status = 'running'
@@ -73,8 +76,9 @@ export async function generatePlanStep(msg: JobMessage, ctx: InvocationContext):
   let plan = await getJsonOrUndefined<PlanOutput>(dataContainer(), planPath(msg.jobId))
   if (!plan) {
     plan = await generateStructured<PlanOutput>({
-      ...planPrompt(set, scope),
+      ...planPrompt(set, scope, sourceSets, userDocs.names),
       schema: PLAN_SCHEMA,
+      ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
     })
     if (!plan.units || plan.units.length === 0) {
       throw new Error('planning produced no units — the request resolved to an empty scope')
@@ -121,6 +125,8 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
   if (!unit) {
     const scope = await getScope(scopeId)
     const set = await getScopeEvidenceSet(scope)
+    const sourceSets = await getScopeSourceSets(scope)
+    const userDocs = await loadScopeUploadDocs(scope, ctx)
     const validItemIds = new Set(set.items.map((it) => it.id))
     const batches: PlanLessonSkeleton[][] = []
     for (let b = 0; b < skeleton.lessons.length; b += CARDS_LESSON_BATCH) {
@@ -142,8 +148,9 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
           return
         }
         const wire = await generateStructured<WireLessonBatch>({
-          ...cardsPrompt(set, scope, plan, skeleton, batches[b]),
+          ...cardsPrompt(set, scope, plan, skeleton, batches[b], sourceSets, userDocs.names),
           schema: UNIT_CARDS_BATCH_SCHEMA,
+          ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
           // effort 'medium' + 48k max_tokens fits the 10-minute Consumption
           // functionTimeout; each call carries at most CARDS_LESSON_BATCH
           // lessons so the output cannot reach the cap. The plan step keeps

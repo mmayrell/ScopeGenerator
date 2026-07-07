@@ -163,9 +163,32 @@ export const api = {
   cancelGeneration: (scopeId: string) =>
     request<{ scope: Scope }>('POST', `/scopes/${encodeURIComponent(scopeId)}/cancel-generation`),
 
-  createScope: (setIds: string[], mode: 'course' | 'standard' | 'topic', params: string, granular?: boolean) =>
+  createScope: (
+    setIds: string[],
+    mode: 'course' | 'standard' | 'topic',
+    params: string,
+    granular?: boolean,
+    uploads?: { token: string; names: string[] },
+  ) =>
     // setId rides along for deploy-skew compatibility (an older API requires it).
-    request<{ id: string; jobId: string }>('POST', '/scopes', { setId: setIds[0], setIds, mode, params, granular }),
+    request<{ id: string; jobId: string }>('POST', '/scopes', {
+      setId: setIds[0],
+      setIds,
+      mode,
+      params,
+      granular,
+      uploadsToken: uploads?.token,
+      uploadNames: uploads?.names,
+    }),
+
+  /** Released-question PDFs attached to a topic request — uploaded BEFORE createScope (generation starts on create). */
+  uploadScopePdf: (token: string, fileName: string, file: Blob) =>
+    request<{ blobPath: string }>(
+      'PUT',
+      `/scope-uploads/${encodeURIComponent(token)}/${encodeURIComponent(fileName)}`,
+      undefined,
+      file,
+    ),
 
   getScope: (id: string) => request<Scope>('GET', `/scopes/${encodeURIComponent(id)}`),
 

@@ -1,12 +1,42 @@
 import { Proposal, Scope } from '../domain/types'
+import { uploadsContainer } from '../data/clients'
 import { deleteScopeDocs, getScope, getSet, mutateScope, saveScope, snapshotScope } from '../data/entities'
 import { createJob, latestJobForScope, mutateJob, pushLog, toJobStatus } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { GENERATE_TOTAL_STAGES } from '../pipeline/generate'
+import { SCOPE_UPLOADS_PREFIX, SCOPE_UPLOADS_TOKEN } from '../pipeline/scope-uploads'
 import { declineMerge, findProtectedPair } from '../pipeline/guardrails'
 import { HttpError } from '../shared/errors'
 import { api, ok, readJson, requireParam } from '../shared/http'
 import { ACTOR, capsStandardCodes, DOCTRINE_VERSIONS, ENGINE_VERSION, newId, today } from '../shared/util'
+
+// PUT /api/scope-uploads/{token}/{fileName}  raw PDF bytes → { blobPath }
+// Released questions the user attaches to a topic request, uploaded BEFORE
+// POST /scopes (generation starts immediately on create, so the files must
+// already be in place). The client mints the token; the scope stores it as
+// request.uploadsToken, and the pipeline attaches the PDFs to the generation
+// calls as native document blocks.
+api({
+  name: 'scope-upload-put',
+  methods: ['PUT'],
+  route: 'scope-uploads/{token}/{fileName}',
+  handler: async (req) => {
+    const token = requireParam(req, 'token')
+    const fileName = requireParam(req, 'fileName')
+    if (!SCOPE_UPLOADS_TOKEN.test(token)) throw new HttpError(400, 'invalid upload token')
+    if (!fileName || /[\\/]|\.\./.test(fileName)) throw new HttpError(400, 'invalid file name')
+    const bytes = Buffer.from(await req.arrayBuffer())
+    if (bytes.length === 0) throw new HttpError(400, 'empty upload body')
+    if (bytes.length > 15 * 1024 * 1024) {
+      throw new HttpError(413, 'released-questions PDF too large (15 MB max) — split it and upload the relevant pages')
+    }
+    const blobPath = `${SCOPE_UPLOADS_PREFIX}${token}/${fileName}`
+    await uploadsContainer()
+      .getBlockBlobClient(blobPath)
+      .uploadData(bytes, { blobHTTPHeaders: { blobContentType: 'application/pdf' } })
+    return ok({ blobPath })
+  },
+})
 
 // POST /api/scopes  { setId, mode, params } → { id, jobId }
 // Creates the scope doc (status 'generating') and enqueues the generate job.
@@ -21,6 +51,8 @@ api({
       mode?: Scope['request']['mode']
       params?: string
       granular?: boolean
+      uploadsToken?: string
+      uploadNames?: string[]
     }>(req)
     const requestedIds = [
       ...new Set(
@@ -50,7 +82,21 @@ api({
       setId: set.id,
       ...(requestedIds.length > 1 ? { setIds: requestedIds } : {}),
       title,
-      request: { mode, params, ...(body.granular === true ? { granular: true } : {}) },
+      request: {
+        mode,
+        params,
+        ...(body.granular === true ? { granular: true } : {}),
+        // User-attached released questions (topic requests): keep the token so
+        // the pipeline can attach the PDFs and delete can clean them up.
+        ...(typeof body.uploadsToken === 'string' && SCOPE_UPLOADS_TOKEN.test(body.uploadsToken)
+          ? {
+              uploadsToken: body.uploadsToken,
+              uploadNames: Array.isArray(body.uploadNames)
+                ? body.uploadNames.map((n) => String(n)).slice(0, 4)
+                : [],
+            }
+          : {}),
+      },
       engineVersion: ENGINE_VERSION,
       doctrineVersions: DOCTRINE_VERSIONS,
       status: 'generating',

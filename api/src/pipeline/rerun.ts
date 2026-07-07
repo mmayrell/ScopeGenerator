@@ -1,6 +1,6 @@
 import { InvocationContext } from '@azure/functions'
 import { JobMessage, Lesson, Scope, Unit } from '../domain/types'
-import { getScope, getScopeEvidenceSet, mutateScope, snapshotScope } from '../data/entities'
+import { getScope, getScopeEvidenceSet, getScopeSourceSets, mutateScope, snapshotScope } from '../data/entities'
 import { mutateJob, pushLog } from '../data/jobs'
 import { generateStructured } from '../services/claude'
 import { rerunLessonPrompt, rerunUnitPrompt } from '../services/prompts'
@@ -11,6 +11,7 @@ import {
   WireLesson,
 } from '../services/schemas'
 import { today } from '../shared/util'
+import { loadScopeUploadDocs } from './scope-uploads'
 import { findLesson } from './qc'
 
 /**
@@ -28,6 +29,8 @@ export async function rerunRunStep(msg: JobMessage, ctx: InvocationContext): Pro
 
   const scope = await getScope(msg.scopeId)
   const set = await getScopeEvidenceSet(scope)
+  const sourceSets = await getScopeSourceSets(scope) // [] unless multi-set (cross-framework union)
+  const userDocs = await loadScopeUploadDocs(scope, ctx) // user-attached released-question PDFs (topic requests)
   const validItemIds = new Set(set.items.map((it) => it.id))
 
   await mutateJob(msg.jobId, (r) => {
@@ -54,18 +57,20 @@ export async function rerunRunStep(msg: JobMessage, ctx: InvocationContext): Pro
       )
     }
     const wire = await generateStructured<{ lesson: WireLesson }>({
-      ...rerunLessonPrompt(set, scope, located.unit, located.lesson),
+      ...rerunLessonPrompt(set, scope, located.unit, located.lesson, sourceSets, userDocs.names),
       schema: RERUN_LESSON_SCHEMA,
       effort: 'medium', // interactive latency; fits the 10-min Consumption cap
+      ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
     })
     const regenerated = toLesson(wire.lesson, validItemIds)
     applyChanges = (s) =>
       replaceLesson(s.units, targetUnit.id, located.lesson.id, (old) => ({ ...regenerated, id: old.id }))
   } else if (mode === 'split' || mode === 'merge') {
     const wire = await generateStructured<{ lessons: WireLesson[] }>({
-      ...rerunUnitPrompt(set, scope, targetUnit, mode, target, override),
+      ...rerunUnitPrompt(set, scope, targetUnit, mode, target, override, sourceSets, userDocs.names),
       schema: RERUN_UNIT_SCHEMA,
       effort: 'medium', // interactive latency; fits the 10-min Consumption cap
+      ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
     })
     if (!wire.lessons || wire.lessons.length === 0) {
       throw new Error(`rerun produced no lessons for unit ${targetUnit.id}`)

@@ -24,6 +24,9 @@ export interface Prompt {
   user: string
 }
 
+/** Canonical-code shapes of every supported framework (see the rerun prompts' comment). */
+const CODE_SHAPES = /(?:[A-Z]{1,3}\.)?[0-9]+\.[A-Za-z0-9]+(?:\([A-Za-z0-9]+\))*(?:\.[A-Za-z0-9]+(?:\([A-Za-z0-9]+\))*)*/g
+
 const jsonBlock = (label: string, data: unknown): string =>
   `\n<${label}>\n${JSON.stringify(data, null, 1)}\n</${label}>\n`
 
@@ -198,11 +201,63 @@ const GRANULAR_TRACKS = `GRANULAR TRACK MODE is ON for this scope (user-selected
 /** The granular block when the scope's toggle is on; '' otherwise (safe to interpolate). */
 const granularBlock = (scope: Scope): string => (scope.request.granular ? `\n${GRANULAR_TRACKS}\n` : '')
 
+/**
+ * User-attached released-question PDFs (topic requests) — the generation call
+ * carries them as native document blocks; this block tells the model what
+ * they are and how they rank as evidence.
+ */
+/** `names` MUST be the files actually attached to this call (loadScopeUploadDocs order) — never the request's display metadata, which can diverge when a blob is missing or budget-skipped. */
+const userUploadsBlock = (names: string[]): string => {
+  if (names.length === 0) return ''
+  return `
+USER-SUPPLIED RELEASED QUESTIONS: ${names.length === 1 ? 'one PDF document is' : `${names.length} PDF documents are`} attached to this request, in this exact order: ${names.map((n, i) => `document ${i + 1} = "${n}"`).join('; ')}. The user uploaded ${names.length === 1 ? 'it' : 'them'} with this scope request as released questions to model from. Treat them as released-items evidence for this scope: classify their items per P2 against the scoped standards; they calibrate demand, inform boundaries and ceilings, and are PRIMARY models for the generated assessment exemplars on this topic (construction quality, distractor style, language precision, visual conventions). They are NOT in the set's item bank, so their items never enter itemRefs — reference them in field content and cite them with sourceType "items", label "User upload: <fileName>" (the file names above, matched by attachment order), locator by page/question number. Cite ONLY these attached documents — never a file name from the request metadata that is not in the list above.
+`
+}
+
+/**
+ * Cross-framework union mode — active whenever a scope draws on more than one
+ * standard set (e.g. a CCSS set + a TEKS set). One combined course covering
+ * every standard of every selected set: unique standards get their own
+ * lessons, overlapping standards merge with the assessment boundary widened
+ * to the union of the frameworks' demands.
+ */
+const unionBlock = (sourceSets: StandardSet[]): string => {
+  if (sourceSets.length < 2) return ''
+  const names = sourceSets.map((s, i) => `Set ${i + 1} = "${s.name}" (scheme: ${s.codingScheme})`).join(' · ')
+  return `
+CROSS-FRAMEWORK UNION MODE is ON — this scope draws on ${sourceSets.length} standard sets (${names}) and must produce ONE combined course after which a student has mastered EVERY standard of EVERY selected set to its fullest demand. BINDING rules:
+- CROSSWALK FIRST (content-based, never code-based — the P2 philosophy): classify every most-granular content standard of each set as (a) unique to its set, or (b) overlapping specific standard(s) of the other set(s) — the same skill substance, judged from the official wordings. Log every classification in scopeDecisions.
+- UNIQUE standards get their own lessons from their set's evidence, exactly as normal.
+- OVERLAPPING standards merge into ONE lesson chain — never parallel duplicate lessons for the same skill. Field 1 (Standard) of a merged lesson lists EVERY aligned standard: each framework's canonical code and verbatim wording, labeled with its set name.
+- BOUNDARY UNION: a merged lesson's assessment boundary and ceiling are the UNION of the aligned standards' demands — wherever one framework's parameters exceed the other's, the lesson teaches and assesses the WIDER demand. Example: one framework limits denominators to 2, 3, 4, 5 and the other allows 2, 3, 4, 5, 8 → the merged lesson covers denominators 2, 3, 4, 5, AND 8. The Included list states the union parameters plainly, and every widening is recorded in a boundary-tagged decision entry citing BOTH standards.
+- The boundary-authority veto (P1) runs against the UNION: content is in-boundary when ANY selected set's standard wording includes it; a contradiction exists only when demand exceeds EVERY selected framework's boundary for that skill.
+- Emphasis (field 4): where the frameworks' designations differ, state each framework's designation by set name; 'not designated' only where NO selected set designates.
+- Items: classify and attach against the union boundary of a lesson's aligned standards; the released-item coverage rule runs across every selected set's item bank.
+- Sequencing: ONE coherent course — the union skill set ordered by the sequencing rules; never one framework's course appended after the other's.
+- COVERAGE IS THE COMPLETION TEST: the plan is defective if any most-granular content standard of ANY selected set lacks a covering lesson (each lesson skeleton's standardCodes must make the covering standards traceable, using each framework's own codes).`
+}
+
+/**
+ * The standards evidence for the prompt: per-set blocks (framework-labeled)
+ * when union mode is active — the crosswalk needs to know which framework
+ * each tree belongs to, which the merged corpus erases — else the single
+ * merged block.
+ */
+const standardsEvidenceBlocks = (set: StandardSet, sourceSets: StandardSet[]): string =>
+  sourceSets.length >= 2
+    ? sourceSets.map((s, i) => jsonBlock(`standard_set_${i + 1}_evidence`, setEvidence(s))).join('')
+    : jsonBlock('standard_set_evidence', setEvidence(set))
+
 // ---------------------------------------------------------------------------
 // Stage prompts
 // ---------------------------------------------------------------------------
 
-export function planPrompt(set: StandardSet, scope: Scope): Prompt {
+export function planPrompt(
+  set: StandardSet,
+  scope: Scope,
+  sourceSets: StandardSet[] = [],
+  userUploadNames: string[] = [],
+): Prompt {
   const requestDescription =
     scope.request.mode === 'course'
       ? `Whole-course scope: cover every published content standard of the set over the full grade span (${set.gradeSpan}), TOGETHER WITH the full skill chain each standard requires. The introductory, foundational, and scaffolding atoms (preskills, first-instance lessons, bridges) that build toward each skill are FIRST-CLASS lessons and are included even when no released item aligns to them — released items are validation evidence, not the inclusion filter. D1 still governs component-level exclusion (drop specific content/difficulty the released evidence never assesses anywhere; cap difficulty at the highest observed tested difficulty), but the ABSENCE of a directly-aligned item for an atom is NOT such an exclusion — that is a documentation gap, and the atoms and preskills constituting the scoped standards stay at full quality with generated exemplars. Item presence gates how hard a lesson goes, never whether the atoms that build the assessed skills appear in the course.`
@@ -226,8 +281,9 @@ Stage 4 — Sequencing & Unit Formation:
 ${SEQUENCING}
 
 ${requestDescription}
+${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
 ${jsonBlock('scope_request', scope.request)}
-${jsonBlock('standard_set_evidence', setEvidence(set))}
+${standardsEvidenceBlocks(set, sourceSets)}
 ${jsonBlock('item_bank', set.items)}
 
 Output: ordered units with lesson skeletons.
@@ -245,6 +301,8 @@ export function cardsPrompt(
   plan: PlanOutput,
   unit: PlanUnit,
   batch: PlanLessonSkeleton[],
+  sourceSets: StandardSet[] = [],
+  userUploadNames: string[] = [],
 ): Prompt {
   const codes = batch.flatMap((l) => l.standardCodes)
   const refs = batch.flatMap((l) => l.itemRefs)
@@ -261,7 +319,7 @@ export function cardsPrompt(
     user: `Generate complete 14-field lesson cards for the ${batch.length} lesson(s) of unit "${unit.id} — ${unit.title}" listed in batch_lessons, following the approved plan skeleton exactly (same lesson ids, same order, same types). Output ONLY the batch_lessons lessons — the unit's remaining lessons are produced by sibling calls; the full unit_skeleton is supplied so relational fields (Prerequisites, Progression Placement, Assessment Boundary, Non-Goals) can reference them by lesson id.
 
 ${CARD_RULES}
-${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: batch.map((l) => l.title), standardCodes: batch.flatMap((l) => l.standardCodes) })}${granularBlock(scope)}
+${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: batch.map((l) => l.title), standardCodes: batch.flatMap((l) => l.standardCodes) })}${granularBlock(scope)}${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
 Additional requirements:
 - evidence-locking is mandatory: generation returns { content, citations[] } per field; uncited fields 4–14 are rejected pre-QC (spec §6 Stage 5); fields 1–3 return citations: [].
 - decision entries must carry rule ids (P#/A#/D#) and quote both sides on every contradiction.
@@ -274,7 +332,7 @@ ${jsonBlock('plan_overview', planOverview)}
 ${jsonBlock('unit_skeleton', unit)}
 ${jsonBlock('batch_lessons', batch)}
 ${jsonBlock('scope_decisions_from_plan', plan.scopeDecisions)}
-${jsonBlock('standard_set_evidence', setEvidence(set))}
+${standardsEvidenceBlocks(set, sourceSets)}
 ${jsonBlock('item_bank_subset', evidenceItems)}`,
   }
 }
@@ -284,19 +342,27 @@ export function rerunLessonPrompt(
   scope: Scope,
   unit: Unit,
   lesson: Lesson,
+  sourceSets: StandardSet[] = [],
+  userUploadNames: string[] = [],
 ): Prompt {
-  const codes = lesson.fields.standards.content.match(/[0-9]+\.[A-Za-z]+(?:\.[A-Za-z0-9]+)*/g) ?? []
+  // Code shapes across frameworks: CCSS 4.NF.B.3 · TEKS 4.3A / 6.2(A) /
+  // 111.26(b)(4)(A) · SOL 3.NS.1 · B.E.S.T. MA.4.NSO.1.1. Union-mode merged
+  // lessons list several frameworks' codes in field 1 — a CCSS-only pattern
+  // silently dropped the other framework's items from the rerun evidence.
+  // Over-matching is harmless (recall-side supply; a non-code just matches no
+  // items); under-matching loses evidence.
+  const codes = lesson.fields.standards.content.match(CODE_SHAPES) ?? []
   const evidenceItems = itemsForCodes(set, codes, lesson.itemRefs)
   return {
     system: systemCore('rerun: regenerate one lesson card in place (Stage 5 re-entry)', !!scope.request.granular),
     user: `Regenerate the lesson card "${lesson.id} — ${lesson.title}" in place at the same granularity (spec §6 rerun re-entry: "regenerate-in-place → Stage 5 for that card"). Keep the lesson id, type, and position in the chain; produce a fresh 14-field card cited per the card rules (fields 4–14 cited; fields 1–3 citations: []).
 
 ${CARD_RULES}
-${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: [lesson.title], standardCodes: codes })}${granularBlock(scope)}
+${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: [lesson.title], standardCodes: codes })}${granularBlock(scope)}${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
 ${jsonBlock('scope_request', scope.request)}
 ${jsonBlock('containing_unit', { id: unit.id, title: unit.title, strand: unit.strand, lessons: unit.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type })) })}
 ${jsonBlock('current_lesson_card', lesson)}
-${jsonBlock('standard_set_evidence', setEvidence(set))}
+${standardsEvidenceBlocks(set, sourceSets)}
 ${jsonBlock('item_bank_subset', evidenceItems)}`,
   }
 }
@@ -308,10 +374,10 @@ export function rerunUnitPrompt(
   mode: 'split' | 'merge',
   target: string,
   override: boolean,
+  sourceSets: StandardSet[] = [],
+  userUploadNames: string[] = [],
 ): Prompt {
-  const codes = unit.lessons.flatMap(
-    (l) => l.fields.standards.content.match(/[0-9]+\.[A-Za-z]+(?:\.[A-Za-z0-9]+)*/g) ?? [],
-  )
+  const codes = unit.lessons.flatMap((l) => l.fields.standards.content.match(CODE_SHAPES) ?? [])
   const evidenceItems = itemsForCodes(
     set,
     codes,
@@ -322,7 +388,7 @@ export function rerunUnitPrompt(
     user: `Rerun unit "${unit.id} — ${unit.title}" at ${mode === 'split' ? 'MORE granularity (split)' : 'LESS granularity (merge)'} around the target "${target}" (spec §6: "lesson granularity change → Stage 3 scoped to affected atoms, then 4–6 locally").${mode === 'split' ? ' A split still requires an A2 criterion to genuinely fire around the target (new strategy/decision/representation/prerequisite, demand-band jump, or objective overload — never merely harder numbers). If none fires, keep the granularity unchanged and record the refusal with its basis in the affected Decision records.' : ''}
 
 ${APPENDIX_A}
-${granularBlock(scope)}
+${granularBlock(scope)}${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
 ${BLAST_RADIUS}
 
 ${override ? `An explicit user override of a protected hard-split boundary is in force for this merge: execute the merge, and log the override in the affected lessons' Decision records (type "override", both sides cited, rule id of the overridden criterion).` : ''}
@@ -337,7 +403,7 @@ ${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: unit
 
 ${jsonBlock('scope_request', scope.request)}
 ${jsonBlock('current_unit', unit)}
-${jsonBlock('standard_set_evidence', setEvidence(set))}
+${standardsEvidenceBlocks(set, sourceSets)}
 ${jsonBlock('item_bank_subset', evidenceItems)}`,
   }
 }

@@ -84,7 +84,7 @@ cannot attach headers to `<img>` requests.
 | `GET /item-image/{setId}/{itemId}` | → `image/png` | question screenshot; auth via header or `?code=` |
 | `POST /sets/{id}/publish` | → `{ set: StandardSet }` | seeded sets (no uploads) publish immediately; uploaded sets 409 unless extraction completed and every warning is resolved. Idempotent |
 | `GET /framework` | → `FrameworkDoc` | the fixed engine/doctrine documents (read-only — no PUT; new versions ship with the tool). The payload keeps a legacy `register: []` so pre-removal bundles render an empty exemplar register during deploy skew |
-| `POST /scopes` | `{ setId, setIds?, mode, params, granular? }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job. Optional `granular: true` = Granular Track Scoping (stored on `Scope.request.granular`): atomization drops to the most granular DI skill level — one rule/decision/response pattern per track; number-form, representation, and distinct-error-pattern changes each split — with synthesis tracks (type `bridge`) where the student decides which mastered procedure applies, and NO prior-grade prerequisite tracks (assumed mastered). Applies to plan, cards, and unit-rerun prompts |
+| `POST /scopes` | `{ setId, setIds?, mode, params, granular?, uploadsToken?, uploadNames? }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job. Optional `granular: true` = Granular Track Scoping (stored on `Scope.request.granular`): atomization drops to the most granular DI skill level — one rule/decision/response pattern per track; number-form, representation, and distinct-error-pattern changes each split — with synthesis tracks (type `bridge`) where the student decides which mastered procedure applies, and NO prior-grade prerequisite tracks (assumed mastered). Applies to plan, cards, and unit-rerun prompts |
 | `GET /scopes/{id}` | → `Scope` | |
 | `GET /scopes/{id}/job` | → `JobStatus` (below) | polled by the generation screen |
 | `POST /scopes/{id}/pause-generation` | → `{ jobId }` (202) | cooperative: flags the job; workers halt at the next checkpoint, scope → `paused` |
@@ -102,6 +102,7 @@ cannot attach headers to `<img>` requests.
 | `POST /packets/{id}/stop` | → `{ jobId }` | sets `cancelRequested`; the hunt halts at its next checkpoint, packet → `cancelled`, found items kept. 409 with no active hunt |
 | `POST /packets/{id}/retry` | → `{ jobId }` (202) | resumes a failed/stopped/stalled hunt: packet → `hunting` with `huntJobId` stamped, then re-dispatches the SAME job id (stop flag cleared) — never a fresh row that a stale execution could wedge; `doneBatches` make finished batches skip. A provably-live active job (log progress < 15 min, no stop flag) is reused as-is |
 | `DELETE /packets/{id}` | → `{ ok: true }` | flags any active hunt job to stop, then removes the doc and index row |
+| `PUT /scope-uploads/{token}/{fileName}` | raw bytes (`application/pdf`, ≤15 MB) → `{ blobPath }` | released questions attached to a topic scope request, uploaded BEFORE `POST /scopes` (client mints the token, sends it as `uploadsToken` + `uploadNames`); stored at `uploads/scope-uploads/<token>/<fileName>`; the pipeline attaches the PDFs to plan/cards calls as native document blocks (evidence rank: released items per P2, primary models for generated exemplars, never in itemRefs); deleted with the scope |
 | `GET /library` | → `{ files: LibraryFile[] }` | Reference Library — the four document sets (standards/progression/items/unpacking) filed per framework (`ccss`/`teks`/`sol`/`best`) and grade (3–8). Listing derives from a blob prefix walk (no index doc) |
 | `PUT /library/{framework}/{grade}/{role}/{fileName}` | raw bytes (`application/pdf`) → `{ file: LibraryFile }` (201) | stores to `uploads` container under `library/...`; same name replaces the document. Every path segment is validated |
 | `DELETE /library/{framework}/{grade}/{role}/{fileName}` | → `{ ok: true }` | |
@@ -174,6 +175,15 @@ interface JobMessage {
 ```
 
 ## Generation pipeline (kind `generate`)
+
+**Cross-framework union (multi-set scopes).** When a scope draws on more than one standard set
+(`setIds.length > 1`, e.g. a CCSS set + a TEKS set), the plan/cards/rerun prompts run in UNION mode
+(`unionBlock` + per-set evidence blocks via `getScopeSourceSets`): a content-based crosswalk
+classifies every most-granular standard as unique-to-set or overlapping; unique standards get their
+own lessons; overlapping standards merge into one lesson chain whose assessment boundary/ceiling is
+the UNION of the frameworks' demands (widenings logged with both standards cited); P1 runs against
+the union (in-boundary if ANY selected framework includes it); coverage requires every standard of
+every selected set to have a covering lesson. Single-set scopes are unchanged ([] source sets).
 
 Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeout
 (`host.json`: `functionTimeout: "00:10:00"`):

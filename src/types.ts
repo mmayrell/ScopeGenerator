@@ -266,6 +266,10 @@ export interface Scope {
     params: string
     /** Granular track scoping — atomize to the most granular DI skill level with synthesis tracks (user toggle). */
     granular?: boolean
+    /** Blob prefix token for user-uploaded released-question PDFs (scope-uploads/<token>/...) — topic requests. */
+    uploadsToken?: string
+    /** Display names of the uploaded PDFs (the blobs under the token are authoritative). */
+    uploadNames?: string[]
   }
   engineVersion: string
   doctrineVersions: string[]

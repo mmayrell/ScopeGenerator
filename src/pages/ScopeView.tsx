@@ -527,13 +527,19 @@ export default function ScopeView() {
         setRetrying(false)
       } catch {
         try {
-          // Carry the full request — dropping granular here would silently
-          // regenerate the user's granular scope at default granularity.
+          // Carry the FULL request — dropping granular would silently
+          // regenerate at default granularity, and dropping the uploads token
+          // would regenerate a topic scope without its released-question PDFs
+          // (the blobs still exist under the token; deleteScopeDocs skips a
+          // token another scope still references).
           const newId = await createScope(
             scope.setIds?.length ? scope.setIds : [scope.setId],
             scope.request.mode,
             scope.request.params,
             scope.request.granular,
+            scope.request.uploadsToken
+              ? { token: scope.request.uploadsToken, names: scope.request.uploadNames ?? [] }
+              : undefined,
           )
           nav(`/scopes/${newId}`)
         } catch {

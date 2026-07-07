@@ -44,7 +44,13 @@ interface Store {
   resolveArtifact: (setId: string, artifactId: string) => Promise<void>
   publishSet: (setId: string) => Promise<{ jobId?: string }>
   rerun: (scopeId: string, target: string, mode: string, override?: boolean) => Promise<RerunResult>
-  createScope: (setIds: string[], mode: 'course' | 'standard' | 'topic', params: string, granular?: boolean) => Promise<string>
+  createScope: (
+    setIds: string[],
+    mode: 'course' | 'standard' | 'topic',
+    params: string,
+    granular?: boolean,
+    uploads?: { token: string; names: string[] },
+  ) => Promise<string>
   submitReport: (scopeId: string, target: string, text: string) => Promise<Proposal>
   iterateProposal: (scopeId: string, proposalId: string, feedback: string) => Promise<void>
   resolveProposal: (scopeId: string, proposalId: string, accept: boolean) => Promise<void>
@@ -306,8 +312,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   )
 
   const createScope = useCallback(
-    async (setIds: string[], mode: 'course' | 'standard' | 'topic', params: string, granular?: boolean): Promise<string> => {
-      const { id } = await guard(() => api.createScope(setIds, mode, params, granular))
+    async (
+      setIds: string[],
+      mode: 'course' | 'standard' | 'topic',
+      params: string,
+      granular?: boolean,
+      uploads?: { token: string; names: string[] },
+    ): Promise<string> => {
+      const { id } = await guard(() => api.createScope(setIds, mode, params, granular, uploads))
       await refreshScope(id) // pull the new 'generating' document into state
       return id
     },

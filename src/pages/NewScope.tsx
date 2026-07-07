@@ -60,6 +60,13 @@ export default function NewScope() {
   const [granular, setGranular] = useState(false)
   const [selectedCodes, setSelectedCodes] = useState<string[]>([])
   const [topic, setTopic] = useState('')
+  // Released-question PDFs the user attaches to a topic request (optional).
+  const [topicFiles, setTopicFiles] = useState<File[]>([])
+  const topicFileInput = useRef<HTMLInputElement>(null)
+  // One token per page visit: a failed launch retried re-uploads OVER the same
+  // blobs instead of minting a new token per attempt (which orphaned the old
+  // ones — nothing references a token until createScope succeeds).
+  const uploadsToken = useRef<string>(crypto.randomUUID())
   const [topicMapped, setTopicMapped] = useState(false)
   const [running, setRunning] = useState<string | null>(null)
   const [job, setJob] = useState<JobStatus | null>(null)
@@ -151,7 +158,15 @@ export default function NewScope() {
     setLaunching(true)
     setLaunchError(null)
     try {
-      const id = await createScope(setIds, mode, params, granular)
+      // Topic requests may carry released-question PDFs to model from: upload
+      // them BEFORE creating the scope (generation starts on create).
+      let uploads: { token: string; names: string[] } | undefined
+      if (mode === 'topic' && topicFiles.length > 0) {
+        const token = uploadsToken.current
+        await Promise.all(topicFiles.map((f) => api.uploadScopePdf(token, f.name, f)))
+        uploads = { token, names: topicFiles.map((f) => f.name) }
+      }
+      const id = await createScope(setIds, mode, params, granular, uploads)
       setJob(null)
       setFailure(null)
       setRunning(id)
@@ -344,6 +359,14 @@ export default function NewScope() {
             ))}
             {published.length === 0 && <p className="text-[13px] text-ink-3">No published sets yet — publish one from Standard sets.</p>}
           </div>
+          {setIds.length > 1 && (
+            <div className="animate-rise mt-2 rounded-xl border border-accent/25 bg-accent-wash/40 px-4 py-2.5 text-[12px] leading-relaxed text-ink-2">
+              <span className="font-semibold text-ink">Cross-framework union:</span> one combined course covering every
+              standard of each selected set. Standards unique to a set get their own lessons; standards that overlap
+              across sets merge into one lesson with the assessment boundary widened to the broadest framework's demand
+              — so completing the course means mastering every selected framework's standards to the fullest.
+            </div>
+          )}
         </div>
 
         <div>
@@ -403,6 +426,61 @@ export default function NewScope() {
                 </div>
               )}
               {topicMapped && <div className="mt-2"><Pill tone="green">mapping confirmed — 4.NBT.5, 4.NBT.6 + 4.OA.3 tier</Pill></div>}
+
+              <div className="mt-3 rounded-xl border border-hairline bg-panel p-3.5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="text-[13px] font-semibold text-ink">Released Questions (Optional)</div>
+                    <p className="mt-0.5 text-[11.5px] leading-snug text-ink-3">
+                      Attach released questions for this topic — the generator classifies them as released-items
+                      evidence and models its generated exemplars on them. PDF only, up to 4 files, 15 MB each.
+                    </p>
+                  </div>
+                  <Btn onClick={() => topicFileInput.current?.click()} className="shrink-0">
+                    {topicFiles.length ? 'Add more' : 'Upload PDF(s)'}
+                  </Btn>
+                </div>
+                <input
+                  ref={topicFileInput}
+                  type="file"
+                  accept=".pdf,application/pdf"
+                  multiple
+                  className="hidden"
+                  onChange={(e) => {
+                    const picked = [...(e.target.files ?? [])].filter(
+                      (f) => (/\.pdf$/i.test(f.name) || f.type === 'application/pdf') && f.size <= 15 * 1024 * 1024,
+                    )
+                    setTopicFiles((prev) => {
+                      // Match the pipeline's 20 MB attachment budget — a file
+                      // accepted here but budget-skipped server-side would be
+                      // cited without being attached.
+                      const merged = [...prev.filter((p) => !picked.some((f) => f.name === p.name)), ...picked].slice(0, 4)
+                      let total = 0
+                      return merged.filter((f) => (total += f.size) <= 18 * 1024 * 1024)
+                    })
+                    e.target.value = ''
+                  }}
+                />
+                {topicFiles.length > 0 && (
+                  <ul className="mt-2.5 space-y-1.5">
+                    {topicFiles.map((f) => (
+                      <li key={f.name} className="flex items-center gap-2 rounded-lg bg-paper px-2.5 py-1.5">
+                        <Mono className="min-w-0 flex-1 truncate text-[11.5px] text-ink-2">{f.name}</Mono>
+                        <span className="shrink-0 text-[10.5px] text-ink-3">{Math.max(1, Math.round(f.size / 1024))} KB</span>
+                        <button
+                          onClick={() => setTopicFiles((prev) => prev.filter((p) => p.name !== f.name))}
+                          className="cursor-pointer rounded p-0.5 text-ink-3 transition-colors hover:bg-ink/5 hover:text-rust"
+                          title="Remove"
+                        >
+                          <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                          </svg>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
           )}
         </div>

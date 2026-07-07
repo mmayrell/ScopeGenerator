@@ -111,6 +111,18 @@ export async function getScopeEvidenceSet(scope: Scope): Promise<StandardSet> {
   }
 }
 
+/**
+ * The INDIVIDUAL sets behind a multi-select scope, in request order — the
+ * cross-framework union prompts need per-set attribution (which framework a
+ * standard belongs to), which the merged evidence set erases. Returns [] for
+ * single-set scopes: union semantics only exist across sets.
+ */
+export async function getScopeSourceSets(scope: Scope): Promise<StandardSet[]> {
+  const ids = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
+  if (ids.length < 2) return []
+  return Promise.all(ids.map((id) => getSet(id)))
+}
+
 /** Removes the set document, its uploaded PDFs, its item screenshots, and its index row. Scopes generated from the set are untouched. */
 export async function deleteSetDocs(id: string): Promise<void> {
   await dataContainer().getBlockBlobClient(setBlobPath(id)).deleteIfExists()
@@ -200,6 +212,16 @@ export async function listScopes(): Promise<Scope[]> {
 }
 
 export async function deleteScopeDocs(id: string): Promise<void> {
+  // User-attached released-question PDFs live under a request token, not the
+  // scope id — read the doc first so its uploads never orphan. A failed-scope
+  // retry recreates the scope SHARING the same token, so only delete the
+  // prefix when no other scope still references it.
+  const doc = await getScopeOrUndefined(id)
+  const token = doc?.request?.uploadsToken
+  if (token && /^[A-Za-z0-9-]{8,64}$/.test(token)) {
+    const others = (await listScopes()).some((s) => s.id !== id && s.request?.uploadsToken === token)
+    if (!others) await deleteBlobsWithPrefix(uploadsContainer(), `scope-uploads/${token}/`)
+  }
   await dataContainer().getBlockBlobClient(scopeBlobPath(id)).deleteIfExists()
   await deleteBlobsWithPrefix(dataContainer(), `scopes/${id}/`)
   try {
