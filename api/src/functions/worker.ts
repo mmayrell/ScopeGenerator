@@ -14,6 +14,13 @@ import { nowIso, today } from '../shared/util'
 const MAX_DEQUEUE_COUNT = 12 // keep in sync with host.json extensions.queues.maxDequeueCount
 
 /**
+ * Attempts a step may RUN before the worker refuses to re-run it (see the
+ * circuit breaker in the handler). Distinct from MAX_DEQUEUE_COUNT, which only
+ * bounds attempts whose errors we can catch — timeout kills bypass the catch.
+ */
+const RUN_ATTEMPT_CAP = 3
+
+/**
  * Deterministic failures — the same input fails the same way every attempt, so
  * retrying only burns 10-minute windows and API spend. Fail fast.
  */
@@ -42,6 +49,22 @@ app.storageQueue('genjobs-worker', {
     const dequeueCount = Number(
       (context.triggerMetadata?.dequeueCount as number | string | undefined) ?? 1,
     )
+    // Circuit breaker: a high dequeue count means previous attempts died WITHOUT
+    // reaching the catch below — the host kills the invocation at the 10-minute
+    // functionTimeout (typically a Claude call that cannot fit) and the catch
+    // never runs. Re-running just repeats the same expensive doomed call up to
+    // maxDequeueCount times; fail the job visibly instead.
+    if (dequeueCount > RUN_ATTEMPT_CAP) {
+      context.error(
+        `genjobs-worker: job ${msg.jobId} ${msg.kind}/${msg.step} exceeded ${RUN_ATTEMPT_CAP} attempts (dequeue ${dequeueCount}); previous attempts were killed before error handling could run - failing the job without re-running`,
+      )
+      await markFailed(
+        msg,
+        `Step was killed ${RUN_ATTEMPT_CAP} times before completing - almost certainly the 10-minute execution cap on a Claude call that does not fit. Reduce the request scope (e.g. plan one framework at a time), lower CLAUDE_EFFORT, or split the step.`,
+        context,
+      )
+      return
+    }
     try {
       await dispatch(msg, context)
     } catch (e) {
