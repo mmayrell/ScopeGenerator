@@ -43,7 +43,12 @@ changing the backend or the frontend's API client, and keep the two sides in syn
 - Queue messages must stay base64-encoded on send (the Functions host expects base64).
 - Custom HTTP routes must not start with `admin` (reserved by the Functions host — 404s).
 - Pipeline work must fit the 10-minute Consumption timeout per queue message; checkpoint to
-  blobs and re-enqueue rather than doing more in one invocation.
+  blobs and re-enqueue rather than doing more in one invocation. The worker circuit-breaks any
+  message on its 4th delivery (RUN_ATTEMPT_CAP in worker.ts) — a step whose Claude call cannot
+  finish inside 10 minutes will fail with a "killed 3 times" error rather than retry forever.
+  KNOWN CASE (2026-07-07): cross-framework **union** full-course scoping doubles the plan-stage
+  evidence and does not fit — split union planning into one plan call per framework (checkpoint
+  each) plus a merge step, or lower the plan call's effort for union requests.
 
 ## Frontend rules (`src/`)
 
