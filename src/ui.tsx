@@ -122,6 +122,9 @@ const sourceTone: Record<Citation['sourceType'], { label: string; cls: string }>
   'performance-report': { label: 'Report', cls: 'text-rust bg-rust-wash border-rust/25' },
 }
 
+/** Human label for a citation source type (shared with the decision-record citation list). */
+export const citationSourceLabel = (t: Citation['sourceType']): string => sourceTone[t].label
+
 const POPOVER_W = 320 // w-80
 const POPOVER_EST_H = 190 // flip threshold — measured typical excerpt popover
 

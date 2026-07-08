@@ -141,6 +141,7 @@ export type DecisionField =
   | 'card'
   | 'standards'
   | 'cluster'
+  | 'substandard'
   | 'objectives'
   | 'emphasis'
   | 'progression'
@@ -167,6 +168,13 @@ export interface DecisionEntry {
 export interface CardField {
   content: string
   citations: Citation[]
+  /**
+   * The field's decision record: a self-contained prose explanation of why the
+   * content reads the way it does — the evidence weighed, defaults overridden,
+   * inferences and their bases. Optional only for scopes generated before
+   * per-field rationales existed.
+   */
+  rationale?: string
   inferred?: boolean
 }
 
@@ -189,7 +197,9 @@ export interface Lesson {
   fields: {
     standards: CardField
     cluster: CardField
-    /** Minimal-complete mastery objectives (field 3). Optional only for scopes generated before the field existed. */
+    /** The verb-led atomized objective — the single teachable behavior this lesson owns (spec: Substandard / atomizedObjective). Optional only for scopes generated before the field existed. */
+    substandard?: CardField
+    /** Minimal-complete mastery objectives. Optional only for scopes generated before the field existed. */
     objectives?: CardField
     emphasis: CardField
     progression: CardField
@@ -373,6 +383,30 @@ export interface HuntedItem {
   /** 'official' only when the source itself maps the item to the standard code. */
   alignment: 'official' | 'ai-inferred'
   notes: string
+  /**
+   * Key of the HuntSource this item was transcribed from (document-first
+   * hunt). Absent on gap-sweep items and on items hunted before sources
+   * existed.
+   */
+  sourceKey?: string
+}
+
+/**
+ * A released-test document the discovery phase cataloged — the unit of
+ * transcription. One entry per (document, grade): the transcription phase
+ * opens the document and transcribes EVERY in-scope item it holds.
+ */
+export interface HuntSource {
+  /** Stable key `${grade}|${normalized url}` — checkpointing across executions. */
+  key: string
+  program: string
+  year: number
+  grade: number
+  url: string
+  title: string
+  /** Item count the release page/document states, when it does; 0 = unknown. */
+  expectedItems: number
+  note: string
 }
 
 export interface EvidencePacket {
@@ -389,6 +423,15 @@ export interface EvidencePacket {
   items: HuntedItem[]
   /** Hunt-batch keys already searched — checkpointing across 10-minute executions. */
   doneBatches: string[]
+  /**
+   * Released-test documents the discovery phase cataloged. undefined = the
+   * discovery phase has not run yet (also the state a deepen re-hunt resets
+   * to so discovery re-catalogs; doneSources keeps transcribed documents
+   * from being paid for twice).
+   */
+  sources?: HuntSource[]
+  /** Keys of sources fully transcribed — checkpointing across executions. */
+  doneSources?: string[]
   /**
    * The job that currently owns the hunt. A retry re-dispatches with a new
    * job id; a superseded execution (stale cancel, redelivered message) must

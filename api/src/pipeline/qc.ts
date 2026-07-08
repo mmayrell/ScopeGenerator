@@ -83,6 +83,21 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
         : `Every card lists its mastery objectives; the set must be minimal-complete, every Assessment Evidence statement traces to an objective, and no objective exists solely to constrain format, method, or representation.`,
   })
 
+  // 4b. Substandard presence — the verb-led lesson-level objective that names
+  // the single teachable behavior. Verb-led/format judgments live in the card
+  // prompt; this check gates presence.
+  const missingSubstandard = lessons
+    .filter((l) => !l.fields.substandard || l.fields.substandard.content.trim().length === 0)
+    .map((l) => l.id)
+  checks.push({
+    name: 'Substandard presence',
+    status: missingSubstandard.length > 0 ? 'flag' : 'pass',
+    detail:
+      missingSubstandard.length > 0
+        ? `These lessons are missing their Substandard field — the verb-led, lesson-level objective naming the single teachable behavior: ${missingSubstandard.join(', ')}.${missingSubstandard.length === lessons.length ? ' (Scopes generated before the Substandard field existed flag here until regenerated.)' : ''}`
+        : `Every card carries a verb-led Substandard specific enough to distinguish its atom from neighbors without locking to one item format.`,
+  })
+
   // 5. Single-strategy check (heuristic)
   const strategyViolations = lessons
     .filter((l) => {
@@ -202,7 +217,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
     status: leaks.length > 0 ? 'flag' : 'pass',
     detail:
       leaks.length > 0
-        ? `These lessons explain a decision inside a field instead of stating the field cleanly (rule IDs like "per D1" or wording like "extrapolated from" belong in the Decision Record under the field, not in its content): ${leaks.slice(0, 12).join(', ')}${leaks.length > 12 ? ', …' : ''}. A rerun regenerates the card under the current rules.`
+        ? `These lessons explain a decision inside a field instead of stating the field cleanly (rule IDs like "per P5" or wording like "extrapolated from" belong in the Decision Record under the field, not in its content): ${leaks.slice(0, 12).join(', ')}${leaks.length > 12 ? ', …' : ''}. A rerun regenerates the card under the current rules.`
         : 'Field content is descriptive only — every rationale lives in a Decision Record under its field.',
   })
 

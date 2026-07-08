@@ -3,8 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api } from '../api'
 import { fieldMeta } from '../data/meta'
 import { scopeUnsettled, useScopePolling, useStore } from '../store'
-import type { DecisionEntry, DecisionField, Lesson, Proposal, Scope } from '../types'
-import { breakNumberedList, Btn, capsStandardCodes, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
+import type { Citation, DecisionEntry, DecisionField, Lesson, Proposal, Scope } from '../types'
+import { breakNumberedList, Btn, capsStandardCodes, citationSourceLabel, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
 
 const typeTone: Record<Lesson['type'], { label: string; tone: 'accent' | 'cite' | 'night' }> = {
   'new-learning': { label: 'new-learning atom', tone: 'accent' },
@@ -57,21 +57,111 @@ function DecisionRow({ d }: { d: DecisionEntry }) {
   )
 }
 
-/** The black record band rendered directly under the field its entries govern. */
-function DecisionBand({ title, purpose, entries }: { title: string; purpose: string; entries: DecisionEntry[] }) {
+/** Full citation list inside an expanded decision record — every citation visible with its excerpt, no hover needed. */
+function CitationList({ citations }: { citations: Citation[] }) {
+  // One entry per source, like CiteChips: a duplicate label reads as an error.
+  const unique = citations.filter((c, i) => citations.findIndex((o) => o.label === c.label) === i)
+  if (unique.length === 0) return null
   return (
-    <section className="grid grid-cols-1 gap-3 border-b border-hairline bg-night px-6 py-4.5 last:border-0 xl:grid-cols-[200px_1fr] xl:gap-6">
-      <div className="pt-0.5">
-        <span className="text-[12px] leading-snug font-semibold text-white/90">{title}</span>
-        <div className="mt-1 text-[11px] leading-snug text-white/45">{purpose}</div>
-      </div>
-      <div className="space-y-3.5">
-        {entries.map((d) => (
-          <DecisionRow key={d.n} d={d} />
-        ))}
-      </div>
+    <div className="space-y-2">
+      {unique.map((c, i) => (
+        <div key={i} className="rounded-lg border border-white/10 bg-white/[0.04] px-3.5 py-2.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-[5px] border border-white/15 bg-white/5 px-1.5 py-px font-mono text-[10px] text-white/60">
+              {citationSourceLabel(c.sourceType)}
+            </span>
+            <span className="text-[12px] font-medium text-white/85">{c.label}</span>
+            <Mono className="ml-auto text-[10px] text-white/40">{c.locator}</Mono>
+          </div>
+          <p className="mt-1.5 border-l-2 border-white/15 pl-2.5 font-display text-[12.5px] leading-relaxed text-white/70 italic">{c.excerpt}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/**
+ * The black record band under each field — collapsed to a single row until
+ * clicked, then the full why: the rationale prose, every citation in full,
+ * and the field's logged decision entries.
+ */
+function DecisionRecord({
+  title,
+  purpose,
+  rationale,
+  citations,
+  entries,
+  expectRationale = false,
+}: {
+  title: string
+  purpose: string
+  rationale?: string
+  citations: Citation[]
+  entries: DecisionEntry[]
+  /** Per-field records explain a missing rationale (pre-rationale scopes); the lesson-level record never has one. */
+  expectRationale?: boolean
+}) {
+  const [open, setOpen] = useState(false)
+  const uniqueCites = citations.filter((c, i) => citations.findIndex((o) => o.label === c.label) === i)
+  const empty = !rationale && uniqueCites.length === 0 && entries.length === 0
+  const counts = [
+    uniqueCites.length > 0 ? `${uniqueCites.length} citation${uniqueCites.length === 1 ? '' : 's'}` : null,
+    entries.length > 0 ? `${entries.length} decision${entries.length === 1 ? '' : 's'}` : null,
+  ]
+    .filter(Boolean)
+    .join(' · ')
+  return (
+    <section className="border-b border-hairline bg-night last:border-0">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="flex w-full cursor-pointer items-center gap-2.5 px-6 py-2.5 text-left transition-colors hover:bg-white/[0.04]"
+      >
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 16 16"
+          fill="none"
+          className={`shrink-0 text-white/50 transition-transform ${open ? 'rotate-90' : ''}`}
+        >
+          <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <span className="text-[11px] font-semibold tracking-[0.08em] text-white/85 uppercase">{title}</span>
+        <span className="hidden truncate text-[10.5px] text-white/40 sm:inline">{purpose}</span>
+        {counts && <Mono className="ml-auto shrink-0 pl-2 text-[10px] text-white/45">{counts}</Mono>}
+      </button>
+      {open && (
+        <div className="animate-rise space-y-4 px-6 pt-1 pb-5">
+          {rationale && <p className="max-w-3xl text-[13px] leading-relaxed whitespace-pre-line text-white/80">{rationale}</p>}
+          {!rationale && expectRationale && !empty && (
+            <p className="text-[12px] leading-relaxed text-white/50">
+              No narrative rationale on this field — this scope predates per-field rationales; the citations and decisions below still carry the record.
+            </p>
+          )}
+          {empty && <p className="text-[12px] leading-relaxed text-white/50">Nothing recorded.</p>}
+          <CitationList citations={citations} />
+          {entries.length > 0 && (
+            <div className="space-y-3.5">
+              {entries.map((d) => (
+                <DecisionRow key={d.n} d={d} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </section>
   )
+}
+
+// One bullet per prerequisite: new scopes emit one per line; legacy scopes
+// packed them into semicolon-separated prose.
+const prerequisiteItems = (content: string): string[] => {
+  const lines = content
+    .split('\n')
+    .map((s) => s.trim())
+    .filter(Boolean)
+  const items = lines.length > 1 ? lines : lines.flatMap((line) => line.split(/;\s+/))
+  return items.map((s) => s.trim()).filter(Boolean)
 }
 
 // ---------- data-informed revision ----------
@@ -318,15 +408,25 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
                   <span className="text-[12.5px] leading-snug font-semibold text-ink">{fm.label}</span>
                 </div>
                 <div className="mt-1 text-[11px] leading-snug text-ink-3">{fm.purpose}</div>
-                {field.inferred && <div className="mt-1.5"><Pill tone="amber">inferred — D1</Pill></div>}
+                {field.inferred && <div className="mt-1.5"><Pill tone="amber">inferred — P5</Pill></div>}
               </div>
               <div className="min-w-0">
-                {/* whitespace-pre-line renders the enumeration breaks from breakNumberedList */}
-                <p className="font-display text-[14px] leading-relaxed whitespace-pre-line text-ink">
-                  {breakNumberedList(field.content)}
-                  {/* Standard, Cluster, and Objectives carry the authority and mastery definition directly, not cited evidence — no provenance chips. */}
-                  {fm.key !== 'standards' && fm.key !== 'cluster' && fm.key !== 'objectives' && <CiteChips citations={field.citations} />}
-                </p>
+                {/* Citations live in the field's decision record below, keeping the content clean. */}
+                {fm.key === 'prerequisites' ? (
+                  <ul className="space-y-1.5">
+                    {prerequisiteItems(field.content).map((p, i) => (
+                      <li key={i} className="flex items-start gap-2.5 font-display text-[14px] leading-relaxed text-ink">
+                        <span className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-ink-3" />
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  /* whitespace-pre-line renders the enumeration breaks from breakNumberedList */
+                  <p className="font-display text-[14px] leading-relaxed whitespace-pre-line text-ink">
+                    {breakNumberedList(field.content)}
+                  </p>
+                )}
                 {fm.key === 'releasedItems' && (
                   <div className="mt-4 space-y-3">
                     {lesson.itemRefs.map((rid) => {
@@ -355,13 +455,14 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
                 )}
               </div>
             </section>
-            {fieldDecisions && (
-              <DecisionBand
-                title="Decision Record"
-                purpose={`Why ${fm.label} reads the way it does — cited; hover a citation for the exact sentences`}
-                entries={fieldDecisions}
-              />
-            )}
+            <DecisionRecord
+              title="Decision Record"
+              purpose={`Why ${fm.label} reads the way it does`}
+              rationale={field.rationale}
+              citations={field.citations}
+              entries={fieldDecisions ?? []}
+              expectRationale
+            />
             </Fragment>
           )
         })}
@@ -369,13 +470,12 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
         {/* lesson-level decision record — granularity/type/sequencing, plus any
             entry not tied to a single field (legacy scopes route contradictions,
             overrides, and assumptions here too) */}
-        {(decisionsByField.get('card') ?? []).length > 0 && (
-          <DecisionBand
-            title="Lesson Decision Record"
-            purpose="Calls that shape the whole card — granularity, lesson type, sequencing, and any decision not tied to a single field"
-            entries={decisionsByField.get('card')!}
-          />
-        )}
+        <DecisionRecord
+          title="Lesson Decision Record"
+          purpose="Calls that shape the whole card — granularity, lesson type, sequencing, and any decision not tied to a single field"
+          citations={[]}
+          entries={decisionsByField.get('card') ?? []}
+        />
       </div>
     </article>
   )
@@ -396,36 +496,40 @@ export default function ScopeView() {
   const [retrying, setRetrying] = useState(false)
   const [genAction, setGenAction] = useState<'pause' | 'resume' | 'cancel' | null>(null)
   const [lookedUp, setLookedUp] = useState(false)
-  const [exporting, setExporting] = useState(false)
+  const [exporting, setExporting] = useState<'csv' | 'json' | null>(null)
   const [exportError, setExportError] = useState<string | null>(null)
 
-  // Download Doc: builds a clean .docx (fields only — no citations, no
-  // decision records) that opens in Word and converts to an editable Google
-  // Doc when dropped into Google Drive. The docx library loads lazily so it
-  // stays out of the main bundle.
-  const exportDoc = async () => {
-    if (!scope) return
-    setExporting(true)
-    setExportError(null)
-    try {
-      const { downloadScopeDocx } = await import('../export/scope-docx')
-      await downloadScopeDocx(scope, sets)
-    } catch (e) {
-      setExportError(e instanceof Error ? e.message : 'Could not build the document.')
-    } finally {
-      setExporting(false)
-    }
-  }
-
-  // Download CSV: one row per lesson, the card carried as JSON in the last column.
+  // Download CSV: one row per lesson, one column per field — fields only (no
+  // decision records), released items as hosted screenshot links. Fetching
+  // those links is a network round-trip, hence the Preparing state.
   const exportCsv = async () => {
     if (!scope) return
+    setExporting('csv')
     setExportError(null)
     try {
       const { downloadScopeCsv } = await import('../export/scope-csv')
-      downloadScopeCsv(scope, sets)
+      await downloadScopeCsv(scope, sets)
     } catch (e) {
       setExportError(e instanceof Error ? e.message : 'Could not build the CSV.')
+    } finally {
+      setExporting(null)
+    }
+  }
+
+  // Download JSON: the canonical machine-readable scope (spec "Exporting the
+  // Scope") — one structured object per lesson card, released items as
+  // structured references with persistent screenshot URLs.
+  const exportJson = async () => {
+    if (!scope) return
+    setExporting('json')
+    setExportError(null)
+    try {
+      const { downloadScopeJson } = await import('../export/scope-json')
+      await downloadScopeJson(scope, sets)
+    } catch (e) {
+      setExportError(e instanceof Error ? e.message : 'Could not build the JSON export.')
+    } finally {
+      setExporting(null)
     }
   }
 
@@ -609,10 +713,12 @@ export default function ScopeView() {
         <div className="mt-3 flex flex-wrap gap-1.5 px-2">
           <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setQcOpen(true)}>QC report</Btn>
           <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setHistOpen(true)}>History</Btn>
-          <Btn className="!px-2.5 !py-1 !text-[11.5px]" disabled={exporting} onClick={() => void exportDoc()}>
-            {exporting ? 'Preparing…' : 'Download Doc'}
+          <Btn className="!px-2.5 !py-1 !text-[11.5px]" disabled={exporting !== null} onClick={() => void exportCsv()}>
+            {exporting === 'csv' ? 'Preparing…' : 'Download CSV'}
           </Btn>
-          <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => void exportCsv()}>Download CSV</Btn>
+          <Btn className="!px-2.5 !py-1 !text-[11.5px]" disabled={exporting !== null} onClick={() => void exportJson()}>
+            {exporting === 'json' ? 'Preparing…' : 'Download JSON'}
+          </Btn>
           <Btn kind="night" className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setRevisionOpen(true)}>Update with Feedback/Data</Btn>
           <Btn kind="danger" className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setConfirmDelete(true)}>Delete</Btn>
         </div>

@@ -2,7 +2,7 @@ import { app, InvocationContext } from '@azure/functions'
 import { JobMessage, Proposal, Scope } from '../domain/types'
 import { getSetOrUndefined, mutateScope, mutateSet, snapshotScope } from '../data/entities'
 import { getPacketOrUndefined, mutatePacket } from '../data/packets'
-import { mutateJob, pushLog } from '../data/jobs'
+import { getJob, mutateJob, pushLog } from '../data/jobs'
 import { generateCardsStep, generateFinalizeStep, generatePlanStep } from '../pipeline/generate'
 import { extractRunStep } from '../pipeline/ingest'
 import { huntPacketStep } from '../pipeline/packets'
@@ -24,13 +24,14 @@ const RUN_ATTEMPT_CAP = 3
  * Deterministic failures — the same input fails the same way every attempt, so
  * retrying only burns 10-minute windows and API spend. Fail fast.
  */
-const TERMINAL_ERROR = /truncated \(max_tokens|declined this request|compiled grammar is too large|is password-protected/i
+const TERMINAL_ERROR =
+  /truncated \(max_tokens|declined this request|compiled grammar is too large|is password-protected|did not fit the 10-minute execution window/i
 
 /**
  * Queue-triggered pipeline worker on `genjobs`, dispatching on
  * JobMessage.kind/step. The host delivers the base64-decoded JSON (typed as
  * unknown and validated here). Failure at any step after the queue's built-in
- * retries (maxDequeueCount 3) marks the job failed and settles the affected
+ * retries (maxDequeueCount 12) marks the job failed and settles the affected
  * document per job kind (see markFailed).
  */
 app.storageQueue('genjobs-worker', {
@@ -78,6 +79,48 @@ app.storageQueue('genjobs-worker', {
       }
       throw e // let the host retry
     }
+  },
+})
+
+/**
+ * Poison-queue settlement — the last line of defense against silent hangs.
+ * The host moves a genjobs message here only after every delivery died
+ * WITHOUT the worker recording anything: in practice the 10-minute execution
+ * kill, which aborts the process mid-call and skips the catch block entirely.
+ * Without this trigger the job row and its document (a scope stuck
+ * 'generating', a set mid-ingest, a hunting packet) would hang forever with
+ * no error and no way for the UI to offer retry/delete. Settlement is
+ * kind-aware via markFailed; checkpoints are untouched, so retry resumes.
+ */
+app.storageQueue('genjobs-poison-worker', {
+  queueName: 'genjobs-poison',
+  connection: 'AzureWebJobsStorage',
+  handler: async (queueItem: unknown, context: InvocationContext): Promise<void> => {
+    let msg: JobMessage
+    try {
+      msg = parseJobMessage(queueItem)
+    } catch (e) {
+      context.error('genjobs-poison: dropping malformed message', queueItem, e)
+      return
+    }
+    try {
+      const job = await getJob(msg.jobId)
+      if (job.status === 'complete' || job.status === 'cancelled') {
+        context.log(`genjobs-poison: job ${msg.jobId} already ${job.status} — stale poison message dropped`)
+        return
+      }
+    } catch (e) {
+      // Job row gone (document deleted) — nothing to settle. Anything else
+      // (transient table error) rethrows so the host redelivers.
+      if ((e as { status?: number }).status === 404) return
+      throw e
+    }
+    context.error(`genjobs-poison: settling job ${msg.jobId} ${msg.kind}/${msg.step} — every delivery died unrecorded`)
+    await markFailed(
+      msg,
+      `The ${msg.kind}/${msg.step} step was killed by the platform's 10-minute execution cap on every attempt before it could record an error. Progress up to the last checkpoint is kept — retry resumes from there. If it keeps happening, narrow the request or lower CLAUDE_EFFORT.`,
+      context,
+    )
   },
 })
 

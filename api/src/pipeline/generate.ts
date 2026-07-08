@@ -50,8 +50,43 @@ const CARDS_LESSON_BATCH = 4
 // entirely and burns a dequeue attempt with nothing recorded.
 const CARDS_TIME_BUDGET_MS = 4.5 * 60 * 1000
 
+// Hard abort for the in-flight Claude call: a plan or cards call can legally
+// stretch (SDK backoff during capacity windows, parse retries) past the
+// 10-minute host cap, and a host kill skips the worker's catch ENTIRELY — the
+// message just redelivers and repeats the identical oversized call until it
+// lands in the poison queue with nothing settled (prod, 2026-07: a
+// cross-framework full-course plan died exactly this way). Aborting at 8.5
+// minutes keeps the failure in-process, where the step can escalate.
+const EXECUTION_DEADLINE_MS = 8.5 * 60 * 1000
+
+// Deadline-cut escalation (mirrors the packet hunts): `cuts` rides the queue
+// message payload and counts how many executions were aborted mid-call on
+// this step. Each cut re-runs the call at lower effort; when the ladder is
+// exhausted the step fails with a terminal error (worker.ts TERMINAL_ERROR
+// matches the phrase) instead of burning the full dequeue budget on a call
+// that provably cannot fit.
+const PLAN_EFFORT_LADDER = ['high', 'medium', 'low'] as const
+const MAX_CARD_CUTS = 3
+
+const isAbort = (e: unknown): boolean =>
+  /abort/i.test((e as { name?: string }).name ?? '') || /abort/i.test(e instanceof Error ? e.message : String(e))
+
+function readCuts(msg: JobMessage): number {
+  const raw = (msg.payload ?? {}) as { cuts?: unknown }
+  const n = Math.trunc(Number(raw.cuts ?? 0))
+  return Number.isFinite(n) && n > 0 ? n : 0
+}
+
+/** Bound a Claude call to the execution deadline; the caller escalates on abort. */
+function bounded(started: number): { signal: AbortSignal; dispose: () => void } {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), Math.max(5_000, started + EXECUTION_DEADLINE_MS - Date.now()))
+  return { signal: controller.signal, dispose: () => clearTimeout(timer) }
+}
+
 export async function generatePlanStep(msg: JobMessage, ctx: InvocationContext): Promise<void> {
   const scopeId = requireScopeId(msg)
+  const started = Date.now()
   if (await pauseRequested(msg.jobId)) {
     await settlePaused(msg)
     return
@@ -75,11 +110,42 @@ export async function generatePlanStep(msg: JobMessage, ctx: InvocationContext):
   // between the checkpoint write and the fan-out).
   let plan = await getJsonOrUndefined<PlanOutput>(dataContainer(), planPath(msg.jobId))
   if (!plan) {
-    plan = await generateStructured<PlanOutput>({
-      ...planPrompt(set, scope, sourceSets, userDocs.names),
-      schema: PLAN_SCHEMA,
-      ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
-    })
+    // Deadline-cut effort ladder: each aborted execution retries one level
+    // lower (a lower-effort plan of the same request is far better than a
+    // generation that dies). The ladder's end fails terminally.
+    const cuts = readCuts(msg)
+    const effort = PLAN_EFFORT_LADDER[Math.min(cuts, PLAN_EFFORT_LADDER.length - 1)]
+    const { signal, dispose } = bounded(started)
+    try {
+      plan = await generateStructured<PlanOutput>({
+        ...planPrompt(set, scope, sourceSets, userDocs.names),
+        schema: PLAN_SCHEMA,
+        effort,
+        signal,
+        ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
+      })
+    } catch (e) {
+      if (!isAbort(e)) throw e
+      if (cuts + 1 >= PLAN_EFFORT_LADDER.length) {
+        throw new Error(
+          `Planning did not fit the 10-minute execution window after ${PLAN_EFFORT_LADDER.length} attempts (effort ${PLAN_EFFORT_LADDER.join(' → ')}). The request is too large for one planning call — narrow it (fewer standards, a single framework, or a smaller grade span) and retry.`,
+        )
+      }
+      // Log BEFORE enqueueing: if either write fails, the error rethrows and
+      // the host redelivers THIS message — enqueue-first could strand a
+      // continuation alongside the redelivery.
+      await mutateJob(msg.jobId, (r) =>
+        pushLog(
+          r,
+          `Planning ran long and was cut at the execution deadline — retrying at ${PLAN_EFFORT_LADDER[cuts + 1]} effort in a fresh execution`,
+        ),
+      )
+      await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'plan', scopeId, payload: { cuts: cuts + 1 } })
+      ctx.log(`generate/plan ${msg.jobId}: call cut at the execution deadline (cut ${cuts + 1}) — re-enqueued`)
+      return
+    } finally {
+      dispose()
+    }
     if (!plan.units || plan.units.length === 0) {
       throw new Error('planning produced no units — the request resolved to an empty scope')
     }
@@ -133,6 +199,7 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
       batches.push(skeleton.lessons.slice(b, b + CARDS_LESSON_BATCH))
     }
     const started = Date.now()
+    const cuts = readCuts(msg)
     const lessons: Lesson[] = []
     for (let b = 0; b < batches.length; b++) {
       // Per-batch checkpoint: a redelivered attempt resumes mid-unit.
@@ -147,17 +214,51 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
           ctx.log(`generate/cards ${msg.jobId}: unit ${unitIndex} paused at batch ${b}/${batches.length} (time budget) — re-enqueued`)
           return
         }
-        const wire = await generateStructured<WireLessonBatch>({
-          ...cardsPrompt(set, scope, plan, skeleton, batches[b], sourceSets, userDocs.names),
-          schema: UNIT_CARDS_BATCH_SCHEMA,
-          ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
-          // effort 'medium' + 48k max_tokens fits the 10-minute Consumption
-          // functionTimeout; each call carries at most CARDS_LESSON_BATCH
-          // lessons so the output cannot reach the cap. The plan step keeps
-          // effort 'high'.
-          effort: 'medium',
-          maxTokens: 48000,
-        })
+        const { signal, dispose } = bounded(started)
+        let wire: WireLessonBatch
+        try {
+          wire = await generateStructured<WireLessonBatch>({
+            ...cardsPrompt(set, scope, plan, skeleton, batches[b], sourceSets, userDocs.names),
+            schema: UNIT_CARDS_BATCH_SCHEMA,
+            ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
+            // effort 'medium' + 48k max_tokens fits the 10-minute Consumption
+            // functionTimeout; each call carries at most CARDS_LESSON_BATCH
+            // lessons so the output cannot reach the cap. The plan step keeps
+            // effort 'high'. After a deadline cut the batch re-runs at 'low'.
+            effort: cuts > 0 ? 'low' : 'medium',
+            maxTokens: 48000,
+            signal,
+          })
+        } catch (e) {
+          if (!isAbort(e)) throw e
+          // The in-flight batch call was cut at the execution deadline —
+          // finished batches are checkpointed, so a fresh execution resumes
+          // exactly here. Escalate through `cuts` so a batch that can NEVER
+          // fit fails terminally instead of looping forever.
+          if (cuts + 1 >= MAX_CARD_CUTS) {
+            throw new Error(
+              `Card generation for unit ${skeleton.id} (batch ${b + 1}/${batches.length}) did not fit the 10-minute execution window after ${MAX_CARD_CUTS} attempts, even at low effort — narrow the request and retry.`,
+            )
+          }
+          await mutateJob(msg.jobId, (r) =>
+            pushLog(
+              r,
+              `Unit ${skeleton.id}: card batch ${b + 1}/${batches.length} ran long and was cut at the execution deadline — retrying at low effort in a fresh execution`,
+            ),
+          )
+          await enqueueJob({
+            jobId: msg.jobId,
+            kind: 'generate',
+            step: 'cards',
+            scopeId,
+            unitIndex,
+            payload: { cuts: cuts + 1 },
+          })
+          ctx.log(`generate/cards ${msg.jobId}: unit ${unitIndex} batch ${b} cut at the execution deadline (cut ${cuts + 1}) — re-enqueued`)
+          return
+        } finally {
+          dispose()
+        }
         if (!wire.lessons || wire.lessons.length === 0) {
           throw new Error(`card generation returned no lessons for unit ${skeleton.id} (batch ${b + 1}/${batches.length})`)
         }

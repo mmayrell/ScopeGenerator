@@ -134,6 +134,7 @@ export type DecisionField =
   | 'card'
   | 'standards'
   | 'cluster'
+  | 'substandard'
   | 'objectives'
   | 'emphasis'
   | 'progression'
@@ -160,6 +161,13 @@ export interface DecisionEntry {
 export interface CardField {
   content: string
   citations: Citation[]
+  /**
+   * The field's decision record: a self-contained prose explanation of why the
+   * content reads the way it does — the evidence weighed, defaults overridden,
+   * inferences and their bases. Optional only for scopes generated before
+   * per-field rationales existed.
+   */
+  rationale?: string
   inferred?: boolean
 }
 
@@ -182,7 +190,9 @@ export interface Lesson {
   fields: {
     standards: CardField
     cluster: CardField
-    /** Minimal-complete mastery objectives (field 3). Optional only for scopes generated before the field existed. */
+    /** The verb-led atomized objective — the single teachable behavior this lesson owns (spec: Substandard / atomizedObjective). Optional only for scopes generated before the field existed. */
+    substandard?: CardField
+    /** Minimal-complete mastery objectives. Optional only for scopes generated before the field existed. */
     objectives?: CardField
     emphasis: CardField
     progression: CardField
@@ -343,6 +353,19 @@ export interface HuntedItem {
   sourceName: string // title of the document or page the item came from
   alignment: 'official' | 'ai-inferred' // 'official' only when the source maps the item to the code
   notes: string
+  sourceKey?: string // key of the HuntSource this item was transcribed from; absent on gap-sweep items
+}
+
+/** A released-test document the discovery phase cataloged — the unit of transcription. */
+export interface HuntSource {
+  key: string // stable `${grade}|${normalized url}` (backend checkpointing)
+  program: string
+  year: number
+  grade: number
+  url: string
+  title: string
+  expectedItems: number // item count the release page states, when it does; 0 = unknown
+  note: string
 }
 
 export interface EvidencePacket {
@@ -357,6 +380,8 @@ export interface EvidencePacket {
   error?: string
   items: HuntedItem[]
   doneBatches: string[] // hunt-batch keys already searched (backend checkpointing)
+  sources?: HuntSource[] // released-test documents cataloged by discovery; undefined = discovery not run
+  doneSources?: string[] // keys of sources fully transcribed (backend checkpointing)
   huntJobId?: string // the job that currently owns the hunt (backend ownership token)
   created: string
   updated: string

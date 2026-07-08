@@ -57,6 +57,11 @@ Wrong/missing → `401 {"error":"unauthorized"}`. The SPA prompts once, stores t
 `localStorage['scopegen-access-code']`, sends it on every call, and re-prompts on any 401.
 Exception: `GET /api/item-image/{setId}/{itemId}` also accepts the code as `?code=` — browsers
 cannot attach headers to `<img>` requests.
+Deliberate SAS exception: `POST /api/item-image-links` (itself header-authenticated) mints
+long-lived read-only **blob SAS URLs** for item screenshots. Those URLs bypass the Function App
+entirely and require no access code — by design, so the CSV export's screenshot links can be
+shared without distributing the app credential. Each link grants read on exactly one screenshot
+blob; rotating the storage account key revokes them all.
 
 ## Shared types
 
@@ -82,6 +87,7 @@ cannot attach headers to `<img>` requests.
 | `POST /sets/{id}/ingest` | → `{ jobId }` (202) | extraction phase: standards tree + item bank (with question screenshots) + cross-document scope-conflict pass. Called automatically after the uploads land at creation; also the retry path. Idempotent with in-flight ingest jobs |
 | `GET /sets/{id}/job` | → `JobStatus` | polled during extraction |
 | `GET /item-image/{setId}/{itemId}` | → `image/png` | question screenshot; auth via header or `?code=` |
+| `POST /item-image-links` | `{ items: [{ setId, itemId }] }` → `{ links: Record<"setId/itemId", url> }` | long-lived (5y) read-only blob SAS URLs for item screenshots, embedded in the CSV export (see Authentication — the deliberate SAS exception). ≤4000 items per call; malformed ids are skipped, not errored |
 | `POST /sets/{id}/publish` | → `{ set: StandardSet }` | seeded sets (no uploads) publish immediately; uploaded sets 409 unless extraction completed and every warning is resolved. Idempotent |
 | `GET /framework` | → `FrameworkDoc` | the fixed engine/doctrine documents (read-only — no PUT; new versions ship with the tool). The payload keeps a legacy `register: []` so pre-removal bundles render an empty exemplar register during deploy skew |
 | `POST /scopes` | `{ setId, setIds?, mode, params, granular?, uploadsToken?, uploadNames? }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job. Optional `granular: true` = Granular Track Scoping (stored on `Scope.request.granular`): atomization drops to the most granular DI skill level — one rule/decision/response pattern per track; number-form, representation, and distinct-error-pattern changes each split — with synthesis tracks (type `bridge`) where the student decides which mastered procedure applies, and NO prior-grade prerequisite tracks (assumed mastered). Applies to plan, cards, and unit-rerun prompts |
@@ -192,19 +198,29 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
    limits), items (with scope classes/demand profiles), artifact usage notes, and the
    request (course/standard/topic). Output (structured): ordered units with lesson skeletons.
    Checkpoint to `jobs/<jobId>/plan.json`; set `totalUnits`; enqueue one `cards` message per unit.
-2. **`cards`** (Stage 5, parallel per unit): one Claude call per unit (effort `medium`,
+   The call is **deadline-bounded** (aborted in-process at 8.5 minutes — a host kill at 10:00
+   skips all settlement) with a **cut-escalation ladder** riding the queue message
+   (`payload.cuts`): each cut re-runs the plan at lower effort (`high → medium → low`); a third
+   cut fails terminally ("did not fit the 10-minute execution window", matched by the worker's
+   TERMINAL_ERROR so it fails fast) instead of burning the dequeue budget on a call that can
+   never fit.
+2. **`cards`** (Stage 5, parallel per unit): one Claude call per lesson batch (effort `medium`,
    max_tokens 48000 — sized to fit the 10-minute consumption cap). Output (structured): full `Unit`
-   with 14-field `Lesson`s — every field `{ content, citations[] }` (fields state the WHAT only;
-   reasoning is banned from field content), decision entries with rule IDs and a `field` tag naming
-   the card field each governs (`card` = lesson-level; the UI renders each record under its field),
-   `generatedExemplar` for lessons with no in-boundary items (never-empty Released Items, spec §7.13).
-   Checkpoint to `jobs/<jobId>/unit-<i>.json`; increment `unitsDone` (ETag retry); any completion
-   observing all units done enqueues `finalize` (at-least-once; finalize is idempotent).
+   with fourteen-content-field `Lesson`s — every field `{ content, citations[], rationale }` (fields
+   state the WHAT only; reasoning is banned from field content), decision entries with rule IDs and
+   a `field` tag naming the card field each governs (`card` = lesson-level; the UI renders each
+   record under its field),
+   `generatedExemplars` for lessons with no in-boundary items (never-empty Released Items, spec §7.14).
+   Batch calls carry the same 8.5-minute abort: a cut batch re-enqueues the unit message with
+   `payload.cuts` (finished batches are checkpointed; the retry runs at effort `low`); after
+   three cuts the unit fails terminally. Checkpoint to `jobs/<jobId>/unit-<i>.json`; increment
+   `unitsDone` (ETag retry); any completion observing all units done enqueues `finalize`
+   (at-least-once; finalize is idempotent).
 3. **`finalize`** (Stage 6): assemble the `Scope` from checkpoints, run **programmatic QC**
-   (ten checks incl. objective integrity and released-item coverage, each → `QCCheck` pass/flag/fail), write history
+   (twelve checks incl. objective integrity, substandard presence, and released-item coverage, each → `QCCheck` pass/flag/fail), write history
    entry, snapshot `v1.json`, status `complete`. No-ops on duplicate finalize messages.
 
-Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is **kind-aware**:
+Failure at any step (after the queue's built-in retries, `maxDequeueCount` 12) is **kind-aware**:
 - `generate`: job `failed`, scope status `failed` + `error` (UI offers delete/retry).
 - `rerun`: scope back to `complete` (previous version intact), history entry `Rerun failed`.
 - `proposal`: proposal settled `abandoned` with an error round; scope status untouched.
@@ -212,6 +228,13 @@ Failure at any step (after the queue's built-in retries, `maxDequeueCount` 3) is
 - `apply-proposal`: scope back to `complete`, history entry `Revision apply failed`.
 - `ingest`: a `CoverageWarning` starting with `Ingestion failed:` is added to the set (the frontend
   watches for it); the set stays unpublished.
+
+**Poison-queue settlement** (`genjobs-poison` trigger in `worker.ts`): a message the host poisons
+means every delivery died WITHOUT the worker recording anything — in practice the 10-minute
+execution kill, which skips the catch block entirely. The trigger runs the same kind-aware
+`markFailed` settlement (skipping jobs already complete/cancelled), so no scope/set/packet can
+ever hang in a working state with no error and no retry path. Checkpoints are untouched; retry
+resumes from them.
 
 **Other kinds**:
 - `rerun` (`run`): Claude regenerates the target (lesson card for `regenerate` — target must resolve

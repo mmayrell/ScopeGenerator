@@ -63,6 +63,7 @@ const DECISION_FIELDS = [
   'card',
   'standards',
   'cluster',
+  'substandard',
   'objectives',
   'emphasis',
   'progression',
@@ -94,6 +95,7 @@ const CITATION = obj({
 const CARD_FIELD = obj({
   content: STR,
   citations: arr(ref('citation')),
+  rationale: STR, // the field's decision record — detailed why-prose (see CARD_RULES)
   inferred: BOOL,
 })
 
@@ -123,6 +125,7 @@ const LESSON = obj({
   fields: obj({
     standards: ref('cardField'),
     cluster: ref('cardField'),
+    substandard: ref('cardField'),
     objectives: ref('cardField'),
     emphasis: ref('cardField'),
     progression: ref('cardField'),
@@ -285,6 +288,7 @@ export interface WireCitation {
 export interface WireCardField {
   content: string
   citations: WireCitation[]
+  rationale: string
   inferred: boolean
 }
 
@@ -419,9 +423,12 @@ export interface WireIngestConflicts {
 }
 
 function toCardField(w: WireCardField) {
+  // The unconstrained fallback path does not guarantee the property exists.
+  const rationale = (w.rationale ?? '').trim()
   return {
     content: w.content,
     citations: w.citations as Citation[],
+    ...(rationale.length > 0 ? { rationale } : {}),
     ...(w.inferred ? { inferred: true } : {}),
   }
 }

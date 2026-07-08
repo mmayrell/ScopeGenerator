@@ -8,13 +8,13 @@ import { FrameworkDoc } from '../domain/types'
 
 const ENGINE_CONTENT = `## Context
 
-Instructional standards define what students are expected to learn, but they rarely define how instruction should be organized into lessons. Converting standards into an effective curriculum requires determining where one lesson ends and the next begins, which skills should be taught together, which require separate instruction, and how those lessons should build on one another to maximize mastery and transfer.
+Instructional standards define what students are expected to learn, but they rarely define how instruction should be organized into lessons. Standards say what students must learn, but they do not say where one lesson ends and the next begins, what "hard enough" looks like, or which method to teach. The Scope Generator performs that translation — systematically, from evidence, and in writing. This engine establishes the instructional design rules used to make those decisions.
 
-This BrainLift establishes the instructional design rules used to make those decisions. Grounded in the principles of Direct Instruction, it defines a consistent, evidence-based procedure for decomposing standards into the smallest meaningful teachable units while preserving conceptual coherence and minimizing unnecessary cognitive load. The resulting lesson scope becomes the canonical instructional blueprint used throughout the curriculum generation pipeline.
+Grounded in the principles of Direct Instruction, it defines a consistent, evidence-based procedure for decomposing standards into the smallest meaningful teachable units while preserving conceptual coherence and minimizing unnecessary cognitive load. The resulting lesson scope becomes the canonical instructional blueprint used throughout the curriculum generation pipeline.
 
 The framework makes two foundational instructional decisions:
 
-- Lesson Granularity (Split vs. Don't Split) — determines whether content should be taught as separate lessons or as variations within a single lesson. Splits are justified only when instruction requires a new strategy, decision, representation, prerequisite, or other meaningful change in student behavior — not simply because problems become harder or use different numbers or contexts.
+- Lesson Granularity (Split vs. Don't Split) — determines whether content should be taught as separate lessons or as variations within a single lesson. Splits are justified only when instruction requires a new strategy, decision, representation, prerequisite, integration behavior, or other meaningful change in student behavior — not simply because problems become harder or use different numbers or contexts.
 - Modeling Scope (Teach vs. Practice) — determines, within each lesson, which examples require explicit modeling and guided instruction and which can be introduced directly through practice because they apply the same mastered strategy under surface-level variation.
 
 Together, these decisions transform standards and assessment evidence into a coherent lesson architecture. That architecture serves as the instructional foundation for downstream artifacts — including lesson cards, worked examples, assessments, interventions, adaptive pathways, and future curriculum revisions.
@@ -27,19 +27,21 @@ Within this curriculum architecture, an atom is the smallest teachable unit — 
 - Lessons plug into tracks/strands but are authored independently of scheduling.
 - This guide identifies how a single lesson is built to be durable and transferable.
 
-## Scope Balance
+## Atomize the Entire Standard (P4)
 
-Before we decide whether to split a lesson, we need a shared frame for depth vs. breadth — what counts as a new behavior (depth) versus a variation (breadth).
+The tool does not limit lessons to skills explicitly named in the standard or unpacking document. It performs a full Direct Instruction task analysis of the standard and generates any instructionally necessary in-between atoms, prerequisite micro-skills, bridges, and application tiers needed for mastery. These atoms stay inside the standard's boundary; they do not add new expectations, but make the full standard teachable, sequenced, and observable. The only restriction is that if an atom belongs in a previous unit or grade level, it is excluded.
 
-## The Assessment Alignment Constraint
+## No Evidence is Not No Lesson (P5)
 
-When designing lessons aligned to state test preparation, instructional scope must be constrained to what is demonstrably assessed.
+When no released item tests a component, the component stays in scope. The tool infers the assessment evidence that would plausibly exist — from how sibling skills are tested and where the component sits developmentally — flags everything built on that inference as inferred, and writes a concrete exemplar problem at the inferred difficulty so the inference is inspectable, not abstract.
 
-Rule: if a component of a standard does not appear in the released state tests from the years selected by Alpha, it should be excluded from instruction — even if it introduces a gap due to its role as a prerequisite for future grade levels.
+## Released Item Demand Analysis
 
-Example: in Grade 4 division, although the standard allows quotients up to four-digit whole numbers, since released STAAR items do not assess this level of complexity, instruction should cap at the highest observed tested difficulty.
+Released items are interpreted as a representative sample of observable assessment evidence — empirical evidence of the types of performances students are expected to demonstrate, not an exhaustive specification of the assessment and never curriculum authority. Instructional decisions rest on consistent patterns across the available evidence rather than any single released question, and the official standards continue to define the outer boundary of instructional scope.
 
-This constraint is defined by Alpha Academics and should be treated as a governing design principle across all lesson development.
+- For each released item, when available, the analysis may identify: prerequisite atoms required; integration behaviors required; strategy-selection demands; representation demands; discrimination demands; common misconception patterns reflected in distractors; expected level of rigor and cognitive coordination.
+- Patterns that recur across multiple released items provide stronger evidence than isolated examples. These recurring demands may justify integration lessons that explicitly teach students to coordinate previously mastered atoms into authentic assessment performance.
+- The absence of a particular performance in the released sample is never interpreted as evidence that the performance is never assessed. Decisions rest on converging evidence across the standards, progressions, unpacking documents, and recurring patterns in released items — never on the absence of any single item type.
 
 ## Granularity: Split Criteria
 
@@ -48,6 +50,7 @@ Split when any of the following holds — each criterion paired with its canonic
 - New rule/strategy not previously taught (requires explicit demonstration) — moving from identifying proportional relationships to finding the constant of proportionality needs a split because students must learn a new rule and see clean worked examples with contrasting non-examples before practice.
 - New vocabulary / concept label that must be stabilized before the procedure — for "identify proportional relationships," students may need a separate micro-lesson on what "proportional" means (constant ratio) with examples/non-examples without doing computations.
 - New/hidden decision step changes the routine (requires task analysis and guided practice on the new step) — adding fractions with like denominators needs to be split from adding fractions with unlike denominators because the change requires first finding the least common denominator before adding.
+- New integration behavior requiring coordination of previously mastered atoms — students can solve one-step addition and subtraction problems independently but cannot determine which operation applies in a mixed set of word problems. A separate integration lesson teaches strategy selection without introducing new computational procedures.
 - Unmastered representation/notation (students can't yet map symbols/graphs/tables to meaning; needs modeling plus scaffolding fades) — representing sample space with a tree diagram needs to be separate from representing sample space in a table, because a new representation changes how information is encoded and must be modeled before scaffolds are faded.
 - High confusability with a look-alike skill (needs discrimination training: side-by-side non-examples) — similarity and congruency must be introduced separately because students require a discrimination rule with contrasted non-examples to prevent persistent mix-ups.
 - Foundational preskill missing/weak (explicit prerequisite skill must be taught prior) — solving two-step equations with negatives needs a split when integer operations haven't been explicitly taught, because the prerequisite must be taught and stabilized before the composite routine.
@@ -59,7 +62,7 @@ Split when any of the following holds — each criterion paired with its canonic
 - Same strategy steps as taught (no new decisions) — finding area of rectangles and squares by multiplying side lengths.
 - Changes are quantitative only (bigger numbers, benign decimals/fractions) or a change in context — solving one-step equations with different integers/decimals using the same inverse-operation routine.
 - Uses already-mastered representations — identifying functions across tables/graphs/points after each representation has been taught.
-- Cumulative goal that shifts from executing one routine to choosing among multiple mastered routines — mixed word problems where students choose add/subtract/multiply/divide, then solve, justifying the choice.
+- Mixed practice that requires no new strategy-selection behavior because students have already mastered the relevant integration atom — after students complete the operation-selection integration lesson, mixed addition/subtraction/multiplication/division practice does not require another lesson.
 
 ## Granularity: Tie-Breakers
 
@@ -68,6 +71,7 @@ For edge cases, apply in order:
 - Would a novice need new decision cues to start/choose steps they have never been exposed to previously? Yes = Split. (In statistics, if students must select mean absolute deviation vs. range to describe variability, split into three lessons: mean absolute deviation, range, and choosing the appropriate measure for a context and justifying the choice.)
 - Can I rewrite with friendlier numbers/shorter text and the routine stays identical? Yes = Don't Split. (A lesson that includes both 1 cm : 3.2 m and 1 : 4 scale drawings doesn't need to split; both use the same proportion routine and only differ in difficulty.)
 - Is there a prerequisite gap that cannot be refreshed quickly without new rules or explicit instruction/practice? Yes = Split. (In a lesson solving two-digit by one-digit multiplication word problems, if the student hasn't been exposed to the standard algorithm yet, split the lesson to include the explicit instruction and then support the mastery via answer explanations.)
+- Would successful performance require coordinating multiple previously mastered atoms in a way students have not yet been explicitly taught? Yes = Split into an integration lesson. (Examples: choosing the correct operation; selecting the appropriate representation; deciding which previously mastered algorithm applies; interpreting a released-item style prompt; rejecting plausible distractors based on common misconceptions.)
 
 ## Bridge Lessons
 
@@ -76,6 +80,7 @@ Sometimes, when a single skill gets split into two atoms, we also need a third, 
 - In this bridge lesson, students learn to (1) recognize which atom applies from the very first cue in the problem and then (2) execute the correct single routine cleanly — without blending steps from the other atom.
 - Importantly, this lesson does not introduce new rules or methods; it's purely about training discrimination, selection, and switching under mixed practice, using look-alike items that are designed to trigger common confusions.
 - While spaced repetition and cumulative review often address this naturally over time, some topics benefit from a more targeted recombination lesson — especially in areas where students reliably confuse approaches (for example, area vs. perimeter, or deciding between addition vs. multiplication).
+- Bridge lessons may also prepare students for authentic mathematical performances: they teach students to coordinate previously mastered atoms into composite performances such as strategy selection, representation selection, discrimination among similar solution paths, or multi-step reasoning. Released assessment items serve as empirical evidence for identifying which of these composite performances are commonly expected, but they do not define the existence of integration lessons.
 
 ## Editing Splits
 
@@ -207,11 +212,11 @@ export function getFramework(): FrameworkDoc {
   return {
     engine: {
       kind: 'engine',
-      name: 'Lesson Granularity & Modeling Scope (v2 for ANY standard set)',
+      name: 'Lesson Granularity & Modeling Scope (v3 — No-HITL specification)',
       description:
-        'Provides the governing principles and decision rules for determining lesson granularity and modeling scope in direct instruction curriculum design.',
-      version: 'v2',
-      updated: '2026-07-06',
+        'Provides the governing principles and decision rules for determining lesson granularity and modeling scope in direct instruction curriculum design — split/don\'t-split criteria, integration lessons, released-item demand analysis, and full-standard atomization (P4/P5).',
+      version: 'v3',
+      updated: '2026-07-08',
       content: ENGINE_CONTENT,
     },
     doctrine: {

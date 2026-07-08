@@ -1,3 +1,4 @@
+import { BlobSASPermissions } from '@azure/storage-blob'
 import { Artifact, NewSetUploads, StandardSet } from '../domain/types'
 import { dataContainer, uploadsContainer } from '../data/clients'
 import { deleteSetDocs, getSet, listScopes, listSets, mutateSet, saveSet } from '../data/entities'
@@ -310,6 +311,39 @@ api({
       body: new Uint8Array(bytes),
       headers: { 'content-type': 'image/png', 'cache-control': 'private, max-age=3600' },
     }
+  },
+})
+
+// POST /api/item-image-links  { items: [{ setId, itemId }] } → { links }
+// Long-lived read-only blob SAS URLs for item screenshots, keyed
+// "<setId>/<itemId>". The CSV export embeds them so a shared spreadsheet can
+// open the screenshots directly — each link grants read on exactly ONE
+// screenshot blob and never carries the app access code (the deliberate SAS
+// exception in docs/backend-architecture.md §Auth). Minted from the storage
+// account key (BlobClient.generateSasUrl requires the shared-key credential
+// the connection string supplies); links survive until the expiry below or an
+// account-key rotation, whichever comes first.
+const SAS_LINK_YEARS = 5
+const SAFE_ID = /^[A-Za-z0-9._-]+$/ // ids become blob-path segments — no separators
+api({
+  name: 'item-image-links',
+  methods: ['POST'],
+  route: 'item-image-links',
+  handler: async (req) => {
+    const { items } = await readJson<{ items?: { setId?: string; itemId?: string }[] }>(req)
+    if (!Array.isArray(items)) throw new HttpError(400, 'items is required')
+    if (items.length > 4000) throw new HttpError(400, 'too many items (max 4000)')
+    const expiresOn = new Date(Date.now() + SAS_LINK_YEARS * 365 * 24 * 60 * 60 * 1000)
+    const links: Record<string, string> = {}
+    for (const { setId, itemId } of items) {
+      if (!setId || !itemId || !SAFE_ID.test(setId) || !SAFE_ID.test(itemId)) continue
+      const key = `${setId}/${itemId}`
+      if (links[key]) continue
+      links[key] = await dataContainer()
+        .getBlobClient(itemImageBlobPath(setId, itemId))
+        .generateSasUrl({ permissions: BlobSASPermissions.parse('r'), expiresOn })
+    }
+    return ok({ links })
   },
 })
 

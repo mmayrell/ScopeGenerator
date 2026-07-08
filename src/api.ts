@@ -266,6 +266,14 @@ export const api = {
   itemImageUrl: (setId: string, itemId: string): string =>
     `${API_BASE}/item-image/${encodeURIComponent(setId)}/${encodeURIComponent(itemId)}?code=${encodeURIComponent(getAccessCode() ?? '')}`,
 
+  /**
+   * Long-lived read-only SAS links to item screenshots, keyed "<setId>/<itemId>".
+   * Used by the CSV export: unlike itemImageUrl, these carry no access code, so
+   * a shared spreadsheet's links are safe to distribute.
+   */
+  itemImageLinks: (items: { setId: string; itemId: string }[]) =>
+    request<{ links: Record<string, string> }>('POST', '/item-image-links', { items }),
+
   adminSeed: (force?: boolean) =>
     request<{ seeded: boolean; sets: number; scopes: number }>(
       'POST',

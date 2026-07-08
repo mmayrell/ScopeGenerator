@@ -47,6 +47,12 @@ export interface GenerateStructuredOptions {
    */
   fetchDomains?: string[]
   /**
+   * Max tokens of fetched page content per web_fetch use (default 30000).
+   * Document transcription raises it so one fetch can carry a full released-
+   * test PDF instead of its first pages.
+   */
+  fetchContentTokens?: number
+  /**
    * Per-call model override. Default (unset) is CLAUDE_MODEL. Used by the
    * packet hunts: Fable's dual-use gating consistently refused fetch-enabled
    * hunts (category 'bio' on grade-school math — a false positive its
@@ -211,7 +217,7 @@ async function callOnce(
         type: 'web_fetch_20250910',
         name: 'web_fetch',
         max_uses: opts.maxSearches ?? 8,
-        max_content_tokens: 30000,
+        max_content_tokens: opts.fetchContentTokens ?? 30000,
         ...(opts.fetchDomains && opts.fetchDomains.length > 0 ? { allowed_domains: opts.fetchDomains } : {}),
       })
     }

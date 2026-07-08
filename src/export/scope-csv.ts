@@ -1,11 +1,16 @@
-// CSV export for a scope — one row per lesson, with the card's data carried
-// as JSON in the final column so downstream tooling can parse it directly.
-// Clean like the Doc export: field contents, items, and exemplars — no
-// citations, no decision records.
+// CSV export for a scope — one row per lesson, one column per card field.
+// Fields only, deliberately: no citations, no rationales, no decision records.
+// Released items appear as hosted screenshot links (long-lived read-only SAS
+// URLs minted by the backend) so anyone the spreadsheet is shared with can
+// open the screenshots without holding the app access code.
+import { api } from '../api'
 import { fieldMeta } from '../data/meta'
 import type { Scope, StandardSet } from '../types'
 import { capsStandardCodes } from '../ui'
 
+// Field columns carry the EXACT on-card field labels (fieldMeta.label, e.g.
+// "Assessment Boundary") — never shortened or re-cased keys, so downstream
+// tooling always sees the same field names the app shows.
 const HEADER = [
   'scope_id',
   'scope_title',
@@ -17,52 +22,70 @@ const HEADER = [
   'lesson_title',
   'lesson_type',
   'evidence_status',
-  'lesson_json',
+  ...fieldMeta.map((fm) => fm.label),
 ]
 
 /**
  * RFC 4180 quoting (every cell quoted, inner quotes doubled) plus formula
  * neutralization: Excel and Sheets evaluate a cell beginning with = + - or @
  * even when quoted, so those get a leading apostrophe — the standard CSV
- * injection mitigation. lesson_json always starts with '{', so downstream
- * JSON parsing is unaffected.
+ * injection mitigation.
  */
 const cell = (value: string): string => {
   const neutralized = /^[=+\-@]/.test(value) ? `'${value}` : value
   return `"${neutralized.replace(/"/g, '""')}"`
 }
 
-export function buildScopeCsv(scope: Scope, sets: StandardSet[]): string {
+/** Every (setId, itemId) pair in the scope that has a screenshot to link. */
+export function scopeImageItems(scope: Scope, sets: StandardSet[]): { setId: string; itemId: string }[] {
+  const itemsById = resolveItems(scope, sets)
+  const pairs: { setId: string; itemId: string }[] = []
+  const seen = new Set<string>()
+  for (const u of scope.units) {
+    for (const l of u.lessons) {
+      for (const rid of l.itemRefs) {
+        const entry = itemsById.get(rid)
+        if (!entry || !entry.it.imagePath || seen.has(rid)) continue
+        seen.add(rid)
+        pairs.push({ setId: entry.setId, itemId: entry.it.id })
+      }
+    }
+  }
+  return pairs
+}
+
+/** Items resolve across every set the scope draws on, keeping the owning set id. */
+function resolveItems(scope: Scope, sets: StandardSet[]) {
   const scopeSetIds = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
   const scopeSets = sets.filter((st) => scopeSetIds.includes(st.id))
-  const itemsById = new Map(scopeSets.flatMap((st) => st.items.map((it) => [it.id, it] as const)))
+  return new Map(scopeSets.flatMap((st) => st.items.map((it) => [it.id, { it, setId: st.id }] as const)))
+}
+
+export function buildScopeCsv(
+  scope: Scope,
+  sets: StandardSet[],
+  imageLinks: Record<string, string> = {},
+): string {
+  const itemsById = resolveItems(scope, sets)
 
   const rows = [HEADER.map(cell).join(',')]
   for (const u of scope.units) {
     for (const l of u.lessons) {
-      const fields: Record<string, string> = {}
-      for (const fm of fieldMeta) fields[fm.key] = l.fields[fm.key]?.content ?? ''
-      // Item refs whose source set was deleted can no longer resolve — list
-      // them explicitly so downstream tooling can tell "never had items" from
-      // "items lost with their set".
-      const unresolvedItemRefs = l.itemRefs.filter((rid) => !itemsById.has(rid))
-      const exemplars = l.generatedExemplars ?? (l.generatedExemplar ? [l.generatedExemplar] : [])
-      const lessonJson = {
-        fields,
-        releasedItems: l.itemRefs
-          .map((rid) => itemsById.get(rid))
-          .filter((it) => !!it)
-          .map((it) => ({
-            test: it.test,
-            year: it.year,
-            itemNumber: it.itemNumber,
-            alignmentCode: it.alignmentCode,
-            stem: it.stem,
-            ...(it.choices ? { choices: it.choices } : {}),
-          })),
-        ...(unresolvedItemRefs.length > 0 ? { unresolvedItemRefs } : {}),
-        ...(exemplars.length > 0 ? { generatedExemplars: exemplars } : {}),
-      }
+      // released_items: one line per item — its identity plus the screenshot
+      // link. Lessons with no resolved items keep the field's content (which
+      // states the generated-exemplar situation).
+      const itemLines = l.itemRefs
+        .map((rid) => itemsById.get(rid))
+        .filter((entry) => !!entry)
+        .map(({ it, setId }) => {
+          const link = imageLinks[`${setId}/${it.id}`]
+          return `${it.test} ${it.year} Q${it.itemNumber}${link ? `: ${link}` : ' (no screenshot available)'}`
+        })
+      const fieldCells = fieldMeta.map((fm) =>
+        fm.key === 'releasedItems' && itemLines.length > 0
+          ? itemLines.join('\n')
+          : (l.fields[fm.key]?.content ?? ''),
+      )
       rows.push(
         [
           scope.id,
@@ -75,7 +98,7 @@ export function buildScopeCsv(scope: Scope, sets: StandardSet[]): string {
           l.title,
           l.type,
           l.evidenceStatus,
-          JSON.stringify(lessonJson),
+          ...fieldCells,
         ]
           .map(cell)
           .join(','),
@@ -85,10 +108,12 @@ export function buildScopeCsv(scope: Scope, sets: StandardSet[]): string {
   return rows.join('\r\n')
 }
 
-/** Builds the CSV and hands it to the browser as a download. */
-export function downloadScopeCsv(scope: Scope, sets: StandardSet[]): void {
+/** Fetches the screenshot links, builds the CSV, and hands it to the browser as a download. */
+export async function downloadScopeCsv(scope: Scope, sets: StandardSet[]): Promise<void> {
+  const pairs = scopeImageItems(scope, sets)
+  const { links } = pairs.length > 0 ? await api.itemImageLinks(pairs) : { links: {} }
   // BOM so Excel opens the UTF-8 content (em dashes, ≤, ×) correctly.
-  const blob = new Blob(['﻿' + buildScopeCsv(scope, sets)], { type: 'text/csv;charset=utf-8' })
+  const blob = new Blob(['﻿' + buildScopeCsv(scope, sets, links)], { type: 'text/csv;charset=utf-8' })
   const name = `${capsStandardCodes(scope.title).replace(/[\\/:*?"<>|]+/g, '-')}.csv`
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
