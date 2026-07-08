@@ -28,6 +28,18 @@ changing the backend or the frontend's API client, and keep the two sides in syn
   (the compiled entry is `require`d on a Windows runner). If you add imports with side effects
   at module scope (network calls, env validation), guard them so the entry stays loadable.
 
+## Incident note (2026-07-08) — Engine v3 deploy failures were NOT the code
+
+The Engine v3 deploy and the diagnostics run failed their health gates because **App Service
+Authentication (Easy Auth) had been enabled on the Function App with no identity provider**,
+which makes the platform return empty 400s on every route before the app runs. It has been
+disabled again. Do NOT enable App Service Authentication on `scopegen-api-apvgm` — the app's
+own `x-access-code` middleware is the auth layer; if real user login is ever wanted, design it
+on the Static Web App side instead. Note the `APP_ACCESS_CODE` app setting was also changed
+around the same time — if you change it, tell Michael so `.secrets/access-code.txt` on his
+machine gets updated. The temporary `.github/workflows/diagnose.yml` can be deleted once no
+longer needed.
+
 ## Backend rules (`api/`)
 
 - Node/TypeScript, Azure Functions v4 model, CommonJS output; `npm run build` must stay green.
