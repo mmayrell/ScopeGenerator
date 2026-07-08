@@ -1,0 +1,68 @@
+name: Diagnose 401
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    name: Inspect Function App state via Kudu
+    runs-on: windows-latest
+    steps:
+      - name: Query Kudu
+        env:
+          PUBLISH_PROFILE: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        shell: pwsh
+        run: |
+          $raw = "$env:PUBLISH_PROFILE".TrimStart([char]0xFEFF).Trim()
+          try { $xml = [xml]$raw } catch { Write-Host 'ERROR: publish profile not parseable'; exit 1 }
+          $prof = $xml.publishData.publishProfile | Where-Object { $_.publishMethod -eq 'ZipDeploy' }
+          if (-not $prof) { Write-Host 'ERROR: no ZipDeploy profile'; exit 1 }
+          $pair = "$($prof.userName):$($prof.userPWD)"
+          Write-Output "::add-mask::$pair"
+          $hdr = @{ Authorization = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes($pair)) }
+          $scm = 'https://scopegen-api-apvgm.scm.azurewebsites.net'
+
+          Write-Host '=== App settings (selected non-secret keys only) ==='
+          try {
+            $settings = Invoke-RestMethod -Uri "$scm/api/settings" -Headers $hdr
+            foreach ($k in @('WEBSITE_RUN_FROM_PACKAGE','FUNCTIONS_EXTENSION_VERSION','FUNCTIONS_WORKER_RUNTIME','WEBSITE_NODE_DEFAULT_VERSION','WEBSITE_CONTENTSHARE','SCM_DO_BUILD_DURING_DEPLOYMENT','WEBSITE_AUTH_ENABLED','CLAUDE_MODEL','CLAUDE_EFFORT')) {
+              $v = $settings.$k
+              if ($null -eq $v) { "  $k = (absent)" } else { "  $k = $v" }
+            }
+            $authKeys = $settings.PSObject.Properties.Name | Where-Object { $_ -like '*AUTH*' -or $_ -like '*EASYAUTH*' }
+            "  keys matching AUTH: $($authKeys -join ', ')"
+          } catch { Write-Host "  settings query failed: $($_.Exception.Message)" }
+
+          Write-Host '=== SitePackages ==='
+          try {
+            $pkgs = Invoke-RestMethod -Uri "$scm/api/vfs/data/SitePackages/" -Headers $hdr
+            $pkgs | Sort-Object mtime -Descending | Select-Object -First 5 | ForEach-Object { "  {0}  {1}  {2}" -f $_.name, $_.size, $_.mtime }
+            $ptr = Invoke-RestMethod -Uri "$scm/api/vfs/data/SitePackages/packagename.txt" -Headers $hdr
+            "  packagename.txt -> $ptr"
+          } catch { Write-Host "  SitePackages query failed: $($_.Exception.Message)" }
+
+          Write-Host '=== wwwroot listing ==='
+          try {
+            $www = Invoke-RestMethod -Uri "$scm/api/vfs/site/wwwroot/" -Headers $hdr
+            $www | ForEach-Object { "  {0}  {1}" -f $_.name, $_.size }
+          } catch { Write-Host "  wwwroot query failed: $($_.Exception.Message)" }
+
+          Write-Host '=== Host status via admin API (master key, masked) ==='
+          try {
+            $mk = Invoke-RestMethod -Uri "$scm/api/functions/admin/masterkey" -Headers $hdr
+            Write-Output "::add-mask::$($mk.masterKey)"
+            $status = Invoke-RestMethod -Uri "https://scopegen-api-apvgm.azurewebsites.net/admin/host/status" -Headers @{ 'x-functions-key' = $mk.masterKey } -TimeoutSec 60
+            "  state: $($status.state)"
+            "  version: $($status.version)"
+            if ($status.errors) { "  errors: $($status.errors -join ' | ')" }
+          } catch {
+            Write-Host "  host status failed: $($_.Exception.Message)"
+            $resp = $_.Exception.Response
+            if ($resp) { Write-Host "  status code: $([int]$resp.StatusCode)" }
+          }
+
+          Write-Host '=== Recent deployments ==='
+          try {
+            $deps = Invoke-RestMethod -Uri "$scm/api/deployments" -Headers $hdr
+            $deps | Select-Object -First 4 | ForEach-Object { "  {0}  status={1}  {2}" -f $_.received_time, $_.status, $_.message.Trim() }
+          } catch { Write-Host "  deployments query failed: $($_.Exception.Message)" }
