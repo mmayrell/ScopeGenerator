@@ -34,6 +34,10 @@ az storage queue create --name genjobs --connection-string $conn -o none
 az storage queue create --name 'genjobs-poison' --connection-string $conn -o none
 az storage container create --name data --connection-string $conn -o none
 az storage container create --name uploads --connection-string $conn -o none
+az storage container create --name screenshots --connection-string $conn -o none
+# Blob CORS so the SPA can render screenshot blobs directly via SAS URLs
+az storage cors clear --services b --connection-string $conn -o none
+az storage cors add --services b --methods GET HEAD OPTIONS --origins "https://lwai-scopegenerator.scopeloop.ai" "https://polite-cliff-00716280f.7.azurestaticapps.net" "http://localhost:5173" --allowed-headers "*" --exposed-headers "*" --max-age 3600 --connection-string $conn -o none
 
 Write-Host "== Function App $funcApp (consumption, Node)"
 $created = $false
