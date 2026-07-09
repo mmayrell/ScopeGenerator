@@ -3,6 +3,7 @@ import { useStore } from '../store'
 import { capsStandardCodes, Spark } from '../ui'
 import type { Scope } from '../types'
 import heroBanner from '../assets/hero-banner.png'
+import lwaiLogo from '../assets/lwai-logo.png'
 
 const workspace = [
   {
@@ -86,6 +87,10 @@ export default function Home() {
         />
         {/* keep the headline legible where the photo hasn't fully faded out */}
         <div className="absolute inset-0 bg-gradient-to-r from-paper via-paper/60 to-transparent" />
+        {/* the logo file is opaque black, so it wears a black badge rather than sitting raw on the photo */}
+        <div className="absolute top-5 right-5 z-10 hidden rounded-xl bg-black px-4 py-2.5 shadow-(--shadow-lift) sm:block lg:top-7 lg:right-8">
+          <img src={lwaiLogo} alt="LearnWith.AI" className="h-9 w-auto lg:h-11" />
+        </div>
         <div className="relative px-6 pt-16 pb-14 lg:px-10">
           <div className="mb-5 font-mono text-[11px] font-semibold tracking-[0.18em] text-accent">LEARNWITH.AI</div>
           <h1 className="m-0 text-[44px] leading-[1.05] font-bold tracking-[-0.03em] text-ink lg:text-[60px]">
