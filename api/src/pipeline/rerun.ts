@@ -62,7 +62,10 @@ export async function rerunRunStep(msg: JobMessage, ctx: InvocationContext): Pro
       effort: 'medium', // interactive latency; fits the 10-min Consumption cap
       ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
     })
-    const regenerated = toLesson(wire.lesson, validItemIds)
+    // Regenerate-in-place keeps the lesson's position in the chain, so its
+    // current itemRefs remain the attachment authority — restore any ref the
+    // rerun call lost or mangled.
+    const regenerated = toLesson(wire.lesson, validItemIds, located.lesson.itemRefs)
     applyChanges = (s) =>
       replaceLesson(s.units, targetUnit.id, located.lesson.id, (old) => ({ ...regenerated, id: old.id }))
   } else if (mode === 'split' || mode === 'merge') {

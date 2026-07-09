@@ -309,7 +309,7 @@ Additional requirements:
 - decision entries must carry rule ids (P#/A#/D#) and quote both sides on every contradiction.
 - for lessons whose skeleton has no in-boundary itemRefs (evidenceStatus inferred), produce 1–3 generated assessment exemplars per P5/§7.13 at released-test quality — distractor-quality choice sets for selected-response formats, strictly inside the lesson's assessment boundary — and label each exactly "Generated exemplar — not a released item" in the releasedItems content. Foundational and introductory lessons are not exempt.
 - bridge and application-tier lessons use §7.14 semantics: bridge newLearning = the selection/discrimination behavior, approach = mixed look-alike practice with no new rules modeled; application-tier newLearning = executing the mastered routine in the new demand band, boundary/ceiling inherited from the parent atom plus the triggering demand statement's scope.
-- itemRefs may only contain ids present in the supplied item bank.
+- itemRefs may only contain ids present in the supplied item bank. Item attachment was decided at planning: each lesson's itemRefs must be its skeleton's itemRefs from batch_lessons with every id COPIED VERBATIM (character-for-character — the ids render the item screenshots, so a mistyped id silently loses the item), reordered by closeness to ceiling. Never invent, alter, or drop an id.
 
 ${jsonBlock('scope_request', scope.request)}
 ${jsonBlock('plan_overview', planOverview)}

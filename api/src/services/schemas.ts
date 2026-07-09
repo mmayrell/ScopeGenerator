@@ -433,7 +433,7 @@ function toCardField(w: WireCardField) {
   }
 }
 
-export function toLesson(w: WireLesson, validItemIds: Set<string>): Lesson {
+export function toLesson(w: WireLesson, validItemIds: Set<string>, fallbackItemRefs: string[] = []): Lesson {
   const fields = {} as Lesson['fields']
   for (const key of Object.keys(w.fields) as (keyof Lesson['fields'])[]) {
     fields[key] = toCardField(w.fields[key])
@@ -455,13 +455,22 @@ export function toLesson(w: WireLesson, validItemIds: Set<string>): Lesson {
       const cleaned = choices.map((c) => c.trim()).filter((c) => c.length > 0)
       return { stem, answer, demandProfile, basis, ...(cleaned.length > 0 ? { choices: cleaned } : {}) }
     })
+  // Item attachment is decided upstream (the plan skeleton, or the lesson
+  // being rerun) and the model is instructed to echo it — but a garbled or
+  // hallucinated id used to be dropped silently here, leaving a card whose
+  // Released Items prose describes items that never render. Repair from the
+  // caller's authoritative refs: keep the model's valid refs (its ordering is
+  // meaningful — closeness to ceiling), then restore any valid authoritative
+  // ref the model lost or mangled.
+  const wireRefs = w.itemRefs.filter((id) => validItemIds.has(id))
+  const restored = fallbackItemRefs.filter((id) => validItemIds.has(id) && !wireRefs.includes(id))
   return {
     id: w.id,
     title: w.title,
     type: w.type,
     evidenceStatus: w.evidenceStatus,
     fields,
-    itemRefs: w.itemRefs.filter((id) => validItemIds.has(id)),
+    itemRefs: [...wireRefs, ...restored],
     ...(exemplars.length > 0 ? { generatedExemplars: exemplars } : {}),
     decisions,
   }

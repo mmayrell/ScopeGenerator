@@ -285,7 +285,9 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
         batch = batches[b].map((sk) => {
           const w = byId.get(sk.id)
           if (!w) throw new Error(`lesson ${sk.id} missing from validated batch — unreachable`)
-          return toLesson(w, validItemIds)
+          // The plan skeleton is the authority on which items attach here —
+          // restore any ref the cards call lost or mangled.
+          return toLesson(w, validItemIds, sk.itemRefs)
         })
         await putJson(dataContainer(), unitBatchPath(msg.jobId, unitIndex, b), batch)
       }

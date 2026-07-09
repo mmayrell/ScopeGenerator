@@ -462,7 +462,19 @@ function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; p
                   <div className="mt-4 space-y-3">
                     {lesson.itemRefs.map((rid) => {
                       const entry = itemsById.get(rid)
-                      return entry ? <ItemShot key={rid} item={entry.it} imageUrl={entry.imageUrl} /> : null
+                      // Never fail silently: an unresolved ref (deleted set or
+                      // packet, stale data) renders as an explicit gap so the
+                      // prose above never claims items the reader cannot see.
+                      return entry ? (
+                        <ItemShot key={rid} item={entry.it} imageUrl={entry.imageUrl} />
+                      ) : (
+                        <div key={rid} className="rounded-xl border border-dashed border-hairline-2 bg-paper/60 px-4 py-3">
+                          <p className="text-[12px] leading-relaxed text-ink-3">
+                            A released item is attached here (<Mono className="text-[11px]">{rid}</Mono>) but its record
+                            could not be loaded — its source set or evidence packet may have been deleted.
+                          </p>
+                        </div>
+                      )
                     })}
                     {(lesson.generatedExemplars ?? (lesson.generatedExemplar ? [lesson.generatedExemplar] : [])).map(
                       (ex, i) => (
@@ -512,7 +524,7 @@ function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; p
 
 export default function ScopeView() {
   const { id } = useParams()
-  const { scopes, sets, deleteScope, createScope, refreshScope } = useStore()
+  const { scopes, sets, deleteScope, createScope, refreshScope, refreshSet } = useStore()
   const nav = useNavigate()
   const scope = scopes.find((s) => s.id === id)
   const [sel, setSel] = useState<string | null>(null)
@@ -583,6 +595,18 @@ export default function ScopeView() {
   // While the scope is generating (initial run, rerun, apply-proposal) or a proposal is
   // drafting/iterating, poll its document every 2s until it settles.
   useScopePolling(scope && scopeUnsettled(scope) ? [scope.id] : [])
+
+  // Released items are extracted onto the SET documents lazily, during the
+  // scope's own generation — a set copy loaded at bootstrap (before or during
+  // that run) has no item records, so every itemRef would silently resolve to
+  // nothing and the Released Items screenshots would not render. Re-pull the
+  // scope's sets once the scope is viewable as complete.
+  const scopeStatus = scope?.status
+  const scopeSetKey = scope ? (scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]).join('|') : ''
+  useEffect(() => {
+    if (scopeStatus !== 'complete' || !scopeSetKey) return
+    for (const setId of scopeSetKey.split('|')) void refreshSet(setId)
+  }, [scopeStatus, scopeSetKey, refreshSet])
 
   // A missing scope may just be a failed refresh at navigation time — try one fetch
   // before declaring it not found.
