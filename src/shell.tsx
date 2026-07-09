@@ -1,16 +1,15 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 import { useStore } from './store'
 import { Btn, Spark } from './ui'
 import lwaiLogo from './assets/lwai-logo.png'
 
 const nav = [
+  { to: '/', label: 'Home', end: true },
   { to: '/system', label: 'Engine & Doctrine' },
   { to: '/packets', label: 'Item Repository' },
   { to: '/library', label: 'Reference Library' },
   { to: '/sets', label: 'Standard Sets' },
   { to: '/scopes', label: 'Scopes' },
-  { to: '/', label: 'Home', end: true },
-  { to: '/lsg', label: 'Lesson Scope Edits' },
 ]
 
 export default function Shell() {
@@ -18,8 +17,10 @@ export default function Shell() {
   const generating = scopes.some((s) => s.status === 'generating')
   return (
     <div className="flex h-screen flex-col overflow-hidden">
-      <header className="flex shrink-0 items-center gap-7 overflow-x-auto border-b border-ink/10 bg-panel px-6 py-[14px] lg:px-10">
-        <img src={lwaiLogo} alt="LearnWith.AI" className="h-[40px] w-auto shrink-0" />
+      <header className="flex shrink-0 items-center gap-7 overflow-x-auto border-b border-ink/10 bg-panel py-[14px] pr-6 pl-3 lg:pr-10 lg:pl-4">
+        <Link to="/" className="shrink-0" title="Home">
+          <img src={lwaiLogo} alt="LearnWith.AI" className="h-[40px] w-auto" />
+        </Link>
         <nav className="ml-4 flex items-center gap-7 lg:ml-9">
           {nav.map((n) => (
             <NavLink
