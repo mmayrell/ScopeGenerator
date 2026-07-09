@@ -1,7 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
-import { Spark } from '../shell'
-import { capsStandardCodes } from '../ui'
+import { capsStandardCodes, Spark } from '../ui'
 import type { Scope } from '../types'
 
 const workspace = [

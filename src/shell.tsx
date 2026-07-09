@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useStore } from './store'
-import { Btn } from './ui'
+import { Btn, Spark } from './ui'
 
 const nav = [
   { to: '/', label: 'Home', end: true },
@@ -10,12 +10,6 @@ const nav = [
   { to: '/packets', label: 'Item Repository' },
   { to: '/system', label: 'Engine & Doctrine' },
 ]
-
-export const Spark = ({ size = 22, color = 'var(--color-accent)' }: { size?: number; color?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="shrink-0">
-    <path d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4 Z" fill={color} />
-  </svg>
-)
 
 export default function Shell() {
   const { scopes, loading, error, refresh, actionError, clearActionError } = useStore()

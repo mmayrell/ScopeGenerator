@@ -205,7 +205,7 @@ export default function NewScope() {
       else {
         await api.cancelGeneration(running)
         await refreshScope(running)
-        nav('/')
+        nav('/scopes')
         return
       }
       setJob(await fetchJob(running))

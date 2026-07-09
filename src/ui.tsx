@@ -43,6 +43,13 @@ export function breakNumberedList(text: string): string {
   })
 }
 
+/** The four-point star mark from the homepage design. */
+export const Spark = ({ size = 22, color = 'var(--color-accent)' }: { size?: number; color?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="shrink-0">
+    <path d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4 Z" fill={color} />
+  </svg>
+)
+
 export const Mono = ({ children, className = '', title }: { children: ReactNode; className?: string; title?: string }) => (
   <span className={`font-mono text-[0.92em] tracking-tight ${className}`} title={title}>
     {children}

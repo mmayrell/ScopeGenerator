@@ -640,7 +640,7 @@ export default function ScopeView() {
             Progress is checkpointed — resuming continues exactly where the run left off.
           </p>
           <div className="mt-4 flex items-center justify-between border-t border-hairline pt-4">
-            <Link to="/" className="text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Curriculum Scopes</Link>
+            <Link to="/scopes" className="text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Curriculum Scopes</Link>
             <div className="flex gap-2">
               <Btn kind="danger" disabled={genAction !== null} onClick={() => void genControl('cancel')}>
                 {genAction === 'cancel' ? 'Cancelling…' : 'Cancel generation'}
@@ -700,9 +700,9 @@ export default function ScopeView() {
             The run is checkpointed server-side; retry resumes from the checkpoints, skipping everything already generated. Delete removes this failed scope.
           </p>
           <div className="mt-4 flex items-center justify-between border-t border-hairline pt-4">
-            <Link to="/" className="text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Curriculum Scopes</Link>
+            <Link to="/scopes" className="text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Curriculum Scopes</Link>
             <div className="flex gap-2">
-              <Btn kind="danger" onClick={() => { void deleteScope(scope.id).then((ok) => { if (ok) nav('/') }) }}>Delete scope</Btn>
+              <Btn kind="danger" onClick={() => { void deleteScope(scope.id).then((ok) => { if (ok) nav('/scopes') }) }}>Delete scope</Btn>
               <Btn kind="primary" disabled={retrying} onClick={() => void retry()}>{retrying ? 'Starting…' : 'Retry generation'}</Btn>
             </div>
           </div>
@@ -717,7 +717,7 @@ export default function ScopeView() {
       <div className="flex h-full items-center justify-center px-10">
         <div className="text-center">
           <p className="text-[13px] text-ink-3">This scope has no lessons.</p>
-          <Link to="/" className="mt-3 inline-block text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Curriculum Scopes</Link>
+          <Link to="/scopes" className="mt-3 inline-block text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Curriculum Scopes</Link>
         </div>
       </div>
     )
@@ -729,7 +729,7 @@ export default function ScopeView() {
     <div className="flex h-full">
       {/* unit / lesson rail */}
       <aside className="w-60 shrink-0 overflow-y-auto border-r border-hairline bg-panel/60 px-4 py-6 xl:w-72">
-        <Link to="/" className="px-2 text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Curriculum Scopes</Link>
+        <Link to="/scopes" className="px-2 text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Curriculum Scopes</Link>
         <h1 className="mt-2 px-2 font-display text-[17px] leading-snug font-semibold text-ink">{capsStandardCodes(scope.title)}</h1>
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5 px-2">
           <Pill tone="neutral">v{scope.version}</Pill>
@@ -858,7 +858,7 @@ export default function ScopeView() {
         </p>
         <div className="mt-5 flex justify-end gap-2">
           <Btn onClick={() => setConfirmDelete(false)}>Cancel</Btn>
-          <Btn kind="danger" onClick={() => { void deleteScope(scope.id).then((ok) => { if (ok) nav('/') }) }}>Delete</Btn>
+          <Btn kind="danger" onClick={() => { void deleteScope(scope.id).then((ok) => { if (ok) nav('/scopes') }) }}>Delete</Btn>
         </div>
       </Modal>
     </div>

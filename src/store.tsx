@@ -12,7 +12,7 @@ import {
   type NewSetUploads,
   type RerunResult,
 } from './api'
-import { Btn } from './ui'
+import { Btn, Spark } from './ui'
 
 export type { JobStatus, NewSetUploads, RerunResult, UploadSlotValue } from './api'
 
@@ -94,12 +94,10 @@ function AccessGate({ error, onSubmit }: { error: string | null; onSubmit: (code
     <div className="flex h-screen items-center justify-center bg-paper px-6">
       <div className="animate-rise w-full max-w-sm rounded-2xl border border-hairline bg-panel p-8 shadow-(--shadow-float)">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent font-display text-[15px] font-bold text-white">
-            S
-          </div>
+          <Spark />
           <div>
-            <div className="font-display text-[15px] leading-5 font-semibold text-ink">Scope Generator</div>
-            <div className="font-mono text-[10px] tracking-wide text-ink-3">evidence-locked scoping</div>
+            <div className="text-[15px] leading-5 font-bold tracking-[0.02em] text-ink">SCOPE GENERATOR</div>
+            <div className="font-mono text-[10px] tracking-[0.08em] text-ink-3">BY LWAI</div>
           </div>
         </div>
         <p className="mt-5 text-[13px] leading-relaxed text-ink-2">Enter the access code to continue.</p>
