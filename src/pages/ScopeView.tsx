@@ -366,7 +366,7 @@ function ProposalView({
 
 // ---------- the 18-field card ----------
 
-function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; packet?: EvidencePacket }) {
+function LessonCard({ scope, lesson, lessonNumber, packet }: { scope: Scope; lesson: Lesson; lessonNumber: number; packet?: EvidencePacket }) {
   const { sets } = useStore()
   // Items resolve across every set the scope draws on (multi-select) plus the
   // linked evidence packet — each entry carries its own image URL (set items
@@ -420,7 +420,8 @@ function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; p
       <header className="flex items-start justify-between gap-6">
         <div>
           <div className="flex items-center gap-2">
-            <Mono className="rounded-md bg-night px-2 py-0.5 text-[11.5px] font-semibold text-white">{lesson.id}</Mono>
+            <Mono className="rounded-md bg-night px-2 py-0.5 text-[11.5px] font-semibold text-white">Lesson {lessonNumber}</Mono>
+            <Mono className="rounded-md border border-hairline bg-paper px-2 py-0.5 text-[11.5px] text-ink-3">{lesson.id}</Mono>
             <Pill tone={tt.tone}>{tt.label}</Pill>
             <Pill tone={lesson.evidenceStatus === 'observed' ? 'green' : lesson.evidenceStatus === 'inferred' ? 'amber' : 'neutral'}>
               evidence: {lesson.evidenceStatus}
@@ -776,6 +777,8 @@ export default function ScopeView() {
     )
   }
   const lesson = allLessons.find((l) => l.id === sel) ?? allLessons[0]
+  // Lessons are numbered through the whole course (not restarting per unit).
+  const courseLessonNumber = new Map(allLessons.map((l, i) => [l.id, i + 1]))
   // Clean-field separation was retired as a QC gate; hide it on scopes generated before the removal.
   const qcChecks = scope.qc.filter((q) => q.name !== 'Clean-field separation')
 
@@ -831,7 +834,7 @@ export default function ScopeView() {
                       lesson.id === l.id ? 'bg-accent-wash text-accent-deep' : 'text-ink-2 hover:bg-ink/[0.035]'
                     }`}
                   >
-                    <Mono className={`shrink-0 text-[10.5px] leading-snug ${lesson.id === l.id ? 'text-accent-deep' : 'text-ink-3'}`}>{l.id.split('.')[1]}</Mono>
+                    <Mono className={`shrink-0 text-[10.5px] leading-snug ${lesson.id === l.id ? 'text-accent-deep' : 'text-ink-3'}`}>L{courseLessonNumber.get(l.id)}</Mono>
                     <span className="min-w-0 flex-1 text-[12.5px] leading-snug font-medium">{l.title}</span>
                     <span className="mt-1 ml-auto flex shrink-0 items-center gap-1">
                       {l.type === 'bridge' && <span className="h-1.5 w-1.5 rounded-full bg-night" title="bridge" />}
@@ -859,7 +862,7 @@ export default function ScopeView() {
             </h1>
           )
         })()}
-        <LessonCard scope={scope} lesson={lesson} packet={packet} />
+        <LessonCard scope={scope} lesson={lesson} lessonNumber={courseLessonNumber.get(lesson.id) ?? 1} packet={packet} />
         <div className="h-16" />
       </div>
 

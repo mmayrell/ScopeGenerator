@@ -31,7 +31,7 @@ export interface ScopeLessonJson {
   /** 1-based position of the lesson's unit within the scope. Key spelled with a space per the spec's JSON Schema. */
   'unit number': string
   'unit name': string
-  /** 1-based position of the lesson within its unit. Key spelled with a space per the spec's JSON Schema. */
+  /** 1-based position of the lesson within the whole course (across all units). Key spelled with a space per the spec's JSON Schema. */
   'lesson order': string
   objectives: string
   majorSupporting: string
@@ -117,8 +117,11 @@ export function buildScopeJson(
   const itemsById = resolveScopeItems(scope, sets, packet)
   // Spec example: subject "Math", course "Grade 4 Mathematics", standardSet "CCSS".
   const { subject, course, standardSet, prefixFor } = scopeCardContext(scope, sets)
+  // 'lesson order' counts through the whole course, not within each unit.
+  let courseLessonNumber = 0
   return scope.units.flatMap((u, unitIdx) =>
-    u.lessons.map((l, lessonIdx): ScopeLessonJson => {
+    u.lessons.map((l): ScopeLessonJson => {
+      courseLessonNumber += 1
       const f = l.fields
       // standardId is forced into canonical <Standard Set Prefix>.<Standard Code> format.
       const { standardId, standardDescription } = splitStandards(content(f.standards), prefixFor)
@@ -132,7 +135,7 @@ export function buildScopeJson(
         lessonTitle: l.title,
         'unit number': String(unitIdx + 1),
         'unit name': u.title,
-        'lesson order': String(lessonIdx + 1),
+        'lesson order': String(courseLessonNumber),
         objectives: content(f.objectives),
         majorSupporting: content(f.emphasis),
         progressionPlacement: content(f.progression),
