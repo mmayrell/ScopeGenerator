@@ -87,6 +87,34 @@ function treeCodes(nodes: StandardNode[], out: Set<string>): Set<string> {
   return out
 }
 
+/**
+ * Standard IDs must ALWAYS render/export in canonical
+ * <Standard Set Prefix>.<Standard Code> format (e.g. CCSS.MATH.CONTENT.6.RP.A.1).
+ * Sets that declare no standardIdPrefix — sets ingested before the field
+ * existed, or whose standards document prints no prefix — would otherwise
+ * leak bare codes, so derive the framework's conventional prefix from the
+ * set's identity: Common Core gets its official URI prefixes; any other
+ * framework gets <FRAMEWORK ACRONYM>.<SUBJECT> (e.g. TEKS.MATH).
+ */
+export function inferStandardIdPrefix(set: StandardSet): string {
+  const identity = `${set.name} ${set.sourceOrganization ?? ''}`
+  const ela = /\b(ela|english|literacy|language arts|reading)\b/i.test(set.subject || identity)
+  if (/common core|\bccss\b/i.test(identity)) return ela ? 'CCSS.ELA-LITERACY' : 'CCSS.MATH.CONTENT'
+  const acronym =
+    identity.match(/\b[A-Z]{2,8}\b/)?.[0] ??
+    set.name
+      .split(/[^A-Za-z]+/)
+      .filter(Boolean)
+      .map((w) => w[0].toUpperCase())
+      .join('')
+      .slice(0, 6)
+  const subjectToken = /math/i.test(set.subject) ? 'MATH' : ela ? 'ELA' : (set.subject.trim().split(/\s+/)[0] ?? '').toUpperCase()
+  return [acronym, subjectToken].filter(Boolean).join('.')
+}
+
+/** A set's declared canonical prefix, or the inferred conventional one — never empty for a named set. */
+const setPrefix = (set: StandardSet): string => set.standardIdPrefix?.trim() || inferStandardIdPrefix(set)
+
 export function scopeCardContext(scope: Scope, sets: StandardSet[]): ScopeCardContext {
   const ids = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
   const scopeSets = sets.filter((s) => ids.includes(s.id))
@@ -98,17 +126,29 @@ export function scopeCardContext(scope: Scope, sets: StandardSet[]): ScopeCardCo
     [scopeSets[0]?.gradeSpan ?? '', scopeSets[0]?.subject ?? ''].filter(Boolean).join(' ')
   // Union scopes mix frameworks: resolve each code's prefix through the set
   // whose tree owns it; codes not found fall back to the first set's prefix.
-  const byCode = scopeSets.map((s) => ({ codes: treeCodes(s.tree, new Set<string>()), prefix: s.standardIdPrefix ?? '' }))
-  const defaultPrefix = scopeSets[0]?.standardIdPrefix ?? ''
+  const byCode = scopeSets.map((s) => ({ codes: treeCodes(s.tree, new Set<string>()), prefix: setPrefix(s) }))
+  const defaultPrefix = scopeSets[0] ? setPrefix(scopeSets[0]) : ''
   return {
     subject,
     course,
     standardSet: scopeSets.map((s) => s.name).join(' + '),
-    prefixFor: (code) => byCode.find((e) => e.codes.has(code.toUpperCase()))?.prefix ?? defaultPrefix,
+    prefixFor: (code) => {
+      const upper = code.toUpperCase()
+      return (
+        // Already-canonical ids resolve to their own framework's prefix (so
+        // canonicalStandardId passes them through instead of re-prefixing).
+        byCode.find((e) => e.prefix && upper.startsWith(`${e.prefix.toUpperCase()}.`))?.prefix ??
+        byCode.find((e) => e.codes.has(upper))?.prefix ??
+        defaultPrefix
+      )
+    },
   }
 }
 
-const CODE_SHAPE = /(?:[A-Z]{1,3}\.)?[0-9]+\.[A-Za-z0-9]+(?:\([A-Za-z0-9]+\))*(?:\.[A-Za-z0-9]+(?:\([A-Za-z0-9]+\))*)*/
+// Any leading chain of dotted UPPERCASE segments is captured with the code
+// ("CCSS.MATH.CONTENT.6.RP.A.1" matches whole, "RL.6.1" too) so an id already
+// carrying its canonical prefix is recognized as such and never re-prefixed.
+const CODE_SHAPE = /(?:[A-Z][A-Z-]{0,14}\.)*[0-9]+\.[A-Za-z0-9]+(?:\([A-Za-z0-9]+\))*(?:\.[A-Za-z0-9]+(?:\([A-Za-z0-9]+\))*)*/
 
 /**
  * Forces the canonical identifier format <Standard Set Prefix>.<Standard Code>
