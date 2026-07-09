@@ -24,7 +24,9 @@ Write-Host "== Resource group $rg ($location)"
 az group create -n $rg -l $location -o none
 
 Write-Host "== Storage account $storage"
-az storage account create -n $storage -g $rg -l $location --sku Standard_LRS --kind StorageV2 --min-tls-version TLS1_2 --allow-blob-public-access false -o none
+# allow-blob-public-access true only PERMITS containers to opt in; every
+# container stays private unless explicitly set (only 'screenshots' opts in below).
+az storage account create -n $storage -g $rg -l $location --sku Standard_LRS --kind StorageV2 --min-tls-version TLS1_2 --allow-blob-public-access true -o none
 $conn = az storage account show-connection-string -n $storage -g $rg --query connectionString -o tsv
 
 Write-Host "== Tables, queue, containers"
@@ -35,6 +37,8 @@ az storage queue create --name 'genjobs-poison' --connection-string $conn -o non
 az storage container create --name data --connection-string $conn -o none
 az storage container create --name uploads --connection-string $conn -o none
 az storage container create --name screenshots --connection-string $conn -o none
+# Screenshots are served straight to the browser: anonymous blob READ (no listing).
+az storage container set-permission --name screenshots --public-access blob --connection-string $conn -o none
 # Blob CORS so the SPA can render screenshot blobs directly via SAS URLs
 az storage cors clear --services b --connection-string $conn -o none
 az storage cors add --services b --methods GET HEAD OPTIONS --origins "https://lwai-scopegenerator.scopeloop.ai" "https://polite-cliff-00716280f.7.azurestaticapps.net" "http://localhost:5173" --allowed-headers "*" --exposed-headers "*" --max-age 3600 --connection-string $conn -o none
