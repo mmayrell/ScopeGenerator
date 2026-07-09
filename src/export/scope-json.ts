@@ -1,13 +1,14 @@
 // JSON export for a scope — the canonical machine-readable version per the
 // No-HITL spec ("Exporting the Scope"): ONE FLAT OBJECT PER LESSON CARD, every
-// field a plain string. The export contains the fields that define the
-// instructional scope and is intended for the downstream curriculum
-// generation tools. Released items are represented as structured references
-// in text form — metadata (source, year, item number, aligned standard)
-// plus a persistent screenshot URL (long-lived read-only SAS links minted by
-// the backend); generated exemplars carry their full text since no hosted
-// asset exists for them. Decision Records are human-readable artifacts and
-// are NOT included.
+// field a plain string except releasedItems, which is an ARRAY with one entry
+// per item so downstream tools can iterate the links without parsing. The
+// export contains the fields that define the instructional scope and is
+// intended for the downstream curriculum generation tools. Released items are
+// represented as structured references in text form — metadata (source, year,
+// item number, aligned standard) plus a persistent screenshot URL (long-lived
+// read-only SAS links minted by the backend); generated exemplars carry their
+// full text since no hosted asset exists for them. Decision Records are
+// human-readable artifacts and are NOT included.
 import { api } from '../api'
 import { scopeCardContext, splitStandards } from '../data/meta'
 import type { CardField, EvidencePacket, Lesson, Scope, StandardSet } from '../types'
@@ -42,7 +43,8 @@ export interface ScopeLessonJson {
   nonGoals: string
   difficultyCeiling: string
   assessmentEvidence: string
-  releasedItems: string
+  /** One entry per released item (metadata + screenshot/source links) or generated exemplar. */
+  releasedItems: string[]
 }
 
 // ---------------------------------------------------------------------------
@@ -91,7 +93,7 @@ function exemplarLines(l: Lesson): string[] {
   )
 }
 
-function releasedItemsText(l: Lesson, itemsById: Map<string, ResolvedScopeItem>, imageLinks: Record<string, string>): string {
+function releasedItemsArray(l: Lesson, itemsById: Map<string, ResolvedScopeItem>, imageLinks: Record<string, string>): string[] {
   const entries = l.itemRefs
     .map((rid) => itemsById.get(rid))
     .filter((entry): entry is NonNullable<typeof entry> => !!entry)
@@ -99,7 +101,7 @@ function releasedItemsText(l: Lesson, itemsById: Map<string, ResolvedScopeItem>,
   const blocks = [...entries, ...exemplarLines(l)]
   // Neither resolved items nor exemplars: the field's own content states the
   // situation (never empty per the card rules).
-  return blocks.length > 0 ? blocks.join('\n\n') : content(l.fields.releasedItems)
+  return blocks.length > 0 ? blocks : [content(l.fields.releasedItems)].filter(Boolean)
 }
 
 // ---------------------------------------------------------------------------
@@ -141,7 +143,7 @@ export function buildScopeJson(
         nonGoals: content(f.nonGoals),
         difficultyCeiling: content(f.ceiling),
         assessmentEvidence: content(f.assessment),
-        releasedItems: releasedItemsText(l, itemsById, imageLinks),
+        releasedItems: releasedItemsArray(l, itemsById, imageLinks),
       }
     }),
   )
