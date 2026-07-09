@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useStore } from './store'
 import { Btn, Spark } from './ui'
+import lwaiLogo from './assets/lwai-logo.png'
 
 const nav = [
   { to: '/', label: 'Home', end: true },
@@ -17,10 +18,9 @@ export default function Shell() {
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <header className="flex shrink-0 items-center gap-7 overflow-x-auto border-b border-ink/10 bg-panel px-6 py-[14px] lg:px-10">
-        <div className="flex shrink-0 items-center gap-2.5">
-          <Spark />
-          <span className="text-[15px] font-bold tracking-[0.02em] text-ink whitespace-nowrap">SCOPE&nbsp;GENERATOR</span>
-          <span className="font-mono text-[10px] font-medium tracking-[0.08em] text-ink-3 whitespace-nowrap">BY LWAI</span>
+        {/* the logo file is opaque black, so it wears a black badge rather than sitting raw on the white header */}
+        <div className="flex h-[30px] shrink-0 items-center rounded-lg bg-black px-2.5">
+          <img src={lwaiLogo} alt="LearnWith.AI" className="h-[20px] w-auto" />
         </div>
         <nav className="ml-4 flex items-center gap-7 lg:ml-9">
           {nav.map((n) => (
@@ -39,11 +39,16 @@ export default function Shell() {
             </NavLink>
           ))}
         </nav>
-        <div
-          className="ml-auto flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full bg-accent text-[12px] font-semibold text-white"
-          title="doreen.mayrell@learnwith.ai"
-        >
-          DM
+        <div className="ml-auto flex shrink-0 items-center gap-2.5">
+          <Spark />
+          <span className="text-[15px] font-bold tracking-[0.02em] text-ink whitespace-nowrap">SCOPE&nbsp;GENERATOR</span>
+          <span className="font-mono text-[10px] font-medium tracking-[0.08em] text-ink-3 whitespace-nowrap">BY LWAI</span>
+          <div
+            className="ml-2 flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full bg-accent text-[12px] font-semibold text-white"
+            title="doreen.mayrell@learnwith.ai"
+          >
+            DM
+          </div>
         </div>
       </header>
       <main className="flex-1 overflow-y-auto">
