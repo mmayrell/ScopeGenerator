@@ -4,7 +4,7 @@ import { api } from '../api'
 import { systemArtifacts } from '../data/meta'
 import { useStore, type JobStatus } from '../store'
 import { Btn, Mono, Pill, Progress, SectionLabel } from '../ui'
-import type { StandardNode } from '../types'
+import type { PacketSummary, StandardNode } from '../types'
 
 const stages = [
   { n: 2, name: 'Scope Resolution', detail: 'Determining exactly what each standard teaches by resolving scope, organizing evidence, and mapping assessment items to instructional components.' },
@@ -68,6 +68,10 @@ export default function NewScope() {
   // ones — nothing references a token until createScope succeeds).
   const uploadsToken = useRef<string>(crypto.randomUUID())
   const [topicMapped, setTopicMapped] = useState(false)
+  // Optional released-items source: a settled evidence packet whose hunted
+  // items (with captured screenshots) join the scope's item bank.
+  const [packets, setPackets] = useState<PacketSummary[]>([])
+  const [packetId, setPacketId] = useState<string>('')
   const [running, setRunning] = useState<string | null>(null)
   const [job, setJob] = useState<JobStatus | null>(null)
   const [failure, setFailure] = useState<string | null>(null)
@@ -111,6 +115,22 @@ export default function NewScope() {
     setSelectedCodes((prev) => (prev.includes(code) ? prev.filter((x) => x !== code) : [...prev, code]))
 
   useEffect(() => () => clearTimeout(navTimer.current), [])
+
+  // Settled repositories with items are eligible released-items sources.
+  useEffect(() => {
+    let cancelled = false
+    void api
+      .listPackets()
+      .then((rows) => {
+        if (!cancelled) setPackets(rows.filter((p) => p.status !== 'hunting' && p.itemCount > 0))
+      })
+      .catch(() => {
+        /* the picker simply stays empty — packets are optional */
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   // Poll the generation job every 2s while a run is active.
   useEffect(() => {
@@ -166,7 +186,7 @@ export default function NewScope() {
         await Promise.all(topicFiles.map((f) => api.uploadScopePdf(token, f.name, f)))
         uploads = { token, names: topicFiles.map((f) => f.name) }
       }
-      const id = await createScope(setIds, mode, params, granular, uploads)
+      const id = await createScope(setIds, mode, params, granular, uploads, packetId || undefined)
       setJob(null)
       setFailure(null)
       setRunning(id)
@@ -484,6 +504,39 @@ export default function NewScope() {
             </div>
           )}
         </div>
+
+        {packets.length > 0 && (
+          <div>
+            <SectionLabel>Released-items source (optional)</SectionLabel>
+            <p className="mt-1 text-[11.5px] leading-snug text-ink-3">
+              Attach a Released Item Repository: its hunted items — with real screenshots where captured — join the
+              item bank, appear on the lesson cards' Released Items fields, and carry screenshot links in the exports.
+            </p>
+            <div className="mt-2 space-y-2">
+              {packets.map((p) => (
+                <label
+                  key={p.id}
+                  className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-all ${
+                    packetId === p.id ? 'border-accent/40 bg-accent-wash/40 shadow-(--shadow-lift)' : 'border-hairline bg-panel hover:border-hairline-2'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={packetId === p.id}
+                    onChange={() => setPacketId((cur) => (cur === p.id ? '' : p.id))}
+                    className="accent-(--color-accent)"
+                  />
+                  <div>
+                    <div className="text-[13.5px] font-semibold text-ink">{p.title}</div>
+                    <div className="text-[11.5px] text-ink-3">
+                      {p.frameworkLabel} · {p.itemCount} item{p.itemCount === 1 ? '' : 's'} · {p.standardCount} standard{p.standardCount === 1 ? '' : 's'}
+                    </div>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div>
           <SectionLabel>Granularity</SectionLabel>

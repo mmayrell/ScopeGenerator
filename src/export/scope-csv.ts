@@ -2,10 +2,12 @@
 // Fields only, deliberately: no citations, no rationales, no decision records.
 // Released items appear as hosted screenshot links (long-lived read-only SAS
 // URLs minted by the backend) so anyone the spreadsheet is shared with can
-// open the screenshots without holding the app access code.
+// open the screenshots without holding the app access code. Items may come
+// from the sets' item banks or from the scope's linked evidence packet
+// (request.packetId) — packet lines also carry the original source URL.
 import { api } from '../api'
 import { fieldMeta } from '../data/meta'
-import type { Scope, StandardSet } from '../types'
+import type { EvidencePacket, HuntedItem, ItemRecord, Scope, StandardSet } from '../types'
 import { capsStandardCodes } from '../ui'
 
 // Field columns carry the EXACT on-card field labels (fieldMeta.label, e.g.
@@ -36,48 +38,82 @@ const cell = (value: string): string => {
   return `"${neutralized.replace(/"/g, '""')}"`
 }
 
-/** Every (setId, itemId) pair in the scope that has a screenshot to link. */
-export function scopeImageItems(scope: Scope, sets: StandardSet[]): { setId: string; itemId: string }[] {
-  const itemsById = resolveItems(scope, sets)
-  const pairs: { setId: string; itemId: string }[] = []
+/** An itemRef resolved to its owner: a set's item bank or the linked packet. */
+export type ResolvedScopeItem =
+  | { kind: 'set'; setId: string; it: ItemRecord }
+  | { kind: 'packet'; packetId: string; item: HuntedItem }
+
+/** Every screenshot-bearing itemRef in the scope, as an image-links request entry. */
+export function scopeImageItems(
+  scope: Scope,
+  sets: StandardSet[],
+  packet?: EvidencePacket,
+): { setId?: string; packetId?: string; itemId: string }[] {
+  const itemsById = resolveScopeItems(scope, sets, packet)
+  const pairs: { setId?: string; packetId?: string; itemId: string }[] = []
   const seen = new Set<string>()
   for (const u of scope.units) {
     for (const l of u.lessons) {
       for (const rid of l.itemRefs) {
         const entry = itemsById.get(rid)
-        if (!entry || !entry.it.imagePath || seen.has(rid)) continue
+        if (!entry || seen.has(rid)) continue
         seen.add(rid)
-        pairs.push({ setId: entry.setId, itemId: entry.it.id })
+        if (entry.kind === 'set' && entry.it.imagePath) {
+          pairs.push({ setId: entry.setId, itemId: entry.it.id })
+        } else if (entry.kind === 'packet' && (entry.item.screenshotPaths?.length ?? 0) > 0) {
+          pairs.push({ packetId: entry.packetId, itemId: entry.item.id })
+        }
       }
     }
   }
   return pairs
 }
 
-/** Items resolve across every set the scope draws on, keeping the owning set id. */
-function resolveItems(scope: Scope, sets: StandardSet[]) {
+/** Items resolve across every set the scope draws on plus the linked packet, keeping the owner id. */
+export function resolveScopeItems(
+  scope: Scope,
+  sets: StandardSet[],
+  packet?: EvidencePacket,
+): Map<string, ResolvedScopeItem> {
   const scopeSetIds = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
   const scopeSets = sets.filter((st) => scopeSetIds.includes(st.id))
-  return new Map(scopeSets.flatMap((st) => st.items.map((it) => [it.id, { it, setId: st.id }] as const)))
+  const entries: (readonly [string, ResolvedScopeItem])[] = scopeSets.flatMap((st) =>
+    st.items.map((it) => [it.id, { kind: 'set', setId: st.id, it } as const] as const),
+  )
+  for (const item of packet?.items ?? []) {
+    entries.push([item.id, { kind: 'packet', packetId: packet!.id, item }])
+  }
+  return new Map(entries)
 }
 
 export function buildScopeCsv(
   scope: Scope,
   sets: StandardSet[],
   imageLinks: Record<string, string> = {},
+  packet?: EvidencePacket,
 ): string {
-  const itemsById = resolveItems(scope, sets)
+  const itemsById = resolveScopeItems(scope, sets, packet)
 
   const rows = [HEADER.map(cell).join(',')]
   for (const u of scope.units) {
     for (const l of u.lessons) {
       // released_items: one line per item — its identity plus the screenshot
-      // link. Lessons with no resolved items keep the field's content (which
-      // states the generated-exemplar situation).
+      // link (packet items add the original source URL). Lessons with no
+      // resolved items keep the field's content (which states the
+      // generated-exemplar situation).
       const itemLines = l.itemRefs
         .map((rid) => itemsById.get(rid))
         .filter((entry) => !!entry)
-        .map(({ it, setId }) => {
+        .map((entry) => {
+          if (entry.kind === 'packet') {
+            const { item } = entry
+            const link = imageLinks[`${entry.packetId}/${item.id}`]
+            const head = [item.program || item.sourceName, item.year > 0 ? String(item.year) : '', item.itemNumber ? `Q${item.itemNumber}` : '']
+              .filter(Boolean)
+              .join(' ')
+            return `${head}${link ? `: ${link}` : ' (no screenshot available)'} — source: ${item.sourceUrl}`
+          }
+          const { it, setId } = entry
           const link = imageLinks[`${setId}/${it.id}`]
           return `${it.test} ${it.year} Q${it.itemNumber}${link ? `: ${link}` : ' (no screenshot available)'}`
         })
@@ -109,11 +145,11 @@ export function buildScopeCsv(
 }
 
 /** Fetches the screenshot links, builds the CSV, and hands it to the browser as a download. */
-export async function downloadScopeCsv(scope: Scope, sets: StandardSet[]): Promise<void> {
-  const pairs = scopeImageItems(scope, sets)
+export async function downloadScopeCsv(scope: Scope, sets: StandardSet[], packet?: EvidencePacket): Promise<void> {
+  const pairs = scopeImageItems(scope, sets, packet)
   const { links } = pairs.length > 0 ? await api.itemImageLinks(pairs) : { links: {} }
   // BOM so Excel opens the UTF-8 content (em dashes, ≤, ×) correctly.
-  const blob = new Blob(['﻿' + buildScopeCsv(scope, sets, links)], { type: 'text/csv;charset=utf-8' })
+  const blob = new Blob(['﻿' + buildScopeCsv(scope, sets, links, packet)], { type: 'text/csv;charset=utf-8' })
   const name = `${capsStandardCodes(scope.title).replace(/[\\/:*?"<>|]+/g, '-')}.csv`
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')

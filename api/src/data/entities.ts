@@ -4,6 +4,7 @@ import { HttpError } from '../shared/errors'
 import { sleep } from '../shared/util'
 import { dataContainer, entitiesTable, uploadsContainer } from './clients'
 import { deleteBlobsWithPrefix, getJsonOrUndefined, getJsonWithEtag, putJson, putJsonIfMatch } from './blobs'
+import { getPacketOrUndefined, packetItemRecords } from './packets'
 
 // Blob layout (contract §Storage layout):
 //   sets/<setId>.json                current StandardSet
@@ -90,7 +91,13 @@ export async function listSets(): Promise<StandardSet[]> {
 export async function getScopeEvidenceSet(scope: Scope): Promise<StandardSet> {
   const ids = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
   const sets = await Promise.all(ids.map((id) => getSet(id)))
-  if (sets.length === 1) return sets[0]
+  // A linked evidence packet contributes its hunted items (with screenshots)
+  // to the item bank — plan attaches them via itemRefs like set items. A
+  // packet deleted after scope creation degrades to set evidence only.
+  const packetItems = await scopePacketItems(scope)
+  if (sets.length === 1) {
+    return packetItems.length > 0 ? { ...sets[0], items: [...sets[0].items, ...packetItems] } : sets[0]
+  }
   const uniq = (values: string[]) => [...new Set(values.filter(Boolean))]
   return {
     ...sets[0],
@@ -107,8 +114,15 @@ export async function getScopeEvidenceSet(scope: Scope): Promise<StandardSet> {
     tree: sets.flatMap((s) => s.tree),
     artifacts: sets.flatMap((s) => s.artifacts),
     warnings: sets.flatMap((s) => s.warnings),
-    items: sets.flatMap((s) => s.items),
+    items: [...sets.flatMap((s) => s.items), ...packetItems],
   }
+}
+
+/** Hunted items of the scope's linked packet as ItemRecords; [] when none is linked (or it was deleted). */
+async function scopePacketItems(scope: Scope) {
+  if (!scope.request.packetId) return []
+  const packet = await getPacketOrUndefined(scope.request.packetId)
+  return packet ? packetItemRecords(packet) : []
 }
 
 /**

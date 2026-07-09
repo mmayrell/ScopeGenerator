@@ -1,8 +1,9 @@
-// Evidence Packets — a standalone web-hunting tool. Selection comes from the
-// built-in standards catalog (src/data/packet-catalog.ts, loaded lazily) and a
-// backend agent searches the public web for genuine released items. Nothing
-// here touches standard sets or scopes.
-import type { EvidencePacket, HuntedItem, PacketFramework, PacketStandard } from './types'
+// Evidence Packets — the web-hunting Released Item Repository tool. Selection
+// comes from the built-in standards catalog (src/data/packet-catalog.ts,
+// loaded lazily) and a backend agent searches the public web for genuine
+// released items. A settled packet can also be linked to a scope request
+// (scope.request.packetId) as its released-items source.
+import type { EvidencePacket, HuntedItem, ItemRecord, PacketFramework, PacketStandard } from './types'
 
 /** One catalog row — a PacketStandard tagged with its framework. */
 export interface CatalogStandard extends PacketStandard {
@@ -180,3 +181,32 @@ export function packetCoverageOf(packet: EvidencePacket): PacketCoverage {
 
 /** Choice letter for facsimile rendering: 0 → 'A'. */
 export const choiceLetter = (i: number): string => String.fromCharCode(65 + i)
+
+/**
+ * A hunted packet item in ItemRecord shape — what ItemShot and the exports
+ * speak. Mirrors the backend's packetItemRecords (which feeds the same items
+ * into the generation pipeline), so a scope's itemRefs resolve identically on
+ * both sides.
+ */
+export function huntedToItemRecord(item: HuntedItem): ItemRecord {
+  return {
+    id: item.id,
+    source: item.sourceName || item.sourceUrl,
+    test: item.program || item.sourceName,
+    year: item.year,
+    itemNumber: Number.parseInt(item.itemNumber, 10) || 0,
+    alignmentCode: item.standardCode,
+    confidence: item.alignment === 'official' ? 'official' : 'ai-proposed',
+    completeness: 1,
+    itemType: item.itemType,
+    responseFormat: item.choices.length > 0 ? 'selected response' : 'constructed response',
+    representations: [],
+    problemTypes: [],
+    demandProfile: '',
+    scopeClass: 'in-boundary',
+    hasKey: item.answer !== '',
+    stem: item.stem,
+    ...(item.choices.length > 0 ? { choices: item.choices } : {}),
+    ...(item.screenshotPaths && item.screenshotPaths.length > 0 ? { imagePath: item.screenshotPaths[0] } : {}),
+  }
+}

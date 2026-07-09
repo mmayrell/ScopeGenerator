@@ -50,6 +50,7 @@ interface Store {
     params: string,
     granular?: boolean,
     uploads?: { token: string; names: string[] },
+    packetId?: string,
   ) => Promise<string>
   submitReport: (scopeId: string, target: string, text: string) => Promise<Proposal>
   iterateProposal: (scopeId: string, proposalId: string, feedback: string) => Promise<void>
@@ -318,8 +319,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       params: string,
       granular?: boolean,
       uploads?: { token: string; names: string[] },
+      packetId?: string,
     ): Promise<string> => {
-      const { id } = await guard(() => api.createScope(setIds, mode, params, granular, uploads))
+      const { id } = await guard(() => api.createScope(setIds, mode, params, granular, uploads, packetId))
       await refreshScope(id) // pull the new 'generating' document into state
       return id
     },

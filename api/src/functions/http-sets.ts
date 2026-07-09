@@ -1,10 +1,11 @@
 import { BlobSASPermissions } from '@azure/storage-blob'
 import { Artifact, NewSetUploads, StandardSet } from '../domain/types'
-import { dataContainer, uploadsContainer } from '../data/clients'
+import { dataContainer, screenshotsContainer, uploadsContainer } from '../data/clients'
 import { deleteSetDocs, getSet, listScopes, listSets, mutateSet, saveSet } from '../data/entities'
 import { createJob, latestJobForSet, mutateJob, pushLog, toJobStatus } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { itemImageBlobPath } from '../pipeline/ingest'
+import { shotBlobPath } from '../pipeline/packet-shots'
 import { HttpError } from '../shared/errors'
 import { api, ok, readJson, requireParam } from '../shared/http'
 import { newId, today } from '../shared/util'
@@ -314,15 +315,16 @@ api({
   },
 })
 
-// POST /api/item-image-links  { items: [{ setId, itemId }] } → { links }
+// POST /api/item-image-links  { items: [{ setId | packetId, itemId }] } → { links }
 // Long-lived read-only blob SAS URLs for item screenshots, keyed
-// "<setId>/<itemId>". The CSV export embeds them so a shared spreadsheet can
-// open the screenshots directly — each link grants read on exactly ONE
-// screenshot blob and never carries the app access code (the deliberate SAS
-// exception in docs/backend-architecture.md §Auth). Minted from the storage
-// account key (BlobClient.generateSasUrl requires the shared-key credential
-// the connection string supplies); links survive until the expiry below or an
-// account-key rotation, whichever comes first.
+// "<setId>/<itemId>" (set item bank, data container) or "<packetId>/<itemId>"
+// (packet hunt captures, screenshots container). The CSV/JSON exports embed
+// them so a shared file can open the screenshots directly — each link grants
+// read on exactly ONE screenshot blob and never carries the app access code
+// (the deliberate SAS exception in docs/backend-architecture.md §Auth).
+// Minted from the storage account key (BlobClient.generateSasUrl requires the
+// shared-key credential the connection string supplies); links survive until
+// the expiry below or an account-key rotation, whichever comes first.
 const SAS_LINK_YEARS = 5
 const SAFE_ID = /^[A-Za-z0-9._-]+$/ // ids become blob-path segments — no separators
 api({
@@ -330,13 +332,22 @@ api({
   methods: ['POST'],
   route: 'item-image-links',
   handler: async (req) => {
-    const { items } = await readJson<{ items?: { setId?: string; itemId?: string }[] }>(req)
+    const { items } = await readJson<{ items?: { setId?: string; packetId?: string; itemId?: string }[] }>(req)
     if (!Array.isArray(items)) throw new HttpError(400, 'items is required')
     if (items.length > 4000) throw new HttpError(400, 'too many items (max 4000)')
     const expiresOn = new Date(Date.now() + SAS_LINK_YEARS * 365 * 24 * 60 * 60 * 1000)
     const links: Record<string, string> = {}
-    for (const { setId, itemId } of items) {
-      if (!setId || !itemId || !SAFE_ID.test(setId) || !SAFE_ID.test(itemId)) continue
+    for (const { setId, packetId, itemId } of items) {
+      if (!itemId || !SAFE_ID.test(itemId)) continue
+      if (packetId && SAFE_ID.test(packetId)) {
+        const key = `${packetId}/${itemId}`
+        if (links[key]) continue
+        links[key] = await screenshotsContainer()
+          .getBlobClient(shotBlobPath(packetId, itemId, 1))
+          .generateSasUrl({ permissions: BlobSASPermissions.parse('r'), expiresOn })
+        continue
+      }
+      if (!setId || !SAFE_ID.test(setId)) continue
       const key = `${setId}/${itemId}`
       if (links[key]) continue
       links[key] = await dataContainer()

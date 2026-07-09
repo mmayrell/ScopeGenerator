@@ -1,5 +1,5 @@
 import { odata } from '@azure/data-tables'
-import { EvidencePacket, PacketSummary } from '../domain/types'
+import { EvidencePacket, ItemRecord, PacketSummary } from '../domain/types'
 import { HttpError } from '../shared/errors'
 import { sleep } from '../shared/util'
 import { dataContainer, entitiesTable } from './clients'
@@ -106,6 +106,37 @@ export function toPacketSummary(packet: EvidencePacket): PacketSummary {
   }
   if (packet.error !== undefined) summary.error = packet.error
   return summary
+}
+
+/**
+ * Hunted packet items as ItemRecords — the shape the scope pipeline's item
+ * bank speaks (plan itemRefs assignment, card evidence subsets, QC coverage).
+ * A scope created with request.packetId gets these merged into its evidence
+ * set. Screenshot serving stays packet-scoped (screenshots container via
+ * /packet-item-image or the SAS-links endpoint) — imagePath here records the
+ * screenshots-container blob path, signaling "a real screenshot exists".
+ */
+export function packetItemRecords(packet: EvidencePacket): ItemRecord[] {
+  return packet.items.map((item) => ({
+    id: item.id,
+    source: item.sourceName || item.sourceUrl,
+    test: item.program || item.sourceName,
+    year: item.year,
+    itemNumber: Number.parseInt(item.itemNumber, 10) || 0,
+    alignmentCode: item.standardCode,
+    confidence: item.alignment === 'official' ? ('official' as const) : ('ai-proposed' as const),
+    completeness: 1,
+    itemType: item.itemType,
+    responseFormat: item.choices.length > 0 ? 'selected response' : 'constructed response',
+    representations: [],
+    problemTypes: [],
+    demandProfile: '',
+    scopeClass: 'in-boundary' as const,
+    hasKey: item.answer !== '',
+    stem: item.stem,
+    ...(item.choices.length > 0 ? { choices: item.choices } : {}),
+    ...(item.screenshotPaths && item.screenshotPaths.length > 0 ? { imagePath: item.screenshotPaths[0] } : {}),
+  }))
 }
 
 export async function deletePacketDocs(id: string): Promise<void> {

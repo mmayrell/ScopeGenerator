@@ -105,10 +105,20 @@ export default function EvidencePackets() {
 // List — past packets
 // ---------------------------------------------------------------------------
 
+const STATUS_FILTERS: { key: EvidencePacket['status']; label: string }[] = [
+  { key: 'hunting', label: 'Hunting' },
+  { key: 'complete', label: 'Complete' },
+  { key: 'failed', label: 'Failed' },
+  { key: 'cancelled', label: 'Stopped' },
+]
+
 function PacketList({ onNew, onOpen }: { onNew: () => void; onOpen: (id: string) => void }) {
   const [packets, setPackets] = useState<PacketSummary[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<PacketSummary | null>(null)
+  const [query, setQuery] = useState('')
+  const [fwFilter, setFwFilter] = useState<PacketFramework | null>(null)
+  const [statusFilter, setStatusFilter] = useState<EvidencePacket['status'] | null>(null)
 
   const load = useCallback(() => {
     api
@@ -130,6 +140,15 @@ function PacketList({ onNew, onOpen }: { onNew: () => void; onOpen: (id: string)
   }, [])
   useEffect(load, [load])
 
+  const q = query.trim().toLowerCase()
+  const filtered = (packets ?? []).filter(
+    (p) =>
+      (fwFilter === null || p.framework === fwFilter) &&
+      (statusFilter === null || p.status === statusFilter) &&
+      (q === '' || p.title.toLowerCase().includes(q) || p.frameworkLabel.toLowerCase().includes(q)),
+  )
+  const filtering = q !== '' || fwFilter !== null || statusFilter !== null
+
   return (
     <div className="mx-auto max-w-4xl px-10 py-10">
       <div className="flex items-end justify-between gap-6">
@@ -148,8 +167,45 @@ function PacketList({ onNew, onOpen }: { onNew: () => void; onOpen: (id: string)
         <div className="animate-rise mt-6 rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] leading-relaxed text-rust">{error}</div>
       )}
 
-      <div className="mt-8 space-y-3">
-        {(packets ?? []).map((p) => (
+      {packets !== null && packets.length > 0 && (
+        <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Filter by title…"
+            className="w-full max-w-60 rounded-xl border border-hairline bg-panel px-3.5 py-2 text-[12.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
+          />
+          <span className="flex flex-wrap gap-1.5">
+            {FRAMEWORKS.map((fw) => (
+              <Chip key={fw.key} on={fwFilter === fw.key} onClick={() => setFwFilter((prev) => (prev === fw.key ? null : fw.key))}>
+                {fw.label}
+              </Chip>
+            ))}
+          </span>
+          <span className="flex flex-wrap gap-1.5">
+            {STATUS_FILTERS.map((s) => (
+              <Chip key={s.key} on={statusFilter === s.key} onClick={() => setStatusFilter((prev) => (prev === s.key ? null : s.key))}>
+                {s.label}
+              </Chip>
+            ))}
+          </span>
+          {filtering && (
+            <button
+              onClick={() => {
+                setQuery('')
+                setFwFilter(null)
+                setStatusFilter(null)
+              }}
+              className="cursor-pointer text-[12px] font-medium text-ink-3 hover:text-ink-2 hover:underline"
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+      )}
+
+      <div className="mt-5 space-y-3">
+        {filtered.map((p) => (
           // The delete control is a SIBLING of the card button (positioned over
           // it) — interactive content inside a <button> is invalid and hides
           // the control from assistive tech.
@@ -185,6 +241,11 @@ function PacketList({ onNew, onOpen }: { onNew: () => void; onOpen: (id: string)
           <div className="rounded-2xl border border-hairline bg-panel p-6 text-[13px] leading-relaxed text-ink-3">
             No repositories yet. Build one: pick a framework, grades, and standards, and the agent goes hunting for
             released items online.
+          </div>
+        )}
+        {packets !== null && packets.length > 0 && filtered.length === 0 && (
+          <div className="rounded-2xl border border-hairline bg-panel p-6 text-[13px] leading-relaxed text-ink-3">
+            No repositories match these filters.
           </div>
         )}
         {packets === null && !error && <p className="text-[12.5px] text-ink-3">Loading repositories…</p>}
@@ -677,8 +738,9 @@ function Detail({ id, onBack }: { id: string; onBack: () => void }) {
           ))}
         </div>
         <p className="mt-4 text-[11px] leading-relaxed text-ink-3">
-          Every item is a text facsimile transcribed from the linked source — verify against the source document before
-          classroom use. Alignments marked ai-inferred are the agent's judgment and are never official.
+          Items show the actual screenshot cropped from the source document where one could be captured, and a faithful
+          text transcription otherwise — verify against the source before classroom use. Alignments marked ai-inferred
+          are the agent's judgment and are never official.
         </p>
       </div>
 
@@ -749,7 +811,7 @@ function Detail({ id, onBack }: { id: string; onBack: () => void }) {
               <p className="mt-1.5 max-w-3xl text-[12.5px] leading-relaxed text-ink-2">{row.standard.text}</p>
               <div className="mt-3 space-y-3">
                 {row.items.map((item) => (
-                  <ItemFacsimile key={item.id} item={item} />
+                  <ItemFacsimile key={item.id} item={item} packetId={packet.id} />
                 ))}
               </div>
             </div>
@@ -773,8 +835,14 @@ function Detail({ id, onBack }: { id: string; onBack: () => void }) {
   )
 }
 
-/** Text facsimile of a hunted item — stem, lettered choices, answer, and source metadata. */
-function ItemFacsimile({ item }: { item: HuntedItem }) {
+/**
+ * Facsimile of a hunted item — the captured screenshot when the capture phase
+ * cropped one from the source PDF, else the text transcription (stem, lettered
+ * choices), plus answer and source metadata either way.
+ */
+function ItemFacsimile({ item, packetId }: { item: HuntedItem; packetId: string }) {
+  const [imageFailed, setImageFailed] = useState(false)
+  const showImage = (item.screenshotPaths?.length ?? 0) > 0 && !imageFailed
   const header = [item.program || item.sourceName, item.year > 0 ? String(item.year) : '', item.itemNumber ? `Q${item.itemNumber}` : '']
     .filter(Boolean)
     .join(' · ')
@@ -782,19 +850,36 @@ function ItemFacsimile({ item }: { item: HuntedItem }) {
     <div className="rounded-xl border border-hairline bg-panel p-4 shadow-(--shadow-lift)">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="text-[11.5px] font-semibold text-ink-2">{header}</span>
-        {item.alignment === 'official' ? <Pill tone="green">official alignment</Pill> : <Pill tone="amber">alignment ai-inferred</Pill>}
+        <span className="flex items-center gap-1.5">
+          {showImage && <Pill tone="cite">screenshot</Pill>}
+          {item.alignment === 'official' ? <Pill tone="green">official alignment</Pill> : <Pill tone="amber">alignment ai-inferred</Pill>}
+        </span>
       </div>
-      <p className="mt-2.5 text-[13px] leading-relaxed whitespace-pre-wrap text-ink">{item.stem}</p>
-      {item.choices.length > 0 && (
-        <div className="mt-2 space-y-1">
-          {item.choices.map((choice, i) => (
-            <p key={i} className="text-[12.5px] leading-relaxed text-ink-2">
-              <span className="font-semibold text-ink">{choiceLetter(i)}.</span> {choice}
-            </p>
-          ))}
+      {showImage ? (
+        <div className="mt-2.5 rounded-lg border border-dashed border-hairline-2 bg-[#fdfcfa] p-2">
+          <img
+            src={api.packetItemImageUrl(packetId, item.id, 1)}
+            alt={header || item.stem.slice(0, 80)}
+            className="mx-auto max-h-[480px] w-auto max-w-full rounded-md"
+            loading="lazy"
+            onError={() => setImageFailed(true)}
+          />
         </div>
+      ) : (
+        <>
+          <p className="mt-2.5 text-[13px] leading-relaxed whitespace-pre-wrap text-ink">{item.stem}</p>
+          {item.choices.length > 0 && (
+            <div className="mt-2 space-y-1">
+              {item.choices.map((choice, i) => (
+                <p key={i} className="text-[12.5px] leading-relaxed text-ink-2">
+                  <span className="font-semibold text-ink">{choiceLetter(i)}.</span> {choice}
+                </p>
+              ))}
+            </div>
+          )}
+        </>
       )}
-      {item.itemType === 'constructed-response' && item.choices.length === 0 && (
+      {item.itemType === 'constructed-response' && item.choices.length === 0 && !showImage && (
         <p className="mt-2 text-[11.5px] text-ink-3 italic">Constructed response — students produce the answer; see the source for the rubric.</p>
       )}
       {item.answer && (

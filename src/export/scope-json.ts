@@ -2,11 +2,14 @@
 // spec ("Exporting the Scope"): one structured object per lesson card, fields
 // only (Decision Records are human-readable artifacts and are not included).
 // Released items are structured references with persistent screenshot URLs
-// (long-lived read-only SAS links minted by the backend); generated exemplars
-// carry their full text since no hosted asset exists for them.
+// (long-lived read-only SAS links minted by the backend); items from the
+// scope's linked evidence packet also carry itemUrl — the original source
+// document. Generated exemplars carry their full text since no hosted asset
+// exists for them.
 import { api } from '../api'
-import type { CardField, Lesson, Scope, StandardSet, Unit } from '../types'
+import type { CardField, EvidencePacket, Lesson, Scope, StandardSet, Unit } from '../types'
 import { capsStandardCodes } from '../ui'
+import { resolveScopeItems, scopeImageItems, type ResolvedScopeItem } from './scope-csv'
 
 // ---------------------------------------------------------------------------
 // Export shape (spec §6 "JSON Schema")
@@ -209,11 +212,36 @@ const LESSON_TYPE_LABEL: Record<Lesson['type'], LessonJson['lessonType']> = {
 // Assembly
 // ---------------------------------------------------------------------------
 
-/** Items resolve across every set the scope draws on, keeping the owning set id. */
-function resolveItems(scope: Scope, sets: StandardSet[]) {
-  const scopeSetIds = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
-  const scopeSets = sets.filter((st) => scopeSetIds.includes(st.id))
-  return { scopeSets, itemsById: new Map(scopeSets.flatMap((st) => st.items.map((it) => [it.id, { it, setId: st.id }] as const))) }
+/** One released-item export entry from a resolved itemRef (set bank or linked packet). */
+function releasedItemJson(entry: ResolvedScopeItem, imageLinks: Record<string, string>): LessonJson['releasedItems'][number] {
+  if (entry.kind === 'packet') {
+    const { item } = entry
+    return {
+      evidenceType: 'released item' as const,
+      source: item.sourceName || item.sourceUrl,
+      assessment: item.program || item.sourceName,
+      year: item.year || null,
+      itemNumber: item.itemNumber || null,
+      alignedStandard: item.standardCode,
+      alignmentType: item.alignment === 'official' ? ('official' as const) : ('AI-inferred' as const),
+      screenshotUrl: imageLinks[`${entry.packetId}/${item.id}`] ?? null,
+      itemUrl: item.sourceUrl || null,
+      itemText: item.stem || null,
+    }
+  }
+  const { it, setId } = entry
+  return {
+    evidenceType: 'released item' as const,
+    source: it.source,
+    assessment: it.test,
+    year: it.year || null,
+    itemNumber: it.itemNumber ? String(it.itemNumber) : null,
+    alignedStandard: it.alignmentCode,
+    alignmentType: it.confidence === 'official' ? ('official' as const) : ('AI-inferred' as const),
+    screenshotUrl: imageLinks[`${setId}/${it.id}`] ?? null,
+    itemUrl: null,
+    itemText: it.stem || null,
+  }
 }
 
 function lessonJson(
@@ -221,25 +249,14 @@ function lessonJson(
   l: Lesson,
   frameworks: string[],
   titles: Map<string, string>,
-  itemsById: ReturnType<typeof resolveItems>['itemsById'],
+  itemsById: Map<string, ResolvedScopeItem>,
   imageLinks: Record<string, string>,
 ): LessonJson {
   const f = l.fields
   const releasedItems: LessonJson['releasedItems'] = l.itemRefs
     .map((rid) => itemsById.get(rid))
     .filter((entry): entry is NonNullable<typeof entry> => !!entry)
-    .map(({ it, setId }) => ({
-      evidenceType: 'released item' as const,
-      source: it.source,
-      assessment: it.test,
-      year: it.year || null,
-      itemNumber: it.itemNumber ? String(it.itemNumber) : null,
-      alignedStandard: it.alignmentCode,
-      alignmentType: it.confidence === 'official' ? ('official' as const) : ('AI-inferred' as const),
-      screenshotUrl: imageLinks[`${setId}/${it.id}`] ?? null,
-      itemUrl: null,
-      itemText: it.stem || null,
-    }))
+    .map((entry) => releasedItemJson(entry, imageLinks))
   for (const ex of l.generatedExemplars ?? (l.generatedExemplar ? [l.generatedExemplar] : [])) {
     releasedItems.push({
       evidenceType: 'generated exemplar',
@@ -277,8 +294,15 @@ function lessonJson(
   }
 }
 
-export function buildScopeJson(scope: Scope, sets: StandardSet[], imageLinks: Record<string, string> = {}): ScopeJsonExport {
-  const { scopeSets, itemsById } = resolveItems(scope, sets)
+export function buildScopeJson(
+  scope: Scope,
+  sets: StandardSet[],
+  imageLinks: Record<string, string> = {},
+  packet?: EvidencePacket,
+): ScopeJsonExport {
+  const scopeSetIds = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
+  const scopeSets = sets.filter((st) => scopeSetIds.includes(st.id))
+  const itemsById = resolveScopeItems(scope, sets, packet)
   const frameworks = scopeSets.map((s) => s.name)
   const titles = new Map(scope.units.flatMap((u) => u.lessons.map((l) => [l.id, l.title] as const)))
   return {
@@ -294,29 +318,11 @@ export function buildScopeJson(scope: Scope, sets: StandardSet[], imageLinks: Re
   }
 }
 
-/** Every (setId, itemId) pair in the scope that has a screenshot to link. */
-function scopeImageItems(scope: Scope, sets: StandardSet[]): { setId: string; itemId: string }[] {
-  const { itemsById } = resolveItems(scope, sets)
-  const pairs: { setId: string; itemId: string }[] = []
-  const seen = new Set<string>()
-  for (const u of scope.units) {
-    for (const l of u.lessons) {
-      for (const rid of l.itemRefs) {
-        const entry = itemsById.get(rid)
-        if (!entry || !entry.it.imagePath || seen.has(rid)) continue
-        seen.add(rid)
-        pairs.push({ setId: entry.setId, itemId: entry.it.id })
-      }
-    }
-  }
-  return pairs
-}
-
 /** Fetches the screenshot links, builds the JSON, and hands it to the browser as a download. */
-export async function downloadScopeJson(scope: Scope, sets: StandardSet[]): Promise<void> {
-  const pairs = scopeImageItems(scope, sets)
+export async function downloadScopeJson(scope: Scope, sets: StandardSet[], packet?: EvidencePacket): Promise<void> {
+  const pairs = scopeImageItems(scope, sets, packet)
   const { links } = pairs.length > 0 ? await api.itemImageLinks(pairs) : { links: {} }
-  const json = JSON.stringify(buildScopeJson(scope, sets, links), null, 2)
+  const json = JSON.stringify(buildScopeJson(scope, sets, links, packet), null, 2)
   const blob = new Blob([json], { type: 'application/json;charset=utf-8' })
   const name = `${capsStandardCodes(scope.title).replace(/[\\/:*?"<>|]+/g, '-')}.json`
   const url = URL.createObjectURL(blob)

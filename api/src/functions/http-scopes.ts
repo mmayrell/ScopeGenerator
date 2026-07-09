@@ -1,6 +1,7 @@
 import { Proposal, Scope } from '../domain/types'
 import { uploadsContainer } from '../data/clients'
 import { deleteScopeDocs, getScope, getSet, mutateScope, saveScope, snapshotScope } from '../data/entities'
+import { getPacketOrUndefined } from '../data/packets'
 import { createJob, latestJobForScope, mutateJob, pushLog, toJobStatus } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { GENERATE_TOTAL_STAGES } from '../pipeline/generate'
@@ -53,6 +54,7 @@ api({
       granular?: boolean
       uploadsToken?: string
       uploadNames?: string[]
+      packetId?: string
     }>(req)
     const requestedIds = [
       ...new Set(
@@ -68,6 +70,18 @@ api({
       if (!s.published) throw new HttpError(400, `set ${s.id} is not published`)
     }
     const set = selectedSets[0]
+
+    // Optional released-items source: an evidence packet whose hunted items
+    // (with captured screenshots) join the scope's item bank.
+    let packet: { id: string; title: string } | undefined
+    if (typeof body.packetId === 'string' && body.packetId.length > 0) {
+      const found = await getPacketOrUndefined(body.packetId)
+      if (!found) throw new HttpError(400, `evidence packet ${body.packetId} not found`)
+      if (found.status === 'hunting') {
+        throw new HttpError(409, 'that repository is still hunting — wait for it to finish before scoping against it')
+      }
+      packet = { id: found.id, title: found.title }
+    }
 
     const id = `scope-${Date.now()}`
     const gradeSpans = [...new Set(selectedSets.map((s) => s.gradeSpan).filter(Boolean))].join(' + ')
@@ -96,6 +110,7 @@ api({
                 : [],
             }
           : {}),
+        ...(packet ? { packetId: packet.id, packetTitle: packet.title } : {}),
       },
       engineVersion: ENGINE_VERSION,
       doctrineVersions: DOCTRINE_VERSIONS,

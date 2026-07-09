@@ -1,5 +1,7 @@
 import { EvidencePacket, PacketFramework, PacketStandard } from '../domain/types'
+import { screenshotsContainer } from '../data/clients'
 import { deletePacketDocs, getPacket, listPackets, mutatePacket, savePacket, toPacketSummary } from '../data/packets'
+import { deletePacketShots, shotBlobPath } from '../pipeline/packet-shots'
 import { createJob, latestJobForPacket, mutateJob, pushLog, toJobStatus } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { HttpError } from '../shared/errors'
@@ -141,9 +143,40 @@ api({
         })
       }
       await deletePacketDocs(id)
+      await deletePacketShots(id)
       return ok({ ok: true })
     }
     return ok(await getPacket(id))
+  },
+})
+
+// GET /api/packet-item-image/{packetId}/{itemId}/{n} → PNG — captured item
+// screenshots for <img> tags. Browsers can't attach the x-access-code header
+// to an image request, so this endpoint also accepts ?code= (checked
+// manually; auth:false skips the header middleware). Mirrors /item-image.
+api({
+  name: 'packet-item-image',
+  methods: ['GET'],
+  route: 'packet-item-image/{packetId}/{itemId}/{n}',
+  auth: false,
+  handler: async (req) => {
+    const expected = process.env.APP_ACCESS_CODE
+    const supplied = req.headers.get('x-access-code') ?? req.query.get('code')
+    if (!expected || supplied !== expected) {
+      return { status: 401, jsonBody: { error: 'unauthorized' } }
+    }
+    const packetId = requireParam(req, 'packetId')
+    const itemId = requireParam(req, 'itemId')
+    const n = Math.trunc(Number(requireParam(req, 'n')))
+    if (!Number.isInteger(n) || n < 1 || n > 9) throw new HttpError(400, 'n must be 1–9')
+    const blob = screenshotsContainer().getBlobClient(shotBlobPath(packetId, itemId, n))
+    if (!(await blob.exists())) throw new HttpError(404, 'no screenshot for this item')
+    const bytes = await blob.downloadToBuffer()
+    return {
+      status: 200,
+      body: new Uint8Array(bytes),
+      headers: { 'content-type': 'image/png', 'cache-control': 'private, max-age=3600' },
+    }
   },
 })
 

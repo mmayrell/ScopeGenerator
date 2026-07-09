@@ -6,6 +6,7 @@ import { getJob, mutateJob, pushLog } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { generateStructured } from '../services/claude'
 import { newId, nowIso } from '../shared/util'
+import { captureShotsForGroup, shotGroupsOf } from './packet-shots'
 
 /**
  * Evidence-packet hunt step (kind 'packet' / step 'hunt') — the web-hunting
@@ -21,6 +22,9 @@ import { newId, nowIso } from '../shared/util'
  *   3. GAP SWEEP — standards still without a single item get the original
  *      per-standard batched search (SBAC sample bank included), so coverage
  *      never falls below the old breadth-first behavior.
+ *   4. SCREENSHOT CAPTURE — the source PDFs are downloaded, every transcribed
+ *      item is localized (page + box), and real screenshots are cropped into
+ *      the `screenshots` container (best-effort — see pipeline/packet-shots).
  *
  * Progress checkpoints to the packet blob after every paid call, and the step
  * re-enqueues itself when the time budget runs out, so a repository of any
@@ -549,8 +553,91 @@ export async function huntPacketStep(msg: JobMessage, context: InvocationContext
     })
   }
 
-  // All documents transcribed and gaps swept — settle (only while this job
-  // still owns the hunt).
+  // -------------------------------------------------------------------------
+  // Phase 4 — screenshot capture: crop real item screenshots from the sources
+  // -------------------------------------------------------------------------
+  const preShots = await freshOrStop()
+  if (!preShots) return
+  const domains = FRAMEWORK_HUNTS[preShots.framework].domains
+  const shotGroups = shotGroupsOf(preShots, domains)
+  const shotsDone = new Set(preShots.doneShots ?? [])
+  const stagesBeforeShots = 1 + (preShots.sources?.length ?? 0) + batches.length
+  await mutateJob(msg.jobId, (r) => {
+    r.totalStages = stagesBeforeShots + shotsDone.size + shotGroups.length
+    if (shotGroups.length > 0) {
+      r.stage = 'Capturing item screenshots'
+      pushLog(
+        r,
+        `Screenshot capture: ${shotGroups.length} source document${shotGroups.length === 1 ? '' : 's'} to crop item screenshots from`,
+      )
+    }
+  })
+
+  for (const group of shotGroups) {
+    const cur = await freshOrStop()
+    if (!cur) return
+    for (const key of cur.doneShots ?? []) shotsDone.add(key)
+    if (shotsDone.has(group.key)) continue
+    if (await stopRequested(`${shotsDone.size} of ${shotsDone.size + shotGroups.length} screenshot sources processed`)) return
+    if (outOfBudget()) {
+      await reenqueue('Time budget reached — continuing in a new execution (screenshot capture)')
+      return
+    }
+
+    const label = new URL(group.url).hostname + ' — ' + (group.items[0]?.sourceName || group.url)
+    const cuts = cutsFor(group.key)
+    let note: string
+    let paths = new Map<string, string[]>()
+    if (cuts >= 3) {
+      note = 'capture ran long three times — skipped; text facsimiles kept'
+    } else {
+      context.log(`packet/hunt ${packetId}: capturing screenshots from ${group.url} (${group.items.length} items)`)
+      const bound = bounded()
+      try {
+        ;({ paths, note } = await captureShotsForGroup(packetId, group, bound.signal, context))
+      } catch (e) {
+        if (isAbort(e)) {
+          await reenqueue(
+            `Screenshot capture for ${label} ran long and was cut at the execution deadline — continuing in a new execution${cuts + 1 >= 3 ? ' (final attempt used — the document will be skipped)' : ''}`,
+            { cuts: cuts + 1, cutKey: group.key },
+          )
+          return
+        }
+        // Capture is best-effort — anything unexpected skips the document.
+        context.warn(`packet/hunt ${packetId}: screenshot capture failed for ${group.url}`, e)
+        note = 'capture failed — text facsimiles kept'
+      } finally {
+        bound.dispose()
+      }
+    }
+
+    shotsDone.add(group.key)
+    let owned = true
+    await mutatePacket(packetId, (p) => {
+      if (p.status !== 'hunting' || !ownsHunt(p)) {
+        owned = false
+        return
+      }
+      for (const item of p.items) {
+        const captured = paths.get(item.id)
+        if (captured && captured.length > 0) item.screenshotPaths = captured
+      }
+      p.doneShots = p.doneShots ?? []
+      if (!p.doneShots.includes(group.key)) p.doneShots.push(group.key)
+      p.updated = nowIso()
+    })
+    if (!owned) {
+      await settleJobQuietly(msg.jobId, 'Superseded by a newer hunt job — stopping (screenshots kept)')
+      return
+    }
+    await mutateJob(msg.jobId, (r) => {
+      r.stagesDone = Math.min(r.stagesDone + 1, r.totalStages)
+      pushLog(r, `Screenshots — ${label}: ${note}`)
+    })
+  }
+
+  // All documents transcribed, gaps swept, and screenshots captured — settle
+  // (only while this job still owns the hunt).
   const settled = await mutatePacket(packetId, (p) => {
     if (p.status === 'hunting' && ownsHunt(p)) p.status = 'complete'
     p.updated = nowIso()
@@ -558,6 +645,7 @@ export async function huntPacketStep(msg: JobMessage, context: InvocationContext
   const coveredCodes = new Set(settled.items.map((i) => i.standardCode))
   const gaps = settled.standards.filter((s) => !coveredCodes.has(s.code)).length
   const docCount = (settled.doneSources ?? []).length
+  const shotCount = settled.items.filter((i) => (i.screenshotPaths?.length ?? 0) > 0).length
   await mutateJob(msg.jobId, (r) => {
     r.status = 'complete'
     r.stage = 'Complete'
@@ -566,6 +654,7 @@ export async function huntPacketStep(msg: JobMessage, context: InvocationContext
       r,
       `Hunt complete: ${settled.items.length} released item${settled.items.length === 1 ? '' : 's'} across ${coveredCodes.size} of ${settled.standards.length} standards` +
         (docCount > 0 ? ` from ${docCount} document${docCount === 1 ? '' : 's'}` : '') +
+        (shotCount > 0 ? ` — ${shotCount} with real screenshots` : '') +
         (gaps > 0 ? ` — ${gaps} standard${gaps === 1 ? '' : 's'} with no released evidence found (documentation gaps)` : ''),
     )
   })

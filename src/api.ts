@@ -169,6 +169,7 @@ export const api = {
     params: string,
     granular?: boolean,
     uploads?: { token: string; names: string[] },
+    packetId?: string,
   ) =>
     // setId rides along for deploy-skew compatibility (an older API requires it).
     request<{ id: string; jobId: string }>('POST', '/scopes', {
@@ -179,6 +180,7 @@ export const api = {
       granular,
       uploadsToken: uploads?.token,
       uploadNames: uploads?.names,
+      packetId,
     }),
 
   /** Released-question PDFs attached to a topic request — uploaded BEFORE createScope (generation starts on create). */
@@ -266,12 +268,17 @@ export const api = {
   itemImageUrl: (setId: string, itemId: string): string =>
     `${API_BASE}/item-image/${encodeURIComponent(setId)}/${encodeURIComponent(itemId)}?code=${encodeURIComponent(getAccessCode() ?? '')}`,
 
+  /** URL for a hunted packet item's captured screenshot (n is 1-based) — same ?code= mechanism as itemImageUrl. */
+  packetItemImageUrl: (packetId: string, itemId: string, n = 1): string =>
+    `${API_BASE}/packet-item-image/${encodeURIComponent(packetId)}/${encodeURIComponent(itemId)}/${n}?code=${encodeURIComponent(getAccessCode() ?? '')}`,
+
   /**
-   * Long-lived read-only SAS links to item screenshots, keyed "<setId>/<itemId>".
-   * Used by the CSV export: unlike itemImageUrl, these carry no access code, so
-   * a shared spreadsheet's links are safe to distribute.
+   * Long-lived read-only SAS links to item screenshots, keyed
+   * "<setId>/<itemId>" (set item bank) or "<packetId>/<itemId>" (packet hunt
+   * captures). Used by the CSV/JSON exports: unlike itemImageUrl, these carry
+   * no access code, so a shared file's links are safe to distribute.
    */
-  itemImageLinks: (items: { setId: string; itemId: string }[]) =>
+  itemImageLinks: (items: { setId?: string; packetId?: string; itemId: string }[]) =>
     request<{ links: Record<string, string> }>('POST', '/item-image-links', { items }),
 
   adminSeed: (force?: boolean) =>

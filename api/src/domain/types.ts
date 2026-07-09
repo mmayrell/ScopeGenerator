@@ -287,6 +287,10 @@ export interface Scope {
     uploadsToken?: string
     /** Display names of the uploaded PDFs (the blobs under the token are authoritative). */
     uploadNames?: string[]
+    /** Evidence packet whose hunted items serve as this scope's released-items source. */
+    packetId?: string
+    /** Packet title at scope creation (display; the packet document is authoritative). */
+    packetTitle?: string
   }
   engineVersion: string
   doctrineVersions: string[]
@@ -389,6 +393,12 @@ export interface HuntedItem {
    * existed.
    */
   sourceKey?: string
+  /**
+   * Blob paths (screenshots container, `<packetId>/<itemId>/<n>.png`) of the
+   * item's actual screenshots, cropped out of the source PDF by the capture
+   * phase. Absent when capture has not run or the item could not be located.
+   */
+  screenshotPaths?: string[]
 }
 
 /**
@@ -432,6 +442,8 @@ export interface EvidencePacket {
   sources?: HuntSource[]
   /** Keys of sources fully transcribed — checkpointing across executions. */
   doneSources?: string[]
+  /** Screenshot-capture group keys already processed — checkpointing across executions. */
+  doneShots?: string[]
   /**
    * The job that currently owns the hunt. A retry re-dispatches with a new
    * job id; a superseded execution (stale cancel, redelivered message) must

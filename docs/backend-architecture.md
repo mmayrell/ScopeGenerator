@@ -30,7 +30,7 @@ Azure Storage account
 | Resource | Name pattern | Notes |
 |---|---|---|
 | Resource group | `scopegen-rg` | region `eastus2` |
-| Storage account | `scopegenst<suffix>` | StorageV2; tables `entities`, `jobs`; queue `genjobs`; containers `data`, `uploads` |
+| Storage account | `scopegenst<suffix>` | StorageV2; tables `entities`, `jobs`; queue `genjobs`; containers `data`, `uploads`, `screenshots` |
 | Function App | `scopegen-api-<suffix>` | Consumption, Node, Functions v4; CORS allows SWA origin + `http://localhost:5173` |
 | Static Web App | `scopegen-web` | Free tier, deployed via deployment token (no GitHub Action) |
 
@@ -87,10 +87,11 @@ blob; rotating the storage account key revokes them all.
 | `POST /sets/{id}/ingest` | → `{ jobId }` (202) | extraction phase: standards tree + item bank (with question screenshots) + cross-document scope-conflict pass. Called automatically after the uploads land at creation; also the retry path. Idempotent with in-flight ingest jobs |
 | `GET /sets/{id}/job` | → `JobStatus` | polled during extraction |
 | `GET /item-image/{setId}/{itemId}` | → `image/png` | question screenshot; auth via header or `?code=` |
-| `POST /item-image-links` | `{ items: [{ setId, itemId }] }` → `{ links: Record<"setId/itemId", url> }` | long-lived (5y) read-only blob SAS URLs for item screenshots, embedded in the CSV export (see Authentication — the deliberate SAS exception). ≤4000 items per call; malformed ids are skipped, not errored |
+| `POST /item-image-links` | `{ items: [{ setId?, packetId?, itemId }] }` → `{ links: Record<"ownerId/itemId", url> }` | long-lived (5y) read-only blob SAS URLs for item screenshots, embedded in the CSV/JSON exports (see Authentication — the deliberate SAS exception). Entries with `packetId` resolve against the `screenshots` container (`<packetId>/<itemId>/1.png`), entries with `setId` against `data` as before. ≤4000 items per call; malformed ids are skipped, not errored |
+| `GET /packet-item-image/{packetId}/{itemId}/{n}` | → `image/png` | captured screenshot of a hunted packet item (n is 1-based); auth via header or `?code=` (mirrors `item-image`) |
 | `POST /sets/{id}/publish` | → `{ set: StandardSet }` | seeded sets (no uploads) publish immediately; uploaded sets 409 unless extraction completed and every warning is resolved. Idempotent |
 | `GET /framework` | → `FrameworkDoc` | the fixed engine/doctrine documents (read-only — no PUT; new versions ship with the tool). The payload keeps a legacy `register: []` so pre-removal bundles render an empty exemplar register during deploy skew |
-| `POST /scopes` | `{ setId, setIds?, mode, params, granular?, uploadsToken?, uploadNames? }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job. Optional `granular: true` = Granular Track Scoping (stored on `Scope.request.granular`): atomization drops to the most granular DI skill level — one rule/decision/response pattern per track; number-form, representation, and distinct-error-pattern changes each split — with synthesis tracks (type `bridge`) where the student decides which mastered procedure applies, and NO prior-grade prerequisite tracks (assumed mastered). Applies to plan, cards, and unit-rerun prompts |
+| `POST /scopes` | `{ setId, setIds?, mode, params, granular?, packetId?, uploadsToken?, uploadNames? }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job. Optional `packetId` links a completed evidence packet as the scope's released-items source (400 if unknown or still hunting): its hunted items are converted to `ItemRecord`s and merged into the pipeline's evidence set, and `request.packetId`/`packetTitle` are stamped on the scope so the UI and exports can resolve packet items and their screenshots. Optional `granular: true` = Granular Track Scoping (stored on `Scope.request.granular`): atomization drops to the most granular DI skill level — one rule/decision/response pattern per track; number-form, representation, and distinct-error-pattern changes each split — with synthesis tracks (type `bridge`) where the student decides which mastered procedure applies, and NO prior-grade prerequisite tracks (assumed mastered). Applies to plan, cards, and unit-rerun prompts |
 | `GET /scopes/{id}` | → `Scope` | |
 | `GET /scopes/{id}/job` | → `JobStatus` (below) | polled by the generation screen |
 | `POST /scopes/{id}/pause-generation` | → `{ jobId }` (202) | cooperative: flags the job; workers halt at the next checkpoint, scope → `paused` |
@@ -107,7 +108,7 @@ blob; rotating the storage account key revokes them all.
 | `GET /packets/{id}/job` | → `JobStatus` | hunt progress (stages = search batches) |
 | `POST /packets/{id}/stop` | → `{ jobId }` | sets `cancelRequested`; the hunt halts at its next checkpoint, packet → `cancelled`, found items kept. 409 with no active hunt |
 | `POST /packets/{id}/retry` | → `{ jobId }` (202) | resumes a failed/stopped/stalled hunt: packet → `hunting` with `huntJobId` stamped, then re-dispatches the SAME job id (stop flag cleared) — never a fresh row that a stale execution could wedge; `doneBatches` make finished batches skip. A provably-live active job (log progress < 15 min, no stop flag) is reused as-is |
-| `DELETE /packets/{id}` | → `{ ok: true }` | flags any active hunt job to stop, then removes the doc and index row |
+| `DELETE /packets/{id}` | → `{ ok: true }` | flags any active hunt job to stop, then removes the doc, index row, and the packet's screenshot blobs |
 | `PUT /scope-uploads/{token}/{fileName}` | raw bytes (`application/pdf`, ≤15 MB) → `{ blobPath }` | released questions attached to a topic scope request, uploaded BEFORE `POST /scopes` (client mints the token, sends it as `uploadsToken` + `uploadNames`); stored at `uploads/scope-uploads/<token>/<fileName>`; the pipeline attaches the PDFs to plan/cards calls as native document blocks (evidence rank: released items per P2, primary models for generated exemplars, never in itemRefs); deleted with the scope |
 | `GET /library` | → `{ files: LibraryFile[] }` | Reference Library — the four document sets (standards/progression/items/unpacking) filed per framework (`ccss`/`teks`/`sol`/`best`) and grade (3–8). Listing derives from a blob prefix walk (no index doc) |
 | `PUT /library/{framework}/{grade}/{role}/{fileName}` | raw bytes (`application/pdf`) → `{ file: LibraryFile }` (201) | stores to `uploads` container under `library/...`; same name replaces the document. Every path segment is validated |
@@ -165,13 +166,13 @@ all units done reports it; finalize itself is idempotent).
 `library/<framework>/<grade>/<role>/<fileName>` — Reference Library documents (no index — the
 `GET /library` listing is a prefix walk, so the library can never drift from storage).
 
-**Blob container `screenshots`** (provisioned 2026-07-08, no app code wired yet): application
-screenshots (e.g. item images rendered from released-item PDFs). Private container — the account
-disallows public blob access; serve either through an authenticated API route (streaming the blob)
-or via short-lived SAS URLs generated by the backend. Blob-service CORS already allows GET/HEAD
-from the site origins (custom domain, azurestaticapps.net default, localhost:5173), so SAS URLs
-render directly in the SPA. Access it with the same `AzureWebJobsStorage` connection string the
-data layer already uses; suggested path convention: `<setId>/<itemId>/<n>.png`.
+**Blob container `screenshots`**: `<packetId>/<itemId>/<n>.png` — actual item screenshots the hunt's
+capture phase crops out of the source PDFs (n is 1-based; currently always 1). Private — the account
+disallows public blob access; serving is either the authenticated `GET /packet-item-image` route or
+per-blob read-only SAS URLs from `POST /item-image-links`. Blob-service CORS allows GET/HEAD from the
+production hostnames and `http://localhost:5173`, so SAS URLs render directly in `<img>` tags.
+`DELETE /packets/{id}` removes the packet's prefix. `infra/provision.ps1` creates the container (and
+`ensureInfra` self-heals it on fresh accounts).
 
 **Queue `genjobs`** — message JSON, **explicitly base64-encoded on send** (the Functions host expects
 base64; `@azure/storage-queue` does not encode by default):
@@ -292,6 +293,8 @@ The Released Item Repository Generator (internally "packets") is **standalone**:
 artifacts. The frontend ships a built-in catalog (`src/data/packet-catalog.ts` — grades 3–8 math
 standards for CCSS / TEKS / Virginia 2023 SOL / Florida B.E.S.T., official wording, lazily loaded)
 and `POST /packets` carries the selected standards verbatim; the backend hunts the public web.
+(Scopes may consume a finished packet — `POST /scopes` with `packetId` — but the dependency only
+points that way; the hunt itself never reads scope or set data.)
 
 - **Batching** (`api/src/pipeline/packets.ts`): standards group by (grade, domain), chunked to ≤4
   per batch. One batch = one Claude call with the **server-side `web_search` + `web_fetch` tools**
@@ -317,6 +320,14 @@ and `POST /packets` carries the selected standards verbatim; the backend hunts t
   (item ids, claim/target, DOK, keys, release year) directly into the prompt. The agent must obtain
   each item's text from a printable source (SBAC/CAASPP scoring guides, state renditions) — bank
   metadata alone is never transcribed; unobtained ids are named in the gap note.
+- **Screenshot capture** (`api/src/pipeline/packet-shots.ts`): after the gap sweep, items whose
+  source is a PDF are grouped by source URL; per group the worker downloads the PDF (≤40 MB), asks
+  Claude to localize each item (page + bounding box, native document blocks; large PDFs are split),
+  renders the pages and crops the boxes, and uploads PNGs to the `screenshots` container at
+  `<packetId>/<itemId>/<n>.png`, stamping `item.screenshotPaths`. Best-effort: a group that fails
+  (download error, item not found, low-confidence box) leaves its items on text facsimiles.
+  Checkpointed per group via `doneShots` under the same time-budget/re-enqueue/cuts machinery as
+  search batches.
 - **Settlement**: all batches done → packet `complete` (job log summarizes items/coverage/gaps).
   Stop (`cancelRequested`) → packet `cancelled` at the next checkpoint, found items kept. Terminal
   worker failure → packet `failed` via `markPacketFailed`, found items kept. `POST /packets/{id}/retry`

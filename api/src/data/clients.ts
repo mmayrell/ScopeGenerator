@@ -51,6 +51,11 @@ export function uploadsContainer(): ContainerClient {
   return blobService().getContainerClient('uploads')
 }
 
+/** Container `screenshots` — captured item screenshots at `<packetId>/<itemId>/<n>.png` (private; served via SAS or the packet-item-image route). */
+export function screenshotsContainer(): ContainerClient {
+  return blobService().getContainerClient('screenshots')
+}
+
 /** Queue `genjobs` — pipeline messages. */
 export function genJobsQueue(): QueueClient {
   if (!_queue) _queue = new QueueClient(connectionString(), 'genjobs')
@@ -68,6 +73,7 @@ export function ensureInfra(): Promise<void> {
     ensured = (async () => {
       await dataContainer().createIfNotExists()
       await uploadsContainer().createIfNotExists()
+      await screenshotsContainer().createIfNotExists()
       await genJobsQueue().createIfNotExists()
       for (const table of [entitiesTable(), jobsTable()]) {
         try {

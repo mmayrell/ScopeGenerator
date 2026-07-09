@@ -2,8 +2,9 @@ import { Fragment, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api } from '../api'
 import { fieldMeta } from '../data/meta'
+import { huntedToItemRecord } from '../packets'
 import { scopeUnsettled, useScopePolling, useStore } from '../store'
-import type { Citation, DecisionEntry, DecisionField, Lesson, Proposal, Scope } from '../types'
+import type { Citation, DecisionEntry, DecisionField, EvidencePacket, Lesson, Proposal, Scope } from '../types'
 import { breakNumberedList, Btn, capsStandardCodes, citationSourceLabel, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
 
 const typeTone: Record<Lesson['type'], { label: string; tone: 'accent' | 'cite' | 'night' }> = {
@@ -355,15 +356,35 @@ function ProposalView({
 
 // ---------- the 14-field card ----------
 
-function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
+function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; packet?: EvidencePacket }) {
   const { sets } = useStore()
-  // Items resolve across every set the scope draws on (multi-select), keeping
-  // the owning set id for the set-scoped image endpoint.
+  // Items resolve across every set the scope draws on (multi-select) plus the
+  // linked evidence packet — each entry carries its own image URL (set items
+  // via /item-image, packet items via /packet-item-image).
   const itemsById = useMemo(() => {
     const ids = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
     const scopeSets = sets.filter((st) => ids.includes(st.id))
-    return new Map(scopeSets.flatMap((st) => st.items.map((it) => [it.id, { it, setId: st.id }] as const)))
-  }, [sets, scope.setIds, scope.setId])
+    const entries = scopeSets.flatMap((st) =>
+      st.items.map(
+        (it) =>
+          [it.id, { it, imageUrl: it.imagePath ? api.itemImageUrl(st.id, it.id) : undefined }] as const,
+      ),
+    )
+    const packetEntries = (packet?.items ?? []).map(
+      (h) =>
+        [
+          h.id,
+          {
+            it: huntedToItemRecord(h),
+            imageUrl:
+              h.screenshotPaths && h.screenshotPaths.length > 0
+                ? api.packetItemImageUrl(packet!.id, h.id, 1)
+                : undefined,
+          },
+        ] as const,
+    )
+    return new Map([...entries, ...packetEntries])
+  }, [sets, scope.setIds, scope.setId, packet])
   const tt = typeTone[lesson.type]
 
   // Each field's record renders directly under it; lesson-level calls
@@ -431,13 +452,7 @@ function LessonCard({ scope, lesson }: { scope: Scope; lesson: Lesson }) {
                   <div className="mt-4 space-y-3">
                     {lesson.itemRefs.map((rid) => {
                       const entry = itemsById.get(rid)
-                      return entry ? (
-                        <ItemShot
-                          key={rid}
-                          item={entry.it}
-                          imageUrl={entry.it.imagePath ? api.itemImageUrl(entry.setId, entry.it.id) : undefined}
-                        />
-                      ) : null
+                      return entry ? <ItemShot key={rid} item={entry.it} imageUrl={entry.imageUrl} /> : null
                     })}
                     {(lesson.generatedExemplars ?? (lesson.generatedExemplar ? [lesson.generatedExemplar] : [])).map(
                       (ex, i) => (
@@ -498,6 +513,25 @@ export default function ScopeView() {
   const [lookedUp, setLookedUp] = useState(false)
   const [exporting, setExporting] = useState<'csv' | 'json' | null>(null)
   const [exportError, setExportError] = useState<string | null>(null)
+  // The linked evidence packet (released-items source), fetched once — its
+  // hunted items resolve the scope's packet itemRefs for rendering/exports.
+  const [packet, setPacket] = useState<EvidencePacket | undefined>(undefined)
+  const packetId = scope?.request.packetId
+  useEffect(() => {
+    if (!packetId) return
+    let cancelled = false
+    void api
+      .getPacket(packetId)
+      .then((p) => {
+        if (!cancelled) setPacket(p)
+      })
+      .catch(() => {
+        /* packet deleted after scope creation — items degrade to unresolved refs */
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [packetId])
 
   // Download CSV: one row per lesson, one column per field — fields only (no
   // decision records), released items as hosted screenshot links. Fetching
@@ -508,7 +542,7 @@ export default function ScopeView() {
     setExportError(null)
     try {
       const { downloadScopeCsv } = await import('../export/scope-csv')
-      await downloadScopeCsv(scope, sets)
+      await downloadScopeCsv(scope, sets, packet)
     } catch (e) {
       setExportError(e instanceof Error ? e.message : 'Could not build the CSV.')
     } finally {
@@ -525,7 +559,7 @@ export default function ScopeView() {
     setExportError(null)
     try {
       const { downloadScopeJson } = await import('../export/scope-json')
-      await downloadScopeJson(scope, sets)
+      await downloadScopeJson(scope, sets, packet)
     } catch (e) {
       setExportError(e instanceof Error ? e.message : 'Could not build the JSON export.')
     } finally {
@@ -632,10 +666,11 @@ export default function ScopeView() {
       } catch {
         try {
           // Carry the FULL request — dropping granular would silently
-          // regenerate at default granularity, and dropping the uploads token
+          // regenerate at default granularity, dropping the uploads token
           // would regenerate a topic scope without its released-question PDFs
           // (the blobs still exist under the token; deleteScopeDocs skips a
-          // token another scope still references).
+          // token another scope still references), and dropping packetId would
+          // regenerate without the linked repository's released items.
           const newId = await createScope(
             scope.setIds?.length ? scope.setIds : [scope.setId],
             scope.request.mode,
@@ -644,6 +679,7 @@ export default function ScopeView() {
             scope.request.uploadsToken
               ? { token: scope.request.uploadsToken, names: scope.request.uploadNames ?? [] }
               : undefined,
+            scope.request.packetId,
           )
           nav(`/scopes/${newId}`)
         } catch {
@@ -700,6 +736,7 @@ export default function ScopeView() {
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5 px-2">
           <Pill tone="neutral">v{scope.version}</Pill>
           {scope.request.granular && <Pill tone="night">granular tracks</Pill>}
+          {scope.request.packetId && <Pill tone="cite">repository items</Pill>}
           <Pill tone={qcFlags.length ? 'amber' : 'green'}>{qcFlags.length ? `QC: ${qcFlags.length} flagged` : 'QC clean'}</Pill>
           {scope.proposals.some((p) => p.working || p.status === 'drafting') && (
             <Pill tone="accent">
@@ -773,7 +810,7 @@ export default function ScopeView() {
             </h1>
           )
         })()}
-        <LessonCard scope={scope} lesson={lesson} />
+        <LessonCard scope={scope} lesson={lesson} packet={packet} />
         <div className="h-16" />
       </div>
 

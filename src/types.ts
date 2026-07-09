@@ -280,6 +280,10 @@ export interface Scope {
     uploadsToken?: string
     /** Display names of the uploaded PDFs (the blobs under the token are authoritative). */
     uploadNames?: string[]
+    /** Evidence packet whose hunted items serve as this scope's released-items source. */
+    packetId?: string
+    /** Packet title at scope creation (display; the packet document is authoritative). */
+    packetTitle?: string
   }
   engineVersion: string
   doctrineVersions: string[]
@@ -354,6 +358,7 @@ export interface HuntedItem {
   alignment: 'official' | 'ai-inferred' // 'official' only when the source maps the item to the code
   notes: string
   sourceKey?: string // key of the HuntSource this item was transcribed from; absent on gap-sweep items
+  screenshotPaths?: string[] // screenshots-container blob paths of the captured screenshots (in order)
 }
 
 /** A released-test document the discovery phase cataloged — the unit of transcription. */
@@ -382,6 +387,7 @@ export interface EvidencePacket {
   doneBatches: string[] // hunt-batch keys already searched (backend checkpointing)
   sources?: HuntSource[] // released-test documents cataloged by discovery; undefined = discovery not run
   doneSources?: string[] // keys of sources fully transcribed (backend checkpointing)
+  doneShots?: string[] // screenshot-capture group keys already processed (backend checkpointing)
   huntJobId?: string // the job that currently owns the hunt (backend ownership token)
   created: string
   updated: string

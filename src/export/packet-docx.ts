@@ -1,12 +1,14 @@
 // Word export for an evidence packet — opens in Word and converts to an
 // editable Google Doc in Drive. Cover, coverage summary, grade/domain sections
-// with the text facsimiles the web-hunting agent transcribed (stem, lettered
-// choices, answer, linked source), and the gaps / inferred-alignment
-// appendices. Loaded lazily so the docx library stays out of the main bundle.
+// with each item's captured screenshot (embedded) or the text facsimile the
+// web-hunting agent transcribed (stem, lettered choices), answer and linked
+// source either way, and the gaps / inferred-alignment appendices. Loaded
+// lazily so the docx library stays out of the main bundle.
 import {
   Document,
   ExternalHyperlink,
   HeadingLevel,
+  ImageRun,
   Packer,
   Paragraph,
   Table,
@@ -18,6 +20,7 @@ import {
 import { choiceLetter, packetCoverageOf } from '../packets'
 import type { EvidencePacket, HuntedItem } from '../types'
 import { capsStandardCodes } from '../ui'
+import { fetchShotImages, type ShotImage } from './packet-images'
 
 const INK = '23232B'
 const INK2 = '5A5A66'
@@ -90,7 +93,12 @@ const summaryCell = (text: string, header = false): TableCell =>
 const gradesLabel = (grades: number[]): string =>
   grades.length === 0 ? '' : grades.length === 1 ? `Grade ${grades[0]}` : `Grades ${grades.join(', ')}`
 
-export async function buildPacketDocxBlob(packet: EvidencePacket): Promise<Blob> {
+export type { ShotImage } from './packet-images'
+
+export async function buildPacketDocxBlob(
+  packet: EvidencePacket,
+  images: Map<string, ShotImage> = new Map(),
+): Promise<Blob> {
   const coverage = packetCoverageOf(packet)
   const children: (Paragraph | Table)[] = []
 
@@ -114,7 +122,7 @@ export async function buildPacketDocxBlob(packet: EvidencePacket): Promise<Blob>
       ? [para(`Administration years hunted (hard filter): ${[...packet.years].sort((a, b) => b - a).join(', ')}`, { size: 18, color: INK2, after: 30 })]
       : []),
     para(
-      'Every item is a text facsimile transcribed from the linked source document — verify against the source before classroom use. Alignments marked "ai-inferred" are the agent\'s judgment and are never official.',
+      'Items show the actual screenshot cropped from the source document where one could be captured, and a faithful text transcription otherwise — verify against the source before classroom use. Alignments marked "ai-inferred" are the agent\'s judgment and are never official.',
       { size: 17, color: INK2, italics: true, after: 160 },
     ),
   )
@@ -182,7 +190,7 @@ export async function buildPacketDocxBlob(packet: EvidencePacket): Promise<Blob>
         para(`${row.items.length} item${row.items.length === 1 ? '' : 's'}`, { size: 17, color: INK2, after: 80 }),
       )
       for (const item of row.items) {
-        children.push(...itemBlock(item))
+        children.push(...itemBlock(item, images.get(item.id)))
       }
     }
   }
@@ -211,7 +219,11 @@ export async function buildPacketDocxBlob(packet: EvidencePacket): Promise<Blob>
   return Packer.toBlob(doc)
 }
 
-function itemBlock(item: HuntedItem): Paragraph[] {
+// Word page content width ≈ 6.5in at 96 DPI; screenshots render at 150 DPI
+// (viewportScale 2), so halving the pixel size restores true print size.
+const MAX_IMAGE_PT_WIDTH = 620
+
+function itemBlock(item: HuntedItem, image?: ShotImage): Paragraph[] {
   const header = [item.program || item.sourceName, item.year > 0 ? String(item.year) : '', item.itemNumber ? `Q${item.itemNumber}` : '']
     .filter(Boolean)
     .join(' · ')
@@ -227,19 +239,39 @@ function itemBlock(item: HuntedItem): Paragraph[] {
         }),
       ],
     }),
-    para(item.stem, { size: 20, after: 40 }),
   ]
-  item.choices.forEach((choice, i) => {
+  if (image) {
+    // Captured screenshot in place of the text facsimile.
+    const scale = Math.min(1, MAX_IMAGE_PT_WIDTH / Math.max(1, image.width / 2))
     out.push(
       new Paragraph({
-        indent: { left: 360 },
-        spacing: { after: 20 },
-        children: textRuns(`${choiceLetter(i)}. ${choice}`, { size: 19, color: INK }),
+        spacing: { after: 40 },
+        children: [
+          new ImageRun({
+            type: 'png',
+            data: image.data,
+            transformation: {
+              width: Math.round((image.width / 2) * scale),
+              height: Math.round((image.height / 2) * scale),
+            },
+          }),
+        ],
       }),
     )
-  })
-  if (item.itemType === 'constructed-response' && item.choices.length === 0) {
-    out.push(para('Constructed response — students produce the answer; see the source for the rubric.', { size: 17, color: INK2, italics: true, after: 30 }))
+  } else {
+    out.push(para(item.stem, { size: 20, after: 40 }))
+    item.choices.forEach((choice, i) => {
+      out.push(
+        new Paragraph({
+          indent: { left: 360 },
+          spacing: { after: 20 },
+          children: textRuns(`${choiceLetter(i)}. ${choice}`, { size: 19, color: INK }),
+        }),
+      )
+    })
+    if (item.itemType === 'constructed-response' && item.choices.length === 0) {
+      out.push(para('Constructed response — students produce the answer; see the source for the rubric.', { size: 17, color: INK2, italics: true, after: 30 }))
+    }
   }
   if (item.answer) {
     out.push(
@@ -265,7 +297,8 @@ function itemBlock(item: HuntedItem): Paragraph[] {
 }
 
 export async function downloadPacketDocx(packet: EvidencePacket): Promise<void> {
-  const blob = await buildPacketDocxBlob(packet)
+  const images = await fetchShotImages(packet)
+  const blob = await buildPacketDocxBlob(packet, images)
   const name = `${capsStandardCodes(packet.title).replace(/[\\/:*?"<>|]+/g, '-')}.docx`
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
