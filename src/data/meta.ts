@@ -1,26 +1,138 @@
 // Static UI/system metadata — not seed data. The app imports this at runtime;
 // src/data/seed.ts stays reserved for the backend seed export. Framework
 // names/versions mirror the fixed documents in api/src/data/framework.ts.
-import type { Lesson, SystemArtifact } from '../types'
+import type { Lesson, Scope, StandardSet, SystemArtifact } from '../types'
+import { capsStandardCodes } from '../ui'
 
 export const systemArtifacts: SystemArtifact[] = [
   { id: 'sys-engine', kind: 'engine', name: 'Lesson Granularity & Modeling Scope (v3 — No-HITL specification)', version: 'v3', published: '2026-07-08', note: 'Fixed with the tool. Split, don’t-split, integration-lesson, and modeling-scope rules for any standard set; full-standard atomization (P4) and no-evidence-is-not-no-lesson (P5).' },
   { id: 'sys-doctrine', kind: 'doctrine', name: 'Direct Instruction BrainLift (Stein et al. 2017)', version: 'v1.8', published: '2026-04-19', note: 'Controlling method authority. Stein-priority encoded in all doctrine prompts.' },
 ]
 
-export const fieldMeta: { key: keyof Lesson['fields']; n: number; label: string; purpose: string }[] = [
-  { key: 'standards', n: 1, label: 'Standard', purpose: 'The official standard this atom is aligned to' },
-  { key: 'cluster', n: 2, label: 'Cluster', purpose: 'Keeps the standard in context' },
-  { key: 'substandard', n: 3, label: 'Substandard', purpose: 'The single teachable behavior this lesson is responsible for teaching' },
-  { key: 'objectives', n: 4, label: 'Objectives', purpose: 'The minimal-complete set of observable objectives that define mastery of this atom' },
-  { key: 'emphasis', n: 5, label: 'Major / Supporting', purpose: 'Determines instructional weight in sequencing' },
-  { key: 'progression', n: 6, label: 'Progression Placement', purpose: 'Situates the atom in the vertical story' },
-  { key: 'prerequisites', n: 7, label: 'Prerequisites', purpose: 'What must already be secure before this lesson' },
-  { key: 'boundary', n: 8, label: 'Assessment Boundary', purpose: 'The atom’s edges' },
-  { key: 'newLearning', n: 9, label: 'New Learning', purpose: 'The one thing this lesson teaches' },
-  { key: 'approach', n: 10, label: 'Instructional Approach', purpose: 'How students are taught to do the problems' },
-  { key: 'nonGoals', n: 11, label: 'Non-Goals', purpose: 'Drift protection — what not to accidentally teach yet' },
-  { key: 'ceiling', n: 12, label: 'Difficulty Ceiling', purpose: 'What “hard” can look like without leaving the grade' },
-  { key: 'assessment', n: 13, label: 'Assessment Evidence', purpose: 'What mastery looks like' },
-  { key: 'releasedItems', n: 14, label: 'Released Items (If Applicable)', purpose: 'The empirical anchors — shown, not cited' },
+// ---------------------------------------------------------------------------
+// The 18-field lesson card (No-HITL spec §6 "Reading a Lesson Card").
+// Fields 01–03 and 07 are derived from scope/set metadata and the lesson
+// title; 04–05 split the stored standards field ("<CODE> — <verbatim
+// wording>") into id and description. The rest map 1:1 onto Lesson['fields'].
+// Cluster remains in the data model (and in generation) but is not a card
+// field under the current spec.
+// ---------------------------------------------------------------------------
+
+export type LessonFieldKey = keyof Lesson['fields']
+
+export type CardKey =
+  | LessonFieldKey
+  | 'subject'
+  | 'course'
+  | 'standardSet'
+  | 'standardId'
+  | 'standardDescription'
+  | 'lessonTitle'
+
+export interface CardFieldMeta {
+  key: CardKey
+  n: number
+  label: string
+  purpose: string
+  /**
+   * The Lesson field whose decision record (rationale, citations, decision
+   * entries) renders beneath this card row. Derived header fields carry none;
+   * the standards field's record renders once, under Standard Description.
+   */
+  record?: LessonFieldKey
+}
+
+export const fieldMeta: CardFieldMeta[] = [
+  { key: 'subject', n: 1, label: 'Subject', purpose: 'The academic content area of the generated scope' },
+  { key: 'course', n: 2, label: 'Course', purpose: 'The course the scope is written for' },
+  { key: 'standardSet', n: 3, label: 'Standard Set', purpose: 'Which standard set the scope is built from (e.g. CCSS, TEKS, combined)' },
+  { key: 'standardId', n: 4, label: 'Standard ID', purpose: 'The official standard code — and, when the lesson teaches only part of one, the exact sub-part' },
+  { key: 'standardDescription', n: 5, label: 'Standard Description', purpose: 'The official standard wording, verbatim', record: 'standards' },
+  { key: 'substandard', n: 6, label: 'Substandard', purpose: 'The single teachable behavior this lesson is responsible for teaching', record: 'substandard' },
+  { key: 'lessonTitle', n: 7, label: 'Lesson Title', purpose: 'The shortest verb-led title that names the atom this lesson teaches' },
+  { key: 'objectives', n: 8, label: 'Objectives', purpose: 'The minimal-complete set of observable objectives that define mastery of this atom', record: 'objectives' },
+  { key: 'emphasis', n: 9, label: 'Major / Supporting', purpose: 'Determines instructional weight in sequencing', record: 'emphasis' },
+  { key: 'progression', n: 10, label: 'Progression Placement', purpose: 'Situates the atom in the vertical story', record: 'progression' },
+  { key: 'prerequisites', n: 11, label: 'Prerequisites', purpose: 'What must already be secure before this lesson', record: 'prerequisites' },
+  { key: 'boundary', n: 12, label: 'Assessment Boundary', purpose: 'The atom’s edges', record: 'boundary' },
+  { key: 'newLearning', n: 13, label: 'New Learning', purpose: 'The one thing this lesson teaches', record: 'newLearning' },
+  { key: 'approach', n: 14, label: 'Instructional Approach', purpose: 'How students are taught to do the problems', record: 'approach' },
+  { key: 'nonGoals', n: 15, label: 'Non-Goals', purpose: 'Drift protection — what not to accidentally teach yet', record: 'nonGoals' },
+  { key: 'ceiling', n: 16, label: 'Difficulty Ceiling', purpose: 'What “hard” can look like without leaving the grade', record: 'ceiling' },
+  { key: 'assessment', n: 17, label: 'Assessment Evidence', purpose: 'What mastery looks like', record: 'assessment' },
+  { key: 'releasedItems', n: 18, label: 'Released Items (If Applicable)', purpose: 'The empirical anchors — shown, not cited', record: 'releasedItems' },
 ]
+
+// ---------------------------------------------------------------------------
+// Derived-content resolution — shared by the card view, the CSV export, and
+// the canonical JSON export so all three present the same 18 fields.
+// ---------------------------------------------------------------------------
+
+/** Card header values derived from the scope's standard set(s). */
+export interface ScopeCardContext {
+  subject: string
+  course: string
+  standardSet: string
+}
+
+export function scopeCardContext(scope: Scope, sets: StandardSet[]): ScopeCardContext {
+  const ids = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
+  const scopeSets = sets.filter((s) => ids.includes(s.id))
+  const subject = scopeSets[0]?.subject ?? ''
+  return {
+    subject,
+    course: [scopeSets[0]?.gradeSpan ?? '', subject].filter(Boolean).join(' '),
+    standardSet: scopeSets.map((s) => s.name).join(' + '),
+  }
+}
+
+const CODE_SHAPE = /(?:[A-Z]{1,3}\.)?[0-9]+\.[A-Za-z0-9]+(?:\([A-Za-z0-9]+\))*(?:\.[A-Za-z0-9]+(?:\([A-Za-z0-9]+\))*)*/
+
+/**
+ * The standards field is authored as "<CODE> — <verbatim wording>", one line
+ * per aligned standard (union-mode merged lessons list several). Split it
+ * into the id(s) and the wording(s); multiple alignments join with "; " for
+ * ids and blank-line separation for wordings.
+ */
+export function splitStandards(text: string): { standardId: string; standardDescription: string } {
+  const lines = text
+    .split('\n')
+    .map((s) => s.trim())
+    .filter(Boolean)
+  const source = lines.length > 0 ? lines : [text]
+  const ids: string[] = []
+  const descriptions: string[] = []
+  for (const line of source) {
+    const code = line.match(CODE_SHAPE)?.[0] ?? ''
+    if (code) ids.push(code)
+    const description = line
+      .replace(code, '')
+      .replace(/^[\s—–\-:;·]+/, '')
+      .trim()
+    if (description) descriptions.push(description)
+  }
+  return {
+    standardId: capsStandardCodes(ids.join('; ')),
+    standardDescription: descriptions.join('\n\n') || text.trim(),
+  }
+}
+
+/** The display/export content of one card field for one lesson. */
+export function cardContent(key: CardKey, lesson: Lesson, ctx: ScopeCardContext): string {
+  switch (key) {
+    case 'subject':
+      return ctx.subject
+    case 'course':
+      return ctx.course
+    case 'standardSet':
+      return ctx.standardSet
+    case 'lessonTitle':
+      return lesson.title
+    case 'standardId':
+      return splitStandards(lesson.fields.standards?.content ?? '').standardId
+    case 'standardDescription':
+      return splitStandards(lesson.fields.standards?.content ?? '').standardDescription
+    default:
+      return (lesson.fields[key]?.content ?? '').trim()
+  }
+}

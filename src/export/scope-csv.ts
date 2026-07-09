@@ -1,18 +1,20 @@
-// CSV export for a scope — one row per lesson, one column per card field.
-// Fields only, deliberately: no citations, no rationales, no decision records.
-// Released items appear as hosted screenshot links (long-lived read-only SAS
-// URLs minted by the backend) so anyone the spreadsheet is shared with can
-// open the screenshots without holding the app access code. Items may come
-// from the sets' item banks or from the scope's linked evidence packet
-// (request.packetId) — packet lines also carry the original source URL.
+// CSV export for a scope — one row per lesson, one column per card field
+// (the 18-field card). Fields only, deliberately: no citations, no
+// rationales, no decision records. Released items appear as hosted
+// screenshot links (long-lived read-only SAS URLs minted by the backend) so
+// anyone the spreadsheet is shared with can open the screenshots without
+// holding the app access code. Items may come from the sets' item banks or
+// from the scope's linked evidence packet (request.packetId) — packet lines
+// also carry the original source URL.
 import { api } from '../api'
-import { fieldMeta } from '../data/meta'
+import { cardContent, fieldMeta, scopeCardContext } from '../data/meta'
 import type { EvidencePacket, HuntedItem, ItemRecord, Scope, StandardSet } from '../types'
 import { capsStandardCodes } from '../ui'
 
 // Field columns carry the EXACT on-card field labels (fieldMeta.label, e.g.
 // "Assessment Boundary") — never shortened or re-cased keys, so downstream
-// tooling always sees the same field names the app shows.
+// tooling always sees the same field names the app shows. Lesson title is
+// card field 07, so it is not repeated as a metadata column.
 const HEADER = [
   'scope_id',
   'scope_title',
@@ -21,7 +23,6 @@ const HEADER = [
   'unit_title',
   'strand',
   'lesson_id',
-  'lesson_title',
   'lesson_type',
   'evidence_status',
   ...fieldMeta.map((fm) => fm.label),
@@ -93,6 +94,7 @@ export function buildScopeCsv(
   packet?: EvidencePacket,
 ): string {
   const itemsById = resolveScopeItems(scope, sets, packet)
+  const ctx = scopeCardContext(scope, sets)
 
   const rows = [HEADER.map(cell).join(',')]
   for (const u of scope.units) {
@@ -118,9 +120,7 @@ export function buildScopeCsv(
           return `${it.test} ${it.year} Q${it.itemNumber}${link ? `: ${link}` : ' (no screenshot available)'}`
         })
       const fieldCells = fieldMeta.map((fm) =>
-        fm.key === 'releasedItems' && itemLines.length > 0
-          ? itemLines.join('\n')
-          : (l.fields[fm.key]?.content ?? ''),
+        fm.key === 'releasedItems' && itemLines.length > 0 ? itemLines.join('\n') : cardContent(fm.key, l, ctx),
       )
       rows.push(
         [
@@ -131,7 +131,6 @@ export function buildScopeCsv(
           u.title,
           u.strand,
           l.id,
-          l.title,
           l.type,
           l.evidenceStatus,
           ...fieldCells,

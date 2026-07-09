@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api } from '../api'
-import { fieldMeta } from '../data/meta'
+import { cardContent, fieldMeta, scopeCardContext } from '../data/meta'
 import { huntedToItemRecord } from '../packets'
 import { scopeUnsettled, useScopePolling, useStore } from '../store'
 import type { Citation, DecisionEntry, DecisionField, EvidencePacket, Lesson, Proposal, Scope } from '../types'
@@ -354,7 +354,7 @@ function ProposalView({
   )
 }
 
-// ---------- the 14-field card ----------
+// ---------- the 18-field card ----------
 
 function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; packet?: EvidencePacket }) {
   const { sets } = useStore()
@@ -388,15 +388,21 @@ function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; p
   const tt = typeTone[lesson.type]
 
   // Each field's record renders directly under it; lesson-level calls
-  // (granularity, type, sequencing) close the card.
+  // (granularity, type, sequencing) close the card. Cluster is no longer a
+  // card field (18-field spec), so cluster-tagged entries join the
+  // lesson-level record rather than disappearing.
   const decisionsByField = useMemo(() => {
     const map = new Map<DecisionField, DecisionEntry[]>()
     for (const d of lesson.decisions) {
-      const f: DecisionField = d.field ?? legacyDecisionField[d.type] ?? 'card'
+      const raw: DecisionField = d.field ?? legacyDecisionField[d.type] ?? 'card'
+      const f: DecisionField = raw === 'cluster' ? 'card' : raw
       map.set(f, [...(map.get(f) ?? []), d])
     }
     return map
   }, [lesson.decisions])
+
+  // Header fields 01–03 derive from the scope's standard set(s).
+  const ctx = useMemo(() => scopeCardContext(scope, sets), [scope, sets])
 
   return (
     <article className="animate-rise" key={lesson.id}>
@@ -414,12 +420,16 @@ function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; p
         </div>
       </header>
 
-      {/* fields 1–13, each followed by its own decision record */}
+      {/* fields 01–18, each backed field followed by its own decision record */}
       <div className="mt-7 overflow-hidden rounded-2xl border border-hairline bg-panel shadow-(--shadow-lift)">
         {fieldMeta.map((fm) => {
-          // Scopes generated before a field existed (e.g. Objectives) lack it.
-          const field = lesson.fields[fm.key] ?? { content: '—', citations: [] }
-          const fieldDecisions = decisionsByField.get(fm.key)
+          // Derived header fields (Subject, Course, Standard Set, Standard ID,
+          // Lesson Title) have no stored field of their own; the record of a
+          // backed field renders beneath it. Scopes generated before a field
+          // existed (e.g. Objectives) lack it.
+          const record = fm.record ? lesson.fields[fm.record] : undefined
+          const content = cardContent(fm.key, lesson, ctx) || '—'
+          const fieldDecisions = fm.record ? decisionsByField.get(fm.record) : undefined
           return (
             <Fragment key={fm.key}>
             <section className="group grid grid-cols-1 gap-2 border-b border-hairline px-6 py-4.5 last:border-0 hover:bg-paper/40 xl:grid-cols-[200px_1fr] xl:gap-6">
@@ -429,13 +439,13 @@ function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; p
                   <span className="text-[12.5px] leading-snug font-semibold text-ink">{fm.label}</span>
                 </div>
                 <div className="mt-1 text-[11px] leading-snug text-ink-3">{fm.purpose}</div>
-                {field.inferred && <div className="mt-1.5"><Pill tone="amber">inferred — P5</Pill></div>}
+                {record?.inferred && <div className="mt-1.5"><Pill tone="amber">inferred — P5</Pill></div>}
               </div>
               <div className="min-w-0">
                 {/* Citations live in the field's decision record below, keeping the content clean. */}
                 {fm.key === 'prerequisites' ? (
                   <ul className="space-y-1.5">
-                    {prerequisiteItems(field.content).map((p, i) => (
+                    {prerequisiteItems(content).map((p, i) => (
                       <li key={i} className="flex items-start gap-2.5 font-display text-[14px] leading-relaxed text-ink">
                         <span className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-ink-3" />
                         <span>{p}</span>
@@ -445,7 +455,7 @@ function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; p
                 ) : (
                   /* whitespace-pre-line renders the enumeration breaks from breakNumberedList */
                   <p className="font-display text-[14px] leading-relaxed whitespace-pre-line text-ink">
-                    {breakNumberedList(field.content)}
+                    {breakNumberedList(content)}
                   </p>
                 )}
                 {fm.key === 'releasedItems' && (
@@ -470,14 +480,16 @@ function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; p
                 )}
               </div>
             </section>
-            <DecisionRecord
-              title="Decision Record"
-              purpose={`Why ${fm.label} reads the way it does`}
-              rationale={field.rationale}
-              citations={field.citations}
-              entries={fieldDecisions ?? []}
-              expectRationale
-            />
+            {fm.record && (
+              <DecisionRecord
+                title="Decision Record"
+                purpose={`Why ${fm.label} reads the way it does`}
+                rationale={record?.rationale}
+                citations={record?.citations ?? []}
+                entries={fieldDecisions ?? []}
+                expectRationale
+              />
+            )}
             </Fragment>
           )
         })}
