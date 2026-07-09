@@ -51,6 +51,8 @@ api({
       setIds?: string[]
       mode?: Scope['request']['mode']
       params?: string
+      courseName?: string
+      subject?: string
       uploadsToken?: string
       uploadNames?: string[]
       packetId?: string
@@ -64,6 +66,11 @@ api({
     const mode = body.mode
     if (!['course', 'standard', 'topic'].includes(mode)) throw new HttpError(400, `unknown mode: ${mode}`)
     const params = capsStandardCodes(body.params ?? '')
+    // User-entered course identity — becomes card fields 01/02 and the scope
+    // title. Optional at the API for deploy-skew compatibility; the frontend
+    // requires both.
+    const courseName = typeof body.courseName === 'string' ? body.courseName.trim() : ''
+    const subject = typeof body.subject === 'string' ? body.subject.trim() : ''
     const selectedSets = await Promise.all(requestedIds.map((sid) => getSet(sid)))
     for (const s of selectedSets) {
       if (!s.published) throw new HttpError(400, `set ${s.id} is not published`)
@@ -86,7 +93,7 @@ api({
     const gradeSpans = [...new Set(selectedSets.map((s) => s.gradeSpan).filter(Boolean))].join(' + ')
     const title =
       mode === 'course'
-        ? `${gradeSpans || 'Course'} Mathematics — Full Course`
+        ? `${courseName || `${gradeSpans || 'Course'} ${subject || 'Mathematics'}`} — Full Course`
         : mode === 'standard'
           ? `Scope — ${params}`
           : `Topic Scope — ${params}`
@@ -98,6 +105,8 @@ api({
       request: {
         mode,
         params,
+        ...(courseName ? { courseName } : {}),
+        ...(subject ? { subject } : {}),
         // User-attached released questions (topic requests): keep the token so
         // the pipeline can attach the PDFs and delete can clean them up.
         ...(typeof body.uploadsToken === 'string' && SCOPE_UPLOADS_TOKEN.test(body.uploadsToken)

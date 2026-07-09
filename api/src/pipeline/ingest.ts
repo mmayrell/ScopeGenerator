@@ -344,6 +344,7 @@ export async function extractRunStep(msg: JobMessage, ctx: InvocationContext): P
         if (out.setMeta.subject.trim()) s.subject = out.setMeta.subject.trim()
         if (out.setMeta.grade.trim()) s.gradeSpan = out.setMeta.grade.trim()
         if (out.setMeta.sourceOrganization.trim()) s.sourceOrganization = out.setMeta.sourceOrganization.trim()
+        if (out.setMeta.standardIdPrefix.trim()) s.standardIdPrefix = out.setMeta.standardIdPrefix.trim()
         const a = findArtifact(s, blob.role, blob.fileName)
         enrichArtifact(a, out.usageNotes)
         if (a) a.reviewStatus = 'reviewed'

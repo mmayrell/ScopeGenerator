@@ -1,7 +1,7 @@
 // Static UI/system metadata — not seed data. The app imports this at runtime;
 // src/data/seed.ts stays reserved for the backend seed export. Framework
 // names/versions mirror the fixed documents in api/src/data/framework.ts.
-import type { Lesson, Scope, StandardSet, SystemArtifact } from '../types'
+import type { Lesson, Scope, StandardNode, StandardSet, SystemArtifact } from '../types'
 import { capsStandardCodes } from '../ui'
 
 export const systemArtifacts: SystemArtifact[] = [
@@ -46,7 +46,7 @@ export const fieldMeta: CardFieldMeta[] = [
   { key: 'subject', n: 1, label: 'Subject', purpose: 'The academic content area of the generated scope' },
   { key: 'course', n: 2, label: 'Course', purpose: 'The course the scope is written for' },
   { key: 'standardSet', n: 3, label: 'Standard Set', purpose: 'Which standard set the scope is built from (e.g. CCSS, TEKS, combined)' },
-  { key: 'standardId', n: 4, label: 'Standard ID', purpose: 'The official standard code — and, when the lesson teaches only part of one, the exact sub-part' },
+  { key: 'standardId', n: 4, label: 'Standard ID', purpose: 'The standard identifier in canonical format (<Standard Set Prefix>.<Standard Code>), e.g. CCSS.MATH.CONTENT.4.NBT.B.5' },
   { key: 'standardDescription', n: 5, label: 'Standard Description', purpose: 'The official standard wording, verbatim', record: 'standards' },
   { key: 'substandard', n: 6, label: 'Substandard', purpose: 'The single teachable behavior this lesson is responsible for teaching', record: 'substandard' },
   { key: 'lessonTitle', n: 7, label: 'Lesson Title', purpose: 'The shortest verb-led title that names the atom this lesson teaches' },
@@ -68,33 +68,70 @@ export const fieldMeta: CardFieldMeta[] = [
 // the canonical JSON export so all three present the same 18 fields.
 // ---------------------------------------------------------------------------
 
-/** Card header values derived from the scope's standard set(s). */
+/** Card header values derived from the scope's request and standard set(s). */
 export interface ScopeCardContext {
   subject: string
   course: string
   standardSet: string
+  /** Canonical identifier prefix for a given standard code (its owning set's standardIdPrefix). */
+  prefixFor: (code: string) => string
+}
+
+/** Collects every canonical/normalized code of a set's tree, uppercased. */
+function treeCodes(nodes: StandardNode[], out: Set<string>): Set<string> {
+  for (const n of nodes) {
+    if (n.code) out.add(n.code.toUpperCase())
+    if (n.norm) out.add(n.norm.toUpperCase())
+    if (n.children) treeCodes(n.children, out)
+  }
+  return out
 }
 
 export function scopeCardContext(scope: Scope, sets: StandardSet[]): ScopeCardContext {
   const ids = scope.setIds && scope.setIds.length > 0 ? scope.setIds : [scope.setId]
   const scopeSets = sets.filter((s) => ids.includes(s.id))
-  const subject = scopeSets[0]?.subject ?? ''
+  // Subject and course come from the user's scope request; scopes created
+  // before the fields existed fall back to the first set's metadata.
+  const subject = scope.request.subject?.trim() || (scopeSets[0]?.subject ?? '')
+  const course =
+    scope.request.courseName?.trim() ||
+    [scopeSets[0]?.gradeSpan ?? '', scopeSets[0]?.subject ?? ''].filter(Boolean).join(' ')
+  // Union scopes mix frameworks: resolve each code's prefix through the set
+  // whose tree owns it; codes not found fall back to the first set's prefix.
+  const byCode = scopeSets.map((s) => ({ codes: treeCodes(s.tree, new Set<string>()), prefix: s.standardIdPrefix ?? '' }))
+  const defaultPrefix = scopeSets[0]?.standardIdPrefix ?? ''
   return {
     subject,
-    course: [scopeSets[0]?.gradeSpan ?? '', subject].filter(Boolean).join(' '),
+    course,
     standardSet: scopeSets.map((s) => s.name).join(' + '),
+    prefixFor: (code) => byCode.find((e) => e.codes.has(code.toUpperCase()))?.prefix ?? defaultPrefix,
   }
 }
 
 const CODE_SHAPE = /(?:[A-Z]{1,3}\.)?[0-9]+\.[A-Za-z0-9]+(?:\([A-Za-z0-9]+\))*(?:\.[A-Za-z0-9]+(?:\([A-Za-z0-9]+\))*)*/
 
 /**
+ * Forces the canonical identifier format <Standard Set Prefix>.<Standard Code>
+ * (e.g. CCSS.MATH.CONTENT.4.NBT.B.5). Codes already carrying the prefix, and
+ * sets that declare none, pass through unchanged.
+ */
+export function canonicalStandardId(code: string, prefixFor?: (code: string) => string): string {
+  const prefix = prefixFor?.(code) ?? ''
+  if (!prefix || code.toUpperCase().startsWith(`${prefix.toUpperCase()}.`)) return code
+  return `${prefix}.${code}`
+}
+
+/**
  * The standards field is authored as "<CODE> — <verbatim wording>", one line
  * per aligned standard (union-mode merged lessons list several). Split it
  * into the id(s) and the wording(s); multiple alignments join with "; " for
- * ids and blank-line separation for wordings.
+ * ids and blank-line separation for wordings. Ids are forced into canonical
+ * <Standard Set Prefix>.<Standard Code> format when prefixFor is supplied.
  */
-export function splitStandards(text: string): { standardId: string; standardDescription: string } {
+export function splitStandards(
+  text: string,
+  prefixFor?: (code: string) => string,
+): { standardId: string; standardDescription: string } {
   const lines = text
     .split('\n')
     .map((s) => s.trim())
@@ -104,7 +141,7 @@ export function splitStandards(text: string): { standardId: string; standardDesc
   const descriptions: string[] = []
   for (const line of source) {
     const code = line.match(CODE_SHAPE)?.[0] ?? ''
-    if (code) ids.push(code)
+    if (code) ids.push(canonicalStandardId(capsStandardCodes(code), prefixFor))
     const description = line
       .replace(code, '')
       .replace(/^[\s—–\-:;·]+/, '')
@@ -129,7 +166,7 @@ export function cardContent(key: CardKey, lesson: Lesson, ctx: ScopeCardContext)
     case 'lessonTitle':
       return lesson.title
     case 'standardId':
-      return splitStandards(lesson.fields.standards?.content ?? '').standardId
+      return splitStandards(lesson.fields.standards?.content ?? '', ctx.prefixFor).standardId
     case 'standardDescription':
       return splitStandards(lesson.fields.standards?.content ?? '').standardDescription
     default:

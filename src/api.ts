@@ -167,6 +167,8 @@ export const api = {
     setIds: string[],
     mode: 'course' | 'standard' | 'topic',
     params: string,
+    courseName: string,
+    subject: string,
     uploads?: { token: string; names: string[] },
     packetId?: string,
   ) =>
@@ -176,6 +178,8 @@ export const api = {
       setIds,
       mode,
       params,
+      courseName,
+      subject,
       uploadsToken: uploads?.token,
       uploadNames: uploads?.names,
       packetId,

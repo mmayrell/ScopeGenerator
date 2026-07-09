@@ -225,7 +225,7 @@ export const INGEST_STANDARDS_SCHEMA = obj({
       emphasis: enums(['Major', 'Supporting', 'Additional', 'not designated']),
     }),
   ),
-  setMeta: obj({ subject: STR, grade: STR, sourceOrganization: STR }),
+  setMeta: obj({ subject: STR, grade: STR, sourceOrganization: STR, standardIdPrefix: STR }),
   coverageWarnings: arr(STR),
   usageNotes: STR,
 })
@@ -377,7 +377,7 @@ export interface WireStandardNode {
 
 export interface WireIngestStandards {
   nodes: WireStandardNode[]
-  setMeta: { subject: string; grade: string; sourceOrganization: string }
+  setMeta: { subject: string; grade: string; sourceOrganization: string; standardIdPrefix: string }
   coverageWarnings: string[]
   usageNotes: string
 }

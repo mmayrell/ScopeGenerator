@@ -711,6 +711,8 @@ export default function ScopeView() {
             scope.setIds?.length ? scope.setIds : [scope.setId],
             scope.request.mode,
             scope.request.params,
+            scope.request.courseName ?? '',
+            scope.request.subject ?? '',
             scope.request.uploadsToken
               ? { token: scope.request.uploadsToken, names: scope.request.uploadNames ?? [] }
               : undefined,

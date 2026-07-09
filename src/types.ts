@@ -89,6 +89,11 @@ export interface StandardSet {
   codingScheme: string
   codingNotes: string
   emphasisSource: string
+  /**
+   * Canonical identifier prefix for the framework (e.g. "CCSS.MATH.CONTENT").
+   * Standard IDs render/export as <prefix>.<code>; empty/absent = bare code.
+   */
+  standardIdPrefix?: string
   /** Source organization, extracted from the standards document. */
   sourceOrganization?: string
   published: boolean
@@ -274,6 +279,10 @@ export interface Scope {
   request: {
     mode: 'course' | 'standard' | 'topic'
     params: string
+    /** User-entered course name (e.g. "Grade 4 Mathematics"). Optional only on scopes created before the field existed. */
+    courseName?: string
+    /** User-entered subject (e.g. "Mathematics"). Optional only on scopes created before the field existed. */
+    subject?: string
     /** LEGACY (removed toggle) — present on scopes generated before granularity moved to the engine document; display-only. */
     granular?: boolean
     /** Blob prefix token for user-uploaded released-question PDFs (scope-uploads/<token>/...) — topic requests. */

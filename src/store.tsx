@@ -48,6 +48,8 @@ interface Store {
     setIds: string[],
     mode: 'course' | 'standard' | 'topic',
     params: string,
+    courseName: string,
+    subject: string,
     uploads?: { token: string; names: string[] },
     packetId?: string,
   ) => Promise<string>
@@ -314,10 +316,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setIds: string[],
       mode: 'course' | 'standard' | 'topic',
       params: string,
+      courseName: string,
+      subject: string,
       uploads?: { token: string; names: string[] },
       packetId?: string,
     ): Promise<string> => {
-      const { id } = await guard(() => api.createScope(setIds, mode, params, uploads, packetId))
+      const { id } = await guard(() => api.createScope(setIds, mode, params, courseName, subject, uploads, packetId))
       await refreshScope(id) // pull the new 'generating' document into state
       return id
     },

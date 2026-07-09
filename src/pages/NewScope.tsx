@@ -59,6 +59,10 @@ export default function NewScope() {
     .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }))
   const [setIds, setSetIds] = useState<string[]>(published[0] ? [published[0].id] : [])
   const [mode, setMode] = useState<'course' | 'standard' | 'topic'>('course')
+  // Entered by the user with every request — they become card fields 01/02
+  // (Subject, Course) and ride the scope request into the pipeline.
+  const [courseName, setCourseName] = useState('')
+  const [subject, setSubject] = useState('')
   const [selectedCodes, setSelectedCodes] = useState<string[]>([])
   const [topic, setTopic] = useState('')
   // Released-question PDFs the user attaches to a topic request (optional).
@@ -167,7 +171,7 @@ export default function NewScope() {
         await Promise.all(topicFiles.map((f) => api.uploadScopePdf(token, f.name, f)))
         uploads = { token, names: topicFiles.map((f) => f.name) }
       }
-      const id = await createScope(setIds, mode, params, uploads)
+      const id = await createScope(setIds, mode, params, courseName.trim(), subject.trim(), uploads)
       setJob(null)
       setFailure(null)
       setRunning(id)
@@ -206,7 +210,7 @@ export default function NewScope() {
       <div className="mx-auto max-w-2xl px-10 py-16">
         <SectionLabel>Generating scope</SectionLabel>
         <h1 className="mt-1 font-display text-[26px] font-semibold tracking-tight text-ink">
-          {mode === 'course' ? 'Full Course' : mode === 'standard' ? selectedCodes.map(normalizeCodeText).join(', ') : normalizeCodeText(topic)}
+          {mode === 'course' ? courseName.trim() || 'Full Course' : mode === 'standard' ? selectedCodes.map(normalizeCodeText).join(', ') : normalizeCodeText(topic)}
         </h1>
         <p className="mt-1 text-[13px] text-ink-2">
           {selectedSets.map((s) => s.name).join(' + ')} · {systemArtifacts.map((a) => `${a.kind === 'engine' ? 'Engine' : 'DI BrainLift'} ${a.version}`).join(' · ')}
@@ -338,7 +342,7 @@ export default function NewScope() {
   return (
     <div className="mx-auto max-w-2xl px-10 py-12">
       <h1 className="font-display text-[28px] font-semibold tracking-tight text-ink">New Scope</h1>
-      <p className="mt-1 text-[13.5px] text-ink-2">Select a published standard set, choose what to scope, and run.</p>
+      <p className="mt-1 text-[13.5px] text-ink-2">Select a published standard set, name the course and subject, choose what to scope, and run.</p>
 
       <div className="mt-8 space-y-6">
         <div>
@@ -368,6 +372,30 @@ export default function NewScope() {
               — so completing the course means mastering every selected framework's standards to the fullest.
             </div>
           )}
+        </div>
+
+        <div>
+          <SectionLabel>Course</SectionLabel>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <div>
+              <input
+                value={courseName}
+                onChange={(e) => setCourseName(e.target.value)}
+                placeholder="Course name — e.g. Grade 4 Mathematics"
+                className="w-full rounded-xl border border-hairline bg-panel px-3.5 py-2.5 text-[13.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
+              />
+              <p className="mt-1 text-[11.5px] text-ink-3">The course this scope is written for (card field 02).</p>
+            </div>
+            <div>
+              <input
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                placeholder="Subject — e.g. Mathematics"
+                className="w-full rounded-xl border border-hairline bg-panel px-3.5 py-2.5 text-[13.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
+              />
+              <p className="mt-1 text-[11.5px] text-ink-3">The academic content area (card field 01).</p>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -495,7 +523,7 @@ export default function NewScope() {
         <div className="flex items-center justify-end border-t border-hairline pt-5">
           <Btn
             kind="primary"
-            disabled={launching || setIds.length === 0 || (mode === 'standard' && selectedCodes.length === 0) || (mode === 'topic' && !topicMapped)}
+            disabled={launching || setIds.length === 0 || !courseName.trim() || !subject.trim() || (mode === 'standard' && selectedCodes.length === 0) || (mode === 'topic' && !topicMapped)}
             onClick={() => void run()}
           >
             {launching ? 'Starting…' : 'Run generation'}

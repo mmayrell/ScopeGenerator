@@ -22,6 +22,7 @@ export interface ScopeLessonJson {
   subject: string
   course: string
   standardSet: string
+  /** Canonical format <Standard Set Prefix>.<Standard Code>, e.g. CCSS.MATH.CONTENT.4.NBT.B.5. */
   standardId: string
   standardDescription: string
   substandard: string
@@ -108,11 +109,12 @@ export function buildScopeJson(
 ): ScopeLessonJson[] {
   const itemsById = resolveScopeItems(scope, sets, packet)
   // Spec example: subject "Math", course "Grade 4 Mathematics", standardSet "CCSS".
-  const { subject, course, standardSet } = scopeCardContext(scope, sets)
+  const { subject, course, standardSet, prefixFor } = scopeCardContext(scope, sets)
   return scope.units.flatMap((u) =>
     u.lessons.map((l): ScopeLessonJson => {
       const f = l.fields
-      const { standardId, standardDescription } = splitStandards(content(f.standards))
+      // standardId is forced into canonical <Standard Set Prefix>.<Standard Code> format.
+      const { standardId, standardDescription } = splitStandards(content(f.standards), prefixFor)
       return {
         subject,
         course,
