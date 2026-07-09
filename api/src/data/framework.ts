@@ -142,6 +142,33 @@ Extension is sufficient for:
 - Stable error pattern absent; prior accuracy holds in practice.
 - Same demand band (all procedural or all application) within the atom.
 
+## How Lessons Are Named
+
+Lesson titles are intentionally engineered: the shortest string that says what the lesson covers and what makes it unique.
+
+- Lead with the observable behavior ("Round Multi-Digit Whole Numbers to Any Place").
+- Carry a constraint only when a sibling lesson differs on it ("…by a One-Digit Number" exists because a two-digit-multiplier sibling does).
+- Ban pedagogy filler — no "Introduction to," no "Exploring."
+- A reader scanning only the lesson names must be able to tell every lesson apart and predict what each covers.
+
+## Example: Full-Standard Atomization (4.NBT.B.5)
+
+The atomization of 4.NBT.B.5 — "Multiply a whole number of up to four digits by a one-digit whole number, and multiply two two-digit numbers, using strategies based on place value and the properties of operations. Illustrate and explain the calculation by using equations, rectangular arrays, and/or area models." — demonstrates the expected granularity for one standard. In teaching order, each atom with its tier and the reasoning that justified it:
+
+1. Multiply One-Digit Numbers by 10, 100, 1,000, and Their Multiples — preskill. Grade 3 already expects multiplying one-digit numbers by multiples of 10 using place-value strategies, and released-test evidence shows the place-value multiplication demand directly (e.g. a task asking students to use 4 × 7 = 28 to find 4 × 700).
+2. Break Apart a Factor Using Expanded Form and Multiply the Parts — preskill / conceptual bridge. Directly prepares place-value multiplication and the distributive property (27 × 4 = 20 × 4 + 7 × 4), aligning with prior-grade area-model reasoning.
+3. Multiply a Two-Digit Number by a One-Digit Number Without Regrouping — new learning. Column multiplication is initially introduced with simple problems without renaming; the sequence places the no-renaming case before the renaming version.
+4. Multiply a Two-Digit Number by a One-Digit Number with Regrouping — new learning. Renaming is a new decision step (5 × 47 = 5 × 7 ones and 5 × 4 tens), introduced only after the no-renaming routine is stable.
+5. Multiply Three- and Four-Digit Numbers by a One-Digit Number — new learning. Expands the same strategy to the full grade range (758 × 2, 364 × 5, 534 × 9).
+6. Multiply Numbers with a Zero in the Tens or Hundreds Place by a One-Digit Number — new learning / error-prone case. Zero is a special problem type creating common renaming errors (403 × 5, 306 × 2); it deserves focused practice rather than being hidden inside general multi-digit multiplication.
+7. Rewrite Horizontal Multiplication Problems Vertically Before Solving — bridge / representation. Horizontally written problems are introduced only after students can correctly work vertically aligned problems; students are taught to rewrite the problem vertically. Assessments and word problems present multiplication horizontally.
+8. Multiply Two Two-Digit Numbers Using Partial Products, Place Value, and the Standard Algorithm — new learning. The second major half of the standard: two two-digit factors, the simplest case of two multi-digit factors.
+9. Explain Multiplication Using Equations, Arrays, and Area Models — conceptual explanation / application. The standard's illustrate-and-explain requirement. Kept as ONE lesson, not three, because each representation was mastered separately before this point — the lesson relates them to larger numbers and shows them in combination.
+10. Solve One-Step Multiplication Word Problems — application. Computation moves into context (one-step word problems multiplying two two-digit numbers or a four-digit number by a one-digit number).
+11. Solve Multi-Step Word Problems Using Multiplication — application / modeling. The final application tier: multi-step word problems (at least 3 steps) with whole-number answers.
+
+What the example demonstrates about the criteria: the no-regrouping/regrouping boundary is a new-decision-step split; the zero case is an error-pattern split even though the algorithm is nominally the same; the horizontal-rewrite lesson is a representation bridge; the three representations stay in ONE explanation lesson because each was already mastered (don't-split: already-mastered representations); and the word-problem tiers are demand-band splits. Atomizing one standard to roughly this depth — preskills, first-instance and variant atoms, error-prone cases, bridges, and application tiers, each justified by a named criterion with evidence cited — is the expected granularity, not an unusually fine partition.
+
 ## Example: Granularity Build From Released STAAR Questions
 
 To cover STAAR problems involving real-world application of comparing fractions, the released problems include the following question types:
@@ -212,11 +239,11 @@ export function getFramework(): FrameworkDoc {
   return {
     engine: {
       kind: 'engine',
-      name: 'Lesson Granularity & Modeling Scope (v3 — No-HITL specification)',
+      name: 'Lesson Granularity & Modeling Scope (v3.1 — No-HITL specification)',
       description:
-        'Provides the governing principles and decision rules for determining lesson granularity and modeling scope in direct instruction curriculum design — split/don\'t-split criteria, integration lessons, released-item demand analysis, and full-standard atomization.',
-      version: 'v3',
-      updated: '2026-07-08',
+        'Provides the governing principles and decision rules for determining lesson granularity and modeling scope in direct instruction curriculum design — split/don\'t-split criteria, integration lessons, released-item demand analysis, full-standard atomization, lesson naming, and the 4.NBT.B.5 worked atomization example.',
+      version: 'v3.1',
+      updated: '2026-07-09',
       content: ENGINE_CONTENT,
     },
     doctrine: {
