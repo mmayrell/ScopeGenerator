@@ -1,4 +1,5 @@
-import { LsgMode, LsgRequestType, LsgRun } from '../domain/types'
+import { LsgDataModelLesson, LsgMode, LsgRequestType, LsgRun } from '../domain/types'
+import { getScopeOrUndefined } from '../data/entities'
 import {
   deleteLsgCourseDocs,
   deleteLsgRunDocs,
@@ -8,6 +9,8 @@ import {
   listLsgRuns,
   saveLsgRun,
   snapshotByCourseName,
+  snapshotFromDataModel,
+  snapshotFromScope,
   toLsgRunSummary,
 } from '../data/lsg'
 import { createJob, latestJobForLsgRun, mutateJob, pushLog, toJobStatus } from '../data/jobs'
@@ -72,6 +75,35 @@ interface CreateRunBody {
   requestType?: string
   courseContext?: { subject?: string; grade?: string; curriculumFramework?: string; courseName?: string }
   generationScope?: { mode?: string; includedLessons?: string[]; editInstruction?: string }
+  /** A published scope to edit — seeds the snapshot when the registry has no course under the name. */
+  sourceScopeId?: string
+  /** An uploaded existing data model — seeds the snapshot (wins over sourceScopeId). */
+  dataModel?: { name?: string; lessons?: Partial<LsgDataModelLesson>[] }
+}
+
+/** An uploaded data model can carry hundreds of lessons of prose — cap the run doc's footprint. */
+const MAX_DM_LESSONS = 300
+
+function normalizeDataModelLessons(rows: Partial<LsgDataModelLesson>[]): LsgDataModelLesson[] {
+  return rows
+    .filter((r) => typeof r?.lessonTitle === 'string' && r.lessonTitle.trim().length > 0)
+    .slice(0, MAX_DM_LESSONS)
+    .map((r, i) => ({
+      lessonTitle: cap(r.lessonTitle, 300),
+      unitName: cap(r.unitName, 200) || 'Uncategorized',
+      standardId: cap(r.standardId, 80),
+      lessonOrder: Number.isFinite(Number(r.lessonOrder)) && Number(r.lessonOrder) > 0 ? Math.trunc(Number(r.lessonOrder)) : i + 1,
+      objectives: cap(r.objectives, 6000),
+      assessmentBoundary: cap(r.assessmentBoundary, 6000),
+      difficultyCeiling: cap(r.difficultyCeiling, 6000),
+      prerequisites: cap(r.prerequisites, 6000),
+      progressionPlacement: cap(r.progressionPlacement, 6000),
+      newLearning: cap(r.newLearning, 6000),
+      instructionalApproach: cap(r.instructionalApproach, 6000),
+      nonGoals: cap(r.nonGoals, 6000),
+      assessmentEvidence: cap(r.assessmentEvidence, 6000),
+      releasedItems: cap(r.releasedItems, 6000),
+    }))
 }
 
 // POST /api/lsg/runs → { run, jobId } (201) — captures the course snapshot,
@@ -105,12 +137,33 @@ api({
       throw new HttpError(400, 'mode LESSONS requires at least one included lesson')
     }
     const editInstruction = cap(body.generationScope?.editInstruction, 4000)
+    const courseContext = { subject, grade, curriculumFramework, courseName }
 
     // The snapshot is captured NOW and stored on the run — the plan the worker
     // builds (possibly across retries) always matches against one stable view.
-    const snapshot = await snapshotByCourseName(courseName)
+    // The registry is authoritative (it holds prior edits); when it has no
+    // course under the name, an uploaded data model seeds the snapshot, else a
+    // selected published scope does.
+    let snapshot = await snapshotByCourseName(courseName)
+    let source: LsgRun['source']
+    const dmRows = normalizeDataModelLessons(Array.isArray(body.dataModel?.lessons) ? body.dataModel.lessons : [])
+    const sourceScopeId = cap(body.sourceScopeId, 100)
+    if (!snapshot.courseExists && dmRows.length > 0) {
+      snapshot = snapshotFromDataModel(courseContext, dmRows)
+      source = { dataModelName: cap(body.dataModel?.name, 200) || 'uploaded data model' }
+      if (sourceScopeId) source.scopeId = sourceScopeId
+    } else if (!snapshot.courseExists && sourceScopeId) {
+      const scope = await getScopeOrUndefined(sourceScopeId)
+      if (!scope) throw new HttpError(400, `scope ${sourceScopeId} not found`)
+      if (scope.status !== 'complete') throw new HttpError(409, 'that scope is not complete — wait for it to finish before editing it')
+      snapshot = snapshotFromScope(courseContext, scope)
+      source = { scopeId: scope.id, scopeTitle: scope.title }
+    }
     if (mode === 'LESSONS' && !snapshot.courseExists) {
-      throw new HttpError(400, `course "${courseName}" does not exist — a partial edit needs an existing course`)
+      throw new HttpError(
+        400,
+        `course "${courseName}" does not exist — a partial edit needs an existing course, a published scope to edit, or an uploaded data model`,
+      )
     }
 
     const now = nowIso()
@@ -118,8 +171,9 @@ api({
     const run: LsgRun = {
       id: newId('lsgrun'),
       requestType,
-      courseContext: { subject, grade, curriculumFramework, courseName },
+      courseContext,
       generationScope: { mode, includedLessons, editInstruction },
+      ...(source ? { source } : {}),
       status: 'generating',
       snapshot,
       created: now,

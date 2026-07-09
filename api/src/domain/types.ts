@@ -599,6 +599,18 @@ export interface LsgOutput {
   lessons: LsgOutputLesson[]
 }
 
+/**
+ * One lesson row of an uploaded existing data model (the canonical JSON
+ * export shape, keys normalized client-side; missing fields arrive as '').
+ * Seeds the course snapshot when the registry has no course under the name.
+ */
+export interface LsgDataModelLesson extends LsgLessonFields {
+  lessonTitle: string
+  unitName: string
+  standardId: string
+  lessonOrder: number
+}
+
 /** One Lesson Scope Generation run (the component contract's input + captured snapshot + output). */
 export interface LsgRun {
   id: string
@@ -615,6 +627,8 @@ export interface LsgRun {
     includedLessons: string[]
     editInstruction: string
   }
+  /** Where the pre-edit course state came from when the registry had no course under the name: a published scope or an uploaded data model. */
+  source?: { scopeId?: string; scopeTitle?: string; dataModelName?: string }
   status: 'generating' | 'complete' | 'failed'
   error?: string
   /** Snapshot captured when the run was created — stable across worker retries. */

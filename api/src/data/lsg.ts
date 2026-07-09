@@ -1,5 +1,5 @@
 import { odata } from '@azure/data-tables'
-import { LsgCourse, LsgRun, LsgRunSummary, LsgSnapshot } from '../domain/types'
+import { LsgCourse, LsgCourseLesson, LsgDataModelLesson, LsgRun, LsgRunSummary, LsgSnapshot, Scope } from '../domain/types'
 import { HttpError } from '../shared/errors'
 import { sleep } from '../shared/util'
 import { dataContainer, entitiesTable } from './clients'
@@ -115,6 +115,89 @@ export async function snapshotByCourseName(courseName: string): Promise<LsgSnaps
       curriculumFramework: course.curriculumFramework,
     },
     lessons: course.lessons,
+  }
+}
+
+/**
+ * Snapshot seeded from a published scope document — used when the registry
+ * has no course under the requested name but the user picked one of the
+ * app's completed scopes as the course to edit. The scope's lesson ids
+ * ("U3.L3") become the platform lesson ids; the fourteen card fields map onto
+ * the ten DM-bound scope fields by content. `courseExists` is true: the
+ * course conceptually exists (we are editing it), so the run's operation is
+ * UPDATE and its lessons are matchable for UPDATE/DEACTIVATE.
+ */
+export function snapshotFromScope(
+  courseContext: LsgRun['courseContext'],
+  scope: Scope,
+): LsgSnapshot {
+  let order = 0
+  const lessons: LsgCourseLesson[] = scope.units.flatMap((unit) =>
+    unit.lessons.map((l) => {
+      order++
+      const f = l.fields
+      // Field 1 format is "<CODE> — <verbatim wording>" — the code is the part before the dash.
+      const standardId = (f.standards.content.split('—')[0] ?? '').trim().slice(0, 80)
+      return {
+        lessonId: l.id,
+        unitName: unit.title,
+        lessonTitle: l.title,
+        standardId,
+        lessonOrder: order,
+        status: 'ACTIVE' as const,
+        objectives: f.objectives?.content ?? '',
+        assessmentBoundary: f.boundary.content,
+        difficultyCeiling: f.ceiling.content,
+        prerequisites: f.prerequisites.content,
+        progressionPlacement: f.progression.content,
+        newLearning: f.newLearning.content,
+        instructionalApproach: f.approach.content,
+        nonGoals: f.nonGoals.content,
+        assessmentEvidence: f.assessment.content,
+        releasedItems: f.releasedItems.content,
+      }
+    }),
+  )
+  return seededSnapshot(courseContext, lessons)
+}
+
+/** Snapshot seeded from an uploaded existing data model (rows already normalized/capped by the HTTP layer). */
+export function snapshotFromDataModel(
+  courseContext: LsgRun['courseContext'],
+  rows: LsgDataModelLesson[],
+): LsgSnapshot {
+  const lessons: LsgCourseLesson[] = rows.map((row, i) => ({
+    lessonId: `dm-${i + 1}`,
+    unitName: row.unitName,
+    lessonTitle: row.lessonTitle,
+    standardId: row.standardId,
+    lessonOrder: row.lessonOrder > 0 ? row.lessonOrder : i + 1,
+    status: 'ACTIVE' as const,
+    objectives: row.objectives,
+    assessmentBoundary: row.assessmentBoundary,
+    difficultyCeiling: row.difficultyCeiling,
+    prerequisites: row.prerequisites,
+    progressionPlacement: row.progressionPlacement,
+    newLearning: row.newLearning,
+    instructionalApproach: row.instructionalApproach,
+    nonGoals: row.nonGoals,
+    assessmentEvidence: row.assessmentEvidence,
+    releasedItems: row.releasedItems,
+  }))
+  return seededSnapshot(courseContext, lessons)
+}
+
+function seededSnapshot(courseContext: LsgRun['courseContext'], lessons: LsgCourseLesson[]): LsgSnapshot {
+  return {
+    courseExists: true,
+    course: {
+      courseId: courseIdFromName(courseContext.courseName),
+      courseName: courseContext.courseName,
+      subject: courseContext.subject,
+      grade: courseContext.grade,
+      curriculumFramework: courseContext.curriculumFramework,
+    },
+    lessons,
   }
 }
 

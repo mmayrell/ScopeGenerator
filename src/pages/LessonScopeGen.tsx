@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundError, UnauthorizedError, api, clearAccessCode, type JobStatus } from '../api'
+import { useStore } from '../store'
 import type {
   LsgCourse,
   LsgCourseLesson,
+  LsgDataModelLesson,
   LsgLessonFields,
   LsgMode,
   LsgOperation,
@@ -10,6 +12,7 @@ import type {
   LsgRun,
   LsgRunSummary,
   LsgSnapshot,
+  Scope,
 } from '../types'
 import { Btn, capsStandardCodes, Modal, Mono, Pill, SectionLabel } from '../ui'
 
@@ -274,10 +277,94 @@ const TrashIcon = () => (
 )
 
 // ---------------------------------------------------------------------------
-// Builder — course identity, snapshot lookup, scope, edit instruction
+// Builder — pick a published scope (or data model) to edit, snapshot lookup,
+// scope, edit instruction
 // ---------------------------------------------------------------------------
 
+/**
+ * Parses an uploaded existing data model: a JSON array of flat per-lesson
+ * objects (the canonical scope JSON export shape), or `{ lessons: [...] }`.
+ * Keys are matched loosely — "lesson title", "lessonTitle", and "Lesson Title"
+ * all land on lessonTitle.
+ */
+function parseDataModel(text: string): LsgDataModelLesson[] {
+  const raw: unknown = JSON.parse(text)
+  const rows: unknown[] = Array.isArray(raw)
+    ? raw
+    : Array.isArray((raw as { lessons?: unknown[] })?.lessons)
+      ? (raw as { lessons: unknown[] }).lessons
+      : []
+  const norm = (k: string) => k.toLowerCase().replace(/[^a-z]/g, '')
+  const KEY_MAP: Record<string, string> = {
+    lessontitle: 'lessonTitle',
+    title: 'lessonTitle',
+    unitname: 'unitName',
+    unit: 'unitName',
+    standardid: 'standardId',
+    standard: 'standardId',
+    lessonorder: 'lessonOrder',
+    order: 'lessonOrder',
+    objectives: 'objectives',
+    assessmentboundary: 'assessmentBoundary',
+    boundary: 'assessmentBoundary',
+    difficultyceiling: 'difficultyCeiling',
+    ceiling: 'difficultyCeiling',
+    prerequisites: 'prerequisites',
+    progressionplacement: 'progressionPlacement',
+    progression: 'progressionPlacement',
+    newlearning: 'newLearning',
+    instructionalapproach: 'instructionalApproach',
+    approach: 'instructionalApproach',
+    nongoals: 'nonGoals',
+    assessmentevidence: 'assessmentEvidence',
+    releaseditems: 'releasedItems',
+  }
+  const out: LsgDataModelLesson[] = []
+  for (const row of rows) {
+    if (typeof row !== 'object' || row === null) continue
+    const mapped: Record<string, string> = {}
+    for (const [k, v] of Object.entries(row)) {
+      const target = KEY_MAP[norm(k)]
+      if (target && (typeof v === 'string' || typeof v === 'number')) mapped[target] = String(v)
+    }
+    if (!mapped.lessonTitle?.trim()) continue
+    out.push({
+      lessonTitle: mapped.lessonTitle.trim(),
+      unitName: (mapped.unitName ?? '').trim(),
+      standardId: (mapped.standardId ?? '').trim(),
+      lessonOrder: Number.parseInt(mapped.lessonOrder ?? '', 10) || out.length + 1,
+      objectives: mapped.objectives ?? '',
+      assessmentBoundary: mapped.assessmentBoundary ?? '',
+      difficultyCeiling: mapped.difficultyCeiling ?? '',
+      prerequisites: mapped.prerequisites ?? '',
+      progressionPlacement: mapped.progressionPlacement ?? '',
+      newLearning: mapped.newLearning ?? '',
+      instructionalApproach: mapped.instructionalApproach ?? '',
+      nonGoals: mapped.nonGoals ?? '',
+      assessmentEvidence: mapped.assessmentEvidence ?? '',
+      releasedItems: mapped.releasedItems ?? '',
+    })
+  }
+  return out
+}
+
+/** Best-effort framework guess from a scope's standard set, for prefilling the chips. */
+function guessFramework(setName: string, codingScheme: string): string | null {
+  const haystack = `${setName} ${codingScheme}`.toLowerCase()
+  if (/teks|texas/.test(haystack)) return 'TEKS'
+  if (/sol|virginia/.test(haystack)) return 'SOL'
+  if (/b\.?e\.?s\.?t|florida/.test(haystack)) return 'B.E.S.T.'
+  if (/ccss|common core/.test(haystack)) return 'CCSS'
+  return null
+}
+
 function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onBack: () => void }) {
+  const { scopes, sets } = useStore()
+  const publishedScopes = scopes.filter((s) => s.status === 'complete')
+
+  const [sourceScope, setSourceScope] = useState<Scope | null>(null)
+  const [dataModel, setDataModel] = useState<{ name: string; lessons: LsgDataModelLesson[] } | null>(null)
+  const [dmError, setDmError] = useState<string | null>(null)
   const [subject, setSubject] = useState('Mathematics')
   const [grade, setGrade] = useState('3')
   const [framework, setFramework] = useState('CCSS')
@@ -296,13 +383,11 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
   useEffect(() => {
     if (courseName.trim() !== checkedName.current) {
       setSnapshot(null)
-      setMode('FULL_COURSE')
       setIncludedLessons([])
     }
   }, [courseName])
 
-  const check = async () => {
-    const name = courseName.trim()
+  const check = useCallback(async (name: string) => {
     if (!name) return
     setChecking(true)
     setError(null)
@@ -320,10 +405,63 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
     } finally {
       setChecking(false)
     }
+  }, [])
+
+  const selectScope = (scope: Scope | null) => {
+    setSourceScope(scope)
+    setIncludedLessons([])
+    if (!scope) return
+    const name = scope.request.courseName || scope.title
+    setCourseName(name)
+    setSubject(scope.request.subject || 'Mathematics')
+    const set = sets.find((s) => s.id === scope.setId)
+    if (set) {
+      const gradeDigit = (set.gradeSpan.match(/\d+/) ?? [])[0]
+      if (gradeDigit && GRADES.includes(gradeDigit)) setGrade(gradeDigit)
+      const fw = guessFramework(set.name, set.codingScheme)
+      if (fw) setFramework(fw)
+    }
+    void check(name.trim())
   }
 
-  const activeLessons = (snapshot?.lessons ?? []).filter((l) => l.status === 'ACTIVE')
-  const exists = snapshot?.courseExists === true
+  const onDataModelFile = (file: File | undefined) => {
+    if (!file) return
+    setDmError(null)
+    file
+      .text()
+      .then((text) => {
+        const lessons = parseDataModel(text)
+        if (lessons.length === 0) {
+          setDataModel(null)
+          setDmError('No lessons found — expected a JSON array of per-lesson objects (the scope JSON export shape) with at least a lesson title per row.')
+          return
+        }
+        setDataModel({ name: file.name, lessons })
+        setIncludedLessons([])
+      })
+      .catch(() => {
+        setDataModel(null)
+        setDmError(`Could not parse ${file.name} — the data model must be valid JSON.`)
+      })
+  }
+
+  // Pre-edit course state, in precedence order: the registry (authoritative —
+  // it holds prior edits) > uploaded data model > selected published scope.
+  // Mirrors the backend's seeding rules.
+  const registryExists = snapshot?.courseExists === true
+  const registryLessons = registryExists ? (snapshot?.lessons ?? []).filter((l) => l.status === 'ACTIVE') : []
+  const seedLessons: { title: string; sub: string }[] = dataModel
+    ? dataModel.lessons.map((l) => ({ title: l.lessonTitle, sub: [l.unitName, l.standardId].filter(Boolean).join(' · ') }))
+    : (sourceScope?.units ?? []).flatMap((u) => u.lessons.map((l) => ({ title: l.title, sub: u.title })))
+  const pickerLessons = registryExists
+    ? registryLessons.map((l) => ({ title: l.lessonTitle, sub: [l.unitName, l.standardId].filter(Boolean).join(' · ') }))
+    : seedLessons
+  const editingExisting = registryExists || seedLessons.length > 0
+  // Deselecting the scope/data model can strip the course state out from
+  // under a partial edit — fall back to full course rather than a dead picker.
+  useEffect(() => {
+    if (!editingExisting) setMode('FULL_COURSE')
+  }, [editingExisting])
   const partial = mode === 'LESSONS'
   const canLaunch =
     courseName.trim().length > 0 &&
@@ -340,6 +478,8 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
         requestType: partial ? 'PARTIAL_UPDATE' : 'FULL_COURSE',
         courseContext: { subject: subject.trim() || 'Mathematics', grade, curriculumFramework: framework, courseName: courseName.trim() },
         generationScope: { mode, includedLessons: partial ? includedLessons : [], editInstruction: editInstruction.trim() },
+        ...(sourceScope ? { sourceScopeId: sourceScope.id } : {}),
+        ...(dataModel ? { dataModel } : {}),
       })
       onLaunched(run.id)
     } catch (e) {
@@ -357,16 +497,72 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
 
   return (
     <div className="mx-auto max-w-4xl px-10 py-10">
-      <Btn onClick={onBack}>← Back to lesson scope generation</Btn>
-      <h1 className="mt-4 font-display text-[28px] font-semibold tracking-tight text-ink">New Lesson Scope Run</h1>
+      <Btn onClick={onBack}>← Back to lesson scope edits</Btn>
+      <h1 className="mt-4 font-display text-[28px] font-semibold tracking-tight text-ink">New Lesson Scope Edit</h1>
       <p className="mt-1 max-w-2xl text-[13.5px] text-ink-2">
-        Name the course and look it up. A name that doesn't exist creates a new course; a name that does updates it in
-        place — in full, or for selected lessons only.
+        Pick a published scope to edit (or upload its existing data model), or name a course directly. A name that
+        doesn't exist creates a new course; a name that does updates it in place — in full, or for selected lessons only.
       </p>
 
       {error && <ErrorStrip text={error} />}
 
       <div className="mt-8 space-y-7">
+        <div>
+          <SectionLabel>Scope To Edit</SectionLabel>
+          <p className="mt-0.5 text-[11.5px] text-ink-3">
+            Selecting a published scope makes its lessons the course's current state (unless the course already exists
+            in the registry, whose state then wins).
+          </p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <Chip on={sourceScope === null} onClick={() => selectScope(null)}>
+              None — new or registry course
+            </Chip>
+            {publishedScopes.map((s) => (
+              <Chip key={s.id} on={sourceScope?.id === s.id} title={`v${s.version} · ${s.units.reduce((n, u) => n + u.lessons.length, 0)} lessons`} onClick={() => selectScope(s)}>
+                {capsStandardCodes(s.title)}
+              </Chip>
+            ))}
+          </div>
+          {publishedScopes.length === 0 && (
+            <p className="mt-2 text-[12.5px] text-ink-3">No published scopes yet — generate one on the Scopes tab, or continue without one.</p>
+          )}
+        </div>
+
+        <div>
+          <SectionLabel>Existing Data Model (Optional)</SectionLabel>
+          <p className="mt-0.5 text-[11.5px] text-ink-3">
+            Upload the course's existing data model as JSON (the scope JSON export shape — one flat object per lesson).
+            When provided, it defines the course's current state and wins over the selected scope.
+          </p>
+          <div className="mt-2 flex items-center gap-3">
+            <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-hairline bg-panel px-3 py-1.5 text-[13px] font-medium text-ink-2 shadow-[0_1px_2px_rgb(28_27_34/0.04)] transition-colors hover:border-hairline-2 hover:text-ink">
+              Upload Data Model
+              <input
+                type="file"
+                accept=".json,application/json"
+                className="hidden"
+                onChange={(e) => {
+                  onDataModelFile(e.target.files?.[0])
+                  e.target.value = ''
+                }}
+              />
+            </label>
+            {dataModel && (
+              <span className="flex items-center gap-2 text-[12.5px] text-ink-2">
+                <Pill tone="cite">{dataModel.name}</Pill>
+                {dataModel.lessons.length} lesson{dataModel.lessons.length === 1 ? '' : 's'}
+                <button
+                  onClick={() => setDataModel(null)}
+                  className="cursor-pointer font-medium text-ink-3 hover:text-ink-2 hover:underline"
+                >
+                  Remove
+                </button>
+              </span>
+            )}
+          </div>
+          {dmError && <p className="mt-2 text-[12px] leading-snug text-rust">{dmError}</p>}
+        </div>
+
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <SectionLabel>Subject</SectionLabel>
@@ -411,18 +607,26 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
               placeholder='e.g. "Grade 3 Mathematics NHITL"'
               className="w-full max-w-md rounded-xl border border-hairline bg-panel px-3.5 py-2.5 text-[13.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
             />
-            <Btn disabled={!courseName.trim() || checking} onClick={() => void check()}>
+            <Btn disabled={!courseName.trim() || checking} onClick={() => void check(courseName.trim())}>
               {checking ? 'Looking up…' : 'Look Up Course'}
             </Btn>
           </div>
           {snapshot !== null && (
-            <div className={`animate-rise mt-3 rounded-xl border px-4 py-3 ${exists ? 'border-accent/25 bg-accent-wash' : 'border-verdant/25 bg-verdant-wash'}`}>
-              {exists ? (
+            <div className={`animate-rise mt-3 rounded-xl border px-4 py-3 ${editingExisting ? 'border-accent/25 bg-accent-wash' : 'border-verdant/25 bg-verdant-wash'}`}>
+              {registryExists ? (
                 <p className="text-[12.5px] leading-relaxed text-ink-2">
                   <Pill tone="accent">UPDATE</Pill>{' '}
-                  <span className="ml-1 font-semibold text-ink">{capsStandardCodes(snapshot.course?.courseName ?? '')}</span> exists —{' '}
-                  {activeLessons.length} active lesson{activeLessons.length === 1 ? '' : 's'}. This run updates it in place; there are no
-                  course versions.
+                  <span className="ml-1 font-semibold text-ink">{capsStandardCodes(snapshot.course?.courseName ?? '')}</span> exists in the
+                  registry — {registryLessons.length} active lesson{registryLessons.length === 1 ? '' : 's'}. This run updates it in place
+                  (registry state wins over the selected scope or data model); there are no course versions.
+                </p>
+              ) : editingExisting ? (
+                <p className="text-[12.5px] leading-relaxed text-ink-2">
+                  <Pill tone="accent">UPDATE</Pill>{' '}
+                  <span className="ml-1">
+                    Editing from {dataModel ? <span className="font-semibold text-ink">{dataModel.name}</span> : <span className="font-semibold text-ink">{capsStandardCodes(sourceScope?.title ?? '')}</span>} —{' '}
+                    {seedLessons.length} lesson{seedLessons.length === 1 ? '' : 's'} as the current course state.
+                  </span>
                 </p>
               ) : (
                 <p className="text-[12.5px] leading-relaxed text-ink-2">
@@ -441,16 +645,16 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
             </Chip>
             <Chip
               on={mode === 'LESSONS'}
-              disabled={!exists}
-              title={exists ? undefined : 'A partial edit needs an existing course — look one up first'}
+              disabled={!editingExisting}
+              title={editingExisting ? undefined : 'A partial edit needs an existing course, a published scope, or an uploaded data model'}
               onClick={() => setMode('LESSONS')}
             >
               Selected lessons only
             </Chip>
           </div>
-          {mode === 'FULL_COURSE' && exists && (
+          {mode === 'FULL_COURSE' && editingExisting && (
             <p className="mt-2 text-[11.5px] leading-relaxed text-ink-3">
-              A full-course run against an existing course rebuilds the whole plan: matching lessons are updated, new
+              A full-course run over existing lessons rebuilds the whole plan: matching lessons are updated, new
               lessons created, and existing lessons missing from the new plan deactivated.
             </p>
           )}
@@ -461,12 +665,12 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
                 Every other lesson stays untouched.
               </p>
               <div className="mt-2 flex max-h-56 flex-wrap gap-1.5 overflow-y-auto rounded-xl border border-hairline bg-panel/50 p-3">
-                {activeLessons.map((l) => (
-                  <Chip key={l.lessonId} on={includedLessons.includes(l.lessonTitle)} title={`${l.unitName} · ${capsStandardCodes(l.standardId)}`} onClick={() => toggleLesson(l.lessonTitle)}>
-                    {l.lessonTitle}
+                {pickerLessons.map((l, i) => (
+                  <Chip key={`${l.title}-${i}`} on={includedLessons.includes(l.title)} title={l.sub} onClick={() => toggleLesson(l.title)}>
+                    {l.title}
                   </Chip>
                 ))}
-                {activeLessons.length === 0 && <p className="text-[12.5px] text-ink-3">This course has no active lessons.</p>}
+                {pickerLessons.length === 0 && <p className="text-[12.5px] text-ink-3">This course has no active lessons.</p>}
               </div>
             </div>
           )}
@@ -474,11 +678,12 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
 
         <div>
           <SectionLabel>Edit Instruction</SectionLabel>
-          <p className="mt-0.5 text-[11.5px] text-ink-3">
-            {partial
-              ? 'Required — what should change on the selected lessons, e.g. "Tighten the assessment boundary to exclude estimating sums and differences."'
-              : 'Optional — steering for the full-course plan, e.g. "Regenerate against current standards and pedagogy."'}
-          </p>
+          {partial && (
+            <p className="mt-0.5 text-[11.5px] text-ink-3">
+              Required — what should change on the selected lessons, e.g. "Tighten the assessment boundary to exclude
+              estimating sums and differences."
+            </p>
+          )}
           <textarea
             value={editInstruction}
             onChange={(e) => setEditInstruction(e.target.value)}
@@ -491,14 +696,14 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
           <span className="text-[12.5px] text-ink-2">
             {snapshot === null
               ? 'Look up the course name to continue.'
-              : exists
+              : editingExisting
                 ? partial
                   ? `Partial edit of ${includedLessons.length || 'no'} lesson${includedLessons.length === 1 ? '' : 's'}`
                   : 'Full-course update in place'
                 : 'Full-course creation'}
           </span>
           <Btn kind="primary" disabled={!canLaunch || launching} onClick={() => void launch()}>
-            {launching ? 'Dispatching…' : 'Generate Lesson Scope'}
+            {launching ? 'Dispatching…' : 'Generate Edited Lesson Scope'}
           </Btn>
         </div>
       </div>
@@ -567,9 +772,16 @@ function RunDetail({ id, onBack }: { id: string; onBack: () => void }) {
     )
   }
 
+  const sourceLine = run.source
+    ? run.source.dataModelName
+      ? ` · edited from data model "${run.source.dataModelName}"`
+      : run.source.scopeTitle
+        ? ` · edited from scope "${run.source.scopeTitle}"`
+        : ''
+    : ''
   const scopeLine = `${run.requestType === 'FULL_COURSE' ? 'Full course' : 'Partial edit'} · ${
     run.generationScope.mode === 'FULL_COURSE' ? 'all lessons in scope' : `${run.generationScope.includedLessons.length} lesson${run.generationScope.includedLessons.length === 1 ? '' : 's'} in scope`
-  } · ${run.courseContext.subject}, Grade ${run.courseContext.grade}, ${run.courseContext.curriculumFramework}`
+  } · ${run.courseContext.subject}, Grade ${run.courseContext.grade}, ${run.courseContext.curriculumFramework}${sourceLine}`
 
   // ---------- generating phase ----------
   if (run.status === 'generating') {

@@ -114,7 +114,7 @@ blob; rotating the storage account key revokes them all.
 | `GET /lsg/courses` | → `LsgCourse[]` | the course registry, newest-updated first |
 | `GET /lsg/courses/{id}` | → `LsgCourse` | |
 | `DELETE /lsg/courses/{id}` | → `{ ok: true }` | removes the course doc + index row; runs are untouched |
-| `POST /lsg/runs` | `{ requestType, courseContext, generationScope }` → `{ run: LsgRun, jobId }` (201) | captures the course snapshot ONTO the run (stable across worker retries), creates the run doc (status `generating`), enqueues an `lsg` job. `mode: 'LESSONS'` requires ≥1 `includedLessons` and an existing course (400 otherwise); enqueue failure settles both the job and the run `failed` |
+| `POST /lsg/runs` | `{ requestType, courseContext, generationScope, sourceScopeId?, dataModel? }` → `{ run: LsgRun, jobId }` (201) | captures the course snapshot ONTO the run (stable across worker retries), creates the run doc (status `generating`), enqueues an `lsg` job. Pre-edit course state precedence: the registry course by name (authoritative — holds prior edits) > `dataModel` (`{ name, lessons: LsgDataModelLesson[] }`, the uploaded existing data model, ≤300 lessons, loosely-keyed rows normalized) > `sourceScopeId` (a completed scope whose units/lessons seed the snapshot; 400 unknown, 409 not complete). Seeded snapshots have `courseExists: true` (the run is an UPDATE against that state). `mode: 'LESSONS'` requires ≥1 `includedLessons` and an existing/seeded course (400 otherwise); enqueue failure settles both the job and the run `failed` |
 | `GET /lsg/runs` | → `LsgRunSummary[]` | slim rows (no snapshot/output), newest first |
 | `GET /lsg/runs/{id}` | → `LsgRun` | full doc incl. snapshot and (when complete) output — polled while `generating` |
 | `GET /lsg/runs/{id}/job` | → `JobStatus` | generation progress (`totalUnits`/`unitsDone` = field batches) |
@@ -369,6 +369,13 @@ update an existing course when only some lessons change.
 - **Snapshot at create**: `POST /lsg/runs` captures the Course Snapshot onto the run doc, so every
   worker attempt plans against one stable view. The snapshot (not the model) decides
   `courseOperation`: course exists → UPDATE, else CREATE.
+- **Seeded snapshots**: when the registry has no course under the name, the request may seed the
+  pre-edit state from an uploaded existing data model (`dataModel.lessons`, ids `dm-<n>`) or from a
+  completed scope (`sourceScopeId` — lesson ids are the scope's "U3.L3" ids; the fourteen card
+  fields map onto the ten DM-bound fields by content, `standardId` extracted from field 1's
+  "<CODE> — wording" format). Seeded snapshots report `courseExists: true`, so the run is an
+  UPDATE whose lessons are matchable for UPDATE/DEACTIVATE. The registry always wins when it has
+  the course (it holds prior edits).
 - **Pipeline** (`api/src/pipeline/lsg.ts`), checkpointed for the 10-minute Consumption timeout with
   the generate pipeline's deadline machinery (8.5-minute in-process abort, `payload.cuts`
   escalation, 4.5-minute launch budget with same-message re-enqueue):
@@ -383,10 +390,13 @@ update an existing course when only some lessons change.
      replies must echo the prompt-assigned keys exactly (validated before checkpointing).
      Checkpointed to `jobs/<jobId>/lsg-batch-<i>.json`; `unitsDone`/`totalUnits` report batches.
   3. **Persist** (the orchestrator role, Decision 5): the assembled `LsgOutput` lands on the run,
-     then is applied to the course registry — CREATE assigns a platform lessonId (`newId('lesson')`),
-     UPDATE merges onto the existing lesson by id, DEACTIVATE flips status to INACTIVE. The apply is
-     idempotent under queue redelivery: CREATEs upsert by (unitName, lessonTitle) among ACTIVE
-     lessons. Finally the run settles `complete` with `applied: true`.
+     then is applied to the course registry — a course missing from the registry (fresh CREATE, or
+     a run seeded from a scope/data model) is first materialized with the run's snapshot lessons so
+     seeded UPDATE/DEACTIVATE lessonIds resolve; then CREATE assigns a platform lessonId
+     (`newId('lesson')`), UPDATE merges onto the existing lesson by id, DEACTIVATE flips status to
+     INACTIVE. The apply is idempotent under queue redelivery: CREATEs upsert by
+     (unitName, lessonTitle) among ACTIVE lessons. Finally the run settles `complete` with
+     `applied: true`.
 - Output lessons keep `lessonId: null` on CREATE (the registry, not the output, holds the assigned
   ids), and echo the snapshot id verbatim on UPDATE/DEACTIVATE.
 

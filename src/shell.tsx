@@ -10,6 +10,7 @@ const nav = [
   { to: '/library', label: 'Reference Library' },
   { to: '/sets', label: 'Standard Sets' },
   { to: '/scopes', label: 'Scopes' },
+  { to: '/lsg', label: 'Lesson Scope Edits' },
 ]
 
 export default function Shell() {

@@ -5,6 +5,7 @@ import type {
   LibraryFile,
   LibraryRole,
   LsgCourse,
+  LsgDataModelLesson,
   LsgMode,
   LsgRequestType,
   LsgRun,
@@ -269,6 +270,10 @@ export const api = {
     requestType: LsgRequestType
     courseContext: { subject: string; grade: string; curriculumFramework: string; courseName: string }
     generationScope: { mode: LsgMode; includedLessons: string[]; editInstruction: string }
+    /** A published scope to edit — seeds the course state when the registry has no course under the name. */
+    sourceScopeId?: string
+    /** An uploaded existing data model — seeds the course state (wins over sourceScopeId). */
+    dataModel?: { name: string; lessons: LsgDataModelLesson[] }
   }) => request<{ run: LsgRun; jobId: string }>('POST', '/lsg/runs', body),
 
   listLsgRuns: () => request<LsgRunSummary[]>('GET', '/lsg/runs'),

@@ -244,7 +244,7 @@ export async function lsgRunStep(msg: JobMessage, ctx: InvocationContext): Promi
     r.output = output
     r.updated = nowIso()
   })
-  await applyOutputToRegistry(output)
+  await applyOutputToRegistry(output, run.snapshot?.lessons ?? [])
   await mutateLsgRun(runId, (r) => {
     r.status = 'complete'
     r.applied = true
@@ -328,10 +328,13 @@ function assembleOutput(
  * The orchestrator persist (design Decision 5): the LSG output lands in the
  * course registry via the lesson-scope write path — CREATE assigns a platform
  * lessonId, UPDATE merges onto the existing lesson, DEACTIVATE flips status.
+ * A course missing from the registry (fresh CREATE, or a run seeded from a
+ * published scope / uploaded data model) is first materialized with the run's
+ * snapshot lessons, so seeded UPDATE/DEACTIVATE lessonIds resolve.
  * Idempotent: a CREATE whose title already exists ACTIVE in the same unit
  * upserts instead of duplicating (safe under queue redelivery).
  */
-async function applyOutputToRegistry(output: LsgOutput): Promise<void> {
+async function applyOutputToRegistry(output: LsgOutput, seedLessons: LsgCourseLesson[]): Promise<void> {
   const courseId = courseIdFromName(output.targetCourse.courseName)
   const now = nowIso()
   const existing = await getLsgCourseOrUndefined(courseId)
@@ -344,12 +347,11 @@ async function applyOutputToRegistry(output: LsgOutput): Promise<void> {
       grade: output.targetCourse.grade,
       curriculumFramework: output.targetCourse.standardSet,
       standardSet: output.targetCourse.standardSet,
-      lessons: output.lessons.filter((l) => l.operation === 'CREATE').map((l) => toCourseLesson(l, newId('lesson'))),
+      lessons: seedLessons,
       created: now,
       updated: now,
     }
     await saveLsgCourse(course)
-    return
   }
 
   await mutateLsgCourse(courseId, (course) => {
