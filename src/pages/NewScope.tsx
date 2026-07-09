@@ -54,7 +54,9 @@ function normalizeCodeText(text: string): string {
 export default function NewScope() {
   const { sets, createScope, fetchJob, refreshScope } = useStore()
   const nav = useNavigate()
-  const published = sets.filter((s) => s.published)
+  const published = sets
+    .filter((s) => s.published)
+    .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }))
   const [setIds, setSetIds] = useState<string[]>(published[0] ? [published[0].id] : [])
   const [mode, setMode] = useState<'course' | 'standard' | 'topic'>('course')
   const [selectedCodes, setSelectedCodes] = useState<string[]>([])
