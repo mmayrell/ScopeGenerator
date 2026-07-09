@@ -91,7 +91,7 @@ blob; rotating the storage account key revokes them all.
 | `GET /packet-item-image/{packetId}/{itemId}/{n}` | → `image/png` | captured screenshot of a hunted packet item (n is 1-based); auth via header or `?code=` (mirrors `item-image`) |
 | `POST /sets/{id}/publish` | → `{ set: StandardSet }` | seeded sets (no uploads) publish immediately; uploaded sets 409 unless extraction completed and every warning is resolved. Idempotent |
 | `GET /framework` | → `FrameworkDoc` | the fixed engine/doctrine documents (read-only — no PUT; new versions ship with the tool). The payload keeps a legacy `register: []` so pre-removal bundles render an empty exemplar register during deploy skew |
-| `POST /scopes` | `{ setId, setIds?, mode, params, granular?, packetId?, uploadsToken?, uploadNames? }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job. Optional `packetId` links a completed evidence packet as the scope's released-items source (400 if unknown or still hunting): its hunted items are converted to `ItemRecord`s and merged into the pipeline's evidence set, and `request.packetId`/`packetTitle` are stamped on the scope so the UI and exports can resolve packet items and their screenshots. Optional `granular: true` = Granular Track Scoping (stored on `Scope.request.granular`): atomization drops to the most granular DI skill level — one rule/decision/response pattern per track; number-form, representation, and distinct-error-pattern changes each split — with synthesis tracks (type `bridge`) where the student decides which mastered procedure applies, and NO prior-grade prerequisite tracks (assumed mastered). Applies to plan, cards, and unit-rerun prompts |
+| `POST /scopes` | `{ setId, setIds?, mode, params, packetId?, uploadsToken?, uploadNames? }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job. Optional `packetId` links a completed evidence packet as the scope's released-items source (400 if unknown or still hunting): its hunted items are converted to `ItemRecord`s and merged into the pipeline's evidence set, and `request.packetId`/`packetTitle` are stamped on the scope so the UI and exports can resolve packet items and their screenshots. Lesson granularity is always determined by the engine document (its full text is embedded in every generation-stage system prompt); the former `granular` flag (Granular Track Scoping) is no longer accepted — `Scope.request.granular` survives only on legacy documents and is ignored by the pipeline |
 | `GET /scopes/{id}` | → `Scope` | |
 | `GET /scopes/{id}/job` | → `JobStatus` (below) | polled by the generation screen |
 | `POST /scopes/{id}/pause-generation` | → `{ jobId }` (202) | cooperative: flags the job; workers halt at the next checkpoint, scope → `paused` |
@@ -372,7 +372,10 @@ proceeds and logs (RerunEvent detail + QC flag), per spec §8.
   min/max constraints. The recursive `StandardNode` tree is represented in schemas as a **flat array
   with `parentCode`** and rebuilt into a tree in code.
 - Prompts live in `api/src/services/prompts.ts`; every prompt embeds the relevant spec-§ verbatim
-  policy text (short excerpts), the evidence JSON, and the required output shape. Card prompts must
+  policy text (short excerpts), the evidence JSON, and the required output shape. Every
+  generation-stage system prompt (plan, cards, reruns, proposals) embeds the FULL engine document
+  from `api/src/data/framework.ts` as the binding granularity/modeling-scope authority — its rules
+  and worked examples, not a paraphrase. Card prompts must
   demand ≥1 citation per field and the mandatory *Generated exemplar — not a released item* label.
 
 ## Seed data

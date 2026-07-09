@@ -11,7 +11,7 @@ const Icon = ({ d, box = 20 }: { d: string; box?: number }) => (
 )
 
 const nav = [
-  { to: '/', label: 'Scopes', icon: 'M3 5h14M3 10h14M3 15h9', end: true },
+  { to: '/', label: 'Curriculum Scopes', icon: 'M3 5h14M3 10h14M3 15h9', end: true },
   { to: '/sets', label: 'Standard Sets', icon: 'M10 3l7 3.5-7 3.5-7-3.5L10 3zM3 10.5L10 14l7-3.5M3 14.5L10 18l7-3.5' },
   { to: '/library', label: 'Reference Library', icon: 'M10 5.5c-1.2-1.3-2.9-2-5-2h-1.5v11H5c2.1 0 3.8.7 5 2 1.2-1.3 2.9-2 5-2h1.5v-11H15c-2.1 0-3.8.7-5 2zM10 5.5v11' },
   { to: '/packets', label: 'Released Item Repository Generator', icon: 'M4 3.5h9l3 3v10a1 1 0 01-1 1H4a1 1 0 01-1-1v-12a1 1 0 011-1zM13 3.5v3h3M6.5 9.5h7M6.5 12.5h7M6.5 15.5h4' },

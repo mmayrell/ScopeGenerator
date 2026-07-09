@@ -51,7 +51,6 @@ api({
       setIds?: string[]
       mode?: Scope['request']['mode']
       params?: string
-      granular?: boolean
       uploadsToken?: string
       uploadNames?: string[]
       packetId?: string
@@ -99,7 +98,6 @@ api({
       request: {
         mode,
         params,
-        ...(body.granular === true ? { granular: true } : {}),
         // User-attached released questions (topic requests): keep the token so
         // the pipeline can attach the PDFs and delete can clean them up.
         ...(typeof body.uploadsToken === 'string' && SCOPE_UPLOADS_TOKEN.test(body.uploadsToken)

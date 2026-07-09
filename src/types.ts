@@ -274,7 +274,7 @@ export interface Scope {
   request: {
     mode: 'course' | 'standard' | 'topic'
     params: string
-    /** Granular track scoping — atomize to the most granular DI skill level with synthesis tracks (user toggle). */
+    /** LEGACY (removed toggle) — present on scopes generated before granularity moved to the engine document; display-only. */
     granular?: boolean
     /** Blob prefix token for user-uploaded released-question PDFs (scope-uploads/<token>/...) — topic requests. */
     uploadsToken?: string

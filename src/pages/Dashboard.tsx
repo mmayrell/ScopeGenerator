@@ -27,16 +27,30 @@ export default function Dashboard() {
   const { scopes, sets, deleteScope } = useStore()
   const nav = useNavigate()
   const [confirmDelete, setConfirmDelete] = useState<Scope | null>(null)
+  const [query, setQuery] = useState('')
+  const [setFilter, setSetFilter] = useState('all')
   // Newest generation first — repeated runs of the same request share a title,
   // so recency is the distinguishing signal.
   const ordered = [...scopes].sort((a, b) => createdAt(b) - createdAt(a))
+  const scopeSetIds = (s: Scope) => (s.setIds?.length ? s.setIds : [s.setId])
+  const q = query.trim().toLowerCase()
+  const filtered = ordered.filter((s) => {
+    if (setFilter !== 'all' && !scopeSetIds(s).includes(setFilter)) return false
+    if (!q) return true
+    const setNames = scopeSetIds(s)
+      .map((sid) => sets.find((x) => x.id === sid)?.name ?? '')
+      .join(' ')
+    return `${s.title} ${setNames}`.toLowerCase().includes(q)
+  })
+  // Only offer sets that actually back a scope.
+  const usedSets = sets.filter((set) => scopes.some((s) => scopeSetIds(s).includes(set.id)))
   // Keep in-flight scopes fresh while they're on screen.
   useScopePolling(scopes.filter(scopeUnsettled).map((s) => s.id))
   return (
     <div className="mx-auto max-w-5xl px-10 py-10">
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="font-display text-[28px] font-semibold tracking-tight text-ink">Scopes</h1>
+          <h1 className="font-display text-[28px] font-semibold tracking-tight text-ink">Curriculum Scopes</h1>
           <p className="mt-1 text-[13.5px] text-ink-2">
             Scopes can be written for an entire course or subset of standards.
           </p>
@@ -49,8 +63,43 @@ export default function Dashboard() {
         </Btn>
       </div>
 
-      <div className="mt-8 space-y-3">
-        {ordered.map((s) => {
+      {scopes.length > 0 && (
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <div className="relative min-w-56 flex-1">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 16 16"
+              fill="none"
+              className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-ink-3"
+            >
+              <path d="M11.5 11.5L14 14M13 7A6 6 0 111 7a6 6 0 0112 0z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Filter by title or standard set…"
+              className="w-full rounded-xl border border-hairline bg-panel py-2 pr-3 pl-8.5 text-[13px] text-ink placeholder:text-ink-3 focus:border-accent/50 focus:outline-none"
+            />
+          </div>
+          <select
+            value={setFilter}
+            onChange={(e) => setSetFilter(e.target.value)}
+            className="cursor-pointer rounded-xl border border-hairline bg-panel px-3 py-2 text-[13px] text-ink-2 focus:border-accent/50 focus:outline-none"
+          >
+            <option value="all">All standard sets</option>
+            {usedSets.map((set) => (
+              <option key={set.id} value={set.id}>
+                {set.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <div className="mt-6 space-y-3">
+        {filtered.map((s) => {
           const setNames = (s.setIds?.length ? s.setIds : [s.setId])
             .map((sid) => sets.find((x) => x.id === sid)?.name)
             .filter(Boolean)
@@ -120,11 +169,15 @@ export default function Dashboard() {
             </Link>
           )
         })}
-        {scopes.length === 0 && (
+        {scopes.length === 0 ? (
           <p className="rounded-2xl border border-hairline bg-panel p-5 text-[13px] text-ink-3">
             No scopes yet — run one from New scope.
           </p>
-        )}
+        ) : filtered.length === 0 ? (
+          <p className="rounded-2xl border border-hairline bg-panel p-5 text-[13px] text-ink-3">
+            No scopes match the current filter.
+          </p>
+        ) : null}
       </div>
 
       <Modal open={confirmDelete !== null} onClose={() => setConfirmDelete(null)} title="Delete Scope?">
@@ -146,32 +199,6 @@ export default function Dashboard() {
           </Btn>
         </div>
       </Modal>
-
-      <div className="mt-12 flex items-end justify-between">
-        <div>
-          <h2 className="font-display text-[20px] font-semibold text-ink">Standard Sets</h2>
-          <p className="mt-1 text-[13px] text-ink-2">Published sets are available for scope requests.</p>
-        </div>
-        <Link to="/sets" className="text-[13px] font-medium text-accent-deep hover:underline">
-          Manage sets →
-        </Link>
-      </div>
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        {sets.map((st) => (
-          <Link
-            key={st.id}
-            to={`/sets/${st.id}`}
-            className="group rounded-2xl border border-hairline bg-panel p-4 shadow-(--shadow-lift) transition-all hover:shadow-(--shadow-float)"
-          >
-            <div className="flex items-center justify-between">
-              <span className="font-display text-[15px] font-semibold text-ink group-hover:text-accent-deep">
-                {st.name}
-              </span>
-              {st.published ? <Pill tone="green">published</Pill> : <Pill tone="amber">draft</Pill>}
-            </div>
-          </Link>
-        ))}
-      </div>
     </div>
   )
 }

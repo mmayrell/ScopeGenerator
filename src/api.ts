@@ -167,7 +167,6 @@ export const api = {
     setIds: string[],
     mode: 'course' | 'standard' | 'topic',
     params: string,
-    granular?: boolean,
     uploads?: { token: string; names: string[] },
     packetId?: string,
   ) =>
@@ -177,7 +176,6 @@ export const api = {
       setIds,
       mode,
       params,
-      granular,
       uploadsToken: uploads?.token,
       uploadNames: uploads?.names,
       packetId,

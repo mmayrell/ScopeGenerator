@@ -9,6 +9,7 @@ import {
   StandardSet,
   Unit,
 } from '../domain/types'
+import { getFramework } from '../data/framework'
 import { doctrineExcerptsFor, DoctrineQuery } from './doctrine'
 import { PlanLessonSkeleton, PlanOutput, PlanUnit } from './schemas'
 
@@ -111,27 +112,24 @@ ${excerpts}
 `
 }
 
-// The engine's foundational POVs (Lesson Granularity & Modeling Scope, v2 for
-// ANY standard set) — binding on every generation stage; nothing below may
-// contradict them. Granular Track Mode is a user-elected engine PARAMETER, so
-// its finer split calibration must be authorized HERE (inside the binding
-// block) — a granular clause placed only below would be dead on arrival
-// against "no rule below overrides them".
-const engineCore = (granular: boolean): string => `The governing engine's POVs are BINDING — no rule below overrides them:
-- Lesson Granularity (Split vs. Don't Split): splits are justified only when instruction requires a new strategy, decision, representation, prerequisite, integration behavior, or other meaningful change in student behavior — not simply because problems become harder or use different numbers or contexts. A demand-band jump IS such a change: some lessons split for rigor.${
-  granular
-    ? ' USER-ELECTED CALIBRATION for this scope (Granular Track Mode, authorized by the engine): the user selected the engine\'s finest granularity setting, under which a change in the form of the numbers/inputs, the representation, or the likely error pattern IS a meaningful change in student behavior and splits — the GRANULAR TRACK MODE block below states the full calibration and governs granularity for this scope.'
-    : ''
+// The governing engine document (Lesson Granularity & Modeling Scope, from
+// data/framework.ts) — embedded IN FULL in every generation stage's system
+// prompt. Its split / don't-split criteria, tie-breakers, bridge rules,
+// editing-splits bar, modeling scope, and worked examples are the sole
+// authority for lesson granularity; nothing below may contradict it.
+const engineDocBlock = (): string => {
+  const engine = getFramework().engine
+  return `The governing engine document — "${engine.name}" (${engine.version}) — is BINDING on every generation decision; no rule below overrides it. Lesson granularity and modeling scope are determined from THIS document's rules and examples. The document in full:
+<engine_document>
+${engine.content}
+</engine_document>
+Engine-level addendum (equally binding): every objective a lesson claims must be explicitly modeled in that lesson — a lesson that accumulates more objectives than one lesson can model MUST split (objective overload is a split trigger, exactly like a new decision step).`
 }
-- Modeling Scope (Teach vs. Practice): every objective a lesson claims must be explicitly modeled in that lesson. A lesson that accumulates more objectives than one lesson can model MUST split — objective overload is a split trigger, exactly like a new decision step.
-- Atomize the Entire Standard (P4): the scope is never limited to skills explicitly named in the standard or unpacking document — a full DI task analysis generates every instructionally necessary in-between atom, prerequisite micro-skill, bridge, and application tier needed for mastery, all inside the standard's boundary. The only restriction: an atom that belongs in a previous unit or grade level is excluded.
-- No Evidence is Not No Lesson (P5): when no released item tests a component, the component STAYS in scope — its assessment evidence is inferred from how sibling skills are tested and where the component sits developmentally, everything built on the inference is flagged inferred, and a concrete generated exemplar makes the inference inspectable. The absence of a performance in the released sample is never evidence that the performance is never assessed.
-- Released Item Demand Analysis: released items are a representative SAMPLE of observable assessment evidence — empirical evidence of expected performances, never curriculum authority and never the source of lesson granularity. Lesson boundaries come solely from the engine's split/don't-split criteria; instructional decisions rest on patterns that recur across the available evidence, never on any single item or on the absence of an item type. Recurring composite demands (strategy selection, representation selection, discrimination, multi-step coordination) may justify integration lessons that teach students to coordinate previously mastered atoms into authentic assessment performance. Many legitimate atoms — foundational and introductory lessons especially — have no directly aligned released item; that is a documentation gap, expected and normal, and it must never reduce the quality or completeness of the scope. Such atoms get generated assessment exemplars at released-test quality instead.`
 
-const systemCore = (role: string, granular = false): string =>
+const systemCore = (role: string): string =>
   `You are the ScopeGenerator pipeline engine — ${role}. You turn a standard set's evidence corpus into strand-coherent units of atomized lessons under Direct Instruction doctrine (Stein, Kinder, Silbert & Carnine, Direct Instruction Mathematics, 5th ed., 2017 — the controlling method authority) and the Lesson Granularity & Modeling Scope framework.
 
-${engineCore(granular)}
+${engineDocBlock()}
 
 ${PRECEDENCE}
 
@@ -189,22 +187,6 @@ function itemsForCodes(set: StandardSet, codes: string[], itemRefs: string[]): I
       normsForWanted.has(it.alignmentCode.toUpperCase()),
   )
 }
-
-/**
- * Granular Track Mode — the user's toggle on the scope request
- * (scope.request.granular). Atomization drops to the most granular Direct
- * Instruction skill level, synthesis tracks recombine the skills afterward,
- * and prior-grade prerequisites are assumed mastered (never generated).
- */
-const GRANULAR_TRACKS = `GRANULAR TRACK MODE is ON for this scope (user-selected). It OVERRIDES the default granularity calibration — the A1–A6 procedure still runs, with these BINDING modifications:
-- Scope lessons at the most granular Direct Instruction skill level before anything is combined into broader skills: a track is small enough that the student is practicing ONE clearly defined rule, decision, or response pattern at a time.
-- A skill becomes its OWN track when it changes ANY of: (1) the rule students apply; (2) the form of the numbers or inputs; (3) the representation used; (4) the likelihood of a distinct error pattern; (5) the prerequisite knowledge required; (6) the decision students must make before solving. In this mode a change in number/input form ALONE justifies a split — the default "quantitative-only or context-only change → don't split" criterion is SUSPENDED — as does a representation change or a distinct error-pattern risk.
-- SYNTHESIS TRACKS: after the granular tracks of a skill cluster are taught and mastered, include tracks that put the skills back together. A synthesis track requires the student to DECIDE which previously learned procedure applies — never told in advance. Model synthesis tracks as type 'bridge' (selection/discrimination across the cluster's mastered routines, no new rules modeled), placed only after every parent track is independently mastered; close each cluster with a cumulative mixed-practice synthesis track (e.g. "Mixed Practice: Fraction Addition").
-- GRADE BOUNDARY (MOST IMPORTANT): tracks cover ONLY grade-appropriate, standard-specific skills. Every prerequisite from earlier grades is ASSUMED MASTERED — generate NO prior-grade prerequisite or refresher tracks; record that content in field 6 (Prerequisites) tagged prior-grade instead. Grade-level first-instance tracks stay (the within-grade skill chain is fully enumerated); below-grade re-teaching does not exist in this mode.
-- Calibration example — the expected granularity for a 4th-grade fraction-addition cluster (16 tracks): Generate Equivalent Fractions Using Multiplication · Decompose Fractions Into Sums of Fractions With the Same Denominator · Decompose Mixed Numbers Into Wholes and Fractions · Add Proper Fractions With Like Denominators · Add Fractions Greater Than 1 With Like Denominators · Add Like-Denominator Fractions and Rename Answers Greater Than 1 · Add Mixed Numbers With Like Denominators, No Regrouping · Add Mixed Numbers With Like Denominators, With Regrouping · Add Mixed Numbers With Like Denominators by Converting to Fractions Greater Than 1 · Add Tenths and Hundredths by Renaming Tenths as Hundredths · Add Tenths and Hundredths With Sums Less Than 1 · Add Tenths and Hundredths With Sums Greater Than 1 · Solve Like-Denominator Fraction Addition Word Problems · Solve Mixed-Number Addition Word Problems With Like Denominators · Solve Tenths-and-Hundredths Addition Word Problems · Mixed Practice: Fraction Addition.`
-
-/** The granular block when the scope's toggle is on; '' otherwise (safe to interpolate). */
-const granularBlock = (scope: Scope): string => (scope.request.granular ? `\n${GRANULAR_TRACKS}\n` : '')
 
 /**
  * User-attached released-question PDFs (topic requests) — the generation call
@@ -271,17 +253,14 @@ export function planPrompt(
         : `Topic scope: the request "${scope.request.params}" — map it onto the set's hierarchy and include exactly the standards that constitute that topic.`
 
   return {
-    system: systemCore(
-      'Stages 2–4: scope resolution, atomization, and sequencing & unit formation',
-      !!scope.request.granular,
-    ),
+    system: systemCore('Stages 2–4: scope resolution, atomization, and sequencing & unit formation'),
     user: `Run Stages 2–4 for the scope request below.
 
 Stage 2 — Scope Resolution: resolve the request to standards + governing decomposition keys (or the sub-part fallback), classify every supplied item per P2 against the governing standard's wording (veto detection per P1), and build the component evidence map. Run the Released Item Demand Analysis here: read each item's demands (prerequisite atoms, integration behaviors, strategy-selection/representation/discrimination demands, misconception patterns in distractors, rigor), and weight patterns that RECUR across items over any single item. Difficulty calibrates from observed demand profiles and decomposition defaults, never past the standard's own limits (P1) — log every ceiling call in scopeDecisions with its basis. Item absence NEVER drives structure and NEVER removes an atom (P5): granularity comes solely from the A1–A6 procedure, and every atom or preskill that constitutes the scoped standards stays in the plan at full quality even when no released item aligns to it directly. You MUST enumerate the introductory, foundational, and scaffolding atoms (the first-instance lessons that introduce each new routine, the preskill lessons that build toward it, the bridges between confusables, and the integration lessons recurring composite demands justify) as their own lesson skeletons — these are the atoms most likely to lack a directly-aligned item, and they are exactly the ones that must not be dropped. Mark them evidenceStatus inferred; the cards fill the gap with generated assessment exemplars written at released-test quality. A plan that contains only item-backed atoms is a defect.
 
 Stage 3 — Atomization:
 ${APPENDIX_A}
-${granularBlock(scope)}
+
 Stage 4 — Sequencing & Unit Formation:
 ${SEQUENCING}
 
@@ -320,11 +299,11 @@ export function cardsPrompt(
   }))
 
   return {
-    system: systemCore('Stage 5: card generation for one unit', !!scope.request.granular),
+    system: systemCore('Stage 5: card generation for one unit'),
     user: `Generate complete lesson cards (all fourteen card fields plus per-field decision records) for the ${batch.length} lesson(s) of unit "${unit.id} — ${unit.title}" listed in batch_lessons, following the approved plan skeleton exactly (same lesson ids, same order, same types). Output ONLY the batch_lessons lessons — the unit's remaining lessons are produced by sibling calls; the full unit_skeleton is supplied so relational fields (Prerequisites, Progression Placement, Assessment Boundary, Non-Goals) can reference them by lesson id.
 
 ${CARD_RULES}
-${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: batch.map((l) => l.title), standardCodes: batch.flatMap((l) => l.standardCodes) })}${granularBlock(scope)}${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
+${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: batch.map((l) => l.title), standardCodes: batch.flatMap((l) => l.standardCodes) })}${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
 Additional requirements:
 - evidence-locking is mandatory: generation returns { content, citations[], rationale } per field; uncited fields 5–14 are rejected pre-QC (spec §6 Stage 5); fields 1–4 return citations: [] but still carry a full rationale.
 - decision entries must carry rule ids (P#/A#/D#) and quote both sides on every contradiction.
@@ -359,11 +338,11 @@ export function rerunLessonPrompt(
   const codes = lesson.fields.standards.content.match(CODE_SHAPES) ?? []
   const evidenceItems = itemsForCodes(set, codes, lesson.itemRefs)
   return {
-    system: systemCore('rerun: regenerate one lesson card in place (Stage 5 re-entry)', !!scope.request.granular),
+    system: systemCore('rerun: regenerate one lesson card in place (Stage 5 re-entry)'),
     user: `Regenerate the lesson card "${lesson.id} — ${lesson.title}" in place at the same granularity (spec §6 rerun re-entry: "regenerate-in-place → Stage 5 for that card"). Keep the lesson id, type, and position in the chain; produce a fresh card cited per the card rules (fields 5–14 cited; fields 1–4 citations: []).
 
 ${CARD_RULES}
-${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: [lesson.title], standardCodes: codes })}${granularBlock(scope)}${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
+${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: [lesson.title], standardCodes: codes })}${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
 ${jsonBlock('scope_request', scope.request)}
 ${jsonBlock('containing_unit', { id: unit.id, title: unit.title, strand: unit.strand, lessons: unit.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type })) })}
 ${jsonBlock('current_lesson_card', lesson)}
@@ -389,11 +368,11 @@ export function rerunUnitPrompt(
     unit.lessons.flatMap((l) => l.itemRefs),
   )
   return {
-    system: systemCore('rerun: re-atomize one unit at different granularity (Stages 3–6 re-entry, scoped)', !!scope.request.granular),
+    system: systemCore('rerun: re-atomize one unit at different granularity (Stages 3–6 re-entry, scoped)'),
     user: `Rerun unit "${unit.id} — ${unit.title}" at ${mode === 'split' ? 'MORE granularity (split)' : 'LESS granularity (merge)'} around the target "${target}" (spec §6: "lesson granularity change → Stage 3 scoped to affected atoms, then 4–6 locally").${mode === 'split' ? ' A split still requires an A2 criterion to genuinely fire around the target (new strategy/decision/representation/prerequisite, demand-band jump, or objective overload — never merely harder numbers). If none fires, keep the granularity unchanged and record the refusal with its basis in the affected Decision records.' : ''}
 
 ${APPENDIX_A}
-${granularBlock(scope)}${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
+${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
 ${BLAST_RADIUS}
 
 ${override ? `An explicit user override of a protected hard-split boundary is in force for this merge: execute the merge, and log the override in the affected lessons' Decision records (type "override", both sides cited, rule id of the overridden criterion).` : ''}

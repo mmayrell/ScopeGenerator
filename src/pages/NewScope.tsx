@@ -57,7 +57,6 @@ export default function NewScope() {
   const published = sets.filter((s) => s.published)
   const [setIds, setSetIds] = useState<string[]>(published[0] ? [published[0].id] : [])
   const [mode, setMode] = useState<'course' | 'standard' | 'topic'>('course')
-  const [granular, setGranular] = useState(false)
   const [selectedCodes, setSelectedCodes] = useState<string[]>([])
   const [topic, setTopic] = useState('')
   // Released-question PDFs the user attaches to a topic request (optional).
@@ -186,7 +185,7 @@ export default function NewScope() {
         await Promise.all(topicFiles.map((f) => api.uploadScopePdf(token, f.name, f)))
         uploads = { token, names: topicFiles.map((f) => f.name) }
       }
-      const id = await createScope(setIds, mode, params, granular, uploads, packetId || undefined)
+      const id = await createScope(setIds, mode, params, uploads, packetId || undefined)
       setJob(null)
       setFailure(null)
       setRunning(id)
@@ -537,31 +536,6 @@ export default function NewScope() {
             </div>
           </div>
         )}
-
-        <div>
-          <SectionLabel>Granularity</SectionLabel>
-          <label
-            className={`mt-2 flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 transition-all ${
-              granular ? 'border-accent/40 bg-accent-wash/40 shadow-(--shadow-lift)' : 'border-hairline bg-panel hover:border-hairline-2'
-            }`}
-          >
-            <input
-              type="checkbox"
-              checked={granular}
-              onChange={() => setGranular((g) => !g)}
-              className="mt-0.5 accent-(--color-accent)"
-            />
-            <div>
-              <div className="text-[13.5px] font-semibold text-ink">Granular Track Scoping</div>
-              <p className="mt-0.5 text-[11.5px] leading-snug text-ink-3">
-                Scope lessons at the most granular Direct Instruction skill level — one rule, decision, or response
-                pattern per track — then add synthesis tracks where students decide which mastered procedure applies.
-                Only grade-level, standard-specific tracks; prior-grade prerequisites are assumed mastered. Off:
-                the engine's default granularity calibration.
-              </p>
-            </div>
-          </label>
-        </div>
 
         {launchError && (
           <div className="animate-rise rounded-xl border border-rust/25 bg-rust-wash px-4 py-3 text-[12.5px] leading-relaxed text-rust">
