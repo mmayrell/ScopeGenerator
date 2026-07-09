@@ -105,7 +105,6 @@ export default function Dashboard() {
             .filter(Boolean)
             .join(' + ')
           const lessons = s.units.reduce((n, u) => n + u.lessons.length, 0)
-          const qcFlags = s.qc.filter((q) => q.status !== 'pass').length
           return (
             <Link
               key={s.id}
@@ -125,11 +124,7 @@ export default function Dashboard() {
                       </Pill>
                     ) : s.status === 'failed' ? (
                       <Pill tone="red">failed</Pill>
-                    ) : qcFlags > 0 ? (
-                      <Pill tone="amber">QC: {qcFlags} flagged</Pill>
-                    ) : (
-                      <Pill tone="green">QC clean</Pill>
-                    )}
+                    ) : null}
                     {s.proposals.some((p) => p.working || p.status === 'drafting') && (
                       <Pill tone="accent">
                         <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-accent" /> proposal drafting

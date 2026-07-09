@@ -545,9 +545,10 @@ export default function ScopeView() {
     }
   }, [packetId])
 
-  // Download CSV: one row per lesson, one column per field — fields only (no
-  // decision records), released items as hosted screenshot links. Fetching
-  // those links is a network round-trip, hence the Preparing state.
+  // Download CSV: one row per lesson, one column per field plus a trailing
+  // scoping_rationale column (the lesson's granularity/scoping decisions with
+  // their cited evidence), released items as hosted screenshot links.
+  // Fetching those links is a network round-trip, hence the Preparing state.
   const exportCsv = async () => {
     if (!scope) return
     setExporting('csv')
@@ -735,7 +736,8 @@ export default function ScopeView() {
     )
   }
   const lesson = allLessons.find((l) => l.id === sel) ?? allLessons[0]
-  const qcFlags = scope.qc.filter((q) => q.status !== 'pass')
+  // Clean-field separation was retired as a QC gate; hide it on scopes generated before the removal.
+  const qcChecks = scope.qc.filter((q) => q.name !== 'Clean-field separation')
 
   return (
     <div className="flex h-full">
@@ -745,9 +747,7 @@ export default function ScopeView() {
         <h1 className="mt-2 px-2 font-display text-[17px] leading-snug font-semibold text-ink">{capsStandardCodes(scope.title)}</h1>
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5 px-2">
           <Pill tone="neutral">v{scope.version}</Pill>
-          {scope.request.granular && <Pill tone="night">granular tracks</Pill>}
           {scope.request.packetId && <Pill tone="cite">repository items</Pill>}
-          <Pill tone={qcFlags.length ? 'amber' : 'green'}>{qcFlags.length ? `QC: ${qcFlags.length} flagged` : 'QC clean'}</Pill>
           {scope.proposals.some((p) => p.working || p.status === 'drafting') && (
             <Pill tone="accent">
               <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-accent" /> proposal drafting
@@ -827,7 +827,7 @@ export default function ScopeView() {
       {/* QC modal */}
       <Modal open={qcOpen} onClose={() => setQcOpen(false)} title="Auto-QC Report" wide>
         <div className="space-y-2.5">
-          {scope.qc.map((q) => (
+          {qcChecks.map((q) => (
             <div key={q.name} className="flex items-start gap-3 rounded-xl border border-hairline bg-panel p-3.5">
               <Pill tone={q.status === 'pass' ? 'green' : q.status === 'flag' ? 'amber' : 'red'}>{q.status}</Pill>
               <div>

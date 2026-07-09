@@ -3,9 +3,10 @@ import { PlanOutput } from '../services/schemas'
 
 /**
  * Stage 6 — programmatic auto-QC (spec §9), from the assembled units.
- * Citation completeness and decision-record integrity were removed from the
- * check list by request — citations and decision records are still demanded
- * by the card prompts; they just aren't QC gates.
+ * Citation completeness, decision-record integrity, and clean-field
+ * separation were removed from the check list by request — citations, decision
+ * records, and what/why separation are still demanded by the card prompts;
+ * they just aren't QC gates.
  */
 export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord[] = []): QCCheck[] {
   const lessons = units.flatMap((u) => u.lessons)
@@ -30,16 +31,20 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
         : `Every in-scope content key (${plannedCodes.length}) lands in ≥1 atom; ${orphans.length > 0 ? `orphan atoms outside the plan: ${orphans.join(', ')}` : 'no orphan atoms'}.`,
   })
 
-  // 2. Prerequisite-chain validity
+  // 2. Prerequisite-chain validity — a whole-course ordering check: every
+  // prerequisite that is taught IN this course must be taught before the
+  // lessons that require it. References to lessons outside the scope are
+  // prior-grade/external prerequisites and are not ordering errors.
   let refCount = 0
   const badRefs: string[] = []
   for (const l of lessons) {
     const refs = l.fields.prerequisites.content.match(lessonRef) ?? []
     for (const r of refs) {
-      refCount++
       const targetIdx = orderIndex.get(r)
+      if (targetIdx === undefined) continue // taught outside this course — not an ordering question
+      refCount++
       const ownIdx = orderIndex.get(l.id) ?? 0
-      if (targetIdx === undefined || targetIdx >= ownIdx) badRefs.push(`${l.id} → ${r}`)
+      if (targetIdx >= ownIdx) badRefs.push(`${l.id} requires ${r}`)
     }
   }
   checks.push({
@@ -47,8 +52,8 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
     status: badRefs.length > 0 ? 'flag' : 'pass',
     detail:
       badRefs.length > 0
-        ? `These lessons list a prerequisite that is taught LATER in the sequence, or not at all (“U3.L2 → U4.L1” means lesson U3.L2 says it requires U4.L1, which comes after it): ${badRefs.join('; ')}. A lesson can only rely on material taught earlier — either the teaching order or the prerequisite reference is wrong.`
-        : `All ${refCount} prerequisite references resolve to an earlier lesson or a prior-grade tag.`,
+        ? `The course ordering is inconsistent — these lessons require material that is taught at or AFTER them in the sequence: ${badRefs.join('; ')}. Either the teaching order or the prerequisite reference is wrong.`
+        : `Course ordering is sound: all ${refCount} taught-in-course prerequisite references point to lessons taught earlier in the sequence; prerequisites taught outside this course are exempt.`,
   })
 
   // 3. Atom-triple format
@@ -192,33 +197,6 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
               .map((it) => `${it.test} ${it.year} Q${it.itemNumber}`)
               .join('; ')}${uncovered.length > 12 ? '; …' : ''}.`
           : `All ${inBoundary.length} in-boundary released items attach to a lesson — the released test is fully modeled.`,
-  })
-
-  // 11. Clean-field separation — field content states the WHAT; reasoning
-  // lives in the per-field decision records. Rule ids (P#/D#/A#) and
-  // derivation narrative in content are the machine-detectable signatures of
-  // reasoning leaking into a field.
-  // Rule ids only in citation shape ("per D1", "(P3)", "rule A2") — a bare
-  // letter-digit token can be legitimate content.
-  const RULE_ID = /\b(?:per|rule)\s+[PDA]\d{1,2}\b|\([PDA]\d{1,2}\)/
-  const DERIVATION = /extrapolated from|inferred from the|overrides? the .{0,30}default|because the|per the (decomposition|standards document|doctrine)/i
-  const leaks: string[] = []
-  for (const l of lessons) {
-    for (const key of Object.keys(l.fields) as (keyof Lesson['fields'])[]) {
-      const content = l.fields[key]?.content ?? ''
-      if (RULE_ID.test(content) || DERIVATION.test(content)) {
-        leaks.push(`${l.id} (${String(key)})`)
-        break // one flag per lesson keeps the detail readable
-      }
-    }
-  }
-  checks.push({
-    name: 'Clean-field separation',
-    status: leaks.length > 0 ? 'flag' : 'pass',
-    detail:
-      leaks.length > 0
-        ? `These lessons explain a decision inside a field instead of stating the field cleanly (rule IDs like "per P5" or wording like "extrapolated from" belong in the Decision Record under the field, not in its content): ${leaks.slice(0, 12).join(', ')}${leaks.length > 12 ? ', …' : ''}. A rerun regenerates the card under the current rules.`
-        : 'Field content is descriptive only — every rationale lives in a Decision Record under its field.',
   })
 
   return checks

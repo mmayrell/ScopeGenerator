@@ -1,14 +1,15 @@
 // CSV export for a scope — one row per lesson, one column per card field
-// (the 18-field card). Fields only, deliberately: no citations, no
-// rationales, no decision records. Released items appear as hosted
-// screenshot links (long-lived read-only SAS URLs minted by the backend) so
-// anyone the spreadsheet is shared with can open the screenshots without
-// holding the app access code. Items may come from the sets' item banks or
-// from the scope's linked evidence packet (request.packetId) — packet lines
-// also carry the original source URL.
+// (the 18-field card), plus a trailing scoping_rationale column carrying the
+// lesson's scoping decision record: why the lesson is cut at this granularity
+// (not more, not less) and the evidence each decision cites. Released items
+// appear as hosted screenshot links (long-lived read-only SAS URLs minted by
+// the backend) so anyone the spreadsheet is shared with can open the
+// screenshots without holding the app access code. Items may come from the
+// sets' item banks or from the scope's linked evidence packet
+// (request.packetId) — packet lines also carry the original source URL.
 import { api } from '../api'
 import { cardContent, fieldMeta, scopeCardContext } from '../data/meta'
-import type { EvidencePacket, HuntedItem, ItemRecord, Scope, StandardSet } from '../types'
+import type { DecisionEntry, DecisionField, EvidencePacket, HuntedItem, ItemRecord, Lesson, Scope, StandardSet } from '../types'
 import { capsStandardCodes } from '../ui'
 
 // Field columns carry the EXACT on-card field labels (fieldMeta.label, e.g.
@@ -26,7 +27,58 @@ const HEADER = [
   'lesson_type',
   'evidence_status',
   ...fieldMeta.map((fm) => fm.label),
+  'scoping_rationale',
 ]
+
+// ---------------------------------------------------------------------------
+// scoping_rationale — the lesson's scoping story in one cell: every
+// granularity decision (why the atom is cut here — why not more granular, why
+// not less) plus the other lesson-level calls (type, sequencing,
+// contradictions, overrides, thin-evidence assumptions), each with its rule id
+// and the cited evidence (source, locator, and the exact excerpt that drove
+// the decision).
+// ---------------------------------------------------------------------------
+
+const decisionTypeLabel: Record<DecisionEntry['type'], string> = {
+  granularity: 'Granularity',
+  strategy: 'Strategy Selection',
+  boundary: 'Boundary',
+  ceiling: 'Ceiling',
+  contradiction: 'Contradiction/Conflict',
+  override: 'Override',
+  assumption: 'Thin-Evidence Assumption',
+}
+
+// Pre-field-tag scopes: place untagged entries by what their type governs
+// (mirrors the ScopeView fallback).
+const legacyDecisionField: Record<DecisionEntry['type'], DecisionField> = {
+  granularity: 'card',
+  strategy: 'approach',
+  boundary: 'boundary',
+  ceiling: 'ceiling',
+  contradiction: 'card',
+  override: 'card',
+  assumption: 'card',
+}
+
+export function lessonScopingRationale(lesson: Lesson): string {
+  // Granularity entries answer "why this scope"; card-level entries carry the
+  // rest of the lesson-shaping calls. Field-scoped entries (e.g. a ceiling
+  // pin) stay out — their field content already lands in its own column.
+  const entries = lesson.decisions.filter(
+    (d) => d.type === 'granularity' || (d.field ?? legacyDecisionField[d.type] ?? 'card') === 'card',
+  )
+  if (entries.length === 0) return 'No scoping decisions recorded on this lesson.'
+  return entries
+    .map((d) => {
+      // One evidence line per distinct source, matching the on-card citation chips.
+      const cites = d.citations
+        .filter((c, i, arr) => arr.findIndex((o) => o.label === c.label) === i)
+        .map((c) => `${c.label} (${c.locator}): “${c.excerpt}”`)
+      return `${decisionTypeLabel[d.type]} [${d.rule}]: ${d.text}${cites.length > 0 ? `\nEvidence: ${cites.join(' | ')}` : ''}`
+    })
+    .join('\n\n')
+}
 
 /**
  * RFC 4180 quoting (every cell quoted, inner quotes doubled) plus formula
@@ -134,6 +186,7 @@ export function buildScopeCsv(
           l.type,
           l.evidenceStatus,
           ...fieldCells,
+          lessonScopingRationale(l),
         ]
           .map(cell)
           .join(','),

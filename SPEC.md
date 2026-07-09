@@ -213,7 +213,7 @@ Targets: whole scope · unit · lesson. Modes: more granular (split) · less gra
 ## 9. Auto-QC Checks
 
 1. **Coverage matrix** keyed on decomposition keys where present, else standard components: every in-scope content key lands in ≥1 atom; reasoning/modeling demands tracked as tiers or application lessons; integrative keys tracked to bridges; no orphan atoms.
-2. **Prerequisite-chain validity:** every prerequisite resolves to an earlier lesson or a prior-grade tag.
+2. **Prerequisite-chain validity:** a whole-course ordering check — every taught-in-course prerequisite is taught before the lessons that require it; prerequisites taught outside the course (prior-grade tags) are exempt.
 3. **Atom-triple format** on New Learning.
 4. **Objective integrity:** the objective set is the smallest complete set that guarantees mastery; every assessment evidence statement traces to at least one objective; every objective is assessable; no objective exists solely to constrain question format, instructional method, or representation unless that constraint is itself part of the lesson boundary.
 5. **Single-strategy check** on Instructional Approach.
