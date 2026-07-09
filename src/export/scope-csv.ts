@@ -62,22 +62,27 @@ const legacyDecisionField: Record<DecisionEntry['type'], DecisionField> = {
 }
 
 export function lessonScopingRationale(lesson: Lesson): string {
-  // Granularity entries answer "why this scope"; card-level entries carry the
-  // rest of the lesson-shaping calls. Field-scoped entries (e.g. a ceiling
-  // pin) stay out — their field content already lands in its own column.
+  // The two lesson-level narratives lead (unit ordering / granularity, card
+  // rule 16); granularity entries answer "why this scope"; card-level entries
+  // carry the rest of the lesson-shaping calls. Field-scoped entries (e.g. a
+  // ceiling pin) stay out — their field content already lands in its own
+  // column.
+  const narratives = [
+    lesson.sequencingRationale ? `Why This Unit Order & Lesson Position: ${lesson.sequencingRationale}` : '',
+    lesson.granularityRationale ? `Why This Granularity — Not More, Not Less: ${lesson.granularityRationale}` : '',
+  ].filter(Boolean)
   const entries = lesson.decisions.filter(
     (d) => d.type === 'granularity' || (d.field ?? legacyDecisionField[d.type] ?? 'card') === 'card',
   )
-  if (entries.length === 0) return 'No scoping decisions recorded on this lesson.'
-  return entries
-    .map((d) => {
-      // One evidence line per distinct source, matching the on-card citation chips.
-      const cites = d.citations
-        .filter((c, i, arr) => arr.findIndex((o) => o.label === c.label) === i)
-        .map((c) => `${c.label} (${c.locator}): “${c.excerpt}”`)
-      return `${decisionTypeLabel[d.type]} [${d.rule}]: ${d.text}${cites.length > 0 ? `\nEvidence: ${cites.join(' | ')}` : ''}`
-    })
-    .join('\n\n')
+  if (narratives.length === 0 && entries.length === 0) return 'No scoping decisions recorded on this lesson.'
+  const entryBlocks = entries.map((d) => {
+    // One evidence line per distinct source, matching the on-card citation chips.
+    const cites = d.citations
+      .filter((c, i, arr) => arr.findIndex((o) => o.label === c.label) === i)
+      .map((c) => `${c.label} (${c.locator}): “${c.excerpt}”`)
+    return `${decisionTypeLabel[d.type]} [${d.rule}]: ${d.text}${cites.length > 0 ? `\nEvidence: ${cites.join(' | ')}` : ''}`
+  })
+  return [...narratives, ...entryBlocks].join('\n\n')
 }
 
 /**

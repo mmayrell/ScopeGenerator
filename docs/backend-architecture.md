@@ -218,7 +218,11 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
    with fourteen-content-field `Lesson`s — every field `{ content, citations[], rationale }` (fields
    state the WHAT only; reasoning is banned from field content), decision entries with rule IDs and
    a `field` tag naming the card field each governs (`card` = lesson-level; the UI renders each
-   record under its field),
+   record under its field), two required lesson-level narratives closing each card's decision
+   record (`sequencingRationale` — why the units are ordered as they are and why the lesson holds
+   its position; `granularityRationale` — why exactly this granularity, arguing both why not more
+   and why not less; optional on legacy scopes, rendered in the trailing Lesson Decision Record and
+   leading the CSV `scoping_rationale` column),
    `generatedExemplars` for lessons with no in-boundary items (never-empty Released Items, spec §7.14).
    Batch calls carry the same 8.5-minute abort: a cut batch re-enqueues the unit message with
    `payload.cuts` (finished batches are checkpointed; the retry runs at effort `low`); after

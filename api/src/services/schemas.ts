@@ -140,6 +140,8 @@ const LESSON = obj({
   }),
   itemRefs: arr(STR),
   generatedExemplars: arr(ref('exemplar')), // 1-3 for atoms with no directly aligned item; [] otherwise
+  sequencingRationale: STR, // lesson-level record part 1: why the units are ordered as they are and why this lesson sits where it does (see CARD_RULES)
+  granularityRationale: STR, // lesson-level record part 2: why this exact granularity — why not more, why not less (see CARD_RULES)
   decisions: arr(ref('decision')),
 })
 
@@ -310,6 +312,8 @@ export interface WireLesson {
   fields: Record<keyof Lesson['fields'], WireCardField>
   itemRefs: string[]
   generatedExemplars: (GeneratedExemplar & { choices: string[] })[]
+  sequencingRationale: string
+  granularityRationale: string
   decisions: WireDecision[]
 }
 
@@ -464,6 +468,9 @@ export function toLesson(w: WireLesson, validItemIds: Set<string>, fallbackItemR
   // ref the model lost or mangled.
   const wireRefs = w.itemRefs.filter((id) => validItemIds.has(id))
   const restored = fallbackItemRefs.filter((id) => validItemIds.has(id) && !wireRefs.includes(id))
+  // The unconstrained fallback path does not guarantee the narrative properties exist.
+  const sequencingRationale = (w.sequencingRationale ?? '').trim()
+  const granularityRationale = (w.granularityRationale ?? '').trim()
   return {
     id: w.id,
     title: w.title,
@@ -472,6 +479,8 @@ export function toLesson(w: WireLesson, validItemIds: Set<string>, fallbackItemR
     fields,
     itemRefs: [...wireRefs, ...restored],
     ...(exemplars.length > 0 ? { generatedExemplars: exemplars } : {}),
+    ...(sequencingRationale.length > 0 ? { sequencingRationale } : {}),
+    ...(granularityRationale.length > 0 ? { granularityRationale } : {}),
     decisions,
   }
 }

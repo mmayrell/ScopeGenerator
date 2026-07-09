@@ -90,6 +90,7 @@ function DecisionRecord({
   title,
   purpose,
   rationale,
+  narratives = [],
   citations,
   entries,
   expectRationale = false,
@@ -97,6 +98,8 @@ function DecisionRecord({
   title: string
   purpose: string
   rationale?: string
+  /** Labeled lesson-level narratives (sequencing / granularity) — rendered before citations and entries. */
+  narratives?: { label: string; text: string }[]
   citations: Citation[]
   entries: DecisionEntry[]
   /** Per-field records explain a missing rationale (pre-rationale scopes); the lesson-level record never has one. */
@@ -104,7 +107,8 @@ function DecisionRecord({
 }) {
   const [open, setOpen] = useState(false)
   const uniqueCites = citations.filter((c, i) => citations.findIndex((o) => o.label === c.label) === i)
-  const empty = !rationale && uniqueCites.length === 0 && entries.length === 0
+  const shownNarratives = narratives.filter((nv) => nv.text.trim().length > 0)
+  const empty = !rationale && shownNarratives.length === 0 && uniqueCites.length === 0 && entries.length === 0
   const counts = [
     uniqueCites.length > 0 ? `${uniqueCites.length} citation${uniqueCites.length === 1 ? '' : 's'}` : null,
     entries.length > 0 ? `${entries.length} decision${entries.length === 1 ? '' : 's'}` : null,
@@ -134,6 +138,12 @@ function DecisionRecord({
       {open && (
         <div className="animate-rise space-y-4 px-6 pt-1 pb-5">
           {rationale && <p className="max-w-3xl text-[13px] leading-relaxed whitespace-pre-line text-white/80">{rationale}</p>}
+          {shownNarratives.map((nv) => (
+            <div key={nv.label} className="max-w-3xl">
+              <div className="text-[10.5px] font-semibold tracking-[0.08em] text-white/50 uppercase">{nv.label}</div>
+              <p className="mt-1 text-[13px] leading-relaxed whitespace-pre-line text-white/80">{nv.text}</p>
+            </div>
+          ))}
           {!rationale && expectRationale && !empty && (
             <p className="text-[12px] leading-relaxed text-white/50">
               No narrative rationale on this field — this scope predates per-field rationales; the citations and decisions below still carry the record.
@@ -511,7 +521,11 @@ function LessonCard({ scope, lesson, packet }: { scope: Scope; lesson: Lesson; p
             overrides, and assumptions here too) */}
         <DecisionRecord
           title="Lesson Decision Record"
-          purpose="Calls that shape the whole card — granularity, lesson type, sequencing, and any decision not tied to a single field"
+          purpose="Calls that shape the whole card — unit ordering, lesson granularity, lesson type, and any decision not tied to a single field"
+          narratives={[
+            { label: 'Why This Unit Order & Lesson Position', text: lesson.sequencingRationale ?? '' },
+            { label: 'Why This Granularity — Not More, Not Less', text: lesson.granularityRationale ?? '' },
+          ]}
           citations={[]}
           entries={decisionsByField.get('card') ?? []}
         />

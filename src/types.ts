@@ -215,6 +215,19 @@ export interface Lesson {
   generatedExemplar?: GeneratedExemplar
   /** State-test-quality assessment exemplars for atoms with no directly aligned released item. */
   generatedExemplars?: GeneratedExemplar[]
+  /**
+   * Lesson-level decision record narrative (trailing card record), part 1:
+   * why the units are ordered as they are around this lesson's unit, and why
+   * the lesson holds its exact position in the teaching order. Optional only
+   * on scopes generated before the narratives existed.
+   */
+  sequencingRationale?: string
+  /**
+   * Lesson-level decision record narrative, part 2: why this lesson is
+   * exactly the granularity it is — and explicitly why not more granular and
+   * why not less. Optional only on scopes generated before it existed.
+   */
+  granularityRationale?: string
   decisions: DecisionEntry[]
 }
 
