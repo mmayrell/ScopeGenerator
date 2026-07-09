@@ -91,6 +91,8 @@ blob; rotating the storage account key revokes them all.
 | `GET /packet-item-image/{packetId}/{itemId}/{n}` | → `image/png` | captured screenshot of a hunted packet item (n is 1-based); auth via header or `?code=` (mirrors `item-image`) |
 | `POST /sets/{id}/publish` | → `{ set: StandardSet }` | seeded sets (no uploads) publish immediately; uploaded sets 409 unless extraction completed and every warning is resolved. Idempotent |
 | `GET /framework` | → `FrameworkDoc` | the fixed engine/doctrine documents (read-only — no PUT; new versions ship with the tool). The payload keeps a legacy `register: []` so pre-removal bundles render an empty exemplar register during deploy skew |
+| `GET /framework-file/{kind}` | → 302 to a blob SAS URL | downloads the engine/doctrine source PDF (`kind` = `engine`\|`doctrine`). A browser navigation, so auth also accepts `?code=` (mirrors `library-file`); redirects to a 15-minute read-only SAS on `uploads/framework/<kind>.pdf` with `content-disposition: attachment` so the browser pulls the file straight from storage (the doctrine source is ~61 MB). 404 until a PDF has been uploaded |
+| `PUT /framework-file/{kind}` | raw bytes (`application/pdf`) → `{ ok: true, size }` (201) | replaces the stored source PDF when a new edition is adopted (see `infra/upload-framework-docs.ps1`); the framework text/versions in `api/src/data/framework.ts` are updated in code alongside it |
 | `POST /scopes` | `{ setId, setIds?, mode, params, courseName?, subject?, packetId?, uploadsToken?, uploadNames? }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job. `courseName`/`subject` are the user-entered course identity (required by the UI, optional at the API for deploy skew): stamped on `request.courseName`/`request.subject`, used for the course-mode title, and rendered as lesson-card fields 01/02 (legacy scopes without them fall back to the first set's `subject`/`gradeSpan`). Optional `packetId` links a completed evidence packet as the scope's released-items source (400 if unknown or still hunting): its hunted items are converted to `ItemRecord`s and merged into the pipeline's evidence set, and `request.packetId`/`packetTitle` are stamped on the scope so the UI and exports can resolve packet items and their screenshots. Lesson granularity is always determined by the engine document (its full text is embedded in every generation-stage system prompt); the former `granular` flag (Granular Track Scoping) is no longer accepted — `Scope.request.granular` survives only on legacy documents and is ignored by the pipeline |
 | `GET /scopes/{id}` | → `Scope` | |
 | `GET /scopes/{id}/job` | → `JobStatus` (below) | polled by the generation screen |
@@ -181,7 +183,8 @@ all units done reports it; finalize itself is idempotent).
 
 **Blob container `uploads`**: `<setId>/<role>/<fileName>` — uploaded PDFs;
 `library/<framework>/<grade>/<role>/<fileName>` — Reference Library documents (no index — the
-`GET /library` listing is a prefix walk, so the library can never drift from storage).
+`GET /library` listing is a prefix walk, so the library can never drift from storage);
+`framework/<kind>.pdf` — the engine/doctrine source PDFs served by `GET /framework-file/{kind}`.
 
 **Blob container `screenshots`**: `<packetId>/<itemId>/<n>.png` — actual item screenshots the hunt's
 capture phase crops out of the source PDFs (n is 1-based; currently always 1). Private — the account

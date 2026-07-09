@@ -239,18 +239,18 @@ export function getFramework(): FrameworkDoc {
   return {
     engine: {
       kind: 'engine',
-      name: 'Lesson Granularity & Modeling Scope (v3.1 — No-HITL specification)',
+      name: 'No HITL Curriculum Scope Generator Specifications',
       description:
-        'Provides the governing principles and decision rules for determining lesson granularity and modeling scope in direct instruction curriculum design — split/don\'t-split criteria, integration lessons, released-item demand analysis, full-standard atomization, lesson naming, and the 4.NBT.B.5 worked atomization example.',
+        'The academic specification for the curriculum scope generator. It defines the educational model, scope design principles, evidence hierarchy, lesson schema, generation methodology, quality standards, and regeneration process that govern how standards-aligned curriculum scopes are produced. Where implementation details are necessary to explain the methodology, they are included, but the document is written from a curriculum and instructional design perspective rather than as software documentation.',
       version: 'v3.1',
       updated: '2026-07-09',
       content: ENGINE_CONTENT,
     },
     doctrine: {
       kind: 'doctrine',
-      name: 'Direct Instruction BrainLift (Stein et al. 2017)',
+      name: 'Direct Instruction Framework',
       description:
-        'The controlling method authority for instruction is Stein, Kinder, Silbert & Carnine, Direct Instruction Mathematics (5th edition, 2017), as operationalized here.',
+        'The foundational instructional text that establishes the Direct Instruction principles used by the generator. It defines the instructional doctrine, lesson design, sequencing, mastery expectations, error correction, and teaching practices that govern how curriculum is atomized, ordered, and taught.',
       version: 'v1.8',
       updated: '2026-04-19',
       content: DOCTRINE_CONTENT,

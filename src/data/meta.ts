@@ -5,8 +5,8 @@ import type { Lesson, Scope, StandardNode, StandardSet, SystemArtifact } from '.
 import { capsStandardCodes } from '../ui'
 
 export const systemArtifacts: SystemArtifact[] = [
-  { id: 'sys-engine', kind: 'engine', name: 'Lesson Granularity & Modeling Scope (v3 — No-HITL specification)', version: 'v3', published: '2026-07-08', note: 'Fixed with the tool. Split, don’t-split, integration-lesson, and modeling-scope rules for any standard set; full-standard atomization (P4) and no-evidence-is-not-no-lesson (P5).' },
-  { id: 'sys-doctrine', kind: 'doctrine', name: 'Direct Instruction BrainLift (Stein et al. 2017)', version: 'v1.8', published: '2026-04-19', note: 'Controlling method authority. Stein-priority encoded in all doctrine prompts.' },
+  { id: 'sys-engine', kind: 'engine', name: 'No HITL Curriculum Scope Generator Specifications', version: 'v3.1', published: '2026-07-09', note: 'Fixed with the tool. Split, don’t-split, integration-lesson, and modeling-scope rules for any standard set; full-standard atomization (P4) and no-evidence-is-not-no-lesson (P5).' },
+  { id: 'sys-doctrine', kind: 'doctrine', name: 'Direct Instruction Framework', version: 'v1.8', published: '2026-04-19', note: 'Controlling method authority. Stein-priority encoded in all doctrine prompts.' },
 ]
 
 // ---------------------------------------------------------------------------

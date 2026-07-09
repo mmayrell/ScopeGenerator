@@ -303,6 +303,10 @@ export const api = {
   libraryFileUrl: (framework: PacketFramework, grade: number, role: LibraryRole, fileName: string): string =>
     `${API_BASE}/library-file/${framework}/${grade}/${role}/${encodeURIComponent(fileName)}?code=${encodeURIComponent(getAccessCode() ?? '')}`,
 
+  /** URL that downloads a framework source PDF (engine/doctrine) — a navigation, so the access code rides as a query param; the API 302s to a short-lived blob SAS. */
+  frameworkFileUrl: (kind: 'engine' | 'doctrine'): string =>
+    `${API_BASE}/framework-file/${kind}?code=${encodeURIComponent(getAccessCode() ?? '')}`,
+
   /** URL for an item's question screenshot — <img> can't send headers, so the access code rides as a query param. */
   itemImageUrl: (setId: string, itemId: string): string =>
     `${API_BASE}/item-image/${encodeURIComponent(setId)}/${encodeURIComponent(itemId)}?code=${encodeURIComponent(getAccessCode() ?? '')}`,

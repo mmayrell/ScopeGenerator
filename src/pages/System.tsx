@@ -29,6 +29,17 @@ function SectionCard({ section }: { section: FrameworkSection }) {
         {/* Deploy-skew fallback: an older API payload has no description — derive a preview from the content. */}
         {section.description || `${section.content.replace(/^## .*$/gm, '').replace(/^- /gm, '').trim().slice(0, 220)}…`}
       </p>
+      <a
+        href={api.frameworkFileUrl(section.kind)}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-4 inline-flex items-center gap-1.5 text-[12.5px] font-medium text-accent-deep hover:underline"
+      >
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8 2.5v8m0 0l-3-3m3 3l3-3M3 13.5h10" />
+        </svg>
+        Download PDF
+      </a>
     </div>
   )
 }
