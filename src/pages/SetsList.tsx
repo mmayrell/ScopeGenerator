@@ -430,7 +430,16 @@ function setStatusPill(published: boolean, job: JobStatus | undefined) {
 export default function SetsList() {
   const { sets } = useStore()
   const [newOpen, setNewOpen] = useState(false)
+  const [query, setQuery] = useState('')
+  const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all')
   const jobs = useDraftSetJobs(sets)
+  const q = query.trim().toLowerCase()
+  const filtered = sets.filter((st) => {
+    if (statusFilter === 'published' && !st.published) return false
+    if (statusFilter === 'draft' && st.published) return false
+    if (!q) return true
+    return `${st.name} ${st.subject} ${st.gradeSpan}`.toLowerCase().includes(q)
+  })
   return (
     <div className="mx-auto max-w-5xl px-10 py-10">
       <div className="flex items-end justify-between">
@@ -448,8 +457,37 @@ export default function SetsList() {
           New Standard Set
         </Btn>
       </div>
-      <div className="mt-8 space-y-3">
-        {sets.map((st) => {
+      {sets.length > 0 && (
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <div className="relative min-w-56 flex-1">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 16 16"
+              fill="none"
+              className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-ink-3"
+            >
+              <path d="M11.5 11.5L14 14M13 7A6 6 0 111 7a6 6 0 0112 0z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Filter by name, subject, or grade…"
+              className="w-full rounded-xl border border-hairline bg-panel py-2 pr-3 pl-8.5 text-[13px] text-ink placeholder:text-ink-3 focus:border-accent/50 focus:outline-none"
+            />
+          </div>
+          <div className="flex gap-1.5">
+            {(['all', 'published', 'draft'] as const).map((s) => (
+              <Pick key={s} on={statusFilter === s} onClick={() => setStatusFilter(s)}>
+                {s === 'all' ? 'All' : s === 'published' ? 'Published' : 'Draft'}
+              </Pick>
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="mt-6 space-y-3">
+        {filtered.map((st) => {
           const blocking = st.artifacts.filter((a) => a.reviewStatus === 'blocked').length
           const unack = st.warnings.filter((w) => !w.acknowledged).length
           const job = jobs[st.id]
@@ -472,6 +510,15 @@ export default function SetsList() {
             </Link>
           )
         })}
+        {sets.length === 0 ? (
+          <p className="rounded-2xl border border-hairline bg-panel p-5 text-[13px] text-ink-3">
+            No standard sets yet — create one with New Standard Set.
+          </p>
+        ) : filtered.length === 0 ? (
+          <p className="rounded-2xl border border-hairline bg-panel p-5 text-[13px] text-ink-3">
+            No standard sets match the current filter.
+          </p>
+        ) : null}
       </div>
       {newOpen && <NewSetModal onClose={() => setNewOpen(false)} />}
     </div>
