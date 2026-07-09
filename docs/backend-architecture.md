@@ -186,26 +186,19 @@ all units done reports it; finalize itself is idempotent).
 `GET /library` listing is a prefix walk, so the library can never drift from storage);
 `framework/<kind>.pdf` — the engine/doctrine source PDFs served by `GET /framework-file/{kind}`.
 
-<<<<<<< Updated upstream
 **Blob container `screenshots`**: `<packetId>/<itemId>/<n>.png` — actual item screenshots the hunt's
-capture phase crops out of the source PDFs (n is 1-based; currently always 1). Private — the account
-disallows public blob access; serving is either the authenticated `GET /packet-item-image` route or
-per-blob read-only SAS URLs from `POST /item-image-links`. Blob-service CORS allows GET/HEAD from the
-production hostnames and `http://localhost:5173`, so SAS URLs render directly in `<img>` tags.
-`DELETE /packets/{id}` removes the packet's prefix. `infra/provision.ps1` creates the container (and
-`ensureInfra` self-heals it on fresh accounts).
-=======
-**Blob container `screenshots`** (provisioned 2026-07-08, anonymous-read since 2026-07-09, no app
-code wired yet): application screenshots (e.g. item images rendered from released-item PDFs).
-**Anonymous blob READ is enabled** (`public-access blob` — no listing, no writes): the SPA can
-render blobs directly with plain URLs, no SAS and no auth header:
-`https://scopegenstapvgm.blob.core.windows.net/screenshots/<path>`.
-Anyone with a URL can fetch that blob, so put ONLY content that is safe to be public here
-(released test items are already public documents) — never anything derived from private uploads.
-Writes still require the `AzureWebJobsStorage` connection string (backend only). All other
-containers (`data`, `uploads`) remain fully private — do not opt them in. Suggested path
-convention: `<setId>/<itemId>/<n>.png`.
->>>>>>> Stashed changes
+capture phase crops out of the source PDFs (n is 1-based; currently always 1).
+**Anonymous blob READ enabled since 2026-07-09** (`public-access blob` — no listing, no writes): the
+SPA can render blobs directly with plain URLs, no SAS and no auth header:
+`https://scopegenstapvgm.blob.core.windows.net/screenshots/<path>`. The authenticated
+`GET /packet-item-image` route and `POST /item-image-links` SAS URLs continue to work (SAS minting is
+now optional for this container). Anyone with a URL can fetch that blob, so put ONLY content that is
+safe to be public here (released test items are already public documents) — never anything derived
+from private uploads. Writes still require the `AzureWebJobsStorage` connection string (backend
+only). All other containers (`data`, `uploads`) remain fully private — do not opt them in.
+Blob-service CORS allows GET/HEAD from the production hostnames and `http://localhost:5173`.
+`DELETE /packets/{id}` removes the packet's prefix. `infra/provision.ps1` creates the container with
+anonymous read (and `ensureInfra` self-heals it on fresh accounts).
 
 **Queue `genjobs`** — message JSON, **explicitly base64-encoded on send** (the Functions host expects
 base64; `@azure/storage-queue` does not encode by default):
