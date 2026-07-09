@@ -18,7 +18,7 @@ export default function Shell() {
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <header className="flex shrink-0 items-center gap-7 overflow-x-auto border-b border-ink/10 bg-panel px-6 py-[14px] lg:px-10">
-        <img src={lwaiLogo} alt="LearnWith.AI" className="h-[30px] w-auto shrink-0" />
+        <img src={lwaiLogo} alt="LearnWith.AI" className="h-[40px] w-auto shrink-0" />
         <nav className="ml-4 flex items-center gap-7 lg:ml-9">
           {nav.map((n) => (
             <NavLink
