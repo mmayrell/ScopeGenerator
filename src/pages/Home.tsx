@@ -95,7 +95,7 @@ export default function Home() {
 
       {/* closing line */}
       <div className="px-6 pb-16 lg:px-10">
-        <p className="m-0 text-center text-[20px] font-bold text-black lg:text-[24px]">
+        <p className="m-0 text-center text-[20px] font-bold italic text-black lg:text-[24px]">
           Standards in. Curriculum out. Zero humans in the loop.
         </p>
       </div>
