@@ -745,7 +745,7 @@ function Detail({ id, onBack }: { id: string; onBack: () => void }) {
       </div>
 
       {/* coverage summary */}
-      <div className="mt-8">
+      <div id="coverage-summary" className="mt-8 scroll-mt-6">
         <SectionLabel>Coverage Summary</SectionLabel>
         {coverage.summaryRows.length === 0 && (
           <p className="mt-2 rounded-xl border border-hairline bg-panel px-4 py-3 text-[12.5px] text-ink-3">
@@ -767,7 +767,15 @@ function Detail({ id, onBack }: { id: string; onBack: () => void }) {
               <tbody>
                 {coverage.summaryRows.map((r) => (
                   <tr key={r.standard.code} className="border-b border-hairline last:border-0">
-                    <td className="px-3.5 py-2"><Mono className="text-ink">{r.standard.code}</Mono></td>
+                    <td className="px-3.5 py-2">
+                      <button
+                        onClick={() => document.getElementById(`std-${r.standard.code}`)?.scrollIntoView({ behavior: 'smooth' })}
+                        title={`Jump to the ${r.standard.code} items below`}
+                        className="cursor-pointer"
+                      >
+                        <Mono className="text-accent-deep hover:underline">{r.standard.code}</Mono>
+                      </button>
+                    </td>
                     <td className="px-3 py-2 text-ink-2">Grade {r.standard.grade}</td>
                     <td className="px-3 py-2 text-ink-2">{r.items.length}</td>
                     <td className="px-3 py-2 text-ink-2">{r.programs.join(', ') || '—'}</td>
@@ -803,10 +811,20 @@ function Detail({ id, onBack }: { id: string; onBack: () => void }) {
             </span>
           </div>
           {sec.rows.map((row) => (
-            <div key={row.standard.code} className="mt-6">
+            <div key={row.standard.code} id={`std-${row.standard.code}`} className="mt-6 scroll-mt-6">
               <div className="flex flex-wrap items-center gap-2">
                 <Mono className="rounded-md bg-night px-2 py-0.5 text-[11.5px] font-semibold text-white">{row.standard.code}</Mono>
                 <Pill tone="neutral">{row.items.length} item{row.items.length === 1 ? '' : 's'}</Pill>
+                <button
+                  onClick={() => document.getElementById('coverage-summary')?.scrollIntoView({ behavior: 'smooth' })}
+                  title="Back to the coverage summary"
+                  className="ml-auto flex cursor-pointer items-center gap-1 rounded-md border border-hairline bg-panel px-2 py-0.5 text-[11px] font-medium text-ink-3 transition-colors hover:border-hairline-2 hover:text-ink-2"
+                >
+                  <svg viewBox="0 0 16 16" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M8 12.5v-9M4.5 7L8 3.5 11.5 7" />
+                  </svg>
+                  Top
+                </button>
               </div>
               <p className="mt-1.5 max-w-3xl text-[12.5px] leading-relaxed text-ink-2">{row.standard.text}</p>
               <div className="mt-3 space-y-3">

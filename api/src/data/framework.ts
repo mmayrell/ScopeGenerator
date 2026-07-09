@@ -214,7 +214,7 @@ export function getFramework(): FrameworkDoc {
       kind: 'engine',
       name: 'Lesson Granularity & Modeling Scope (v3 — No-HITL specification)',
       description:
-        'Provides the governing principles and decision rules for determining lesson granularity and modeling scope in direct instruction curriculum design — split/don\'t-split criteria, integration lessons, released-item demand analysis, and full-standard atomization (P4/P5).',
+        'Provides the governing principles and decision rules for determining lesson granularity and modeling scope in direct instruction curriculum design — split/don\'t-split criteria, integration lessons, released-item demand analysis, and full-standard atomization.',
       version: 'v3',
       updated: '2026-07-08',
       content: ENGINE_CONTENT,
