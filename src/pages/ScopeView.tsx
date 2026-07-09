@@ -782,11 +782,10 @@ export default function ScopeView() {
   return (
     <div className="flex h-full">
       {/* unit / lesson rail */}
-      <aside className="w-60 shrink-0 overflow-y-auto border-r border-hairline bg-panel/60 px-4 py-6 xl:w-72">
+      <aside className="w-72 shrink-0 overflow-y-auto border-r border-hairline bg-panel/60 px-4 py-6 xl:w-80">
         <Link to="/scopes" className="px-2 text-[12px] font-medium text-ink-3 hover:text-accent-deep">← Curriculum Scopes</Link>
         <h1 className="mt-2 px-2 font-display text-[17px] leading-snug font-semibold text-ink">{capsStandardCodes(scope.title)}</h1>
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5 px-2">
-          <Pill tone="neutral">v{scope.version}</Pill>
           {scope.request.packetId && <Pill tone="cite">repository items</Pill>}
           {scope.proposals.some((p) => p.working || p.status === 'drafting') && (
             <Pill tone="accent">
@@ -828,13 +827,13 @@ export default function ScopeView() {
                   <button
                     key={l.id}
                     onClick={() => setSel(l.id)}
-                    className={`flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors ${
+                    className={`flex w-full cursor-pointer items-start gap-2 rounded-lg px-2 py-1.5 text-left transition-colors ${
                       lesson.id === l.id ? 'bg-accent-wash text-accent-deep' : 'text-ink-2 hover:bg-ink/[0.035]'
                     }`}
                   >
-                    <Mono className={`shrink-0 text-[10.5px] ${lesson.id === l.id ? 'text-accent-deep' : 'text-ink-3'}`}>{l.id.split('.')[1]}</Mono>
-                    <span className="truncate text-[12.5px] leading-snug font-medium">{l.title}</span>
-                    <span className="ml-auto flex shrink-0 items-center gap-1">
+                    <Mono className={`shrink-0 text-[10.5px] leading-snug ${lesson.id === l.id ? 'text-accent-deep' : 'text-ink-3'}`}>{l.id.split('.')[1]}</Mono>
+                    <span className="min-w-0 flex-1 text-[12.5px] leading-snug font-medium">{l.title}</span>
+                    <span className="mt-1 ml-auto flex shrink-0 items-center gap-1">
                       {l.type === 'bridge' && <span className="h-1.5 w-1.5 rounded-full bg-night" title="bridge" />}
                       {l.type === 'application-tier' && <span className="h-1.5 w-1.5 rounded-full bg-cite" title="application tier" />}
                       {l.evidenceStatus !== 'observed' && <span className="h-1.5 w-1.5 rounded-full bg-amber-ink" title="inferred evidence" />}

@@ -32,19 +32,29 @@ const CHAPTERS: DoctrineChapter[] = [
   { slug: 'ch10-division', title: 'Division', domains: [], keywords: ['division', 'divide', 'dividing', 'divisor*', 'dividend*', 'quotient*', 'remainder*'] },
   { slug: 'ch11-problem-solving', title: 'Problem Solving', domains: ['OA'], keywords: ['word problem*', 'problem solving', 'problem-solving', 'multi-step', 'multistep', 'two-step', 'comparison problem*', 'story problem*'] },
   { slug: 'ch12-measurement-time-money', title: 'Measurement, Time, and Money', domains: ['MD'], keywords: ['time', 'elapsed', 'clock*', 'money', 'coin*', 'dollar*', 'length*', 'mass', 'liquid volume', 'capacity', 'convert*', 'conversion*', 'measurement unit*', 'kilometer*', 'centimeter*', 'gram*', 'liter*'] },
-  { slug: 'ch13-fractions', title: 'Fractions', domains: ['NF'], keywords: ['fraction*', 'numerator*', 'denominator*', 'mixed number*', 'equivalent', 'equivalence'] },
+  // GCF/LCM: Stein teaches greatest common factor and least common multiple
+  // inside the Fractions chapter (reducing and common denominators) — without
+  // these keywords a "GCF and LCM" unit matched only Multiplication's "factor*".
+  { slug: 'ch13-fractions', title: 'Fractions', domains: ['NF'], keywords: ['fraction*', 'numerator*', 'denominator*', 'mixed number*', 'equivalent', 'equivalence', 'greatest common factor', 'least common multiple', 'gcf', 'lcm'] },
   { slug: 'ch14-decimals', title: 'Decimals', domains: [], keywords: ['decimal*', 'tenths', 'hundredths'] },
   { slug: 'ch15-percent-ratio-probability', title: 'Percent, Ratio, and Probability', domains: ['RP'], keywords: ['percent*', 'ratio', 'ratios', 'rate', 'rates', 'probability', 'proportion*'] },
   { slug: 'ch16-data-analysis', title: 'Data Analysis', domains: ['SP'], keywords: ['data', 'graph*', 'line plot*', 'mean', 'median', 'statistic*', 'frequency'] },
   // Angles, perimeter, and area file under MD in CCSS, so Geometry carries MD too.
   { slug: 'ch17-geometry', title: 'Geometry', domains: ['G', 'MD'], keywords: ['geometry', 'geometric', 'angle*', 'shape*', 'symmetry', 'symmetric', 'triangle*', 'quadrilateral*', 'polygon*', 'perimeter', 'area', 'perpendicular', 'parallel', 'protractor*'] },
-  { slug: 'ch18-pre-algebra', title: 'Pre-algebra', domains: ['EE', 'NS', 'F'], keywords: ['pre-algebra', 'algebra', 'algebraic', 'expression*', 'variable*', 'integer*', 'coordinate*', 'pattern*', 'function*'] },
+  { slug: 'ch18-pre-algebra', title: 'Pre-algebra', domains: ['EE', 'NS', 'F'], keywords: ['pre-algebra', 'algebra', 'algebraic', 'expression*', 'variable*', 'integer*', 'coordinate*', 'pattern*', 'function*', 'exponent*', 'square root*', 'absolute value*', 'inequalit*', 'equation*', 'order of operations'] },
 ]
 
 // Two chapters cover a unit comfortably; the shared budget keeps the prompt
 // bounded — long chapters are cut at a paragraph boundary with a marker.
+// 150k chars ≈ 38k tokens: with the engine document (~23k chars), the card
+// rules, and the evidence JSON, a cards call stays comfortably inside the
+// model's 200k-token context. The budget is allocated by match score — the
+// primary chapter (the one the strategy is selected from) gets up to
+// PRIMARY_CAP_CHARS so it ships whole or nearly whole (the longest chapter,
+// Fractions, is ~149k; most are 45–100k), and the secondary keeps the rest.
 const MAX_CHAPTERS = 2
-const TOTAL_BUDGET_CHARS = 90_000
+const TOTAL_BUDGET_CHARS = 150_000
+const PRIMARY_CAP_CHARS = 110_000
 
 const cache = new Map<string, string>()
 const warned = new Set<string>()
@@ -127,8 +137,15 @@ export function doctrineExcerptsFor(query: DoctrineQuery): string | undefined {
     .filter((t): t is { title: string; text: string } => !!t.text)
   if (texts.length === 0) return undefined
 
-  const per = Math.floor(TOTAL_BUDGET_CHARS / texts.length)
-  return texts
-    .map((t) => `--- Doctrine chapter: ${t.title} ---\n${truncateAtParagraph(t.text, per)}`)
-    .join('\n\n')
+  // Score-ordered allocation: the best match takes what it needs (capped so a
+  // long primary cannot starve the secondary); later chapters share what's left.
+  let remaining = TOTAL_BUDGET_CHARS
+  const blocks: string[] = []
+  for (let i = 0; i < texts.length; i++) {
+    const cap = i === texts.length - 1 ? remaining : Math.min(remaining, PRIMARY_CAP_CHARS)
+    const body = truncateAtParagraph(texts[i].text, cap)
+    remaining = Math.max(0, remaining - body.length)
+    blocks.push(`--- Doctrine chapter: ${texts[i].title} ---\n${body}`)
+  }
+  return blocks.join('\n\n')
 }

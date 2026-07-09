@@ -123,7 +123,8 @@ const doctrineBlock = (q: DoctrineQuery): string => {
   const excerpts = doctrineExcerptsFor(q)
   if (!excerpts) return ''
   return `
-Doctrine consultation — Direct Instruction Mathematics (5th ed., Stein, Kinder, Silbert & Carnine), the controlling method authority. The chapter excerpts below are the PRIMARY source for field 9 (Instructional Approach): select the single best strategy, its preskills, and the modeling scope FROM these instructional procedures and teaching formats — name the strategy the way the book teaches it, follow its recommended sequence and example selection, and cite the chapter (sourceType "doctrine", label = the chapter title). Where the excerpts do not cover the specific case, fall back to the doctrine principles in the system prompt.
+Doctrine consultation — Direct Instruction Mathematics (5th ed., Stein, Kinder, Silbert & Carnine), the controlling method authority. The chapter excerpts below are the PRIMARY source for field 10 (Instructional Approach): select the single best strategy, its preskills, and the modeling scope FROM these instructional procedures and teaching formats — name the strategy the way the book teaches it, and follow its recommended sequence and example selection.
+CITING THE TEXTBOOK IS MANDATORY where these excerpts govern a decision. On every new-learning lesson whose topic the excerpts cover: (a) the approach field carries a doctrine citation, and (b) the strategy-selection decision entry (type "strategy", field "approach") carries a doctrine citation naming its Stein basis. Doctrine citations use sourceType "doctrine", label = the chapter title (e.g. "Direct Instruction Mathematics (5th ed.), ch. Division"), locator = the most specific location inside the excerpt that drove the call — the teaching format number and name (e.g. "Format 10.4: Division with Two-Digit Divisors"), the Instructional Sequence and Assessment Chart row, or the section heading — and excerpt = the verbatim sentence(s) of the excerpt that drove it. The same applies wherever the excerpts drive OTHER decisions: preskill choices they name (prerequisites), problem-type sequences they prescribe (progression, boundary, ceiling), and documented error patterns they inventory (newLearning, modeling scope, distractor design) are cited the same way. Where the excerpts do not cover the specific case, fall back to the doctrine principles in the system prompt (cite the doctrine framework document itself) and say so in the rationale.
 <doctrine_excerpts>
 ${excerpts}
 </doctrine_excerpts>
@@ -144,10 +145,25 @@ ${engine.content}
 Engine-level addendum (equally binding): every objective a lesson claims must be explicitly modeled in that lesson — a lesson that accumulates more objectives than one lesson can model MUST split (objective overload is a split trigger, exactly like a new decision step).`
 }
 
+// The doctrine framework document (the DI BrainLift compiled from Stein et
+// al.) — embedded in full in every generation stage's system prompt. It is
+// the operative summary of the controlling method authority; the topical
+// chapter excerpts (doctrineBlock) supply the book's actual procedures on
+// card-writing stages. Citable as sourceType "doctrine".
+const doctrineDocBlock = (): string => {
+  const doctrine = getFramework().doctrine
+  return `The doctrine document — "${doctrine.name}" (${doctrine.version}, compiled from Stein, Kinder, Silbert & Carnine, Direct Instruction Mathematics, 5th ed., 2017) — governs every instructional-method decision. When a decision rests on one of its principles, cite it (sourceType "doctrine", label "${doctrine.name} (${doctrine.version})", locator = the section heading). The document in full:
+<doctrine_document>
+${doctrine.content}
+</doctrine_document>`
+}
+
 const systemCore = (role: string): string =>
   `You are the ScopeGenerator pipeline engine — ${role}. You turn a standard set's evidence corpus into strand-coherent units of atomized lessons under Direct Instruction doctrine (Stein, Kinder, Silbert & Carnine, Direct Instruction Mathematics, 5th ed., 2017 — the controlling method authority) and the Lesson Granularity & Modeling Scope framework.
 
 ${engineDocBlock()}
+
+${doctrineDocBlock()}
 
 ${PRECEDENCE}
 
@@ -473,7 +489,14 @@ Rules:
 - Every rewritten field 5–14 keeps ≥1 citation (fields 1–4 stay citations: []); the PerformanceReport is citable as sourceType "performance-report".
 
 ${CARD_RULES}
-${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: unit.lessons.map((l) => l.title), standardCodes: [] })}
+${doctrineBlock({
+  unitTitle: unit.title,
+  strand: unit.strand,
+  lessonTitles: unit.lessons.map((l) => l.title),
+  // Codes from the lessons' Standard fields (as the rerun prompts do) — an
+  // empty list dropped the CCSS-domain signal from chapter matching here.
+  standardCodes: unit.lessons.flatMap((l) => l.fields.standards.content.match(CODE_SHAPES) ?? []),
+})}
 
 ${jsonBlock('accepted_proposal', proposal)}
 ${scopeUnitsOverview(scope)}

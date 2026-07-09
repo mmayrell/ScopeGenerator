@@ -6,7 +6,9 @@ import { PlanOutput } from '../services/schemas'
  * Citation completeness, decision-record integrity, and clean-field
  * separation were removed from the check list by request — citations, decision
  * records, and what/why separation are still demanded by the card prompts;
- * they just aren't QC gates.
+ * they just aren't QC gates. Doctrine grounding (check 5b) is the one
+ * citation-shaped check that WAS requested back: strategy selection must
+ * name its Stein basis.
  */
 export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord[] = []): QCCheck[] {
   const lessons = units.flatMap((u) => u.lessons)
@@ -120,6 +122,30 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
       strategyViolations.length > 0
         ? `The Instructional Approach on these lessons may teach more than one way to solve the same problem — Direct Instruction requires exactly one best strategy per problem type: ${strategyViolations.join(', ')}.`
         : 'No Instructional Approach names two computation strategies.',
+  })
+
+  // 5b. Doctrine grounding — the Instructional Approach is selected from
+  // Stein's procedures (the doctrine chapter excerpts supplied to card
+  // generation), so a new-learning lesson whose approach carries no doctrine
+  // citation anywhere (field citations, approach-tagged decisions, or the
+  // strategy decision) was written without naming its method authority.
+  const doctrineUngrounded = lessons
+    .filter((l) => l.type === 'new-learning')
+    .filter((l) => {
+      const fieldCited = l.fields.approach.citations.some((c) => c.sourceType === 'doctrine')
+      const decisionCited = l.decisions.some(
+        (d) => (d.field === 'approach' || d.type === 'strategy') && d.citations.some((c) => c.sourceType === 'doctrine'),
+      )
+      return !fieldCited && !decisionCited
+    })
+    .map((l) => l.id)
+  checks.push({
+    name: 'Doctrine grounding',
+    status: doctrineUngrounded.length > 0 ? 'flag' : 'pass',
+    detail:
+      doctrineUngrounded.length > 0
+        ? `The Instructional Approach on these new-learning lessons cites no Direct Instruction doctrine source (Stein et al. 2017) for its strategy selection — the method authority behind the chosen strategy is undocumented: ${doctrineUngrounded.join(', ')}.`
+        : 'Every new-learning lesson grounds its strategy selection in a cited Direct Instruction doctrine source (Stein et al. 2017).',
   })
 
   // 6. Neighbor consistency

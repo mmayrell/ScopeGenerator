@@ -257,7 +257,7 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
    `unitsDone` (ETag retry); any completion observing all units done enqueues `finalize`
    (at-least-once; finalize is idempotent).
 3. **`finalize`** (Stage 6): assemble the `Scope` from checkpoints, run **programmatic QC**
-   (twelve checks incl. objective integrity, substandard presence, and released-item coverage, each → `QCCheck` pass/flag/fail), write history
+   (thirteen checks incl. objective integrity, substandard presence, doctrine grounding, and released-item coverage, each → `QCCheck` pass/flag/fail), write history
    entry, snapshot `v1.json`, status `complete`. No-ops on duplicate finalize messages.
 
 Failure at any step (after the queue's built-in retries, `maxDequeueCount` 12) is **kind-aware**:
@@ -450,9 +450,18 @@ proceeds and logs (RerunEvent detail + QC flag), per spec §8.
 - Prompts live in `api/src/services/prompts.ts`; every prompt embeds the relevant spec-§ verbatim
   policy text (short excerpts), the evidence JSON, and the required output shape. Every
   generation-stage system prompt (plan, cards, reruns, proposals) embeds the FULL engine document
-  from `api/src/data/framework.ts` as the binding granularity/modeling-scope authority — its rules
+  AND the full doctrine framework document from `api/src/data/framework.ts` as the binding
+  granularity/modeling-scope and instructional-method authorities — their rules
   and worked examples, not a paraphrase. Card prompts must
   demand ≥1 citation per field and the mandatory *Generated exemplar — not a released item* label.
+- **Doctrine chapter excerpts** (`api/src/services/doctrine.ts`): card-writing stages (cards,
+  rerun-lesson, rerun-unit, apply) additionally inject up to 2 keyword/CCSS-domain-matched chapter
+  `.txt` extracts of *Direct Instruction Mathematics* (5th ed., Stein et al.) from
+  `api/assets/doctrine/` — score-ordered budget of 150k chars total, primary chapter capped at
+  110k so it ships (nearly) whole. The prompt makes doctrine citations mandatory where the
+  excerpts govern: the Instructional Approach and its strategy decision entry cite the chapter
+  with a format/section locator and a verbatim excerpt; QC flags new-learning lessons whose
+  strategy selection carries no doctrine citation ("Doctrine grounding").
 
 ## Seed data
 
