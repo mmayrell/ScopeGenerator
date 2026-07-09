@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import Shell from './shell'
+import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import SetsList from './pages/SetsList'
 import SetDetail from './pages/SetDetail'
@@ -13,7 +14,8 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Shell />}>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/scopes" element={<Dashboard />} />
         <Route path="/sets" element={<SetsList />} />
         <Route path="/sets/:id" element={<SetDetail />} />
         <Route path="/scopes/new" element={<NewScope />} />
