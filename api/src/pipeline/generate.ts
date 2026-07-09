@@ -19,11 +19,13 @@ import { today } from '../shared/util'
 import { ensureSetItemsExtracted } from './items'
 import { loadScopeUploadDocs } from './scope-uploads'
 import { countLessons, deriveProtectedBoundaries, runQc } from './qc'
+import { buildCoherenceWebs, coherenceQcCheck } from './webs'
 
 // Generation pipeline (contract §Generation pipeline), checkpointed for the
 // 10-minute consumption timeout:
 //   plan     (Stages 2–4, one Claude call)  → jobs/<jobId>/plan.json
-//   cards    (Stage 5, parallel per unit)   → jobs/<jobId>/unit-<i>.json
+//   cards    (Stage 5, parallel per unit)   → jobs/<jobId>/unit-<i>-lesson-<id>.json per lesson,
+//                                             then the assembled jobs/<jobId>/unit-<i>.json
 //   finalize (Stage 6, programmatic QC)     → the assembled Scope, v1 snapshot
 
 // Singular 'Stage' — the frontend parses the label with /stage\s*(\d+)/i.
@@ -34,7 +36,11 @@ export const GENERATE_TOTAL_STAGES = 3
 
 const planPath = (jobId: string) => `jobs/${jobId}/plan.json`
 const unitPath = (jobId: string, i: number) => `jobs/${jobId}/unit-${i}.json`
+// Legacy fixed-size batch checkpoint (pre per-lesson checkpoints) — still READ
+// so runs that failed under the old batching resume without regenerating.
 const unitBatchPath = (jobId: string, i: number, b: number) => `jobs/${jobId}/unit-${i}-batch-${b}.json`
+const unitLessonPath = (jobId: string, i: number, lessonId: string) =>
+  `jobs/${jobId}/unit-${i}-lesson-${lessonId}.json`
 
 // Cards generate at most this many lessons per Claude call: a 10-lesson unit's
 // full lesson cards overflowed the 48k output budget in production (the
@@ -42,6 +48,15 @@ const unitBatchPath = (jobId: string, i: number, b: number) => `jobs/${jobId}/un
 // oversized call). Batches also keep each call well inside the 10-minute
 // Consumption timeout.
 const CARDS_LESSON_BATCH = 4
+// Even 4-lesson calls can overflow on dense lessons (prod, 2026-07: a CCSS
+// grade-6 full course failed repeatedly on the same slice). The call size is
+// ADAPTIVE: on truncation it halves (persisted on the re-enqueued message as
+// payload.callSize) down to a single lesson, so no fixed slice can ever loop
+// a generation to death. Reasoning tokens share the max_tokens budget, so a
+// single lesson that still overflows gets one rescue retry at low effort with
+// the full default output cap before failing terminally.
+const CARDS_MAX_TOKENS = 48000
+const CARDS_RESCUE_MAX_TOKENS = 64000
 // Leave headroom inside the 10-minute functionTimeout: after this long, stop
 // starting new batches and re-enqueue the message to continue where the
 // checkpoints left off. A batch call can realistically run 3-5 minutes
@@ -71,10 +86,20 @@ const MAX_CARD_CUTS = 3
 const isAbort = (e: unknown): boolean =>
   /abort/i.test((e as { name?: string }).name ?? '') || /abort/i.test(e instanceof Error ? e.message : String(e))
 
+const isTruncation = (e: unknown): boolean =>
+  /max_tokens reached/i.test(e instanceof Error ? e.message : String(e))
+
 function readCuts(msg: JobMessage): number {
   const raw = (msg.payload ?? {}) as { cuts?: unknown }
   const n = Math.trunc(Number(raw.cuts ?? 0))
   return Number.isFinite(n) && n > 0 ? n : 0
+}
+
+/** Learned lessons-per-call for the cards step (shrunk on truncation), riding the queue message. */
+function readCallSize(msg: JobMessage): number {
+  const raw = (msg.payload ?? {}) as { callSize?: unknown }
+  const n = Math.trunc(Number(raw.callSize ?? CARDS_LESSON_BATCH))
+  return Number.isFinite(n) && n >= 1 && n <= CARDS_LESSON_BATCH ? n : CARDS_LESSON_BATCH
 }
 
 /** Bound a Claude call to the execution deadline; the caller escalates on abort. */
@@ -125,10 +150,17 @@ export async function generatePlanStep(msg: JobMessage, ctx: InvocationContext):
         ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
       })
     } catch (e) {
-      if (!isAbort(e)) throw e
+      // Truncation escalates down the SAME effort ladder as a deadline cut:
+      // reasoning tokens share the max_tokens budget, so a lower-effort re-run
+      // of the identical request leaves far more room for the plan itself —
+      // a plain retry would repeat the identical overflowing call forever.
+      const truncated = isTruncation(e)
+      if (!truncated && !isAbort(e)) throw e
       if (cuts + 1 >= PLAN_EFFORT_LADDER.length) {
         throw new Error(
-          `Planning did not fit the 10-minute execution window after ${PLAN_EFFORT_LADDER.length} attempts (effort ${PLAN_EFFORT_LADDER.join(' → ')}). The request is too large for one planning call — narrow it (fewer standards, a single framework, or a smaller grade span) and retry.`,
+          truncated
+            ? `Planning exceeded the model's output budget after ${PLAN_EFFORT_LADDER.length} attempts (effort ${PLAN_EFFORT_LADDER.join(' → ')}). The request resolves to a plan too large for one call — narrow it (fewer standards, a single framework, or a smaller grade span) and retry.`
+            : `Planning did not fit the 10-minute execution window after ${PLAN_EFFORT_LADDER.length} attempts (effort ${PLAN_EFFORT_LADDER.join(' → ')}). The request is too large for one planning call — narrow it (fewer standards, a single framework, or a smaller grade span) and retry.`,
         )
       }
       // Log BEFORE enqueueing: if either write fails, the error rethrows and
@@ -137,11 +169,15 @@ export async function generatePlanStep(msg: JobMessage, ctx: InvocationContext):
       await mutateJob(msg.jobId, (r) =>
         pushLog(
           r,
-          `Planning ran long and was cut at the execution deadline — retrying at ${PLAN_EFFORT_LADDER[cuts + 1]} effort in a fresh execution`,
+          truncated
+            ? `Planning overflowed the output budget — retrying at ${PLAN_EFFORT_LADDER[cuts + 1]} effort in a fresh execution (less reasoning leaves the budget to the plan itself)`
+            : `Planning ran long and was cut at the execution deadline — retrying at ${PLAN_EFFORT_LADDER[cuts + 1]} effort in a fresh execution`,
         ),
       )
       await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'plan', scopeId, payload: { cuts: cuts + 1 } })
-      ctx.log(`generate/plan ${msg.jobId}: call cut at the execution deadline (cut ${cuts + 1}) — re-enqueued`)
+      ctx.log(
+        `generate/plan ${msg.jobId}: call ${truncated ? 'overflowed the output budget' : 'cut at the execution deadline'} (cut ${cuts + 1}) — re-enqueued`,
+      )
       return
     } finally {
       dispose()
@@ -194,105 +230,169 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
     const sourceSets = await getScopeSourceSets(scope)
     const userDocs = await loadScopeUploadDocs(scope, ctx)
     const validItemIds = new Set(set.items.map((it) => it.id))
-    const batches: PlanLessonSkeleton[][] = []
-    for (let b = 0; b < skeleton.lessons.length; b += CARDS_LESSON_BATCH) {
-      batches.push(skeleton.lessons.slice(b, b + CARDS_LESSON_BATCH))
-    }
     const started = Date.now()
     const cuts = readCuts(msg)
-    const lessons: Lesson[] = []
-    for (let b = 0; b < batches.length; b++) {
-      // Per-batch checkpoint: a redelivered attempt resumes mid-unit.
-      let batch = await getJsonOrUndefined<Lesson[]>(dataContainer(), unitBatchPath(msg.jobId, unitIndex, b))
-      if (!batch) {
-        if (b > 0 && (await pauseRequested(msg.jobId))) {
-          await settlePaused(msg)
-          return
-        }
-        if (b > 0 && Date.now() - started > CARDS_TIME_BUDGET_MS) {
-          await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'cards', scopeId, unitIndex })
-          ctx.log(`generate/cards ${msg.jobId}: unit ${unitIndex} paused at batch ${b}/${batches.length} (time budget) — re-enqueued`)
-          return
-        }
-        const { signal, dispose } = bounded(started)
-        let wire: WireLessonBatch
-        try {
-          wire = await generateStructured<WireLessonBatch>({
-            ...cardsPrompt(set, scope, plan, skeleton, batches[b], sourceSets, userDocs.names),
-            schema: UNIT_CARDS_BATCH_SCHEMA,
-            ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
-            // effort 'medium' + 48k max_tokens fits the 10-minute Consumption
-            // functionTimeout; each call carries at most CARDS_LESSON_BATCH
-            // lessons so the output cannot reach the cap. The plan step keeps
-            // effort 'high'. After a deadline cut the batch re-runs at 'low'.
-            effort: cuts > 0 ? 'low' : 'medium',
-            maxTokens: 48000,
-            signal,
-          })
-        } catch (e) {
-          if (!isAbort(e)) throw e
-          // The in-flight batch call was cut at the execution deadline —
-          // finished batches are checkpointed, so a fresh execution resumes
-          // exactly here. Escalate through `cuts` so a batch that can NEVER
-          // fit fails terminally instead of looping forever.
-          if (cuts + 1 >= MAX_CARD_CUTS) {
-            throw new Error(
-              `Card generation for unit ${skeleton.id} (batch ${b + 1}/${batches.length}) did not fit the 10-minute execution window after ${MAX_CARD_CUTS} attempts, even at low effort — narrow the request and retry.`,
-            )
-          }
+    let callSize = readCallSize(msg)
+
+    // Checkpoints are PER LESSON (decoupled from call batching, which is
+    // adaptive): a redelivered attempt resumes exactly at the first missing
+    // lesson no matter what call size produced the finished ones. Legacy
+    // fixed-size batch checkpoints from older builds seed the map so failed
+    // runs from before this change resume without regenerating.
+    const done = new Map<string, Lesson>()
+    for (let b = 0; b * CARDS_LESSON_BATCH < skeleton.lessons.length; b++) {
+      const legacy = await getJsonOrUndefined<Lesson[]>(dataContainer(), unitBatchPath(msg.jobId, unitIndex, b))
+      if (legacy) for (const l of legacy) done.set(l.id, l)
+    }
+    for (const sk of skeleton.lessons) {
+      if (done.has(sk.id)) continue
+      const l = await getJsonOrUndefined<Lesson>(dataContainer(), unitLessonPath(msg.jobId, unitIndex, sk.id))
+      if (l) done.set(sk.id, l)
+    }
+
+    const callCards = (slice: PlanLessonSkeleton[], effort: 'low' | 'medium', maxTokens: number, signal: AbortSignal) =>
+      generateStructured<WireLessonBatch>({
+        ...cardsPrompt(set, scope, plan, skeleton, slice, sourceSets, userDocs.names),
+        schema: UNIT_CARDS_BATCH_SCHEMA,
+        ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
+        // effort 'medium' + 48k max_tokens fits the 10-minute Consumption
+        // functionTimeout. The plan step keeps effort 'high'. After a
+        // deadline cut the remaining lessons re-run at 'low'.
+        effort,
+        maxTokens,
+        signal,
+      })
+
+    // Deadline-cut escalation shared by both call sites below: checkpointed
+    // lessons are kept, so a fresh execution resumes exactly here; `cuts`
+    // makes a slice that can NEVER fit fail terminally instead of looping.
+    const escalateCut = async (label: string): Promise<void> => {
+      if (cuts + 1 >= MAX_CARD_CUTS) {
+        throw new Error(
+          `Card generation for unit ${skeleton.id} (${label}) did not fit the 10-minute execution window after ${MAX_CARD_CUTS} attempts, even at low effort — narrow the request and retry.`,
+        )
+      }
+      await mutateJob(msg.jobId, (r) =>
+        pushLog(
+          r,
+          `Unit ${skeleton.id}: card call (${label}) ran long and was cut at the execution deadline — retrying at low effort in a fresh execution`,
+        ),
+      )
+      await enqueueJob({
+        jobId: msg.jobId,
+        kind: 'generate',
+        step: 'cards',
+        scopeId,
+        unitIndex,
+        payload: { cuts: cuts + 1, callSize },
+      })
+      ctx.log(
+        `generate/cards ${msg.jobId}: unit ${unitIndex} (${label}) cut at the execution deadline (cut ${cuts + 1}) — re-enqueued`,
+      )
+    }
+
+    let calls = 0
+    while (done.size < skeleton.lessons.length) {
+      const pending = skeleton.lessons.filter((sk) => !done.has(sk.id))
+      if (calls > 0 && (await pauseRequested(msg.jobId))) {
+        await settlePaused(msg)
+        return
+      }
+      if (calls > 0 && Date.now() - started > CARDS_TIME_BUDGET_MS) {
+        await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'cards', scopeId, unitIndex, payload: { callSize } })
+        ctx.log(
+          `generate/cards ${msg.jobId}: unit ${unitIndex} paused with ${pending.length} lesson(s) pending (time budget) — re-enqueued`,
+        )
+        return
+      }
+      const slice = pending.slice(0, callSize)
+      const label = `lessons ${slice.map((sk) => sk.id).join(', ')}`
+      const { signal, dispose } = bounded(started)
+      let wire: WireLessonBatch
+      calls++
+      try {
+        wire = await callCards(slice, cuts > 0 ? 'low' : 'medium', CARDS_MAX_TOKENS, signal)
+      } catch (e) {
+        if (isTruncation(e) && slice.length > 1) {
+          // The output budget overflowed — truncation is deterministic, so a
+          // plain retry of the identical slice fails identically. Halve the
+          // call size (it rides every re-enqueue) and re-slice.
+          callSize = Math.ceil(slice.length / 2)
           await mutateJob(msg.jobId, (r) =>
             pushLog(
               r,
-              `Unit ${skeleton.id}: card batch ${b + 1}/${batches.length} ran long and was cut at the execution deadline — retrying at low effort in a fresh execution`,
+              `Unit ${skeleton.id}: ${slice.length} lessons per call overflowed the output budget — continuing with ${callSize}`,
             ),
           )
-          await enqueueJob({
-            jobId: msg.jobId,
-            kind: 'generate',
-            step: 'cards',
-            scopeId,
-            unitIndex,
-            payload: { cuts: cuts + 1 },
-          })
-          ctx.log(`generate/cards ${msg.jobId}: unit ${unitIndex} batch ${b} cut at the execution deadline (cut ${cuts + 1}) — re-enqueued`)
-          return
-        } finally {
-          dispose()
+          continue
         }
-        if (!wire.lessons || wire.lessons.length === 0) {
-          throw new Error(`card generation returned no lessons for unit ${skeleton.id} (batch ${b + 1}/${batches.length})`)
-        }
-        // Validate against the skeleton slice BEFORE checkpointing: the model
-        // sees the full unit_skeleton alongside batch_lessons, so an
-        // off-target reply (wrong ids, duplicates, extra lessons) is possible
-        // — and a checkpointed bad batch would be reused by every retry
-        // forever. A throw instead gets normal queue retries, which
-        // regenerate the batch.
-        const returnedIds = wire.lessons.map((l) => l.id)
-        const wantedIds = batches[b].map((l) => l.id)
-        const wantedSet = new Set(wantedIds)
-        if (
-          returnedIds.length !== wantedIds.length ||
-          new Set(returnedIds).size !== returnedIds.length ||
-          returnedIds.some((lid) => !wantedSet.has(lid))
-        ) {
-          throw new Error(
-            `card generation for unit ${skeleton.id} (batch ${b + 1}/${batches.length}) returned lessons [${returnedIds.join(', ')}] — expected exactly [${wantedIds.join(', ')}]`,
+        if (isTruncation(e)) {
+          // A single lesson alone overflowed 48k. Reasoning tokens share the
+          // max_tokens budget, so one rescue attempt at low effort with the
+          // full default cap almost always fits; a second overflow is terminal.
+          await mutateJob(msg.jobId, (r) =>
+            pushLog(
+              r,
+              `Unit ${skeleton.id}: lesson ${slice[0].id} alone overflowed the output budget — retrying at low effort with the full output cap`,
+            ),
           )
+          try {
+            wire = await callCards(slice, 'low', CARDS_RESCUE_MAX_TOKENS, signal)
+          } catch (e2) {
+            if (isTruncation(e2)) {
+              throw new Error(
+                `Card generation for lesson ${slice[0].id} (unit ${skeleton.id}) exceeded the model's output budget even alone at low effort — the lesson resolves to more content than one call can emit. Split the standard or narrow the request and retry.`,
+              )
+            }
+            if (isAbort(e2)) {
+              await escalateCut(label)
+              return
+            }
+            throw e2
+          }
+        } else if (isAbort(e)) {
+          await escalateCut(label)
+          return
+        } else {
+          throw e
         }
-        // Assemble in skeleton order regardless of reply order.
-        const byId = new Map(wire.lessons.map((l) => [l.id, l]))
-        batch = batches[b].map((sk) => {
-          const w = byId.get(sk.id)
-          if (!w) throw new Error(`lesson ${sk.id} missing from validated batch — unreachable`)
-          // The plan skeleton is the authority on which items attach here —
-          // restore any ref the cards call lost or mangled.
-          return toLesson(w, validItemIds, sk.itemRefs)
-        })
-        await putJson(dataContainer(), unitBatchPath(msg.jobId, unitIndex, b), batch)
+      } finally {
+        dispose()
       }
-      lessons.push(...batch)
+      if (!wire.lessons || wire.lessons.length === 0) {
+        throw new Error(`card generation returned no lessons for unit ${skeleton.id} (${label})`)
+      }
+      // Validate against the skeleton slice BEFORE checkpointing: the model
+      // sees the full unit_skeleton alongside batch_lessons, so an
+      // off-target reply (wrong ids, duplicates, extra lessons) is possible
+      // — and a checkpointed bad lesson would be reused by every retry
+      // forever. A throw instead gets normal queue retries, which
+      // regenerate the slice.
+      const returnedIds = wire.lessons.map((l) => l.id)
+      const wantedIds = slice.map((l) => l.id)
+      const wantedSet = new Set(wantedIds)
+      if (
+        returnedIds.length !== wantedIds.length ||
+        new Set(returnedIds).size !== returnedIds.length ||
+        returnedIds.some((lid) => !wantedSet.has(lid))
+      ) {
+        throw new Error(
+          `card generation for unit ${skeleton.id} returned lessons [${returnedIds.join(', ')}] — expected exactly [${wantedIds.join(', ')}]`,
+        )
+      }
+      const byId = new Map(wire.lessons.map((l) => [l.id, l]))
+      for (const sk of slice) {
+        const w = byId.get(sk.id)
+        if (!w) throw new Error(`lesson ${sk.id} missing from validated slice — unreachable`)
+        // The plan skeleton is the authority on which items attach here —
+        // restore any ref the cards call lost or mangled.
+        const lesson = toLesson(w, validItemIds, sk.itemRefs)
+        await putJson(dataContainer(), unitLessonPath(msg.jobId, unitIndex, sk.id), lesson)
+        done.set(sk.id, lesson)
+      }
     }
+    // Assemble in skeleton order regardless of generation order.
+    const lessons = skeleton.lessons.map((sk) => done.get(sk.id) as Lesson)
     unit = { id: skeleton.id, title: skeleton.title, rationale: skeleton.rationale, strand: skeleton.strand, lessons }
     await putJson(dataContainer(), unitPath(msg.jobId, unitIndex), unit)
   }
@@ -340,11 +440,16 @@ export async function generateFinalizeStep(msg: JobMessage, ctx: InvocationConte
 
   const scope = await getScope(scopeId)
   const evidenceSet = await getScopeEvidenceSet(scope)
-  const qc = runQc(units, plan, evidenceSet.items)
+  // Coherence webs (Atomization Guide Part IV): rendered from the plan's
+  // dependency extraction + the finished units, sanitized into DAGs; their
+  // structural findings land in the QC report.
+  const built = buildCoherenceWebs(plan, units, scope.title)
+  const qc = [...runQc(units, plan, evidenceSet.items), coherenceQcCheck(built)]
   const lessons = countLessons(units)
 
   scope.units = units
   scope.qc = qc
+  if (built.webs.length > 0) scope.coherence = built.webs
   scope.status = 'complete'
   delete scope.error
   scope.version = 1

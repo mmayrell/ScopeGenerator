@@ -76,7 +76,8 @@ const DECISION_FIELDS = [
   'assessment',
   'releasedItems',
 ]
-const LESSON_TYPES = ['new-learning', 'bridge', 'application-tier']
+// The Atomization Guide's five lesson types (Types of Lessons).
+const LESSON_TYPES = ['preskill', 'new-learning', 'representation', 'bridge', 'application-tier']
 const EVIDENCE_STATUS = ['observed', 'inferred', 'mixed']
 
 // Lesson-bearing schemas share their subtrees via $defs/$ref: JS-object reuse
@@ -155,6 +156,15 @@ const LESSON_DEFS: Record<string, Schema> = {
 
 const withLessonDefs = (root: Schema): Schema => ({ ...root, $defs: LESSON_DEFS })
 
+// One direct dependency edge for the coherence webs (Atomization Guide §21.2):
+// `on` is an earlier lesson id (same or earlier unit) or a prerequisite-node id
+// from the unit's prereqs list; `carries` names the 1–3 ledger entries the
+// dependency transmits ("is required by").
+const PLAN_DEPENDENCY = obj({
+  on: STR,
+  carries: arr(STR),
+})
+
 const PLAN_LESSON = obj({
   id: STR,
   title: STR,
@@ -163,6 +173,24 @@ const PLAN_LESSON = obj({
   standardCodes: arr(STR),
   itemRefs: arr(STR),
   planningNotes: STR,
+  // The lesson's single instructional objective, one sentence (web node metadata).
+  objective: STR,
+  // The lesson's new Cumulative Mastery Ledger entries: its objective plus any
+  // vocabulary or representation explicitly taught inside it (guide §15).
+  newEntries: arr(STR),
+  // Direct dependencies per the atom-web edge rules (direct consumption ·
+  // minimality/no transitive edges · order).
+  dependsOn: arr(PLAN_DEPENDENCY),
+  // 'inserted-by-triage' when Exclusion Triage Q2 exposed the missing atom.
+  flags: arr(enums(['inserted-by-triage'])),
+})
+
+// One M(0) prerequisite node of a unit's atom web: the standing prerequisite
+// set plus a separate flagged node per Triage-Q1-added prerequisite.
+const PLAN_PREREQ = obj({
+  id: STR, // "<unitId>.M0", "<unitId>.M0b", …
+  label: STR,
+  addedByTriage: BOOL,
 })
 
 export const PLAN_SCHEMA = obj({
@@ -172,6 +200,14 @@ export const PLAN_SCHEMA = obj({
       title: STR,
       rationale: STR,
       strand: STR,
+      // Grade-progression context (guide §23): this unit's topic plus the
+      // prior-grade topic(s) that feed it and next-grade topic(s) that consume
+      // it — short noun phrases at progressions-document grain, ≤3 per side.
+      topic: STR,
+      priorGradeTopics: arr(STR),
+      nextGradeTopics: arr(STR),
+      // The unit's M(0) prerequisite nodes (guide §21.1).
+      prereqs: arr(PLAN_PREREQ),
       lessons: arr(PLAN_LESSON),
     }),
   ),
@@ -397,6 +433,20 @@ export interface WireLesson {
   decisions: WireDecision[]
 }
 
+export interface PlanDependency {
+  on: string
+  carries: string[]
+}
+
+export interface PlanPrereq {
+  id: string
+  label: string
+  addedByTriage: boolean
+}
+
+// The web-bearing fields are optional in the TS shape (though required by the
+// schema) so plan checkpoints written by pre-dependency-mapping builds still
+// resume — finalize guards every read.
 export interface PlanLessonSkeleton {
   id: string
   title: string
@@ -405,6 +455,10 @@ export interface PlanLessonSkeleton {
   standardCodes: string[]
   itemRefs: string[]
   planningNotes: string
+  objective?: string
+  newEntries?: string[]
+  dependsOn?: PlanDependency[]
+  flags?: 'inserted-by-triage'[]
 }
 
 export interface PlanUnit {
@@ -412,6 +466,10 @@ export interface PlanUnit {
   title: string
   rationale: string
   strand: string
+  topic?: string
+  priorGradeTopics?: string[]
+  nextGradeTopics?: string[]
+  prereqs?: PlanPrereq[]
   lessons: PlanLessonSkeleton[]
 }
 

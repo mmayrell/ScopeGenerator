@@ -71,6 +71,13 @@ blob; rotating the storage account key revokes them all.
   2. `Proposal.status`: `'drafting' | 'draft' | 'accepted' | 'abandoned'`
   3. `Proposal` gains optional `working?: boolean` (true while Claude is drafting/iterating)
   4. `Scope` gains optional `error?: string` (populated when status === 'failed')
+- `Lesson.type` is the guide's five-value enum:
+  `'preskill' | 'new-learning' | 'representation' | 'bridge' | 'application-tier'` (Engine v4.0;
+  pre-v4.0 scopes only ever carry the last three values).
+- `Scope` carries optional `coherence?: CoherenceWeb[]` — the three-tier dependency maps
+  (one `level: 'atom'` web per unit, one `'unit'` web, one `'grade'` web), built code-side at
+  finalize from the plan checkpoint. Absent on scopes generated before Engine v4.0; the frontend
+  Dependency Map explains the absence rather than erroring.
 
 ## HTTP API (all JSON unless noted; base path `/api`)
 
@@ -178,7 +185,9 @@ all units done reports it; finalize itself is idempotent).
   `mutateLsgCourse` (blob ETag If-Match + retry)
 - `lsg/runs/<runId>.json` — current `LsgRun` (snapshot captured at create; output + `applied` written
   by the worker). Mutations go through `mutateLsgRun`
-- `jobs/<jobId>/plan.json`, `jobs/<jobId>/unit-<i>.json` — pipeline checkpoints
+- `jobs/<jobId>/plan.json`, `jobs/<jobId>/unit-<i>-lesson-<lessonId>.json`,
+  `jobs/<jobId>/unit-<i>.json` — pipeline checkpoints (legacy `unit-<i>-batch-<b>.json` batch
+  checkpoints are still read on resume)
 - `jobs/<jobId>/lsg-plan.json`, `jobs/<jobId>/lsg-batch-<i>.json` — LSG pipeline checkpoints
 
 **Blob container `uploads`**: `<setId>/<role>/<fileName>` — uploaded PDFs;
@@ -232,16 +241,31 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
 
 1. **`plan`** (Stages 2–4): one Claude call (effort `high`). Input: the published set's tree (with
    limits), items (with scope classes/demand profiles), artifact usage notes, and the
-   request (course/standard/topic). Output (structured): ordered units with lesson skeletons.
+   request (course/standard/topic). Output (structured): ordered units with lesson skeletons,
+   produced by the Engine v4.0 atomization pipeline (scope resolution → item decomposition →
+   atom discovery/split rules → ordering → Cumulative Mastery Ledger + item placement →
+   dependency extraction). Each skeleton may carry `objective`, `newEntries` (ledger),
+   `dependsOn` (within-unit + cross-unit prerequisite edges with `carries` skills), and `flags`;
+   each unit may carry `topic`, `priorGradeTopics`, `nextGradeTopics`, and `prereqs` (assumed
+   prior-grade M(0) skills) — all optional so lower-effort re-runs and legacy plans still parse.
    Checkpoint to `jobs/<jobId>/plan.json`; set `totalUnits`; enqueue one `cards` message per unit.
    The call is **deadline-bounded** (aborted in-process at 8.5 minutes — a host kill at 10:00
    skips all settlement) with a **cut-escalation ladder** riding the queue message
    (`payload.cuts`): each cut re-runs the plan at lower effort (`high → medium → low`); a third
    cut fails terminally ("did not fit the 10-minute execution window", matched by the worker's
    TERMINAL_ERROR so it fails fast) instead of burning the dequeue budget on a call that can
-   never fit.
-2. **`cards`** (Stage 5, parallel per unit): one Claude call per lesson batch (effort `medium`,
-   max_tokens 48000 — sized to fit the 10-minute consumption cap). Output (structured): full `Unit`
+   never fit. **Output truncation (`max_tokens`) escalates down the SAME ladder**: reasoning
+   tokens share the max_tokens budget, so a lower-effort re-run leaves more room for the plan
+   itself; exhausting the ladder fails terminally ("exceeded the model's output budget").
+2. **`cards`** (Stage 5, parallel per unit): one Claude call per lesson slice (effort `medium`,
+   max_tokens 48000 — sized to fit the 10-minute consumption cap). The lessons-per-call count is
+   **adaptive** (starts at 4, rides re-enqueued messages as `payload.callSize`): on truncation it
+   halves down to a single lesson — truncation is deterministic, so a fixed slice would fail
+   identically forever; a single lesson that still truncates gets one rescue retry at effort
+   `low` with the full 64k output cap (reasoning shares the budget) before failing terminally
+   ("exceeded the model's output budget"). Lessons checkpoint **individually** to
+   `jobs/<jobId>/unit-<i>-lesson-<lessonId>.json` (legacy `unit-<i>-batch-<b>.json` checkpoints
+   are still read so pre-change runs resume). Output (structured): full `Unit`
    with fourteen-content-field `Lesson`s — every field `{ content, citations[], rationale }` (fields
    state the WHAT only; reasoning is banned from field content), decision entries with rule IDs and
    a `field` tag naming the card field each governs (`card` = lesson-level; the UI renders each
@@ -251,13 +275,20 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
    and why not less; optional on legacy scopes, rendered in the trailing Lesson Decision Record and
    leading the CSV `scoping_rationale` column),
    `generatedExemplars` for lessons with no in-boundary items (never-empty Released Items, spec §7.14).
-   Batch calls carry the same 8.5-minute abort: a cut batch re-enqueues the unit message with
-   `payload.cuts` (finished batches are checkpointed; the retry runs at effort `low`); after
-   three cuts the unit fails terminally. Checkpoint to `jobs/<jobId>/unit-<i>.json`; increment
-   `unitsDone` (ETag retry); any completion observing all units done enqueues `finalize`
-   (at-least-once; finalize is idempotent).
-3. **`finalize`** (Stage 6): assemble the `Scope` from checkpoints, run **programmatic QC**
-   (thirteen checks incl. objective integrity, substandard presence, doctrine grounding, and released-item coverage, each → `QCCheck` pass/flag/fail), write history
+   Card calls carry the same 8.5-minute abort: a cut call re-enqueues the unit message with
+   `payload.cuts` + `payload.callSize` (finished lessons are checkpointed; the retry runs at
+   effort `low`); after three cuts the unit fails terminally. The assembled unit checkpoints to
+   `jobs/<jobId>/unit-<i>.json`; increment `unitsDone` (ETag retry); any completion observing
+   all units done enqueues `finalize` (at-least-once; finalize is idempotent).
+3. **`finalize`** (Stage 6): assemble the `Scope` from checkpoints, build the **coherence webs**
+   (`api/src/pipeline/webs.ts`, `buildCoherenceWebs`) purely in code from the plan checkpoint —
+   atom web per unit (lessons + synthesized cross-unit/M(0) prerequisite nodes, edges sanitized:
+   unknown endpoints and forward-in-sequence edges dropped and flagged), unit web (cross-unit
+   lesson edges lifted to unit level, transitively reduced), grade-progression web (topic rows
+   from `priorGradeTopics`/`nextGradeTopics`) — stored on `scope.coherence`; then run
+   **programmatic QC** (fourteen checks incl. objective integrity, substandard presence, doctrine
+   grounding, released-item coverage, and the coherence-web check reporting any sanitization
+   flags, each → `QCCheck` pass/flag/fail), write history
    entry, snapshot `v1.json`, status `complete`. No-ops on duplicate finalize messages.
 
 Failure at any step (after the queue's built-in retries, `maxDequeueCount` 12) is **kind-aware**:
@@ -460,8 +491,8 @@ proceeds and logs (RerunEvent detail + QC flag), per spec §8.
   `api/assets/doctrine/` — score-ordered budget of 150k chars total, primary chapter capped at
   110k so it ships (nearly) whole. The prompt makes doctrine citations mandatory where the
   excerpts govern: the Instructional Approach and its strategy decision entry cite the chapter
-  with a format/section locator and a verbatim excerpt; QC flags new-learning lessons whose
-  strategy selection carries no doctrine citation ("Doctrine grounding").
+  with a format/section locator and a verbatim excerpt; QC flags new-learning and preskill
+  lessons whose strategy selection carries no doctrine citation ("Doctrine grounding").
 
 ## Seed data
 
@@ -486,6 +517,10 @@ proceeds and logs (RerunEvent detail + QC flag), per spec §8.
     settled; 404 evicts the scope from state.
 - `src/data/seed.ts` keeps `seedSets`/`seedScope` (the backend seed export imports them); static UI
   metadata lives in `src/data/meta.ts`; the app imports no seed data at runtime.
+- `src/pages/DependencyMap.tsx`: the full-screen Dependency Map opened from the scope sidebar —
+  renders `scope.coherence` in three tabs (Atom Web per unit, Unit Web, Grade Progression) with
+  the Achieve the Core coherence-map interaction (focused node centered, requires/unlocks fanned
+  left/right, click-to-recenter). Pure client-side rendering of the stored webs; no API call.
 
 ## Build & deploy
 

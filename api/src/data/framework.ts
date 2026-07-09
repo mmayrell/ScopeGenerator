@@ -5,27 +5,290 @@ import { FrameworkDoc } from '../domain/types'
 // new versions ship with the tool, and every generated scope records the
 // versions it ran under (ENGINE_VERSION / DOCTRINE_VERSIONS in shared/util.ts
 // must stay in step with the versions below).
+//
+// Engine v4.0 is compiled from "The Curriculum Atomization, Item Alignment &
+// Coherence Guide — A Direct Instruction Framework for Decomposing Standards
+// into Teachable Lessons, Aligning State-Level Assessment Items, and Mapping
+// Coherence Across Lessons, Units, and Grades". Its rules are carried here
+// with their exact meanings; do not substitute intuitive readings.
 
-const ENGINE_CONTENT = `## Context
+const ENGINE_CONTENT = `## Purpose
 
-Instructional standards define what students are expected to learn, but they rarely define how instruction should be organized into lessons. Standards say what students must learn, but they do not say where one lesson ends and the next begins, what "hard enough" looks like, or which method to teach. The Scope Generator performs that translation — systematically, from evidence, and in writing. This engine establishes the instructional design rules used to make those decisions.
+The purpose of atomization is to transform an academic standard into the smallest instructionally complete sequence of lessons that allows every student to master the standard through explicit teaching. This framework produces three coupled outputs:
 
-Grounded in the principles of Direct Instruction, it defines a consistent, evidence-based procedure for decomposing standards into the smallest meaningful teachable units while preserving conceptual coherence and minimizing unnecessary cognitive load. The resulting lesson scope becomes the canonical instructional blueprint used throughout the curriculum generation pipeline.
+- Output 1 — The Lesson Sequence: the ordered set of instructional atoms, each teaching exactly one new thing.
+- Output 2 — The Item Alignment Map: for every lesson, assessment material at state-test rigor that measures exactly that lesson's objective using only skills already taught. Released items are placed only where they match perfectly; lessons with no perfect match receive generated items.
+- Output 3 — The Coherence Webs: navigable dependency maps at three levels — an atom web for every unit, a unit web for the course, and a grade progression web showing only the immediate prerequisite topic from the previous grade and the immediate successor topic in the next grade. Dependencies are derived from the reference library, the Achieve the Core Coherence Map, and other authoritative progression resources. Relationships are inferred only when supported by clear, converging evidence from multiple independent sources.
 
-The framework makes two foundational instructional decisions:
+Atomization is not simply breaking standards into smaller pieces. It is the process of identifying every new behavior, decision, representation, vocabulary concept, prerequisite, discrimination, and integration performance that must be explicitly taught. The resulting scope is instructional — not topical.
 
-- Lesson Granularity (Split vs. Don't Split) — determines whether content should be taught as separate lessons or as variations within a single lesson. Splits are justified only when instruction requires a new strategy, decision, representation, prerequisite, integration behavior, or other meaningful change in student behavior — not simply because problems become harder or use different numbers or contexts.
-- Modeling Scope (Teach vs. Practice) — determines, within each lesson, which examples require explicit modeling and guided instruction and which can be introduced directly through practice because they apply the same mastered strategy under surface-level variation.
+Item alignment is not distributing released items evenly across lessons. It is the process of proving, item by item, that every skill an item demands has already been taught by the time the item appears — and relocating, repairing the scope around, or excluding any item for which that proof fails.
 
-Together, these decisions transform standards and assessment evidence into a coherent lesson architecture. That architecture serves as the instructional foundation for downstream artifacts — including lesson cards, worked examples, assessments, interventions, adaptive pathways, and future curriculum revisions.
+Coherence mapping is not decoration. It is the process of making every dependency — atom to atom, unit to unit, grade to grade — explicit, checkable, and navigable, in the manner of a standards coherence map.
 
-## Alignment to Track Design
+## Definitions
 
-Within this curriculum architecture, an atom is the smallest teachable unit — introduced by a clear start cue, guided by a single decision path/strategy, and demonstrated through one observable response form — defined as follows:
+These terms are used with exact meanings throughout. Do not substitute intuitive readings.
 
-- The tracks/strands described in this architecture control when atoms recur (spacing/interleaving/maintenance).
-- Lessons plug into tracks/strands but are authored independently of scheduling.
-- This guide identifies how a single lesson is built to be durable and transferable.
+- Atom — the smallest lesson satisfying all seven conditions in "What Is an Atom".
+- Released item — a publicly released state assessment item. Used as evidence of tested performance (atom discovery) and as candidate lesson assessment material (item alignment).
+- Target demand — the single behavior a released item is designed to elicit. Every item has exactly one target demand. Placement requires it to match exactly one lesson objective.
+- Embedded demand (side skill) — any additional knowledge or skill the item requires beyond the target demand: a computation, a representation to read or construct, a vocabulary term, a decision, a coordination of procedures, or contextual knowledge.
+- Cumulative Mastery Ledger, M(L) — the complete set of skills explicitly taught in Lessons 1 through L, plus the explicitly listed prerequisites, M(0). The ledger is the sole authority on what students have learned at any point in the sequence.
+- PLACED — the item passed both placement conditions and is assigned to a lesson.
+- GENERATED — an item written new for a lesson that has no qualifying released item: state rigor, ledger scope.
+- EXCLUDED — the item is removed after Exclusion Triage confirms that an unmet instructional demand lies beyond the standard's scope or requires a later-taught skill that is not a prerequisite of the lesson's focal objective. If the later-taught skill is a documented prerequisite of the focal objective, the item remains admissible. Exclusion is silent.
+- Coherence web — a navigable dependency graph in which every edge means "is required by". Modeled on grade-to-grade coherence maps. Always a DAG: no cycles, every edge points from earlier to later.
+- Atom web (Tier 1) — one per unit. Nodes are the unit's lessons plus its M(0) entries; edges are direct knowledge dependencies.
+- Unit web (Tier 2) — one per grade or course. Nodes are units; edges are lifted from atom-level dependencies by the Lift Rule.
+- Grade progression web (Tier 3) — topic-level context only. For each unit: the topic from the grade before that feeds it and the topic in the grade after that it feeds. Topics — never skills, lessons, or items.
+- Direct dependency (edge) — A → B exists only if B's new learning consumes A's ledger entry directly, not through an intermediate atom.
+- Lift Rule — a unit edge U → V exists only if at least one atom-level dependency or M(0) consumption crosses from U into V.
+
+## What Is an Atom?
+
+An instructional atom is the smallest lesson that can satisfy all of the following:
+
+- One instructional objective
+- One observable behavior
+- One decision path
+- One start cue
+- One response form
+- One mastery criterion
+- Students never have to decide between two different procedures inside a single atom.
+
+## The Goal
+
+Every lesson should answer exactly one question: "What is the one new capability students acquire today?" A lesson may involve multiple previously learned skills only when they are combined to teach a single new capability (e.g., discrimination, comparison, selection, or integration). It must not introduce multiple independent new capabilities.
+
+## Sources of Evidence
+
+Atomization begins with evidence. Evidence is gathered from: official standards, standard progressions, unpacking documents, released assessment items, Direct Instruction doctrine, and approved prerequisite documents.
+
+Released items play two distinct roles, and the roles must never be confused:
+
+- During atom discovery: items are evidence of observable performance. They reveal the behaviors, representations, and decisions the state actually tests.
+- During item alignment: items are candidate assessment material to be verified and placed into specific lessons.
+
+Standards define instructional boundaries. Direct Instruction defines instructional doctrine. Released items define tested performance. Progressions define cross-grade coherence. Items never define lessons — they are evidence, not curriculum — and lessons are never distorted to absorb items (the No-Forcing Rule).
+
+## The Atom Discovery Process
+
+For every standard, make the following considerations in order.
+
+- 1 — Identify every observable student behavior. Examples: identify, compare, solve, represent, explain, classify, construct, justify. Each distinct capability becomes a candidate atom.
+- 2 — Identify every distinct mathematical idea. Examples (ratio standard): ratio, equivalent ratio, unit rate, proportional relationship. Each new concept becomes a candidate atom.
+- 3 — Identify every representation. Examples: table, graph, number line, equation, tape diagram, area model. Representations become separate atoms whenever students must learn to express or interpret meaning for the first time through that representation rather than merely use it.
+- 4 — Identify vocabulary stabilization lessons. If a new academic term carries conceptual meaning before students can perform the procedure, create a vocabulary atom. Examples: proportional, constant of proportionality, equivalent.
+- 5 — Identify selection skills. Ask: "Must students choose among multiple previously learned procedures or concepts before solving?" Whenever selecting the correct approach is itself new learning, create a candidate atom.
+- 6 — Identify prerequisite gaps. Whenever a candidate atom requires a prerequisite that is part of the generated course but has not yet appeared in the instructional sequence, insert a prerequisite (preskill) lesson. Do not generate preskill lessons for prerequisite knowledge assigned to earlier grades or outside the selected standards. Prerequisite instruction is never embedded inside a later lesson.
+- 7 — Validate instructional coverage and rigor. Ask: "Does this sequence fully prepare students for the demonstrated rigor of the standard?" If released assessment items or other admissible evidence reveal a documented instructional demand that is not yet explicitly taught, insert additional atoms until every in-scope demand is covered. When problem solving, word problems, mathematical modeling, or other application tasks are within the standard's scope, they must be explicitly taught rather than assumed. Do not create new atoms solely because numbers become larger or examples become more numerous when the underlying generalization remains unchanged.
+- 8 — Identify bridge lessons. A lesson may combine multiple previously mastered skills only to teach one new instructional capability. The prerequisite skills are not new learning; they are coordinated in service of a single objective (e.g., discrimination, comparison, selection, or integration). A lesson must not introduce more than one independent new capability.
+
+## Split Decision Rules
+
+Split into a new atom whenever instruction introduces:
+
+- a new rule
+- a new algorithm
+- a new representation
+- a new vocabulary concept
+- a new decision point
+- a new prerequisite
+- a new discrimination
+- a new integration behavior
+
+Do not split merely because numbers become larger.
+
+## Don't Split Rules
+
+Remain one atom when only:
+
+- numbers become larger
+- context changes
+- wording changes
+- formatting changes
+- problem difficulty increases
+- additional practice is needed
+
+…provided the cognitive routine remains identical.
+
+## Types of Lessons
+
+Each lesson type has a typical assessment source in the Item Alignment Map. "Typical" is a prior, not a rule — the Placement Rule always decides.
+
+- Preskill — teaches prerequisite knowledge.
+- New Learning — teaches a new behavior.
+- Representation — teaches a new way of expressing already-learned knowledge.
+- Bridge — teaches choosing between previously mastered atoms.
+- Application — teaches transfer of mastered knowledge into authentic problems.
+
+## Ordering
+
+The generator orders lessons to produce the shortest coherent instructional path to mastery. Sequence is determined by documented instructional dependencies, Direct Instruction doctrine, and admissible evidence — not by the order of the standards document.
+
+- 1. Prerequisites first. Every lesson appears only after all required prerequisite knowledge has been taught or is expected from prior grades.
+- 2. Teach one new capability at a time. Each lesson introduces exactly one new instructional capability. Later lessons may depend on multiple previously mastered capabilities but may not introduce multiple new ones.
+- 3. Concepts before procedures. Introduce the concepts, vocabulary, and representations that are necessary to understand a procedure before teaching that procedure.
+- 4. Explicit instruction before application. New procedures, algorithms, and decision skills are taught explicitly before students are expected to apply them independently, solve word problems, or transfer them to novel situations.
+- 5. Generalize before extending. Expand the range of examples within the same instructional generalization before introducing a new rule, capability, or decision.
+- 6. Integrate only after mastery. Bridge lessons, cumulative review, and mixed practice occur only after the component atoms have been mastered individually.
+- 7. Evidence determines rigor. If admissible evidence demonstrates an instructional demand that has not yet been explicitly taught, insert additional lessons before students are assessed on that demand.
+- 8. Units follow coherent knowledge progressions. Units group closely related atoms that build toward a common mathematical idea. Unit boundaries should minimize prerequisite crossings and maximize instructional coherence.
+- 9. The sequence forms a coherent dependency graph. Every lesson unlocks later learning, every dependency points forward, and no lesson appears before the knowledge it requires.
+
+## Representation Doctrine
+
+Representations are instructional only when students must learn how to interpret them, how to construct them, or how to choose them. Otherwise they remain examples inside another lesson.
+
+Alignment consequence: a released item that merely displays a representation students must read or build has an embedded representation demand. The item cannot be placed before the lesson that teaches that representation.
+
+## Vocabulary Doctrine
+
+Vocabulary exists to reduce cognitive load. Words are never taught in isolation. Vocabulary lessons exist only when the word introduces a new concept or when misunderstanding the word blocks later instruction.
+
+Alignment consequence: academic vocabulary inside an item stem or answer choices is an embedded demand. An item using "unit rate" cannot be placed before the lesson that stabilizes "unit rate".
+
+## Bridge Doctrine
+
+Bridge lessons never teach new mathematics. They teach discrimination, selection, switching, and coordination. Typical bridge lessons include: area vs. perimeter, ratio vs. rate, mean vs. median, equation vs. inequality, multiplication vs. division.
+
+A bridge lesson title should contain the competing atoms ("A vs. B") or the explicit selection behavior ("Choose the Appropriate Representation"), never a generic phrase like "Mixed Practice" or "Review". That keeps every bridge lesson instructionally precise and independently assessable.
+
+Alignment consequence: any released item that requires choosing between procedures may only be placed at a bridge, application, or mixed-performance lesson (the Coordination Rule). Web consequence: every bridge node receives one incoming edge from each competing atom.
+
+## Application Doctrine
+
+Applications never introduce new computational procedures. They increase demand by requiring students to model, interpret, justify, solve contexts, and coordinate multiple atoms.
+
+Alignment consequence: released items most often appear in their original, unmodified form at application and mixed-performance lessons, because state items typically demand exactly this coordination. Web consequence: every application node receives an edge from each atom it coordinates.
+
+## The Cumulative Mastery Ledger
+
+The ledger is the formal device that makes item placement checkable rather than intuitive.
+
+- Construction Rule 1. M(0) is the explicit prerequisite list: prior-grade skills students are accountable for, each verified as activatable in under two minutes. Nothing enters M(0) by assumption.
+- Construction Rule 2. M(L) = M(L−1) plus Lesson L's new entries: its objective, plus any vocabulary or representation explicitly taught inside it.
+- Construction Rule 3. Build the ledger after sequencing and before any item work. Every placement decision reads from it.
+- Construction Rule 4. The ledger is the sole authority for every question of the form "Have students learned X by Lesson L?" If X is not in M(L), the answer is no — regardless of how plausible "they probably know it" feels.
+
+## Released Item Placement Doctrine
+
+Core principle: an item belongs to a lesson only if it measures that lesson's objective and demands nothing that is untaught.
+
+Item Decomposition — interrogate every released item the way the discovery process interrogates a standard. Identify its target demand (the single behavior the item is designed to elicit) and its embedded demands — every additional requirement, across six categories: computations, representations (to read or construct), vocabulary, decisions, coordinations of procedures, and contextual knowledge.
+
+The Placement Rule — PLACE item i at Lesson L if and only if both conditions hold:
+
+- Condition A (Exact target match): the item's primary instructional target matches Lesson L's objective — same capability, same decision path, and same response form.
+- Condition B (Ledger containment): every required embedded instructional demand of the item is contained in M(L).
+
+If either condition fails, the item is not placed at Lesson L. There is no partial credit and no "close enough".
+
+The Deferral Rule — when Condition A matches Lesson L but Condition B fails on a demand taught LATER in the course, the item is DEFERRED: it is placed at the earliest later review, bridge, or application lesson where Condition B passes.
+
+The Coordination Rule — a multi-atom item (one requiring students to choose between procedures or coordinate several mastered atoms) may only be placed at a bridge, application, or mixed-performance lesson.
+
+The No-Forcing Rule — lessons are never distorted to absorb items. An item that fits no lesson is triaged, deferred, or excluded; the sequence is repaired only when the triage proves an in-scope demand is genuinely untaught.
+
+End-of-Course Exclusion — if an item requires an instructional demand that is taught later in the course and is not a documented prerequisite of the lesson's objective, the item is excluded from lesson alignment. Such items are treated as end-of-course or cumulative assessments rather than evidence for placement within the instructional sequence. A later skill that is actually a prerequisite (e.g., a discrimination lesson requiring two previously taught operations) can influence placement appropriately; a later, unrelated skill that simply appears because the state wrote an end-of-course item does not force the item later in the sequence — it is excluded from lesson alignment instead. That prevents cumulative released items from distorting the atomization while still allowing legitimate prerequisite relationships to affect placement.
+
+## The Exclusion Triage Rule
+
+Applies when an embedded demand never enters the ledger — it appears in no lesson and no listed prerequisite. Do not immediately discard the item. Run this triage, in order:
+
+- Triage Question 1 — Is the demand prior-grade content? If the skill belongs to an earlier grade's standards, students are already accountable for it. If it can be activated in under two minutes, add it explicitly to M(0) and re-run placement for the item. If it requires explicit reteaching, create a preskill lesson (Discovery step 6), rebuild the ledger, and re-run placement.
+- Triage Question 2 — Is the demand within the current standard's scope? If the skill falls inside the standard being atomized but appears in no lesson, the item has exposed a candidate missing atom. Re-run the discovery process on that demand. If the standard implies it, add the atom to the sequence, rebuild the ledger, and re-run placement for all affected items. Multiple items orphaned by the same demand are strong evidence that the atom is missing.
+- Triage Question 3 — Is the demand beyond the standard? If the skill lies outside the standard and outside the grade, EXCLUDE the item. Exclusion is silent: excluded items receive no annotation in the Item Alignment Map. The Grade Progression Web will usually show where the demand lives — typically a next-grade topic.
+
+The order is mandatory: prior-grade first, in-scope second, exclusion last. The triage is the feedback loop through which item alignment audits the atomization itself — orphaned items are one of the strongest signals that the lesson sequence has a gap.
+
+## Item Generation Doctrine
+
+Trigger: any lesson with zero PLACED items after the Item Alignment Algorithm completes.
+
+Governing rule: state rigor, ledger scope. Generated items match the precision, format, and cognitive demand of the state's released items while drawing every skill exclusively from M(L). Every generated item must:
+
+- Measure only the lesson's objective — exactly one target demand.
+- Draw every embedded demand from M(L).
+- Mirror released-item conventions: stem phrasing, response formats (multiple choice, multi-select, gridded response), and distractor logic of the state's released items.
+- Build distractors from predictable student errors within taught content — never from untaught skills.
+
+Prohibitions: never introduce untaught vocabulary, untaught representations, or contexts requiring outside knowledge. Never reduce rigor because the lesson is early — an early lesson's item covers a smaller scope at full state-level precision. Smaller scope, not softer demand.
+
+## The Item Alignment Algorithm
+
+Run after ordering is complete. Execute the steps in order; loop where directed.
+
+- Step A — Build the ledger. M(0) = the explicit prerequisite list; M(L) = M(L−1) + Lesson L's new entries.
+- Step B — Decompose every released item. One target demand + a complete embedded-demand list per item.
+- Step C — Match targets (Condition A). For each item, find the lesson whose objective exactly matches the item's target demand. If no lesson matches, send the item to Exclusion Triage.
+- Step D — Check the ledger (Condition B). Pass → PLACED at the matched lesson (subject to the Coordination Rule). Fail on a demand taught later → DEFERRED; place per the Deferral Rule. Fail on a demand that never enters the ledger → Exclusion Triage.
+- Step E — Apply triage outcomes. Prerequisite added to M(0) or atom added to the sequence → rebuild the ledger and re-run Steps C–D for every affected item. Demand beyond the standard → EXCLUDED.
+- Step F — Generate. Every lesson with zero placed items receives generated items per the Item Generation Doctrine.
+- Step G — Validate and emit. Check every placement and generated item, then emit the Item Alignment Map. For each lesson the map records: lesson number, title, and lesson type; objective and new ledger entries; assessment source (RELEASED, GENERATED, or MIXED); each item, with a one-sentence justification stating the target match and the ledger check.
+
+## Coherence Web Doctrine
+
+Webs are renderings of the ledger, not a second source of truth. Every edge must be justifiable by a ledger entry and the dependencies established during atomization and item alignment. If a web seems to need an edge the ledger cannot justify, the sequence is wrong — fix the sequence, then re-render the web. Never edit a web directly.
+
+Three tiers, three altitudes:
+
+- Atom web (Tier 1) — a teacher planning tomorrow's lesson sees exactly what today's atom requires and unlocks.
+- Unit web (Tier 2) — a coach sequencing the year sees which units feed which, and what skills carry each dependency.
+- Grade progression web (Tier 3) — anyone asking "where does this come from and where does it go" sees the topic from the grade before and the topic in the grade after. Nothing more.
+
+Every web at every tier is a directed acyclic graph: no cycles, and every edge points from earlier to later. Every edge at every tier reads the same way: "is required by".
+
+## The Atom Web — One Per Unit
+
+Nodes: one node per lesson in the unit's final sequence; one node for the unit's standing M(0) prerequisite set; a separate, flagged node for every prerequisite added by Triage Q1, so repairs stay visible. Node metadata: number, title, lesson type, objective (one sentence), assessment source, and a triage flag if the atom was inserted by Triage Q2.
+
+Edge Rules — draw A → B only when all three conditions hold:
+
+- Direct consumption. B's new learning uses A's ledger entry in its start cue, its procedure, or its response form.
+- Minimality. The dependency is not already carried through an intermediate atom. No transitive edges: if A → B → C exists, add A → C only if C consumes A beyond what B transmits.
+- Order. A precedes B in the sequence, or A is an M(0) node.
+
+Structural Requirements:
+
+- Every lesson except the first has at least one incoming edge.
+- Every bridge has one incoming edge from each competing atom — at least two.
+- Every application receives an edge from each atom it coordinates.
+- Every representation lesson receives an edge from the atom whose knowledge it re-expresses.
+- M(0) nodes connect only to the atoms that consume them — never to Lesson 1 by default.
+
+## The Unit Web — One Per Grade or Course
+
+Nodes: every unit in the scope and sequence, in teaching order. Node metadata: unit number, title, primary standards, atom count.
+
+The Lift Rule — draw U → V if and only if at least one of the following holds: an atom in V directly consumes a skill taught by an atom in U, or V's M(0) contains entries that are taught in U rather than in a prior grade.
+
+Label every unit edge with the one to three skills that carry the dependency — for example, "carries: equivalent ratios, unit rates". An unlabeled unit edge is unverifiable and therefore invalid. Minimality applies at this tier too: no transitive unit edges.
+
+The Orphan Check — a unit with no incoming edges and no prior-grade feed in the progression web is either truly foundational or mis-sequenced. Verify against the progressions document before accepting it.
+
+## The Grade Progression Web — Topic Level
+
+Purpose: context, not instruction. For every unit it answers exactly two questions: what topic from the grade before feeds this unit, and what topic in the grade after consumes it.
+
+Nodes are topics — short noun phrases at the grain of a progressions document: "fraction division", "ratios and rates", "proportional relationships". Never skills, never lessons, never items.
+
+Structure: one row per unit — prior-grade topic(s) (grade N−1) → this unit's topic (grade N) → next-grade topic(s) (grade N+1). A grade-level rollup may combine all rows into a single three-column view for the whole year.
+
+Sources and limits: topics come from official standards progressions; when progressions are silent, the source grade of the unit's dominant M(0) entries defines the prior-grade topic. No more than three topics per side per unit. No edges between topics within the same grade — that is the unit web's job. No skill-level or item-level detail at this tier, ever.
+
+## The Web Construction Algorithm
+
+Run after the Item Alignment Algorithm has completed for every unit.
+
+- Step A — Extract dependencies. For each lesson in each unit, list the ledger entries its new learning directly consumes. This list exists implicitly from the ledger and the placement work; make it explicit.
+- Step B — Emit each atom web. Verify the DAG property and the structural requirements.
+- Step C — Lift to the unit web. Apply the Lift Rule across all units. Label carrying skills on every edge. Run the Orphan Check.
+- Step D — Attach grade context from the progressions documents for grade N−1 and grade N+1.
+- Step E — Validate and regenerate. Whenever triage inserts an atom or adds a prerequisite, rebuild the ledger first, then regenerate every affected web. Webs are always downstream of the ledger.
+
+The reference interaction for rendering is a coherence-map web — the focused node centered, everything it requires fanning in from the left, everything it unlocks fanning out to the right, with every node clickable to re-center. The data object, not the drawing, is the deliverable; the drawing must be regenerable from the object alone.
 
 ## Atomize the Entire Standard (P4)
 
@@ -33,66 +296,7 @@ The tool does not limit lessons to skills explicitly named in the standard or un
 
 ## No Evidence is Not No Lesson (P5)
 
-When no released item tests a component, the component stays in scope. The tool infers the assessment evidence that would plausibly exist — from how sibling skills are tested and where the component sits developmentally — flags everything built on that inference as inferred, and writes a concrete exemplar problem at the inferred difficulty so the inference is inspectable, not abstract.
-
-## Released Item Demand Analysis
-
-Released items are interpreted as a representative sample of observable assessment evidence — empirical evidence of the types of performances students are expected to demonstrate, not an exhaustive specification of the assessment and never curriculum authority. Instructional decisions rest on consistent patterns across the available evidence rather than any single released question, and the official standards continue to define the outer boundary of instructional scope.
-
-- For each released item, when available, the analysis may identify: prerequisite atoms required; integration behaviors required; strategy-selection demands; representation demands; discrimination demands; common misconception patterns reflected in distractors; expected level of rigor and cognitive coordination.
-- Patterns that recur across multiple released items provide stronger evidence than isolated examples. These recurring demands may justify integration lessons that explicitly teach students to coordinate previously mastered atoms into authentic assessment performance.
-- The absence of a particular performance in the released sample is never interpreted as evidence that the performance is never assessed. Decisions rest on converging evidence across the standards, progressions, unpacking documents, and recurring patterns in released items — never on the absence of any single item type.
-
-## Granularity: Split Criteria
-
-Split when any of the following holds — each criterion paired with its canonical example:
-
-- New rule/strategy not previously taught (requires explicit demonstration) — moving from identifying proportional relationships to finding the constant of proportionality needs a split because students must learn a new rule and see clean worked examples with contrasting non-examples before practice.
-- New vocabulary / concept label that must be stabilized before the procedure — for "identify proportional relationships," students may need a separate micro-lesson on what "proportional" means (constant ratio) with examples/non-examples without doing computations.
-- New/hidden decision step changes the routine (requires task analysis and guided practice on the new step) — adding fractions with like denominators needs to be split from adding fractions with unlike denominators because the change requires first finding the least common denominator before adding.
-- New integration behavior requiring coordination of previously mastered atoms — students can solve one-step addition and subtraction problems independently but cannot determine which operation applies in a mixed set of word problems. A separate integration lesson teaches strategy selection without introducing new computational procedures.
-- Unmastered representation/notation (students can't yet map symbols/graphs/tables to meaning; needs modeling plus scaffolding fades) — representing sample space with a tree diagram needs to be separate from representing sample space in a table, because a new representation changes how information is encoded and must be modeled before scaffolds are faded.
-- High confusability with a look-alike skill (needs discrimination training: side-by-side non-examples) — similarity and congruency must be introduced separately because students require a discrimination rule with contrasted non-examples to prevent persistent mix-ups.
-- Foundational preskill missing/weak (explicit prerequisite skill must be taught prior) — solving two-step equations with negatives needs a split when integer operations haven't been explicitly taught, because the prerequisite must be taught and stabilized before the composite routine.
-- Demand-band jump (e.g. selection vs construction) — from mathematical area calculations to real-world problems.
-- Data-driven error pattern (systematic/high-frequency misconception; needs error-based modeling before independent practice) — in multi-digit multiplication where the multiplier contains one or more zeros (e.g. 3,204 × 203), if item data commonly showed a large spike of answers off by a factor of 10 or 100 because students omit or misplace placeholder zeros and misalign partial products, that would call for a micro-lesson to cover it explicitly. Although the algorithm is nominally the same as the no-zero case (normally "Don't Split: quantitative change only"), the systematic error pattern warrants a separate micro-lesson.
-
-## Granularity: Don't-Split Criteria
-
-- Same strategy steps as taught (no new decisions) — finding area of rectangles and squares by multiplying side lengths.
-- Changes are quantitative only (bigger numbers, benign decimals/fractions) or a change in context — solving one-step equations with different integers/decimals using the same inverse-operation routine.
-- Uses already-mastered representations — identifying functions across tables/graphs/points after each representation has been taught.
-- Mixed practice that requires no new strategy-selection behavior because students have already mastered the relevant integration atom — after students complete the operation-selection integration lesson, mixed addition/subtraction/multiplication/division practice does not require another lesson.
-
-## Granularity: Tie-Breakers
-
-For edge cases, apply in order:
-
-- Would a novice need new decision cues to start/choose steps they have never been exposed to previously? Yes = Split. (In statistics, if students must select mean absolute deviation vs. range to describe variability, split into three lessons: mean absolute deviation, range, and choosing the appropriate measure for a context and justifying the choice.)
-- Can I rewrite with friendlier numbers/shorter text and the routine stays identical? Yes = Don't Split. (A lesson that includes both 1 cm : 3.2 m and 1 : 4 scale drawings doesn't need to split; both use the same proportion routine and only differ in difficulty.)
-- Is there a prerequisite gap that cannot be refreshed quickly without new rules or explicit instruction/practice? Yes = Split. (In a lesson solving two-digit by one-digit multiplication word problems, if the student hasn't been exposed to the standard algorithm yet, split the lesson to include the explicit instruction and then support the mastery via answer explanations.)
-- Would successful performance require coordinating multiple previously mastered atoms in a way students have not yet been explicitly taught? Yes = Split into an integration lesson. (Examples: choosing the correct operation; selecting the appropriate representation; deciding which previously mastered algorithm applies; interpreting a released-item style prompt; rejecting plausible distractors based on common misconceptions.)
-
-## Bridge Lessons
-
-Sometimes, when a single skill gets split into two atoms, we also need a third, cumulative lesson whose only job is to recombine them.
-
-- In this bridge lesson, students learn to (1) recognize which atom applies from the very first cue in the problem and then (2) execute the correct single routine cleanly — without blending steps from the other atom.
-- Importantly, this lesson does not introduce new rules or methods; it's purely about training discrimination, selection, and switching under mixed practice, using look-alike items that are designed to trigger common confusions.
-- While spaced repetition and cumulative review often address this naturally over time, some topics benefit from a more targeted recombination lesson — especially in areas where students reliably confuse approaches (for example, area vs. perimeter, or deciding between addition vs. multiplication).
-- Bridge lessons may also prepare students for authentic mathematical performances: they teach students to coordinate previously mastered atoms into composite performances such as strategy selection, representation selection, discrimination among similar solution paths, or multi-step reasoning. Released assessment items serve as empirical evidence for identifying which of these composite performances are commonly expected, but they do not define the existence of integration lessons.
-
-## Editing Splits
-
-High-frequency or systematic errors inform what must be taught explicitly, not automatically whether an atom must be split.
-
-Errors justify splitting only when analysis reveals:
-
-- a new or unstable start cue/problem type,
-- a new decision step or rule, or
-- a missing prerequisite that must be taught and stabilized first.
-
-Otherwise, errors should be addressed through improved modeling, contrasts, scaffolding, or sequencing within the same atom.
+When no released item is PLACED at a lesson, the lesson stays in scope. The lesson receives generated items under the Item Generation Doctrine — state rigor, ledger scope — flagged as generated with the inference basis stated, so the inference is inspectable, not abstract. The absence of a particular performance in the released sample is never interpreted as evidence that the performance is never assessed.
 
 ## Modeling Scope
 
@@ -104,7 +308,7 @@ Building on that principle of minimum viable modeling, vary only surface feature
 
 What to vary between "I Do" and "We Do":
 
-- Numbers and magnitude — scale values (small to large), include boundary cases that still use the same steps (e.g. sums crossing 1 but not requiring a new conversion rule if that rule was not taught yet).
+- Numbers and magnitude — scale values (small to large), include boundary cases that still use the same steps.
 - Surface contexts — swap story frames (recipes, distance, prices) that don't change the mathematical action.
 - Order/format — commuted order (a+b vs b+a), item stems (fill-in/select/short-answer) that preserve the same response mode.
 - Previously mastered representations — tables/graphs/arrays only if those representations are mastered.
@@ -120,27 +324,9 @@ What to hold constant between "I Do" and "We Do":
 
 Direct Instruction draws a clear line between what must be explicitly taught and what can be treated as extension once the core routine is stable. When a problem introduces a new rule, a new representation, or a likely misinterpretation, instruction should model and secure the strategy before expecting independent transfer (Stein et al., 2017).
 
-Explicit modeling is necessary for:
+Explicit modeling is necessary for: new rule/strategy or clear misinterpretation risk; unmastered representation (first time seeing a form); high cognitive load / multiple hidden steps; preskill missing or shaky; look-alike confusion likely; foundational prerequisite for later learning; error-prone skill where mistakes fossilize; jump in cognitive demand (procedural to application/modeling).
 
-- New rule/strategy or clear misinterpretation risk.
-- Unmastered representation (first time seeing a form: e.g. mapping, coordinate plane).
-- High cognitive load / multiple hidden steps (teach steps, then fade).
-- Preskill missing or shaky (reteach preskill, then composite skill).
-- Look-alike confusion likely (similar types require discrimination).
-- Foundational prerequisite for later learning (must be stable).
-- Error-prone skill where mistakes fossilize (e.g. place value, fraction operations).
-- Jump in cognitive demand (procedural to application/modeling).
-
-Extension is sufficient for:
-
-- Same strategy as taught; no new steps added.
-- Representation already mastered; rotate representations to show invariance.
-- Single, familiar procedure repeated; vary numbers/contexts only.
-- Preskills solid; current item sits on mastered foundations.
-- Low confusability; include a quick discrimination item but no new modeling.
-- Non-foundational variant of the same atom.
-- Stable error pattern absent; prior accuracy holds in practice.
-- Same demand band (all procedural or all application) within the atom.
+Extension is sufficient for: same strategy as taught with no new steps; representation already mastered; single, familiar procedure repeated with varied numbers/contexts only; preskills solid; low confusability; non-foundational variant of the same atom; stable error pattern absent; same demand band within the atom.
 
 ## How Lessons Are Named
 
@@ -148,51 +334,45 @@ Lesson titles are intentionally engineered: the shortest string that says what t
 
 - Lead with the observable behavior ("Round Multi-Digit Whole Numbers to Any Place").
 - Carry a constraint only when a sibling lesson differs on it ("…by a One-Digit Number" exists because a two-digit-multiplier sibling does).
-- Ban pedagogy filler — no "Introduction to," no "Exploring."
+- Ban pedagogy filler — no "Introduction to", no "Exploring".
+- A bridge title contains the competing atoms ("A vs. B") or the explicit selection behavior — never "Mixed Practice" or "Review".
 - A reader scanning only the lesson names must be able to tell every lesson apart and predict what each covers.
 
-## Example: Full-Standard Atomization (4.NBT.B.5)
+## Worked Example: CCSS 6.RP.A.3 — The Full Pipeline
 
-The atomization of 4.NBT.B.5 — "Multiply a whole number of up to four digits by a one-digit whole number, and multiply two two-digit numbers, using strategies based on place value and the properties of operations. Illustrate and explain the calculation by using equations, rectangular arrays, and/or area models." — demonstrates the expected granularity for one standard. In teaching order, each atom with its tier and the reasoning that justified it:
+The doctrine above, demonstrated on one real standard — "Use ratio and rate reasoning to solve real-world and mathematical problems". Every lesson boundary, placement, deferral, exclusion, and edge is justified by doctrine, not intuition.
 
-1. Multiply One-Digit Numbers by 10, 100, 1,000, and Their Multiples — preskill. Grade 3 already expects multiplying one-digit numbers by multiples of 10 using place-value strategies, and released-test evidence shows the place-value multiplication demand directly (e.g. a task asking students to use 4 × 7 = 28 to find 4 × 700).
-2. Break Apart a Factor Using Expanded Form and Multiply the Parts — preskill / conceptual bridge. Directly prepares place-value multiplication and the distributive property (27 × 4 = 20 × 4 + 7 × 4), aligning with prior-grade area-model reasoning.
-3. Multiply a Two-Digit Number by a One-Digit Number Without Regrouping — new learning. Column multiplication is initially introduced with simple problems without renaming; the sequence places the no-renaming case before the renaming version.
-4. Multiply a Two-Digit Number by a One-Digit Number with Regrouping — new learning. Renaming is a new decision step (5 × 47 = 5 × 7 ones and 5 × 4 tens), introduced only after the no-renaming routine is stable.
-5. Multiply Three- and Four-Digit Numbers by a One-Digit Number — new learning. Expands the same strategy to the full grade range (758 × 2, 364 × 5, 534 × 9).
-6. Multiply Numbers with a Zero in the Tens or Hundreds Place by a One-Digit Number — new learning / error-prone case. Zero is a special problem type creating common renaming errors (403 × 5, 306 × 2); it deserves focused practice rather than being hidden inside general multi-digit multiplication.
-7. Rewrite Horizontal Multiplication Problems Vertically Before Solving — bridge / representation. Horizontally written problems are introduced only after students can correctly work vertically aligned problems; students are taught to rewrite the problem vertically. Assessments and word problems present multiplication horizontally.
-8. Multiply Two Two-Digit Numbers Using Partial Products, Place Value, and the Standard Algorithm — new learning. The second major half of the standard: two two-digit factors, the simplest case of two multi-digit factors.
-9. Explain Multiplication Using Equations, Arrays, and Area Models — conceptual explanation / application. The standard's illustrate-and-explain requirement. Kept as ONE lesson, not three, because each representation was mastered separately before this point — the lesson relates them to larger numbers and shows them in combination.
-10. Solve One-Step Multiplication Word Problems — application. Computation moves into context (one-step word problems multiplying two two-digit numbers or a four-digit number by a one-digit number).
-11. Solve Multi-Step Word Problems Using Multiplication — application / modeling. The final application tier: multi-step word problems (at least 3 steps) with whole-number answers.
+Discovery (steps 1–5): observable behaviors listed (read/write/interpret ratios, generate equivalent ratios, use ratio tables, find/compare unit rates, solve ratio/rate/percent problems, convert units, solve applications); concepts identified (ratio, rate, unit rate, equivalent ratio, percent, proportional relationship); representations identified (ratio notation, tables, double number lines, coordinate graphs, equations); hidden decisions found — "flour for 20 muffins" vs "flour for 1 muffin" use the same numbers but different start cues and decision paths (equivalent ratio vs unit rate), therefore different atoms; prerequisites checked — fraction simplification verified activatable, so it enters M(0) rather than becoming a preskill lesson.
 
-What the example demonstrates about the criteria: the no-regrouping/regrouping boundary is a new-decision-step split; the zero case is an error-pattern split even though the algorithm is nominally the same; the horizontal-rewrite lesson is a representation bridge; the three representations stay in ONE explanation lesson because each was already mastered (don't-split: already-mastered representations); and the word-problem tiers are demand-band splits. Atomizing one standard to roughly this depth — preskills, first-instance and variant atoms, error-prone cases, bridges, and application tiers, each justified by a named criterion with evidence cited — is the expected granularity, not an unusually fine partition.
+Split decisions (step 6): read ratios — No (same concept as writing, no new decision path); write ratios in three forms — No (same routine, different notation); interpret ratios — Yes (new conceptual understanding before procedures); generate equivalent ratios — Yes (new procedure requiring explicit modeling); use ratio tables — Yes (new representation); find unit rates — Yes (new concept and computational rule); compare unit rates — Yes (new decision behavior); solve one-step ratio problems — No (same computational routine in context); solve multi-step ratio problems — No (same mathematics with increased coordination; reserved for an application lesson).
+
+Sequencing, bridges, applications (steps 7–9): Understand Ratios → Write Ratios → Interpret Ratios → Generate Equivalent Ratios → Represent Ratios Using Tables → Solve Equivalent Ratio Problems → Understand Unit Rates → Find Unit Rates → Compare Unit Rates; bridges "Equivalent Ratios vs. Unit Rates" and "Choose the Appropriate Ratio Representation" (selection only, no new mathematics); applications "Solve One-Step Ratio Word Problems" and "Solve Multi-Step Ratio Problems". First pass: 13 lessons.
+
+Ledger (step 10): M(0) = whole-number multiplication and division; fraction simplification. Each lesson's new entries recorded (e.g. L1 ratio concept + vocabulary "ratio"; L4 equivalent-ratio procedure + vocabulary "equivalent"; L5 ratio tables read/construct; L8 unit-rate computation).
+
+Item placement (step 11) — seven released items through the algorithm:
+
+- R1 (which table shows the relationship): target = construct/identify a ratio table; embedded = ratio concept (L1), notation (L2). PLACED at Lesson 5 — Condition A matches L5's objective, all demands in M(5).
+- R2 (flour for 20 muffins): target = solve an equivalent-ratio problem in context. PLACED at Lesson 6.
+- R3 (which is the better buy): compare unit rates; embedded decimal division NOT in the ledger → TRIAGE Q1: decimal division is Grade 5 content, activatable in under two minutes → added to M(0), flagged; re-run: PLACED at Compare Unit Rates.
+- R4 (unit rate from a graph): embedded demand "reading a coordinate graph of a ratio relationship" NOT in the ledger → TRIAGE Q2: graphing ratio relationships is inside 6.RP.A.3 but no lesson teaches it — candidate missing atom CONFIRMED → Representation lesson "Graph Ratio Relationships" inserted after tables (flagged inserted-by-triage); ledger rebuilt; re-run: PLACED.
+- R5 (which equation represents the proportional relationship): proportional equations are 7.RP.A.2c — Q1 no, Q2 no → TRIAGE Q3: EXCLUDED, silently.
+- R6 (complete the ratio table, pool-tagged to equivalent ratios): Condition A matches Lesson 4, Condition B fails at L4 (tables enter the ledger at L5) → DEFERRED to the earliest later application lesson where B passes (One-Step Applications).
+- R7 (tickets for $100): multi-step, coordinates unit-rate computation + equivalent-ratio reasoning → Coordination Rule: Application only. PLACED at the final application lesson.
+
+Note what the triage produced: R3 repaired the prerequisite list, R4 repaired the scope itself, and R5 was excluded only after both repair questions failed. The item pool audited the atomization.
+
+Final map (steps 12–13): 14 lessons; every lesson without a placed released item carries GENERATED items at state rigor over ledger scope (e.g. Lesson 2 "Write Ratios": "A basket holds 5 pears and 3 plums. Which shows the ratio of pears to plums? A. 3:5 B. 5:3 C. 5:8 D. 8:5" — distractors encode order reversal and part-to-whole errors; every skill inside M(2); full state rigor over a two-lesson scope).
+
+Coherence webs (step 14): the atom web's edge list is all direct consumptions with no transitive edges — there is no L4 → L6 edge, because tables (L5) carry the equivalent-ratio dependency into graphing. M(0) → L4 carries fraction simplification; the flagged M(0)+ node → Compare Unit Rates carries decimal division; both bridges receive one incoming edge per competing atom; applications receive an edge per coordinated atom. The unit web lifts "Unit 1 Ratios and Rates → Unit 2 Percents" carrying unit rates and ratio tables. The grade progression row reads: fraction operations and division (Grade 5) → ratios and rates (Grade 6) → proportional relationships (Grade 7) — which is exactly where R5's excluded demand becomes visible again.
 
 ## Example: Granularity Build From Released STAAR Questions
 
-To cover STAAR problems involving real-world application of comparing fractions, the released problems include the following question types:
+To cover STAAR problems involving real-world application of comparing fractions, the released problems include: finding a fraction greater/less than a given fraction; identifying which comparison is true from a word problem; given a fraction model, determining which inequality is true; identifying true comparisons from tables.
 
-- Finding a fraction greater/less than a given fraction.
-- Identifying which comparison is true from a word problem.
-- Given a fraction model, determine which inequality is true.
-- Identifying true comparisons from tables.
+Determining lesson granularity: granularity is driven by the smallest new behavior (atom) the lesson can provide. Some problems compare two explicitly given fractions; others require determining WHICH fractions to compare — a new decision point with additional steps and higher cognitive load. The split rules fire (a new decision point), so the lesson splits into two: "Word Problems Involving Identifying Correct Fraction Comparisons" and "Word Problems Involving Comparing Multiple Fractions".
 
-Determining lesson granularity: granularity is driven by the smallest new behavior (atom), or skill, that the lesson can provide. Applying the checklist, one criterion is met — the task has multiple hidden steps / high cognitive load. Some of the problems involve comparing two fractions at a time that are explicitly given to the student, while other problems involve making determinations of which fractions to use in comparison; that carries a significantly higher cognitive load as well as additional steps. This suggests the lesson should be split. The most efficient way to split, so as not to violate the checklist, is to divide the lesson into two:
-
-- Word Problems Involving Identifying Correct Fraction Comparisons.
-- Word Problems Involving Comparing Multiple Fractions.
-
-Determining which problems to model — for each of the two lessons, determine the minimum viable modeling set that aligns to the desired characteristics:
-
-- Lesson 1 (identifying correct fraction comparisons) — model explicitly: EASY, given a fraction model, determine which inequality is true; MEDIUM, identifying correct comparisons from a word problem with two or three fractions; HARD, given a table with 4 or 5 values, determine which comparison is true.
-- Lesson 2 (comparing multiple fractions) — model explicitly: EASY, finding a fraction greater or less than another given fraction; MEDIUM, use a table with qualitative answer choices, requiring multiple comparisons.
-
-Problems that do not require explicit modeling:
-
-- A prompt that looks different but measures the same skill — evaluating which comparisons are true. Students with solid mastery of this skill should be able to answer correctly.
-- A question with slightly different formatting (such as bullets) that is essentially the same as the word problems containing three fractions where students identify the true comparison.
-- A problem whose rigor matches the broader problem set and the underlying skill demands — finding a number less than a given number is already covered in other problems, and it is written in a familiar, already-mastered representation.`
+Determining which problems to model — for each lesson, the minimum viable modeling set: Lesson 1 models EASY (fraction model → which inequality is true), MEDIUM (identifying correct comparisons from a word problem with two or three fractions), HARD (a table with 4–5 values → which comparison is true); Lesson 2 models EASY (finding a fraction greater/less than a given fraction) and MEDIUM (a table with qualitative answer choices requiring multiple comparisons). Problems that look different but measure the same mastered skill, differ only in formatting, or sit at the same rigor over already-mastered representations go straight to practice.`
 
 const DOCTRINE_CONTENT = `## Authority
 
@@ -239,10 +419,10 @@ export function getFramework(): FrameworkDoc {
   return {
     engine: {
       kind: 'engine',
-      name: 'No HITL Curriculum Scope Generator Specifications',
+      name: 'Curriculum Atomization, Item Alignment & Coherence Guide',
       description:
-        'The academic specification for the curriculum scope generator. It defines the educational model, scope design principles, evidence hierarchy, lesson schema, generation methodology, quality standards, and regeneration process that govern how standards-aligned curriculum scopes are produced. Where implementation details are necessary to explain the methodology, they are included, but the document is written from a curriculum and instructional design perspective rather than as software documentation.',
-      version: 'v3.1',
+        'The academic specification for the curriculum scope generator, compiled from the Curriculum Atomization, Item Alignment & Coherence Guide — a Direct Instruction framework for decomposing standards into teachable lessons, aligning state-level assessment items, and mapping coherence across lessons, units, and grades. It defines the atom conditions, the discovery process, split and don\u2019t-split rules, the five lesson types, ordering rules, the Cumulative Mastery Ledger, the released-item Placement Rule and Exclusion Triage, the Item Generation Doctrine, and the three-tier coherence webs that govern how standards-aligned curriculum scopes are produced.',
+      version: 'v4.0',
       updated: '2026-07-09',
       content: ENGINE_CONTENT,
     },

@@ -25,9 +25,13 @@ const RUN_ATTEMPT_CAP = 3
 /**
  * Deterministic failures — the same input fails the same way every attempt, so
  * retrying only burns 10-minute windows and API spend. Fail fast.
+ * (The generate plan/cards steps handle raw max_tokens truncation themselves —
+ * effort-ladder/call-size escalation — and only surface the "exceeded the
+ * model's output budget" message once escalation is exhausted; the raw
+ * "truncated (max_tokens" match remains for kinds without such handling.)
  */
 const TERMINAL_ERROR =
-  /truncated \(max_tokens|declined this request|compiled grammar is too large|is password-protected|did not fit the 10-minute execution window/i
+  /truncated \(max_tokens|exceeded the model's output budget|declined this request|compiled grammar is too large|is password-protected|did not fit the 10-minute execution window/i
 
 /**
  * Queue-triggered pipeline worker on `genjobs`, dispatching on

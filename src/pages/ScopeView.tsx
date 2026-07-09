@@ -4,11 +4,14 @@ import { api } from '../api'
 import { cardContent, fieldMeta, scopeCardContext } from '../data/meta'
 import { huntedToItemRecord } from '../packets'
 import { scopeUnsettled, useScopePolling, useStore } from '../store'
-import type { Citation, DecisionEntry, DecisionField, EvidencePacket, Lesson, Proposal, Scope } from '../types'
-import { breakNumberedList, Btn, capsStandardCodes, citationSourceLabel, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill, SectionLabel } from '../ui'
+import type { Citation, DecisionEntry, DecisionField, EvidencePacket, Lesson, Scope } from '../types'
+import { breakNumberedList, Btn, capsStandardCodes, citationSourceLabel, CiteChips, GeneratedShot, ItemShot, Modal, Mono, Pill } from '../ui'
+import DependencyMap from './DependencyMap'
 
-const typeTone: Record<Lesson['type'], { label: string; tone: 'accent' | 'cite' | 'night' }> = {
+const typeTone: Record<Lesson['type'], { label: string; tone: 'accent' | 'cite' | 'night' | 'green' | 'amber' }> = {
+  preskill: { label: 'preskill', tone: 'amber' },
   'new-learning': { label: 'new-learning atom', tone: 'accent' },
+  representation: { label: 'representation', tone: 'green' },
   bridge: { label: 'bridge', tone: 'night' },
   'application-tier': { label: 'application tier', tone: 'cite' },
 }
@@ -173,195 +176,6 @@ const prerequisiteItems = (content: string): string[] => {
     .filter(Boolean)
   const items = lines.length > 1 ? lines : lines.flatMap((line) => line.split(/;\s+/))
   return items.map((s) => s.trim()).filter(Boolean)
-}
-
-// ---------- data-informed revision ----------
-
-function RevisionDialog({ scope, onClose }: { scope: Scope; onClose: () => void }) {
-  const { submitReport, iterateProposal, resolveProposal, scopes } = useStore()
-  const [text, setText] = useState('')
-  // Reconnect to an unresolved proposal (drafting, draft, or mid-apply) —
-  // closing the dialog must never orphan a proposal the user can't reach again.
-  const [proposalId, setProposalId] = useState<string | null>(() => {
-    const open = [...scope.proposals].reverse().find((p) => p.working || p.status === 'drafting' || p.status === 'draft')
-    return open?.id ?? null
-  })
-  const [feedback, setFeedback] = useState('')
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const live = scopes.find((s) => s.id === scope.id)
-  const proposal = live?.proposals.find((p) => p.id === proposalId)
-
-  const submit = async () => {
-    setSubmitting(true)
-    setSubmitError(null)
-    try {
-      // Scope-level report: the update may touch any number of lessons, so the
-      // target is the whole scope — the drafted change set names the lessons.
-      const p = await submitReport(scope.id, 'scope', text)
-      setProposalId(p.id)
-    } catch (e) {
-      setSubmitError(e instanceof Error ? e.message : 'Could not submit the report.')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  return (
-    <Modal open onClose={onClose} title="Update from Feedback or Student Data" wide>
-      {!proposal ? (
-        <div className="space-y-4">
-          <p className="text-[12.5px] leading-relaxed text-ink-2">
-            Describe what prompted this update, including the lessons involved and any key findings or recurring
-            patterns. Your report will be analyzed to generate evidence-based recommendations. All proposed changes are
-            reviewed before anything is applied.
-          </p>
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            rows={5}
-            className="w-full rounded-xl border border-hairline bg-panel px-3.5 py-3 text-[13px] leading-relaxed outline-none placeholder:text-ink-3 focus:border-accent/40"
-          />
-          {submitError && (
-            <div className="rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] leading-relaxed text-rust">{submitError}</div>
-          )}
-          <div className="flex justify-end">
-            <Btn kind="primary" disabled={text.trim().length < 20 || submitting} onClick={() => void submit()}>
-              {submitting ? 'Submitting…' : 'Submit report'}
-            </Btn>
-          </div>
-        </div>
-      ) : (
-        <ProposalView
-          proposal={proposal}
-          feedback={feedback}
-          setFeedback={setFeedback}
-          onIterate={() => {
-            void iterateProposal(scope.id, proposal.id, feedback)
-            setFeedback('')
-          }}
-          onResolve={(accept) => {
-            void resolveProposal(scope.id, proposal.id, accept)
-            onClose()
-          }}
-        />
-      )}
-    </Modal>
-  )
-}
-
-function ProposalView({
-  proposal,
-  feedback,
-  setFeedback,
-  onIterate,
-  onResolve,
-}: {
-  proposal: Proposal
-  feedback: string
-  setFeedback: (v: string) => void
-  onIterate: () => void
-  onResolve: (accept: boolean) => void
-}) {
-  const working = proposal.working || proposal.status === 'drafting'
-  return (
-    <div className="space-y-5">
-      <div className="rounded-xl border border-rust/20 bg-rust-wash/60 p-3.5">
-        <div className="flex items-center gap-2">
-          <Pill tone="red">PerformanceReport</Pill>
-          <span className="text-[11.5px] text-ink-3">{proposal.report.date} · {proposal.report.actor} · target {proposal.report.target}</span>
-        </div>
-        <p className="mt-2 font-display text-[13px] leading-relaxed text-ink-2 italic">“{proposal.report.text}”</p>
-      </div>
-
-      {working && (
-        <div className="animate-rise flex items-center gap-3 rounded-xl border border-accent/25 bg-accent-wash/40 px-4 py-3">
-          <span className="stage-pulse h-2 w-2 shrink-0 rounded-full bg-accent" />
-          <p className="text-[12.5px] leading-relaxed text-accent-deep">
-            {proposal.status === 'drafting'
-              ? 'Drafting the change set — mapping the report onto the engine’s Editing-Splits logic. Nothing mutates until you accept.'
-              : 'Revising the draft per your feedback — the round is appended when it completes.'}
-          </p>
-        </div>
-      )}
-
-      {proposal.changes.length > 0 && (
-      <div>
-        <SectionLabel>Draft change set — rendered as a diff, nothing mutated</SectionLabel>
-        <div className="mt-2 space-y-3">
-          {proposal.changes.map((ch, i) => (
-            <div key={i} className="overflow-hidden rounded-xl border border-hairline">
-              <div className="flex items-center gap-2 border-b border-hairline bg-paper/70 px-3.5 py-2">
-                <Pill tone={ch.kind === 'split' ? 'accent' : 'neutral'}>{ch.kind}</Pill>
-                <Mono className="text-[12px] font-medium text-ink">{ch.target}</Mono>
-                <Mono className="ml-auto text-[10.5px] text-ink-3">{ch.rule}</Mono>
-              </div>
-              <div className="divide-y divide-hairline text-[12.5px] leading-relaxed">
-                <div className="flex gap-2.5 bg-rust-wash/50 px-3.5 py-2.5">
-                  <span className="font-mono font-semibold text-rust">−</span>
-                  <span className="text-ink-2 line-through decoration-rust/40">{ch.before}</span>
-                </div>
-                <div className="flex gap-2.5 bg-verdant-wash/60 px-3.5 py-2.5">
-                  <span className="font-mono font-semibold text-verdant">+</span>
-                  <span className="text-ink">{ch.after}</span>
-                </div>
-              </div>
-              <div className="border-t border-hairline px-3.5 py-2.5 text-[12px] leading-relaxed text-ink-2">
-                <span className="font-semibold text-ink">Rationale — </span>{ch.rationale}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      )}
-
-      {proposal.ripple.length > 0 && (
-      <div>
-        <SectionLabel>Ripple preview</SectionLabel>
-        <ul className="mt-1.5 space-y-1">
-          {proposal.ripple.map((r, i) => (
-            <li key={i} className="flex items-start gap-2 text-[12.5px] leading-relaxed text-ink-2">
-              <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-ink-3" />{r}
-            </li>
-          ))}
-        </ul>
-      </div>
-      )}
-
-      {proposal.rounds.length > 0 && (
-        <div>
-          <SectionLabel>Iteration history</SectionLabel>
-          <div className="mt-2 space-y-2.5">
-            {proposal.rounds.map((r, i) => (
-              <div key={i} className="space-y-1.5">
-                <div className="ml-8 rounded-xl rounded-tr-sm bg-accent-wash px-3.5 py-2 text-[12.5px] leading-relaxed text-accent-deep">{r.feedback}</div>
-                <div className="mr-8 rounded-xl rounded-tl-sm border border-hairline bg-panel px-3.5 py-2 text-[12.5px] leading-relaxed text-ink-2">{r.response}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="space-y-3 border-t border-hairline pt-4">
-        <div className="flex gap-2">
-          <input
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
-            placeholder="Reply with feedback to iterate…"
-            className="flex-1 rounded-xl border border-hairline bg-panel px-3.5 py-2 text-[13px] outline-none placeholder:text-ink-3 focus:border-accent/40"
-          />
-          <Btn disabled={working || feedback.trim().length < 4} onClick={onIterate}>Iterate</Btn>
-        </div>
-        <div className="flex items-center justify-between">
-          <Btn kind="danger" disabled={working} onClick={() => onResolve(false)}>Abandon</Btn>
-          <div className="flex items-center gap-3">
-            <span className="text-[11.5px] text-ink-3">Acceptance creates a new immutable version with the report attached.</span>
-            <Btn kind="primary" disabled={working} onClick={() => onResolve(true)}>Accept proposal</Btn>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
 }
 
 // ---------- the 18-field card ----------
@@ -543,9 +357,8 @@ export default function ScopeView() {
   const nav = useNavigate()
   const scope = scopes.find((s) => s.id === id)
   const [sel, setSel] = useState<string | null>(null)
-  const [qcOpen, setQcOpen] = useState(false)
   const [histOpen, setHistOpen] = useState(false)
-  const [revisionOpen, setRevisionOpen] = useState(false)
+  const [mapOpen, setMapOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [retrying, setRetrying] = useState(false)
   const [genAction, setGenAction] = useState<'pause' | 'resume' | 'cancel' | null>(null)
@@ -779,9 +592,6 @@ export default function ScopeView() {
   const lesson = allLessons.find((l) => l.id === sel) ?? allLessons[0]
   // Lessons are numbered through the whole course (not restarting per unit).
   const courseLessonNumber = new Map(allLessons.map((l, i) => [l.id, i + 1]))
-  // Clean-field separation was retired as a QC gate; hide it on scopes generated before the removal.
-  const qcChecks = scope.qc.filter((q) => q.name !== 'Clean-field separation')
-
   return (
     <div className="flex h-full">
       {/* unit / lesson rail */}
@@ -800,7 +610,7 @@ export default function ScopeView() {
           {scope.engineVersion.split(' (')[0]} · {(scope.doctrineVersions[0] ?? '—').split(' (')[0]}
         </div>
         <div className="mt-3 flex flex-wrap gap-1.5 px-2">
-          <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setQcOpen(true)}>QC report</Btn>
+          <Btn kind="night" className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setMapOpen(true)}>Dependency Map</Btn>
           <Btn className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setHistOpen(true)}>History</Btn>
           <Btn className="!px-2.5 !py-1 !text-[11.5px]" disabled={exporting !== null} onClick={() => void exportCsv()}>
             {exporting === 'csv' ? 'Preparing…' : 'Download CSV'}
@@ -808,7 +618,6 @@ export default function ScopeView() {
           <Btn className="!px-2.5 !py-1 !text-[11.5px]" disabled={exporting !== null} onClick={() => void exportJson()}>
             {exporting === 'json' ? 'Preparing…' : 'Download JSON'}
           </Btn>
-          <Btn kind="night" className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setRevisionOpen(true)}>Update with Feedback/Data</Btn>
           <Btn kind="danger" className="!px-2.5 !py-1 !text-[11.5px]" onClick={() => setConfirmDelete(true)}>Delete</Btn>
         </div>
         {exportError && (
@@ -837,6 +646,8 @@ export default function ScopeView() {
                     <Mono className={`shrink-0 text-[10.5px] leading-snug ${lesson.id === l.id ? 'text-accent-deep' : 'text-ink-3'}`}>L{courseLessonNumber.get(l.id)}</Mono>
                     <span className="min-w-0 flex-1 text-[12.5px] leading-snug font-medium">{l.title}</span>
                     <span className="mt-1 ml-auto flex shrink-0 items-center gap-1">
+                      {l.type === 'preskill' && <span className="h-1.5 w-1.5 rounded-full border border-amber-ink" title="preskill" />}
+                      {l.type === 'representation' && <span className="h-1.5 w-1.5 rounded-full bg-verdant" title="representation" />}
                       {l.type === 'bridge' && <span className="h-1.5 w-1.5 rounded-full bg-night" title="bridge" />}
                       {l.type === 'application-tier' && <span className="h-1.5 w-1.5 rounded-full bg-cite" title="application tier" />}
                       {l.evidenceStatus !== 'observed' && <span className="h-1.5 w-1.5 rounded-full bg-amber-ink" title="inferred evidence" />}
@@ -866,20 +677,8 @@ export default function ScopeView() {
         <div className="h-16" />
       </div>
 
-      {/* QC modal */}
-      <Modal open={qcOpen} onClose={() => setQcOpen(false)} title="Auto-QC Report" wide>
-        <div className="space-y-2.5">
-          {qcChecks.map((q) => (
-            <div key={q.name} className="flex items-start gap-3 rounded-xl border border-hairline bg-panel p-3.5">
-              <Pill tone={q.status === 'pass' ? 'green' : q.status === 'flag' ? 'amber' : 'red'}>{q.status}</Pill>
-              <div>
-                <div className="text-[13px] font-semibold text-ink">{q.name}</div>
-                <p className="mt-0.5 text-[12.5px] leading-relaxed text-ink-2">{q.detail}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Modal>
+      {/* dependency map — full-screen coherence webs */}
+      {mapOpen && <DependencyMap scope={scope} onClose={() => setMapOpen(false)} />}
 
       {/* history modal */}
       <Modal open={histOpen} onClose={() => setHistOpen(false)} title="Version History" wide>
@@ -902,8 +701,6 @@ export default function ScopeView() {
           )}
         </div>
       </Modal>
-
-      {revisionOpen && <RevisionDialog scope={scope} onClose={() => setRevisionOpen(false)} />}
 
       {/* delete confirm */}
       <Modal open={confirmDelete} onClose={() => setConfirmDelete(false)} title="Delete Scope?">

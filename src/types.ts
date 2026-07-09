@@ -176,7 +176,14 @@ export interface CardField {
   inferred?: boolean
 }
 
-export type LessonType = 'new-learning' | 'bridge' | 'application-tier'
+/**
+ * The five lesson types of the Atomization Guide ("Types of Lessons"):
+ * preskill (prerequisite knowledge) · new-learning (a new behavior) ·
+ * representation (a new way of expressing already-learned knowledge) ·
+ * bridge (choosing between previously mastered atoms) · application-tier
+ * (transfer of mastered knowledge into authentic problems).
+ */
+export type LessonType = 'preskill' | 'new-learning' | 'representation' | 'bridge' | 'application-tier'
 
 export interface GeneratedExemplar {
   stem: string
@@ -237,6 +244,49 @@ export interface Unit {
   rationale: string
   strand: string
   lessons: Lesson[]
+}
+
+// ---------------------------------------------------------------------------
+// Coherence webs (Atomization Guide, Part IV) — navigable dependency maps
+// emitted with every generated scope. Three tiers: an atom web per unit, one
+// unit web for the course, one grade progression web (topic level). Every web
+// is a DAG whose every edge reads "is required by"; the data object is the
+// deliverable — any rendering must be regenerable from it alone.
+// ---------------------------------------------------------------------------
+
+export type WebNodeKind = 'lesson' | 'prerequisite' | 'unit' | 'topic'
+
+export interface WebNode {
+  id: string
+  label: string
+  kind: WebNodeKind
+  /** Lesson type (atom webs) — one of the five LessonType values. */
+  type?: string
+  /** One-sentence objective (atom-web lesson nodes). */
+  objective?: string
+  /** Assessment source from the Item Alignment Map (atom-web lesson nodes). */
+  assessment?: 'RELEASED' | 'GENERATED' | 'MIXED'
+  /** Grade-progression column: 'prior' | 'this' | 'next' (topic nodes only). */
+  grade?: string
+  /** Triage repairs stay visible: Q2-inserted atoms and Q1-added prerequisites. */
+  flags?: ('inserted-by-triage' | 'added-to-M0')[]
+}
+
+export interface WebEdge {
+  from: string
+  to: string
+  /** The one-to-three skills that carry the dependency ("is required by"). */
+  carries: string[]
+}
+
+export interface CoherenceWeb {
+  level: 'atom' | 'unit' | 'grade'
+  /** Unit id for atom webs; the course/scope for unit and grade webs. */
+  scope: string
+  /** Display title for the web (e.g. the unit title). */
+  title: string
+  nodes: WebNode[]
+  edges: WebEdge[]
 }
 
 export interface QCCheck {
@@ -317,6 +367,14 @@ export interface Scope {
   history: ScopeVersion[]
   proposals: Proposal[]
   protectedBoundaries?: string[][] // lesson-id pairs protected by a hard split criterion
+  /**
+   * The three-tier coherence webs (atom webs per unit, the unit web, the
+   * grade progression web), built at finalize from the plan's dependency
+   * extraction. Optional only on scopes generated before dependency mapping
+   * existed. Self-contained: nodes carry their own labels/metadata, so the
+   * webs render even if later reruns reshape the units.
+   */
+  coherence?: CoherenceWeb[]
   creator: string
   updated: string
 }

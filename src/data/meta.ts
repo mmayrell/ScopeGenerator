@@ -5,7 +5,7 @@ import type { Lesson, Scope, StandardNode, StandardSet, SystemArtifact } from '.
 import { capsStandardCodes } from '../ui'
 
 export const systemArtifacts: SystemArtifact[] = [
-  { id: 'sys-engine', kind: 'engine', name: 'No HITL Curriculum Scope Generator Specifications', version: 'v3.1', published: '2026-07-09', note: 'Fixed with the tool. Split, don’t-split, integration-lesson, and modeling-scope rules for any standard set; full-standard atomization (P4) and no-evidence-is-not-no-lesson (P5).' },
+  { id: 'sys-engine', kind: 'engine', name: 'Curriculum Atomization, Item Alignment & Coherence Guide', version: 'v4.0', published: '2026-07-09', note: 'Fixed with the tool. The atom conditions, discovery process, split/don’t-split rules, five lesson types, ordering rules, Cumulative Mastery Ledger, released-item Placement Rule with Exclusion Triage, Item Generation Doctrine (state rigor, ledger scope), and the three-tier coherence webs.' },
   { id: 'sys-doctrine', kind: 'doctrine', name: 'Direct Instruction Framework', version: 'v1.8', published: '2026-04-19', note: 'Controlling method authority. Stein-priority encoded in all doctrine prompts.' },
 ]
 
