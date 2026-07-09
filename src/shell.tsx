@@ -18,10 +18,7 @@ export default function Shell() {
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <header className="flex shrink-0 items-center gap-7 overflow-x-auto border-b border-ink/10 bg-panel px-6 py-[14px] lg:px-10">
-        {/* the logo file is opaque black, so it wears a black badge rather than sitting raw on the white header */}
-        <div className="flex h-[30px] shrink-0 items-center rounded-lg bg-black px-2.5">
-          <img src={lwaiLogo} alt="LearnWith.AI" className="h-[20px] w-auto" />
-        </div>
+        <img src={lwaiLogo} alt="LearnWith.AI" className="h-[30px] w-auto shrink-0" />
         <nav className="ml-4 flex items-center gap-7 lg:ml-9">
           {nav.map((n) => (
             <NavLink
