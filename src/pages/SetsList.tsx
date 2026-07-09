@@ -434,12 +434,14 @@ export default function SetsList() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all')
   const jobs = useDraftSetJobs(sets)
   const q = query.trim().toLowerCase()
-  const filtered = sets.filter((st) => {
-    if (statusFilter === 'published' && !st.published) return false
-    if (statusFilter === 'draft' && st.published) return false
-    if (!q) return true
-    return `${st.name} ${st.subject} ${st.gradeSpan}`.toLowerCase().includes(q)
-  })
+  const filtered = sets
+    .filter((st) => {
+      if (statusFilter === 'published' && !st.published) return false
+      if (statusFilter === 'draft' && st.published) return false
+      if (!q) return true
+      return `${st.name} ${st.subject} ${st.gradeSpan}`.toLowerCase().includes(q)
+    })
+    .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }))
   return (
     <div className="mx-auto max-w-5xl px-10 py-10">
       <div className="flex items-end justify-between">
