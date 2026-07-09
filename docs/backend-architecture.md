@@ -110,6 +110,15 @@ blob; rotating the storage account key revokes them all.
 | `POST /packets/{id}/retry` | → `{ jobId }` (202) | resumes a failed/stopped/stalled hunt: packet → `hunting` with `huntJobId` stamped, then re-dispatches the SAME job id (stop flag cleared) — never a fresh row that a stale execution could wedge; `doneBatches` make finished batches skip. A provably-live active job (log progress < 15 min, no stop flag) is reused as-is |
 | `DELETE /packets/{id}` | → `{ ok: true }` | flags any active hunt job to stop, then removes the doc, index row, and the packet's screenshot blobs |
 | `PUT /scope-uploads/{token}/{fileName}` | raw bytes (`application/pdf`, ≤15 MB) → `{ blobPath }` | released questions attached to a topic scope request, uploaded BEFORE `POST /scopes` (client mints the token, sends it as `uploadsToken` + `uploadNames`); stored at `uploads/scope-uploads/<token>/<fileName>`; the pipeline attaches the PDFs to plan/cards calls as native document blocks (evidence rank: released items per P2, primary models for generated exemplars, never in itemRefs); deleted with the scope |
+| `GET /lsg/snapshot?courseName=…` | → `LsgSnapshot` | Lesson Scope Generation (standalone tool — see §Lesson Scope Generation). The Course Snapshot API: current course + lessons resolved by course NAME; an unknown name returns `{ courseExists: false, course: null, lessons: [] }` (never 404 — "does not exist" decides CREATE vs UPDATE) |
+| `GET /lsg/courses` | → `LsgCourse[]` | the course registry, newest-updated first |
+| `GET /lsg/courses/{id}` | → `LsgCourse` | |
+| `DELETE /lsg/courses/{id}` | → `{ ok: true }` | removes the course doc + index row; runs are untouched |
+| `POST /lsg/runs` | `{ requestType, courseContext, generationScope }` → `{ run: LsgRun, jobId }` (201) | captures the course snapshot ONTO the run (stable across worker retries), creates the run doc (status `generating`), enqueues an `lsg` job. `mode: 'LESSONS'` requires ≥1 `includedLessons` and an existing course (400 otherwise); enqueue failure settles both the job and the run `failed` |
+| `GET /lsg/runs` | → `LsgRunSummary[]` | slim rows (no snapshot/output), newest first |
+| `GET /lsg/runs/{id}` | → `LsgRun` | full doc incl. snapshot and (when complete) output — polled while `generating` |
+| `GET /lsg/runs/{id}/job` | → `JobStatus` | generation progress (`totalUnits`/`unitsDone` = field batches) |
+| `DELETE /lsg/runs/{id}` | → `{ ok: true }` | removes the run doc + index row; the course registry is untouched |
 | `GET /library` | → `{ files: LibraryFile[] }` | Reference Library — the four document sets (standards/progression/items/unpacking) filed per framework (`ccss`/`teks`/`sol`/`best`) and grade (3–8). Listing derives from a blob prefix walk (no index doc) |
 | `PUT /library/{framework}/{grade}/{role}/{fileName}` | raw bytes (`application/pdf`) → `{ file: LibraryFile }` (201) | stores to `uploads` container under `library/...`; same name replaces the document. Every path segment is validated |
 | `DELETE /library/{framework}/{grade}/{role}/{fileName}` | → `{ ok: true }` | |
@@ -120,7 +129,7 @@ blob; rotating the storage account key revokes them all.
 ```ts
 interface JobStatus {
   jobId: string
-  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet'
+  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg'
   status: 'queued' | 'running' | 'complete' | 'failed'
   stage: string            // human-readable current stage, e.g. "Stage 3-4 - Atomization & sequencing" (always singular 'Stage', parsed by the frontend)
   stagesDone: number       // 0..totalStages
@@ -142,6 +151,8 @@ Endpoints that persist state and then enqueue a job revert the persisted state i
 - Sets: PartitionKey `set`, RowKey `<setId>`, props: `name`, `published` (bool), `updated`, `blobPath`
 - Scopes: PartitionKey `scope`, RowKey `<scopeId>`, props: `title`, `setId`, `status`, `version`, `updated`, `blobPath`
 - Packets: PartitionKey `packet`, RowKey `<packetId>`, props: `title`, `status`, `updated`, `blobPath`
+- LSG courses: PartitionKey `lsg-course`, RowKey `<courseId>`, props: `courseName`, `updated`, `blobPath`
+- LSG runs: PartitionKey `lsg-run`, RowKey `<runId>`, props: `courseName`, `status`, `updated`, `blobPath`
 
 **Table `jobs`** — PartitionKey `job`, RowKey `<jobId>`, props: `scopeId`/`setId`/`packetId`, `kind`, `status`,
 `stage`, `stagesDone`, `totalStages`, `unitsDone`, `totalUnits`, `error`, `logJson` (stringified log
@@ -160,7 +171,13 @@ all units done reports it; finalize itself is idempotent).
   (`items` merged per batch, `doneBatches` keys). `huntJobId` is the ownership token: only the
   stamped job may cancel/complete the packet or merge items — superseded executions settle their
   own job row and abandon
+- `lsg/courses/<courseId>.json` — current `LsgCourse` (the LSG course registry; `courseId` is the
+  slug of the course NAME — the primary key per the LSG design's Decision 2). Mutations go through
+  `mutateLsgCourse` (blob ETag If-Match + retry)
+- `lsg/runs/<runId>.json` — current `LsgRun` (snapshot captured at create; output + `applied` written
+  by the worker). Mutations go through `mutateLsgRun`
 - `jobs/<jobId>/plan.json`, `jobs/<jobId>/unit-<i>.json` — pipeline checkpoints
+- `jobs/<jobId>/lsg-plan.json`, `jobs/<jobId>/lsg-batch-<i>.json` — LSG pipeline checkpoints
 
 **Blob container `uploads`**: `<setId>/<role>/<fileName>` — uploaded PDFs;
 `library/<framework>/<grade>/<role>/<fileName>` — Reference Library documents (no index — the
@@ -179,11 +196,12 @@ base64; `@azure/storage-queue` does not encode by default):
 ```ts
 interface JobMessage {
   jobId: string
-  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet'
-  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'hunt'   // 'run' for single-step kinds; 'hunt' for kind 'packet'
+  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg'
+  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'hunt'   // 'run' for single-step kinds (incl. 'lsg'); 'hunt' for kind 'packet'
   scopeId?: string
   setId?: string
   packetId?: string
+  lsgRunId?: string       // for kind 'lsg'
   unitIndex?: number      // for step 'cards'
   payload?: Record<string, unknown>   // kind-specific (rerun target/mode, report text, feedback, proposalId…)
 }
@@ -241,6 +259,8 @@ Failure at any step (after the queue's built-in retries, `maxDequeueCount` 12) i
 - `apply-proposal`: scope back to `complete`, history entry `Revision apply failed`.
 - `ingest`: a `CoverageWarning` starting with `Ingestion failed:` is added to the set (the frontend
   watches for it); the set stays unpublished.
+- `lsg`: run settled `failed` + `error`; the course registry is untouched (persist only happens on
+  success).
 
 **Poison-queue settlement** (`genjobs-poison` trigger in `worker.ts`): a message the host poisons
 means every delivery died WITHOUT the worker recording anything — in practice the 10-minute
@@ -336,6 +356,39 @@ points that way; the hunt itself never reads scope or set data.)
   Stop (`cancelRequested`) → packet `cancelled` at the next checkpoint, found items kept. Terminal
   worker failure → packet `failed` via `markPacketFailed`, found items kept. `POST /packets/{id}/retry`
   resumes any non-complete packet past its `doneBatches`.
+
+## Lesson Scope Generation (kind `lsg`, step `run`)
+
+A **standalone** tool (design doc "Lesson Scope Generation: Create Course vs Partial Edit") — it
+never reads standard sets, scopes, or packets. It supports two workflows: create a full course, and
+update an existing course when only some lessons change.
+
+- **Course identity**: the primary key is the course NAME (`courseIdFromName` slugs it). The same
+  name always updates the same course in place — there are no course versions; a different name
+  creates a different course.
+- **Snapshot at create**: `POST /lsg/runs` captures the Course Snapshot onto the run doc, so every
+  worker attempt plans against one stable view. The snapshot (not the model) decides
+  `courseOperation`: course exists → UPDATE, else CREATE.
+- **Pipeline** (`api/src/pipeline/lsg.ts`), checkpointed for the 10-minute Consumption timeout with
+  the generate pipeline's deadline machinery (8.5-minute in-process abort, `payload.cuts`
+  escalation, 4.5-minute launch budget with same-message re-enqueue):
+  1. **Target plan & matching** (one Claude call, effort ladder high → medium → low on cuts):
+     builds the target lesson plan from the framework's official standards under the engine
+     document, matches it against the snapshot per the design's matching rules, and returns
+     per-lesson operations. Checkpointed to `jobs/<jobId>/lsg-plan.json`. Code-level sanitizing:
+     an UPDATE/DEACTIVATE whose `lessonId` is not in the snapshot demotes to CREATE / is dropped
+     (the platform owns lesson identity — Decision 4).
+  2. **Scope fields** (batches of 5 lessons, effort medium, low after a cut): the ten DM-bound
+     fields for every CREATE/UPDATE lesson (DEACTIVATE lessons carry only their reason). Batch
+     replies must echo the prompt-assigned keys exactly (validated before checkpointing).
+     Checkpointed to `jobs/<jobId>/lsg-batch-<i>.json`; `unitsDone`/`totalUnits` report batches.
+  3. **Persist** (the orchestrator role, Decision 5): the assembled `LsgOutput` lands on the run,
+     then is applied to the course registry — CREATE assigns a platform lessonId (`newId('lesson')`),
+     UPDATE merges onto the existing lesson by id, DEACTIVATE flips status to INACTIVE. The apply is
+     idempotent under queue redelivery: CREATEs upsert by (unitName, lessonTitle) among ACTIVE
+     lessons. Finally the run settles `complete` with `applied: true`.
+- Output lessons keep `lessonId: null` on CREATE (the registry, not the output, holds the assigned
+  ids), and echo the snapshot id verbatim on UPDATE/DEACTIVATE.
 
 ## Guardrails (synchronous, data-driven)
 

@@ -213,6 +213,86 @@ export const APPLY_SCHEMA = withLessonDefs(
 )
 
 
+// ---------------------------------------------------------------------------
+// Lesson Scope Generation (LSG) — create course vs partial edit
+// ---------------------------------------------------------------------------
+
+// Phase 1: the target lesson plan — course operation plus per-lesson operations
+// and identity fields only (the DM fields fill in per batch in phase 2, so a
+// full-course plan stays inside one call's output budget). lessonId '' = null
+// (new lesson — the platform assigns the id); deactivationReason '' = null.
+export const LSG_PLAN_SCHEMA = obj({
+  courseOperation: enums(['CREATE', 'UPDATE']),
+  targetCourse: obj({ courseName: STR, grade: STR, subject: STR, standardSet: STR }),
+  lessons: arr(
+    obj({
+      lessonId: STR,
+      operation: enums(['CREATE', 'UPDATE', 'DEACTIVATE']),
+      unitName: STR,
+      lessonOrder: INT,
+      standardId: STR,
+      lessonTitle: STR,
+      deactivationReason: STR,
+    }),
+  ),
+  planDecisions: arr(STR),
+})
+
+// Phase 2: the ten DM-bound scope fields for a batch of plan lessons — each
+// echoes the `key` assigned in the prompt ("L1", "L2", …) for exact matching.
+export const LSG_FIELDS_BATCH_SCHEMA = obj({
+  lessons: arr(
+    obj({
+      key: STR,
+      objectives: STR,
+      assessmentBoundary: STR,
+      difficultyCeiling: STR,
+      prerequisites: STR,
+      progressionPlacement: STR,
+      newLearning: STR,
+      instructionalApproach: STR,
+      nonGoals: STR,
+      assessmentEvidence: STR,
+      releasedItems: STR,
+    }),
+  ),
+})
+
+export interface WireLsgPlanLesson {
+  lessonId: string
+  operation: 'CREATE' | 'UPDATE' | 'DEACTIVATE'
+  unitName: string
+  lessonOrder: number
+  standardId: string
+  lessonTitle: string
+  deactivationReason: string
+}
+
+export interface WireLsgPlan {
+  courseOperation: 'CREATE' | 'UPDATE'
+  targetCourse: { courseName: string; grade: string; subject: string; standardSet: string }
+  lessons: WireLsgPlanLesson[]
+  planDecisions: string[]
+}
+
+export interface WireLsgFields {
+  key: string
+  objectives: string
+  assessmentBoundary: string
+  difficultyCeiling: string
+  prerequisites: string
+  progressionPlacement: string
+  newLearning: string
+  instructionalApproach: string
+  nonGoals: string
+  assessmentEvidence: string
+  releasedItems: string
+}
+
+export interface WireLsgFieldsBatch {
+  lessons: WireLsgFields[]
+}
+
 // Flat StandardNode list — parentCode '' marks a root; the tree is rebuilt in code.
 export const INGEST_STANDARDS_SCHEMA = obj({
   nodes: arr(

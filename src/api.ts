@@ -4,6 +4,12 @@ import type {
   FrameworkDoc,
   LibraryFile,
   LibraryRole,
+  LsgCourse,
+  LsgMode,
+  LsgRequestType,
+  LsgRun,
+  LsgRunSummary,
+  LsgSnapshot,
   PacketFramework,
   PacketStandard,
   PacketSummary,
@@ -43,7 +49,7 @@ export class NotFoundError extends Error {
 
 export interface JobStatus {
   jobId: string
-  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet'
+  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg'
   status: 'queued' | 'running' | 'complete' | 'failed' | 'cancelled'
   cancelRequested?: boolean
   stage: string // human-readable current stage, e.g. "Stage 3-4 - Atomization & sequencing"
@@ -246,6 +252,32 @@ export const api = {
   retryPacket: (id: string) => request<{ jobId: string }>('POST', `/packets/${encodeURIComponent(id)}/retry`),
 
   deletePacket: (id: string) => request<{ ok: true }>('DELETE', `/packets/${encodeURIComponent(id)}`),
+
+  // ---- Lesson Scope Generation (create course vs partial edit) ----
+
+  /** Course Snapshot API — "does not exist" is a first-class answer, never a 404. */
+  lsgSnapshot: (courseName: string) =>
+    request<LsgSnapshot>('GET', `/lsg/snapshot?courseName=${encodeURIComponent(courseName)}`),
+
+  listLsgCourses: () => request<LsgCourse[]>('GET', '/lsg/courses'),
+
+  getLsgCourse: (id: string) => request<LsgCourse>('GET', `/lsg/courses/${encodeURIComponent(id)}`),
+
+  deleteLsgCourse: (id: string) => request<{ ok: true }>('DELETE', `/lsg/courses/${encodeURIComponent(id)}`),
+
+  createLsgRun: (body: {
+    requestType: LsgRequestType
+    courseContext: { subject: string; grade: string; curriculumFramework: string; courseName: string }
+    generationScope: { mode: LsgMode; includedLessons: string[]; editInstruction: string }
+  }) => request<{ run: LsgRun; jobId: string }>('POST', '/lsg/runs', body),
+
+  listLsgRuns: () => request<LsgRunSummary[]>('GET', '/lsg/runs'),
+
+  getLsgRun: (id: string) => request<LsgRun>('GET', `/lsg/runs/${encodeURIComponent(id)}`),
+
+  getLsgRunJob: (id: string) => request<JobStatus>('GET', `/lsg/runs/${encodeURIComponent(id)}/job`),
+
+  deleteLsgRun: (id: string) => request<{ ok: true }>('DELETE', `/lsg/runs/${encodeURIComponent(id)}`),
 
   // ---- Reference Library (framework → grade → four document slots) ----
 

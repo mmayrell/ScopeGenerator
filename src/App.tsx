@@ -9,6 +9,7 @@ import ScopeView from './pages/ScopeView'
 import EvidencePackets from './pages/EvidencePackets'
 import ReferenceLibrary from './pages/ReferenceLibrary'
 import System from './pages/System'
+import LessonScopeGen from './pages/LessonScopeGen'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/library" element={<ReferenceLibrary />} />
         <Route path="/packets" element={<EvidencePackets />} />
         <Route path="/system" element={<System />} />
+        <Route path="/lsg" element={<LessonScopeGen />} />
       </Route>
     </Routes>
   )

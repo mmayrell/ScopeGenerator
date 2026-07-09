@@ -2,6 +2,7 @@ import {
   Artifact,
   ItemRecord,
   Lesson,
+  LsgRun,
   PerformanceReport,
   Proposal,
   Scope,
@@ -11,7 +12,7 @@ import {
 } from '../domain/types'
 import { getFramework } from '../data/framework'
 import { doctrineExcerptsFor, DoctrineQuery } from './doctrine'
-import { PlanLessonSkeleton, PlanOutput, PlanUnit } from './schemas'
+import { PlanLessonSkeleton, PlanOutput, PlanUnit, WireLsgPlan, WireLsgPlanLesson } from './schemas'
 
 /**
  * Prompt assembly (spec §6: "Every stage prompt is assembled from: relevant
@@ -621,4 +622,101 @@ function flattenTreeDigest(nodes: StandardSet['tree'], out: string[] = []): stri
     if (n.children) flattenTreeDigest(n.children, out)
   }
   return out
+}
+
+// ---------------------------------------------------------------------------
+// Lesson Scope Generation prompts (create course vs partial edit)
+// ---------------------------------------------------------------------------
+
+const lsgSystem = (role: string): string =>
+  `You are Lesson Scope Generation (LSG) — ${role}. LSG owns the pedagogical plan for a course: it reads the current course state from a snapshot, builds the target lesson plan for the request, matches it against the existing lessons, and returns a course operation plus per-lesson operations. It never writes the database and never generates lesson content — downstream components consume its output.
+
+${engineDocBlock()}
+
+There is no uploaded evidence corpus on this request: work from your knowledge of the named curriculum framework's OFFICIAL published standards (codes and wording) for the stated subject and grade. Standard IDs must be genuine codes of that framework — never invented. Where you are uncertain of a code's exact form, use the framework's documented conventions and stay consistent.
+
+${OUTPUT_DISCIPLINE}`
+
+const MATCHING_RULES = `Matching rules (binding — Decision 4: the platform owns lesson identity):
+- No existing course → courseOperation CREATE; every lesson operation CREATE with lessonId "".
+- Existing course found → courseOperation UPDATE.
+- A target lesson that matches an existing snapshot lesson (same teachable skill, judged by content — title, standard, and unit, not string equality) → echo that lesson's lessonId VERBATIM and set operation UPDATE.
+- A target lesson with no match → operation CREATE with lessonId "".
+- An existing IN-SCOPE lesson missing from the new plan → operation DEACTIVATE with its existing lessonId and a concrete deactivationReason.
+- An existing lesson OUTSIDE the requested partial scope → omit from the output entirely (it stays untouched).`
+
+export function lsgPlanPrompt(run: LsgRun): Prompt {
+  const scopeText =
+    run.generationScope.mode === 'FULL_COURSE'
+      ? `FULL_COURSE: plan the complete course — every unit and lesson a student needs to master the framework's official content standards for this subject and grade, atomized and sequenced per the engine document. ALL existing lessons are in scope: any existing lesson that does not survive into the new plan must be DEACTIVATED per the matching rules.`
+      : `LESSONS (partial edit): ONLY these existing lessons are in scope: ${run.generationScope.includedLessons.map((t) => `"${t}"`).join(', ')}. Plan the target state of exactly those lessons under the edit instruction — update them, split/replace them (CREATE the replacements + DEACTIVATE the originals), or deactivate them, as the instruction and the engine rules demand. Every other existing lesson is OUT of scope and must be omitted from the output.`
+
+  return {
+    system: lsgSystem('target-plan construction: decide the course operation and the per-lesson operations'),
+    user: `Build the target lesson plan for the request below, then match it against the course snapshot.
+
+${MATCHING_RULES}
+
+Generation scope — ${scopeText}
+
+Edit instruction from the requester: "${run.generationScope.editInstruction || '(none — plan from the framework and the engine rules alone)'}"
+
+Rules:
+- Lesson granularity, sequencing, and unit formation follow the engine document (atomize fully; preskills before composites; confusables separated; bridges after both parents).
+- unitName groups lessons into coherent strand units (Title Case); lessonOrder is the global 1-based teaching order across the whole output; lessonTitle follows the engine's How Lessons Are Named rules (Title Case, shortest string that says what the lesson covers and what makes it unique).
+- standardId: the single governing official standard code for the lesson's atom (the framework's canonical form, e.g. "3.NBT.A.1" or "3.2(A)").
+- For UPDATE lessons, keep unitName/lessonOrder/lessonTitle aligned with the updated target state (they may change), but the lessonId is ALWAYS the snapshot's id, verbatim.
+- deactivationReason: "" except on DEACTIVATE lessons, where it names the concrete reason (superseded by which lesson, out of scope since when, and why).
+- targetCourse: courseName EXACTLY as requested (it is the course's primary key — never normalize or improve it); grade and subject from the request; standardSet a display label like "Texas (TEKS) — Grade 3".
+- planDecisions: terse records of the consequential calls — the matching decisions (which snapshot lessons matched which targets and why), split/merge/deactivation reasoning, and any ambiguity in the edit instruction and how you resolved it.
+
+${jsonBlock('request', { requestType: run.requestType, courseContext: run.courseContext, generationScope: run.generationScope })}
+${jsonBlock('course_snapshot', run.snapshot ?? { courseExists: false, course: null, lessons: [] })}`,
+  }
+}
+
+export function lsgFieldsPrompt(
+  run: LsgRun,
+  plan: WireLsgPlan,
+  batch: { key: string; lesson: WireLsgPlanLesson }[],
+): Prompt {
+  const overview = plan.lessons.map((l) => ({
+    unitName: l.unitName,
+    lessonOrder: l.lessonOrder,
+    lessonTitle: l.lessonTitle,
+    standardId: l.standardId,
+    operation: l.operation,
+  }))
+  // Existing field content is the baseline for UPDATE lessons — the edit
+  // instruction modifies it; everything it does not touch carries over.
+  const snapshotByLessonId = new Map((run.snapshot?.lessons ?? []).map((l) => [l.lessonId, l]))
+  const currentState = batch
+    .filter((b) => b.lesson.lessonId && snapshotByLessonId.has(b.lesson.lessonId))
+    .map((b) => ({ key: b.key, current: snapshotByLessonId.get(b.lesson.lessonId) }))
+
+  return {
+    system: lsgSystem('lesson scope field generation for a batch of planned lessons'),
+    user: `Write the ten lesson-scope fields for each of the ${batch.length} lesson(s) in batch_lessons (echo each lesson's key verbatim). The full plan overview is supplied so relational fields (prerequisites, progression placement, non-goals) can reference sibling lessons by title.
+
+Field rules (each field is a plain string; every field filled — never empty):
+- objectives: a concise numbered list of the observable mastery objectives ("Students are able to: …" behaviors); minimal-complete — together they fully define mastery, none is redundant.
+- assessmentBoundary: explicit Included/Excluded lists with concrete parameters (number ranges, step counts, representation load).
+- difficultyCeiling: the hardest legitimate case, stated with concrete parameters.
+- prerequisites: one prerequisite per line, each tagged taught-in-course (naming the lesson) or prior-grade.
+- progressionPlacement: cross-grade placement (where this skill comes from and goes) plus the within-course chain (the lessons immediately before and after in this skill's chain, by title).
+- newLearning: the atom triple — "Start cue: … Decision path: … Response form: …".
+- instructionalApproach: exactly ONE named strategy (begin with "Single strategy: <name>"), then the modeling scope — which concrete cases are explicitly modeled versus which go straight to independent practice. No gradual-release labels.
+- nonGoals: forward-looking "do not teach yet" exclusions, each naming where the content is taught when known.
+- assessmentEvidence: "Students are able to: [observable behavior] [task parameters] [conditions]" statements; no percentages or rates.
+- releasedItems: what assessment of this atom looks like — reference genuine released items of the framework's assessment program when you know them by year/number, else describe 1–2 representative assessment tasks labeled "Generated exemplar — not a released item".
+
+For UPDATE lessons, current_lesson_state carries the lesson's existing fields: apply the edit instruction to them — change exactly what it demands and carry everything else over (improved wording is fine; changed meaning is not).
+
+Edit instruction from the requester: "${run.generationScope.editInstruction || '(none)'}"
+
+${jsonBlock('request', { requestType: run.requestType, courseContext: run.courseContext, generationScope: run.generationScope })}
+${jsonBlock('plan_overview', overview)}
+${jsonBlock('batch_lessons', batch)}
+${jsonBlock('current_lesson_state', currentState)}`,
+  }
 }

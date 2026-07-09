@@ -4,6 +4,7 @@
 import './functions/http-admin'
 import './functions/http-framework'
 import './functions/http-library'
+import './functions/http-lsg'
 import './functions/http-packets'
 import './functions/http-sets'
 import './functions/http-scopes'

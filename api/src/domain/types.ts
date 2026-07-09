@@ -511,7 +511,135 @@ export interface LibraryFile {
   updated: string // ISO timestamp
 }
 
-export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet'
+// ---------------------------------------------------------------------------
+// Lesson Scope Generation (LSG) — create course vs partial edit (design doc
+// "Lesson Scope Generation: Create Course vs Partial Edit"). A course registry
+// keyed by course NAME, a snapshot of current course state, and runs whose
+// output carries a per-lesson operation (CREATE | UPDATE | DEACTIVATE) that
+// the orchestrator persists into the registry. Standalone: no coupling to
+// standard sets, scopes, or packets. Mirrors api/src/domain/types.ts.
+// ---------------------------------------------------------------------------
+
+export type LsgOperation = 'CREATE' | 'UPDATE' | 'DEACTIVATE'
+export type LsgRequestType = 'FULL_COURSE' | 'PARTIAL_UPDATE'
+export type LsgMode = 'FULL_COURSE' | 'LESSONS'
+
+/** The DM-bound lesson scope fields the LSG generates (design doc §3, output lessons). */
+export interface LsgLessonFields {
+  objectives: string
+  assessmentBoundary: string
+  difficultyCeiling: string
+  prerequisites: string
+  progressionPlacement: string
+  newLearning: string
+  instructionalApproach: string
+  nonGoals: string
+  assessmentEvidence: string
+  releasedItems: string
+}
+
+/** A lesson as persisted in the course registry — the platform owns lessonId (Decision 4). */
+export interface LsgCourseLesson extends LsgLessonFields {
+  lessonId: string
+  unitName: string
+  lessonTitle: string
+  standardId: string
+  lessonOrder: number
+  status: 'ACTIVE' | 'INACTIVE'
+}
+
+/** One course in the registry. The primary key is the course NAME (Decision 2) — courseId is its slug. */
+export interface LsgCourse {
+  courseId: string
+  courseName: string
+  subject: string
+  grade: string
+  curriculumFramework: string
+  /** Display label, e.g. "Texas (TEKS) — Grade 3". */
+  standardSet: string
+  lessons: LsgCourseLesson[]
+  created: string
+  updated: string
+}
+
+/** Course Snapshot API response (Decision 3) — read-only current course/lesson state. */
+export interface LsgSnapshot {
+  courseExists: boolean
+  course: {
+    courseId: string
+    courseName: string
+    subject: string
+    grade: string
+    curriculumFramework: string
+  } | null
+  lessons: LsgCourseLesson[]
+}
+
+/** One lesson of the LSG output: operation + identity + generated fields (design doc §3). */
+export interface LsgOutputLesson extends LsgLessonFields {
+  /** Echoed snapshot lessonId for UPDATE/DEACTIVATE; null for CREATE — the platform assigns one on persist. */
+  lessonId: string | null
+  operation: LsgOperation
+  unitName: string
+  lessonOrder: number
+  standardId: string
+  lessonTitle: string
+  deactivationReason: string | null
+}
+
+export interface LsgOutput {
+  courseOperation: 'CREATE' | 'UPDATE'
+  targetCourse: {
+    courseId: string | null
+    courseName: string
+    grade: string
+    subject: string
+    standardSet: string
+  }
+  lessons: LsgOutputLesson[]
+}
+
+/** One Lesson Scope Generation run (the component contract's input + captured snapshot + output). */
+export interface LsgRun {
+  id: string
+  requestType: LsgRequestType
+  courseContext: {
+    subject: string
+    grade: string
+    curriculumFramework: string
+    courseName: string
+  }
+  generationScope: {
+    mode: LsgMode
+    /** Lesson titles selected from the snapshot (mode LESSONS); [] for FULL_COURSE. */
+    includedLessons: string[]
+    editInstruction: string
+  }
+  status: 'generating' | 'complete' | 'failed'
+  error?: string
+  /** Snapshot captured when the run was created — stable across worker retries. */
+  snapshot?: LsgSnapshot
+  output?: LsgOutput
+  /** True once the orchestrator persisted the output into the course registry. */
+  applied?: boolean
+  created: string
+  updated: string
+}
+
+/** Slim row for the run list (outputs can be large; the list stays light). */
+export interface LsgRunSummary {
+  id: string
+  requestType: LsgRequestType
+  courseName: string
+  mode: LsgMode
+  status: LsgRun['status']
+  error?: string
+  lessonCount: number
+  created: string
+  updated: string
+}
+
+export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg'
 
 export interface JobStatus {
   jobId: string
@@ -532,10 +660,11 @@ export interface JobStatus {
 export interface JobMessage {
   jobId: string
   kind: JobKind
-  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'lexicon' | 'hunt' // 'run' for single-step kinds; 'lexicon' only for legacy queued messages; 'hunt' for kind 'packet'
+  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'lexicon' | 'hunt' // 'run' for single-step kinds (incl. kind 'lsg'); 'lexicon' only for legacy queued messages; 'hunt' for kind 'packet'
   scopeId?: string
   setId?: string
   packetId?: string
+  lsgRunId?: string // for kind 'lsg'
   unitIndex?: number // for step 'cards'
   payload?: Record<string, unknown> // kind-specific (rerun target/mode, report text, feedback, proposalId…)
 }

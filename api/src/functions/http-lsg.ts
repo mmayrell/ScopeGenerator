@@ -1,0 +1,198 @@
+import { LsgMode, LsgRequestType, LsgRun } from '../domain/types'
+import {
+  deleteLsgCourseDocs,
+  deleteLsgRunDocs,
+  getLsgCourse,
+  getLsgRun,
+  listLsgCourses,
+  listLsgRuns,
+  saveLsgRun,
+  snapshotByCourseName,
+  toLsgRunSummary,
+} from '../data/lsg'
+import { createJob, latestJobForLsgRun, mutateJob, pushLog, toJobStatus } from '../data/jobs'
+import { enqueueJob } from '../data/queue'
+import { LSG_TOTAL_STAGES } from '../pipeline/lsg'
+import { HttpError } from '../shared/errors'
+import { api, ok, readJson, requireParam } from '../shared/http'
+import { newId, nowIso } from '../shared/util'
+
+/**
+ * Lesson Scope Generation (contract §Lesson Scope Generation) — create course
+ * vs partial edit. The course registry is keyed by course NAME; the Snapshot
+ * endpoint reads current course state; a run captures the snapshot, plans the
+ * target lessons with per-lesson operations (CREATE | UPDATE | DEACTIVATE),
+ * and the worker persists the output into the registry. Standalone: no
+ * coupling to standard sets, scopes, or packets.
+ */
+
+const cap = (v: unknown, max: number): string => String(v ?? '').trim().slice(0, max)
+
+// GET /api/lsg/snapshot?courseName=… → LsgSnapshot — the Course Snapshot API.
+// "Course does not exist" is a first-class answer (it decides CREATE vs
+// UPDATE), so an unknown name returns the empty shape, never 404.
+api({
+  name: 'lsg-snapshot',
+  methods: ['GET'],
+  route: 'lsg/snapshot',
+  handler: async (req) => {
+    const courseName = (req.query.get('courseName') ?? '').trim()
+    if (!courseName) throw new HttpError(400, 'courseName query parameter is required')
+    return ok(await snapshotByCourseName(courseName))
+  },
+})
+
+// GET /api/lsg/courses → LsgCourse[] (newest first)
+api({
+  name: 'lsg-course-list',
+  methods: ['GET'],
+  route: 'lsg/courses',
+  handler: async () => {
+    const courses = await listLsgCourses()
+    return ok(courses.sort((a, b) => b.updated.localeCompare(a.updated)))
+  },
+})
+
+// GET /api/lsg/courses/{id} → LsgCourse   |   DELETE → { ok: true }
+api({
+  name: 'lsg-course-get-delete',
+  methods: ['GET', 'DELETE'],
+  route: 'lsg/courses/{id}',
+  handler: async (req) => {
+    const id = requireParam(req, 'id')
+    if (req.method === 'DELETE') {
+      await deleteLsgCourseDocs(id)
+      return ok({ ok: true })
+    }
+    return ok(await getLsgCourse(id))
+  },
+})
+
+interface CreateRunBody {
+  requestType?: string
+  courseContext?: { subject?: string; grade?: string; curriculumFramework?: string; courseName?: string }
+  generationScope?: { mode?: string; includedLessons?: string[]; editInstruction?: string }
+}
+
+// POST /api/lsg/runs → { run, jobId } (201) — captures the course snapshot,
+// creates the run doc (status 'generating'), and dispatches the lsg job.
+api({
+  name: 'lsg-run-create',
+  methods: ['POST'],
+  route: 'lsg/runs',
+  handler: async (req) => {
+    const body = await readJson<CreateRunBody>(req)
+    const requestType = String(body.requestType ?? '') as LsgRequestType
+    if (!['FULL_COURSE', 'PARTIAL_UPDATE'].includes(requestType)) {
+      throw new HttpError(400, 'requestType must be FULL_COURSE or PARTIAL_UPDATE')
+    }
+    const mode = String(body.generationScope?.mode ?? '') as LsgMode
+    if (!['FULL_COURSE', 'LESSONS'].includes(mode)) {
+      throw new HttpError(400, 'generationScope.mode must be FULL_COURSE or LESSONS')
+    }
+    const courseName = cap(body.courseContext?.courseName, 200)
+    const subject = cap(body.courseContext?.subject, 120)
+    const grade = cap(body.courseContext?.grade, 40)
+    const curriculumFramework = cap(body.courseContext?.curriculumFramework, 80)
+    if (!courseName || !subject || !grade || !curriculumFramework) {
+      throw new HttpError(400, 'courseContext requires subject, grade, curriculumFramework, and courseName')
+    }
+    const includedLessons = (Array.isArray(body.generationScope?.includedLessons) ? body.generationScope.includedLessons : [])
+      .map((t) => cap(t, 300))
+      .filter((t) => t.length > 0)
+      .slice(0, 60)
+    if (mode === 'LESSONS' && includedLessons.length === 0) {
+      throw new HttpError(400, 'mode LESSONS requires at least one included lesson')
+    }
+    const editInstruction = cap(body.generationScope?.editInstruction, 4000)
+
+    // The snapshot is captured NOW and stored on the run — the plan the worker
+    // builds (possibly across retries) always matches against one stable view.
+    const snapshot = await snapshotByCourseName(courseName)
+    if (mode === 'LESSONS' && !snapshot.courseExists) {
+      throw new HttpError(400, `course "${courseName}" does not exist — a partial edit needs an existing course`)
+    }
+
+    const now = nowIso()
+    const jobId = newId('job')
+    const run: LsgRun = {
+      id: newId('lsgrun'),
+      requestType,
+      courseContext: { subject, grade, curriculumFramework, courseName },
+      generationScope: { mode, includedLessons, editInstruction },
+      status: 'generating',
+      snapshot,
+      created: now,
+      updated: now,
+    }
+    await saveLsgRun(run)
+
+    try {
+      await createJob({
+        jobId,
+        kind: 'lsg',
+        lsgRunId: run.id,
+        totalStages: LSG_TOTAL_STAGES,
+        stage: 'Queued',
+        detail: `Lesson scope generation queued (${requestType}, ${mode}) for "${courseName}"`,
+      })
+      await enqueueJob({ jobId, kind: 'lsg', step: 'run', lsgRunId: run.id })
+    } catch (e) {
+      // No job means the 'generating' run would spin forever — settle it failed.
+      try {
+        await mutateJob(jobId, (r) => {
+          r.status = 'failed'
+          r.error = 'Failed to dispatch the generation job'
+          pushLog(r, 'Dispatch failed')
+        })
+      } catch {
+        /* the job row may never have been created — the run settle below is what matters */
+      }
+      run.status = 'failed'
+      run.error = 'Failed to start the generation — try again'
+      run.updated = nowIso()
+      await saveLsgRun(run)
+      throw new HttpError(500, `failed to enqueue lesson scope generation: ${e instanceof Error ? e.message : String(e)}`)
+    }
+    return ok({ run, jobId }, 201)
+  },
+})
+
+// GET /api/lsg/runs → LsgRunSummary[] (newest first)
+api({
+  name: 'lsg-run-list',
+  methods: ['GET'],
+  route: 'lsg/runs',
+  handler: async () => {
+    const runs = await listLsgRuns()
+    return ok(runs.map(toLsgRunSummary).sort((a, b) => b.created.localeCompare(a.created)))
+  },
+})
+
+// GET /api/lsg/runs/{id} → LsgRun   |   DELETE → { ok: true }
+api({
+  name: 'lsg-run-get-delete',
+  methods: ['GET', 'DELETE'],
+  route: 'lsg/runs/{id}',
+  handler: async (req) => {
+    const id = requireParam(req, 'id')
+    if (req.method === 'DELETE') {
+      await deleteLsgRunDocs(id)
+      return ok({ ok: true })
+    }
+    return ok(await getLsgRun(id))
+  },
+})
+
+// GET /api/lsg/runs/{id}/job → JobStatus — polled by the run screen
+api({
+  name: 'lsg-run-job',
+  methods: ['GET'],
+  route: 'lsg/runs/{id}/job',
+  handler: async (req) => {
+    const id = requireParam(req, 'id')
+    const job = await latestJobForLsgRun(id)
+    if (!job) throw new HttpError(404, `no job for lesson scope run ${id}`)
+    return ok(toJobStatus(job))
+  },
+})

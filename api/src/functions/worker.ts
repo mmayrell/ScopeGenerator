@@ -5,6 +5,8 @@ import { getPacketOrUndefined, mutatePacket } from '../data/packets'
 import { getJob, mutateJob, pushLog } from '../data/jobs'
 import { generateCardsStep, generateFinalizeStep, generatePlanStep } from '../pipeline/generate'
 import { extractRunStep } from '../pipeline/ingest'
+import { lsgRunStep } from '../pipeline/lsg'
+import { mutateLsgRun } from '../data/lsg'
 import { huntPacketStep } from '../pipeline/packets'
 import { applyProposalRunStep, iterateRunStep, proposalRunStep } from '../pipeline/proposals'
 import { rerunRunStep } from '../pipeline/rerun'
@@ -157,6 +159,8 @@ async function dispatch(msg: JobMessage, context: InvocationContext): Promise<vo
       return extractRunStep(msg, context)
     case 'packet/hunt':
       return huntPacketStep(msg, context)
+    case 'lsg/run':
+      return lsgRunStep(msg, context)
     case 'ingest/lexicon':
       // The lexicon step was removed from the pipeline; settle legacy queued
       // messages cleanly instead of poisoning them.
@@ -196,6 +200,10 @@ async function markFailed(msg: JobMessage, error: string, context: InvocationCon
   }
   if (msg.kind === 'packet') {
     await markPacketFailed(msg, error, context)
+    return
+  }
+  if (msg.kind === 'lsg') {
+    await markLsgFailed(msg, error, context)
     return
   }
   if (!msg.scopeId) return
@@ -285,6 +293,27 @@ async function markPacketFailed(msg: JobMessage, error: string, context: Invocat
     })
   } catch (e) {
     context.error(`genjobs-worker: could not record hunt failure on packet ${msg.packetId}`, e)
+  }
+}
+
+/**
+ * Terminal LSG failure: settle the run 'failed' with the error so the UI can
+ * surface it (checkpoints are kept — a future retry endpoint could resume).
+ * The course registry is untouched: persist only happens on success.
+ */
+async function markLsgFailed(msg: JobMessage, error: string, context: InvocationContext): Promise<void> {
+  if (!msg.lsgRunId) return
+  try {
+    await mutateLsgRun(msg.lsgRunId, (run) => {
+      if (run.status === 'generating') {
+        run.status = 'failed'
+        run.error = error
+      }
+      run.updated = nowIso()
+    })
+  } catch (e) {
+    const status = (e as { status?: number }).status
+    if (status !== 404) context.error(`genjobs-worker: could not record failure on lsg run ${msg.lsgRunId}`, e)
   }
 }
 
