@@ -247,6 +247,10 @@ export async function importScopeIntoRegistry(
     if (courseContext.subject) course.subject = courseContext.subject
     if (courseContext.grade) course.grade = courseContext.grade
     if (courseContext.curriculumFramework) course.curriculumFramework = courseContext.curriculumFramework
+    // Same slug by construction (the caller resolved courseId from this
+    // name) — refreshing repairs display-name drift, e.g. a mangled em dash
+    // from a non-UTF-8 client.
+    course.courseName = courseContext.courseName
     course.updated = now
   })
 }

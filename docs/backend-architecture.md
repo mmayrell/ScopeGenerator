@@ -515,8 +515,13 @@ of the source PDF is deliberately stripped). Courses come from the **LSG registr
 course store); scripts persist per (course, lesson) with a version, stamped with the playbook +
 doctrine versions.
 
-- **Routes** (`api/src/functions/http-vsg.ts`): `GET vsg/courses` (registry shaped for the picker:
-  active-lesson counts) · `POST vsg/runs` `{ courseId, lessonIds ≤ 60, steering }` → `{ run, jobId }`
+- **Picker is scope-driven**: the builder lists PUBLISHED scopes (live from the store, so deleted
+  scopes never appear); picking one auto-syncs its backing course via the mechanical
+  `lsg/courses/import-scope` (course name = scope title), falling back to the existing course when
+  a live run 409-blocks the sync — Step 2 therefore always offers ALL of the scope's lessons.
+- **Routes** (`api/src/functions/http-vsg.ts`): `GET vsg/courses` (registry shaped for a picker:
+  active-lesson counts; the UI now drives from scopes, the route remains for API consumers) ·
+  `POST vsg/runs` `{ courseId, lessonIds ≤ 60, steering }` → `{ run, jobId }`
   (201; lessons must be ACTIVE in the course) · `GET vsg/runs` (summaries) · `GET/DELETE
   vsg/runs/{id}` (delete flags a live job `cancelRequested`) · `GET vsg/runs/{id}/job` ·
   `POST vsg/runs/{id}/reconcile` `{ lessonId, resolutions[{conflictId, resolution, resolvedBy}] }`

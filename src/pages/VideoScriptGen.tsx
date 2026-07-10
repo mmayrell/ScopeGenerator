@@ -3,11 +3,9 @@ import { NotFoundError, UnauthorizedError, api, clearAccessCode, type JobStatus 
 import { useStore } from '../store'
 import type {
   LsgCourse,
-  Scope,
   VideoScript,
   VsgChannel,
   VsgConflict,
-  VsgCourseRow,
   VsgInteraction,
   VsgRun,
   VsgRunLesson,
@@ -17,7 +15,7 @@ import { Btn, capsStandardCodes, Modal, Mono, Pill, SectionLabel } from '../ui'
 
 // Video Script Generator — turns generated lesson cards into production-ready
 // scripts for ~3-minute DI math videos with checked student interactions.
-// Pick a course from the registry, multi-select lessons (grouped by unit),
+// Pick a published scope, multi-select lessons (grouped by unit),
 // generate; each lesson's script renders channel-colored per the playbook
 // (§3) and conflicts pause per lesson for flag → propose → reconcile.
 
@@ -218,53 +216,71 @@ function Overview({ onNew, onOpenRun }: { onNew: () => void; onOpenRun: (id: str
 }
 
 // ---------------------------------------------------------------------------
-// Builder — pick a course, multi-select lessons grouped by unit, generate
+// Builder — pick a PUBLISHED SCOPE, multi-select its lessons, generate. The
+// backing course syncs mechanically (instant, no generation) when a scope is
+// picked, so Step 2 always offers all of the scope's lessons, and deleted
+// scopes never appear (the list comes live from the scopes store).
 // ---------------------------------------------------------------------------
+
+/** Mirrors the backend courseIdFromName — the scope title keys its backing course. */
+const slugOf = (name: string): string =>
+  name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'untitled-course'
 
 function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onBack: () => void }) {
   const { scopes } = useStore()
-  const [courses, setCourses] = useState<VsgCourseRow[] | null>(null)
-  const [courseId, setCourseId] = useState<string>('')
-  // Bumped when an import refreshes the ALREADY-selected course — same id,
-  // new content, so the id alone can't retrigger the load effect.
-  const [courseNonce, setCourseNonce] = useState(0)
+  const published = scopes.filter((s) => s.status === 'complete')
+  const [scopeId, setScopeId] = useState('')
   const [course, setCourse] = useState<LsgCourse | null>(null)
+  const [syncing, setSyncing] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [steering, setSteering] = useState('')
   const [launching, setLaunching] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const loadCourses = useCallback(() => {
-    api
-      .listVsgCourses()
-      .then(setCourses)
-      .catch((e: unknown) => {
-        if (e instanceof NotFoundError) {
-          setCourses([])
-          return
-        }
-        setError(errText(e, 'Could not load the course registry.'))
-      })
-  }, [])
-  useEffect(loadCourses, [loadCourses])
-
+  // Picking a scope syncs its backing course; when a live video-script run
+  // blocks the sync (409 guard), fall back to the course as it stands.
   useEffect(() => {
-    if (!courseId) return
-    let stale = false // course A's slow response must not land under course B's selection
+    if (!scopeId) return
+    const sc = scopes.find((s) => s.id === scopeId)
+    if (!sc) return
+    let stale = false // scope A's slow response must not land under scope B's selection
     setCourse(null)
     setSelected(new Set())
+    setSyncing(true)
+    setError(null)
     api
-      .getLsgCourse(courseId)
-      .then((c) => {
-        if (!stale) setCourse(c)
+      .importScopeCourse(sc.id, sc.title)
+      .then(({ course: synced }) => {
+        if (!stale) setCourse(synced)
       })
-      .catch((e: unknown) => {
-        if (!stale) setError(errText(e, 'Could not load the course.'))
+      .catch(async (e: unknown) => {
+        try {
+          const existing = await api.getLsgCourse(slugOf(sc.title))
+          if (!stale) setCourse(existing)
+        } catch {
+          if (!stale) {
+            setError(
+              e instanceof NotFoundError
+                ? 'The backend is still rolling out this feature — try again in a couple of minutes.'
+                : errText(e, 'Could not prepare the course.'),
+            )
+          }
+        }
+      })
+      .finally(() => {
+        if (!stale) setSyncing(false)
       })
     return () => {
       stale = true
     }
-  }, [courseId, courseNonce])
+    // Keyed on the scope id alone — `scopes` re-derives every store refresh
+    // and must not re-trigger the sync mid-selection.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scopeId])
 
   const active = (course?.lessons ?? []).filter((l) => l.status === 'ACTIVE').sort((a, b) => a.lessonOrder - b.lessonOrder)
   const units: { unitName: string; lessons: typeof active }[] = []
@@ -283,10 +299,11 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
     })
 
   const launch = async () => {
+    if (!course) return
     setLaunching(true)
     setError(null)
     try {
-      const { run } = await api.createVsgRun({ courseId, lessonIds: [...selected], steering })
+      const { run } = await api.createVsgRun({ courseId: course.courseId, lessonIds: [...selected], steering })
       onLaunched(run.id)
     } catch (e) {
       setError(
@@ -303,7 +320,7 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
       <Btn onClick={onBack}>← Back to runs</Btn>
       <h1 className="mt-4 font-display text-[28px] font-semibold tracking-tight text-ink">New Video Script Run</h1>
       <p className="mt-1 max-w-2xl text-[13.5px] text-ink-2">
-        Pick a generated course, select the lessons to script, and generate. Each selected lesson becomes one
+        Pick a published scope, select the lessons to script, and generate. Each selected lesson becomes one
         production-ready video script: lesson card + Stein's teaching formats + the playbook.
       </p>
 
@@ -311,49 +328,43 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
 
       <div className="mt-8 space-y-7">
         <div>
-          <SectionLabel>Step 1 — Course</SectionLabel>
+          <SectionLabel>Step 1 — Published Scope</SectionLabel>
           <div className="mt-2 space-y-2">
-            {(courses ?? []).map((c) => (
+            {published.map((s) => (
               <button
-                key={c.courseId}
-                onClick={() => setCourseId(c.courseId)}
+                key={s.id}
+                onClick={() => setScopeId(s.id)}
                 className={`block w-full cursor-pointer rounded-xl border p-4 text-left transition-colors ${
-                  courseId === c.courseId ? 'border-accent/40 bg-accent-wash' : 'border-hairline bg-panel hover:border-hairline-2'
+                  scopeId === s.id ? 'border-accent/40 bg-accent-wash' : 'border-hairline bg-panel hover:border-hairline-2'
                 }`}
               >
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[14px] font-semibold text-ink">{c.courseName}</span>
+                  <span className="text-[14px] font-semibold text-ink">{s.title}</span>
                   <span className="text-[11.5px] text-ink-3">
-                    {c.subject} · Grade {c.grade} · {c.standardSet} · {c.activeLessonCount} active lesson{c.activeLessonCount === 1 ? '' : 's'}
+                    {s.units.length} unit{s.units.length === 1 ? '' : 's'} ·{' '}
+                    {s.units.reduce((n, u) => n + u.lessons.length, 0)} lessons
                   </span>
                 </div>
               </button>
             ))}
-            {courses !== null && courses.length === 0 && (
+            {published.length === 0 && (
               <p className="rounded-xl border border-hairline bg-panel px-4 py-3 text-[12.5px] text-ink-3">
-                The course registry is empty — import a published scope below, or generate a course in Lesson Scope
-                Edits.
+                No published scopes yet — generate a scope first; it appears here the moment it completes.
               </p>
             )}
-            {courses === null && <p className="text-[12.5px] text-ink-3">Loading courses…</p>}
           </div>
-          <ImportScopePanel
-            scopes={scopes}
-            onImported={(id) => {
-              loadCourses()
-              setCourseId(id)
-              setCourseNonce((n) => n + 1) // same-id refresh must reload Step 2
-            }}
-          />
         </div>
 
-        {courseId && (
+        {scopeId && (
           <div>
             <SectionLabel>Step 2 — Lessons</SectionLabel>
             <p className="mt-0.5 text-[11.5px] text-ink-3">
-              {selected.size === 0 ? 'Select the lessons to script.' : `${selected.size} selected.`}
+              {selected.size === 0
+                ? `All ${active.length} of the scope's lessons are available — select the ones to script.`
+                : `${selected.size} selected of ${active.length}.`}
             </p>
-            {!course && <p className="mt-2 text-[12.5px] text-ink-3">Loading lessons…</p>}
+            {syncing && <p className="mt-2 text-[12.5px] text-ink-3">Syncing the scope's lessons…</p>}
+            {!course && !syncing && <p className="mt-2 text-[12.5px] text-ink-3">Loading lessons…</p>}
             <div className="mt-2 space-y-4">
               {units.map((u) => {
                 const allOn = u.lessons.every((l) => selected.has(l.lessonId))
@@ -396,7 +407,7 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
           </div>
         )}
 
-        {courseId && (
+        {scopeId && (
           <div>
             <SectionLabel>Steering Instruction (Optional)</SectionLabel>
             <p className="mt-0.5 text-[11.5px] text-ink-3">Steers below doctrine — it may tighten, never override the playbook or the card's boundary.</p>
@@ -426,85 +437,6 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
           </Btn>
         </div>
       </div>
-    </div>
-  )
-}
-
-/**
- * Course missing, or its lesson count stale against a newer scope? The
- * registry only updates through LSG runs — this panel imports a published
- * scope's lessons MECHANICALLY (no generation, instant): matched lessons keep
- * their ids and take the scope's content, absentees deactivate.
- */
-function ImportScopePanel({ scopes, onImported }: { scopes: Scope[]; onImported: (courseId: string) => void }) {
-  const published = scopes.filter((s) => s.status === 'complete')
-  const [scopeId, setScopeId] = useState('')
-  const [name, setName] = useState('')
-  // The prefill follows the picked scope until the user types a name of
-  // their own — switching chips must never leave scope A's title silently
-  // targeting an import of scope B (an existing name is an in-place update).
-  const [nameTouched, setNameTouched] = useState(false)
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  if (published.length === 0) return null
-
-  const pick = (id: string) => {
-    setScopeId(id)
-    const sc = published.find((s) => s.id === id)
-    if (sc && !nameTouched) setName(sc.title)
-  }
-
-  const run = async () => {
-    setBusy(true)
-    setError(null)
-    try {
-      const { course } = await api.importScopeCourse(scopeId, name.trim())
-      setScopeId('')
-      setName('')
-      setNameTouched(false)
-      onImported(course.courseId)
-    } catch (e) {
-      setError(
-        e instanceof NotFoundError
-          ? 'The backend is still rolling out this feature — try again in a couple of minutes.'
-          : errText(e, 'Could not import the scope.'),
-      )
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  return (
-    <div className="mt-3 rounded-xl border border-hairline bg-panel/50 p-4">
-      <p className="text-[11.5px] leading-relaxed text-ink-3">
-        Course missing, or showing fewer lessons than its latest scope? Import a published scope — the course takes
-        the scope's lessons instantly (no generation). Importing under an existing course name refreshes that course
-        in place.
-      </p>
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        {published.map((s) => (
-          <Chip key={s.id} on={scopeId === s.id} onClick={() => pick(s.id)}>
-            {s.title} · {s.units.reduce((n, u) => n + u.lessons.length, 0)} lessons
-          </Chip>
-        ))}
-      </div>
-      {scopeId && (
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <input
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value)
-              setNameTouched(true)
-            }}
-            placeholder="Course name (existing name updates that course)"
-            className="w-full max-w-md rounded-lg border border-hairline bg-panel px-3 py-2 text-[12.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
-          />
-          <Btn kind="primary" disabled={busy || !name.trim()} onClick={() => void run()}>
-            {busy ? 'Importing…' : 'Import as Course'}
-          </Btn>
-        </div>
-      )}
-      {error && <p className="mt-2 text-[12px] text-rust">{error}</p>}
     </div>
   )
 }
