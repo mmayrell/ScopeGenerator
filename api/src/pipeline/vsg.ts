@@ -34,8 +34,26 @@ const SCRIPT_MAX_TOKENS = 40000
 const EFFORT_LADDER = ['medium', 'low'] as const
 /** A 'generating' claim older than this belongs to a host-killed execution — reclaimable. */
 const CLAIM_STALE_MS = 12 * 60 * 1000
-/** Interaction cadence: the playbook demands one every 30–60s; beyond 60s is the hard fail. */
-const MAX_INTERACTION_GAP_S = 60
+/**
+ * Interaction cadence (playbook §15.1.1: never 30 seconds without one). The
+ * hard fail sits at 45s — line times are words-per-minute ESTIMATES, and
+ * failing a script over estimate noise would thrash the corrective pass;
+ * anything past the stated 30s is still surfaced as a review flag.
+ */
+const MAX_INTERACTION_GAP_S = 45
+const TARGET_INTERACTION_GAP_S = 30
+/**
+ * §15.7.2 — internal vocabulary must never reach the student. Hard-fail terms
+ * are unambiguous pipeline jargon. The stage labels are matched
+ * CASE-SENSITIVELY — "What do we do next?" is the playbook's own Template B
+ * prompt and ordinary DI narration ("now we do the tens") is the recommended
+ * voice; only the title-cased labels are jargon. Ambiguous words that can be
+ * legitimate math/word-problem content ("atoms in a molecule",
+ * "discrimination") surface as review flags instead.
+ */
+const BANNED_STUDENT_TERMS_CI = /\b(start cue|decision path)\b/i
+const BANNED_STUDENT_TERMS_CS = /\b(I Do|We Do|You Do)\b/
+const FLAGGED_STUDENT_TERMS = /\b(atoms?|discriminations?|interactions?|assessment boundary|difficulty ceiling)\b/i
 
 const isTruncation = (e: unknown): boolean =>
   /truncated \(max_tokens|max_tokens reached/i.test(e instanceof Error ? e.message : String(e))
@@ -419,11 +437,37 @@ function qaOf(wire: WireVsgScript): { hardFails: string[]; flags: string[] } {
   const totalSecs = Math.max(parseTime(wire.durationEstimate) ?? 0, ...(segEnds.length > 0 ? segEnds : [0]))
   if (totalSecs > 180) fails.push(`total run time ${Math.floor(totalSecs / 60)}:${String(totalSecs % 60).padStart(2, '0')} exceeds 3:00`)
   const interactions = wire.segments.reduce((n, s) => n + s.interactions.length, 0)
-  if (interactions < 3 || interactions > 7) fails.push(`${interactions} interactions — the playbook requires 3-7`)
+  if (interactions < 3 || interactions > 10) fails.push(`${interactions} interactions — the playbook requires 3-10, scaled to length`)
   const title = wire.segments.find((s) => s.kind === 'title')
   if (title) {
     const len = segmentSeconds(title.start, title.end)
     if (len !== undefined && len > 10) fails.push(`title card runs ${len}s — must be under 10s`)
+    if (title.interactions.length > 0 || title.lines.some((l) => l.channel === 'INTERACTION')) {
+      fails.push('the title card carries an interaction — none are allowed there (§15.1.1)')
+    }
+  }
+  // §15.7.2 — internal vocabulary in student-facing text (narration, on-screen
+  // text, prompts, feedback). NOTE lines are production-facing and exempt.
+  const studentTexts: string[] = []
+  for (const s of wire.segments) {
+    for (const l of s.lines) if (l.channel === 'SAY' || l.channel === 'TEXT') studentTexts.push(l.content)
+    for (const i of s.interactions) {
+      studentTexts.push(i.prompt, i.correctFeedback, i.try1Hint, i.try2ShowAndMoveOn, ...i.options)
+    }
+  }
+  const banned = new Set<string>()
+  const soft = new Set<string>()
+  for (const t of studentTexts) {
+    const hard = BANNED_STUDENT_TERMS_CI.exec(t) ?? BANNED_STUDENT_TERMS_CS.exec(t)
+    if (hard) banned.add(hard[1])
+    const flagged = FLAGGED_STUDENT_TERMS.exec(t)
+    if (flagged) soft.add(flagged[1].toLowerCase())
+  }
+  if (banned.size > 0) {
+    fails.push(`internal vocabulary reaches the student (§15.7.2): ${[...banned].join(', ')} — translate to student terms`)
+  }
+  if (soft.size > 0) {
+    flags.push(`possible internal vocabulary in student-facing text: ${[...soft].join(', ')} — verify these read as math, not pipeline jargon`)
   }
   for (const s of wire.segments) {
     const lineCount = s.lines.filter((l) => l.channel === 'INTERACTION').length
@@ -456,9 +500,9 @@ function qaOf(wire: WireVsgScript): { hardFails: string[]; flags: string[] } {
     }
     worst = Math.max(worst, totalSecs - last)
     if (worst > MAX_INTERACTION_GAP_S) {
-      fails.push(`${worst} seconds without a student interaction — the playbook caps the gap at 30-60s`)
-    } else if (worst > 45) {
-      flags.push(`longest stretch without an interaction is ${worst}s — inside the hard limit but past the 30s target`)
+      fails.push(`${worst} seconds without a student interaction — §15.1.1 caps the gap at 30s (45s hard limit over timing-estimate noise)`)
+    } else if (worst > TARGET_INTERACTION_GAP_S) {
+      flags.push(`longest stretch without an interaction is ${worst}s — past the 30s rule, inside the estimate-noise allowance`)
     }
   }
   return { hardFails: fails, flags: [...flags, ...(wire.qa?.flags ?? [])] }
