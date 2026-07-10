@@ -40,21 +40,64 @@ const verdictPill = (verdict: string) =>
   )
 
 const APPS_SCRIPT = `function doPost(e) {
-  var sheet = SpreadsheetApp.openById('1HYeLKwtRv-PujoNowQ0CqMMUTfdazvhYXfKt2_IX-9w').getSheets()[0];
-  var body = JSON.parse(e.postData.contents);
-  // body.values EXCLUDES the trailing SME columns, so this upsert can never
-  // overwrite the human's entries. scopeId lives far right of every column.
-  var ID_COL = 50;
-  var last = sheet.getLastRow();
-  var row = 0;
-  if (last > 0) {
-    var ids = sheet.getRange(1, ID_COL, last, 1).getValues();
-    for (var i = 0; i < ids.length; i++) if (ids[i][0] === body.scopeId) { row = i + 1; break; }
+  var lock = LockService.getScriptLock();
+  var locked = false;
+  try {
+    lock.waitLock(20000);
+    locked = true;
+    return upsertRow(JSON.parse(e.postData.contents));
+  } catch (err) {
+    return jsonReply({ ok: false, error: String(err) });
+  } finally {
+    if (locked) {
+      // Commit buffered writes BEFORE the next caller can read, or the lock
+      // does not actually serialize the sheet state.
+      SpreadsheetApp.flush();
+      lock.releaseLock();
+    }
   }
-  if (row === 0) row = last + 1;
-  sheet.getRange(row, 1, 1, body.values.length).setValues([body.values]);
+}
+
+function upsertRow(body) {
+  var ss = SpreadsheetApp.openById('1HYeLKwtRv-PujoNowQ0CqMMUTfdazvhYXfKt2_IX-9w');
+  var sheet = ss.getSheets().filter(function (s) { return s.getSheetId() === 0; })[0] || ss.getSheets()[0];
+  var ID_COL = 50; // scopeId column, far past every heading
+  var FIRST_DATA_ROW = 3; // rows 1-2 are the group + heading headers
+  // The last 3 headed columns belong to the human SME: cap every write short
+  // of them, whatever the caller sends.
+  var heads = sheet.getRange(2, 1, 1, ID_COL - 1).getValues()[0];
+  var headed = 0;
+  for (var h = 0; h < heads.length; h++) if (String(heads[h]).trim() !== '') headed = h + 1;
+  var width = Math.min(body.values.length, Math.max(1, headed - 3));
+
+  var scan = Math.max(sheet.getLastRow(), FIRST_DATA_ROW) - FIRST_DATA_ROW + 1;
+  var ids = sheet.getRange(FIRST_DATA_ROW, ID_COL, scan, 1).getValues();
+  var dates = sheet.getRange(FIRST_DATA_ROW, 1, scan, 1).getValues();
+  var row = 0;
+  var firstFree = 0;
+  for (var i = 0; i < scan; i++) {
+    if (String(ids[i][0]) === String(body.scopeId)) { row = FIRST_DATA_ROW + i; break; }
+    if (!firstFree && ids[i][0] === '' && dates[i][0] === '') firstFree = FIRST_DATA_ROW + i;
+  }
+  if (!firstFree) firstFree = sheet.getLastRow() + 1;
+  if (row === 0) {
+    // New scope: take the first unused slot. Template placeholders below the
+    // headers inflate getLastRow(), so never blindly append at the bottom.
+    row = firstFree;
+  } else if (firstFree < row) {
+    // Heal a row stranded far down the sheet: move it whole (SME entries
+    // included) up into the first unused slot, then clear the stray copy.
+    sheet.getRange(firstFree, 1, 1, ID_COL).setValues(sheet.getRange(row, 1, 1, ID_COL).getValues());
+    sheet.getRange(row, 1, 1, ID_COL).clearContent();
+    row = firstFree;
+  }
+  sheet.getRange(row, 1, 1, width).setValues([body.values.slice(0, width)]);
   sheet.getRange(row, ID_COL).setValue(body.scopeId);
-  return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+  return jsonReply({ ok: true });
+}
+
+function jsonReply(payload) {
+  return ContentService.createTextOutput(JSON.stringify(payload))
     .setMimeType(ContentService.MimeType.JSON);
 }`
 
@@ -239,17 +282,15 @@ export default function ScopeEvaluations() {
                 {ev.exportStatus === 'exported' ? (
                   <Pill tone="green">In Sheet</Pill>
                 ) : (
-                  <>
-                    <Pill tone="amber">Pending Export</Pill>
-                    {connected && (
-                      <Btn
-                        disabled={busy.has(`push-${ev.scopeId}`)}
-                        onClick={() => void act(`push-${ev.scopeId}`, () => api.pushEval(ev.scopeId))}
-                      >
-                        {busy.has(`push-${ev.scopeId}`) ? 'Pushing…' : 'Push to Sheet'}
-                      </Btn>
-                    )}
-                  </>
+                  <Pill tone="amber">Pending Export</Pill>
+                )}
+                {connected && (
+                  <Btn
+                    disabled={busy.has(`push-${ev.scopeId}`)}
+                    onClick={() => void act(`push-${ev.scopeId}`, () => api.pushEval(ev.scopeId))}
+                  >
+                    {busy.has(`push-${ev.scopeId}`) ? 'Pushing…' : ev.exportStatus === 'exported' ? 'Re-push' : 'Push to Sheet'}
+                  </Btn>
                 )}
                 <Btn disabled={busy.has(`run-${ev.scopeId}`) || dispatched[ev.scopeId] !== undefined} onClick={() => runEval(ev.scopeId)}>
                   {busy.has(`run-${ev.scopeId}`) ? 'Dispatching…' : 'Re-evaluate'}
