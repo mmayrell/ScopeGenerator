@@ -12,7 +12,8 @@ import {
   type NewSetUploads,
   type RerunResult,
 } from './api'
-import { Btn, Spark } from './ui'
+import lwaiLogo from './assets/lwai-logo.png'
+import gateBg from './assets/gate-bg.jpg'
 
 export type { JobStatus, NewSetUploads, RerunResult, UploadSlotValue } from './api'
 
@@ -93,16 +94,17 @@ const errMessage = (e: unknown) => (e instanceof Error ? e.message : 'Something 
 function AccessGate({ error, onSubmit }: { error: string | null; onSubmit: (code: string) => void }) {
   const [value, setValue] = useState('')
   return (
-    <div className="flex h-screen items-center justify-center bg-paper px-6">
-      <div className="animate-rise w-full max-w-sm rounded-2xl border border-hairline bg-panel p-8 shadow-(--shadow-float)">
-        <div className="flex items-center gap-2.5">
-          <Spark />
-          <div>
-            <div className="text-[15px] leading-5 font-bold tracking-[0.02em] text-ink">SCOPE GENERATOR</div>
-            <div className="font-mono text-[10px] tracking-[0.08em] text-ink-3">BY LWAI</div>
-          </div>
-        </div>
-        <p className="mt-5 text-[13px] leading-relaxed text-ink-2">Enter the access code to continue.</p>
+    // The hero collage fills the screen; the live tile sits centered exactly
+    // over the tile painted into the artwork, covering it.
+    <div
+      className="flex h-screen items-center justify-center bg-paper bg-cover bg-center px-6"
+      style={{ backgroundImage: `url(${gateBg})` }}
+    >
+      <div className="animate-rise w-full max-w-[400px] rounded-2xl border border-white/60 bg-white px-9 py-8 text-center shadow-(--shadow-float)">
+        <img src={lwaiLogo} alt="LearnWith.AI" className="mx-auto h-[52px] w-auto" />
+        <div className="mt-5 text-[15px] font-semibold tracking-[0.28em] text-[#1e3a5f]">ACADEMIC CURRICULUM</div>
+        <div className="mt-1 text-[12.5px] font-medium tracking-[0.34em] text-[#5b8def]">SCOPE GENERATOR</div>
+        <p className="mt-6 text-[13px] font-medium text-ink">Enter Access Code</p>
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -114,15 +116,17 @@ function AccessGate({ error, onSubmit }: { error: string | null; onSubmit: (code
             autoFocus
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            placeholder="Access code"
-            className="mt-3 w-full rounded-xl border border-hairline bg-panel px-3.5 py-2.5 text-[13.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
+            placeholder="Enter access code"
+            className="mt-2.5 w-full rounded-lg border border-hairline bg-white px-3.5 py-2.5 text-center text-[13.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
           />
           {error && <p className="mt-2 text-[12px] leading-snug text-rust">{error}</p>}
-          <div className="mt-4 flex justify-end">
-            <Btn kind="primary" disabled={!value.trim()}>
-              Continue
-            </Btn>
-          </div>
+          <button
+            type="submit"
+            disabled={!value.trim()}
+            className="mt-4 w-full cursor-pointer rounded-lg bg-[#4a86f7] px-4 py-2.5 text-[13px] font-semibold tracking-[0.12em] text-white transition-colors hover:bg-[#3b76e8] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            ENTER
+          </button>
         </form>
       </div>
     </div>
