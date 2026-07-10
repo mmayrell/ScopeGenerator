@@ -35,7 +35,7 @@ const EFFORT_LADDER = ['medium', 'low'] as const
 /** A 'generating' claim older than this belongs to a host-killed execution — reclaimable. */
 const CLAIM_STALE_MS = 12 * 60 * 1000
 /**
- * Interaction cadence (playbook §15.1.1: never 30 seconds without one). The
+ * Interaction cadence (playbook §8.1: never 30 seconds without one). The
  * hard fail sits at 45s — line times are words-per-minute ESTIMATES, and
  * failing a script over estimate noise would thrash the corrective pass;
  * anything past the stated 30s is still surfaced as a review flag.
@@ -43,7 +43,8 @@ const CLAIM_STALE_MS = 12 * 60 * 1000
 const MAX_INTERACTION_GAP_S = 45
 const TARGET_INTERACTION_GAP_S = 30
 /**
- * §15.7.2 — internal vocabulary must never reach the student. Hard-fail terms
+ * §8.1 (Student-facing language) — internal vocabulary must never reach the
+ * student. Hard-fail terms
  * are unambiguous pipeline jargon. The stage labels are matched
  * CASE-SENSITIVELY — "What do we do next?" is the playbook's own Template B
  * prompt and ordinary DI narration ("now we do the tens") is the recommended
@@ -443,10 +444,10 @@ function qaOf(wire: WireVsgScript): { hardFails: string[]; flags: string[] } {
     const len = segmentSeconds(title.start, title.end)
     if (len !== undefined && len > 10) fails.push(`title card runs ${len}s — must be under 10s`)
     if (title.interactions.length > 0 || title.lines.some((l) => l.channel === 'INTERACTION')) {
-      fails.push('the title card carries an interaction — none are allowed there (§15.1.1)')
+      fails.push('the title card carries an interaction — none are allowed there (§8.1)')
     }
   }
-  // §15.7.2 — internal vocabulary in student-facing text (narration, on-screen
+  // §8.1 — internal vocabulary in student-facing text (narration, on-screen
   // text, prompts, feedback). NOTE lines are production-facing and exempt.
   const studentTexts: string[] = []
   for (const s of wire.segments) {
@@ -464,7 +465,7 @@ function qaOf(wire: WireVsgScript): { hardFails: string[]; flags: string[] } {
     if (flagged) soft.add(flagged[1].toLowerCase())
   }
   if (banned.size > 0) {
-    fails.push(`internal vocabulary reaches the student (§15.7.2): ${[...banned].join(', ')} — translate to student terms`)
+    fails.push(`internal vocabulary reaches the student (§8.1): ${[...banned].join(', ')} — translate to student terms`)
   }
   if (soft.size > 0) {
     flags.push(`possible internal vocabulary in student-facing text: ${[...soft].join(', ')} — verify these read as math, not pipeline jargon`)
@@ -500,7 +501,7 @@ function qaOf(wire: WireVsgScript): { hardFails: string[]; flags: string[] } {
     }
     worst = Math.max(worst, totalSecs - last)
     if (worst > MAX_INTERACTION_GAP_S) {
-      fails.push(`${worst} seconds without a student interaction — §15.1.1 caps the gap at 30s (45s hard limit over timing-estimate noise)`)
+      fails.push(`${worst} seconds without a student interaction — §8.1 caps the gap at 30s (45s hard limit over timing-estimate noise)`)
     } else if (worst > TARGET_INTERACTION_GAP_S) {
       flags.push(`longest stretch without an interaction is ${worst}s — past the 30s rule, inside the estimate-noise allowance`)
     }
