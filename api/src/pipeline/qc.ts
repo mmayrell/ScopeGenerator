@@ -228,6 +228,27 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
           : `All ${inBoundary.length} in-boundary released items attach to a lesson — the released test is fully modeled.`,
   })
 
+  // 11. Atomization depth — the engine document's calibration (its worked
+  // example atomizes ONE standard into 14 lessons: concept, notation,
+  // interpretation, procedure, representation, decision, bridge, and
+  // application atoms). A course averaging under two lessons per most-granular
+  // standard is presumptively under-atomized: catch-all lessons that teach
+  // several new capabilities at once, which the atom conditions forbid.
+  const plannedStandardCodes = new Set(
+    plan.units.flatMap((u) => u.lessons.flatMap((l) => l.standardCodes.map((c) => c.toUpperCase()))),
+  )
+  const perStandard = plannedStandardCodes.size > 0 ? lessons.length / plannedStandardCodes.size : 0
+  checks.push({
+    name: 'Atomization depth',
+    status: plannedStandardCodes.size > 0 && perStandard < 2 ? 'flag' : 'pass',
+    detail:
+      plannedStandardCodes.size === 0
+        ? 'No standard codes recorded on the plan lessons — depth cannot be measured.'
+        : perStandard < 2
+          ? `${lessons.length} lessons across ${plannedStandardCodes.size} standards (${perStandard.toFixed(1)} per standard) — below the engine document's depth calibration (its worked example atomizes one standard into 14 lessons; even simple standards typically carry concept, procedure, and application atoms). Lessons are likely teaching multiple new capabilities each; consider re-running the affected units at more granularity.`
+          : `${lessons.length} lessons across ${plannedStandardCodes.size} standards (${perStandard.toFixed(1)} per standard) — consistent with the engine document's atom-level granularity.`,
+  })
+
   return checks
 }
 

@@ -12,7 +12,15 @@ import {
 } from '../domain/types'
 import { getFramework } from '../data/framework'
 import { doctrineExcerptsFor, DoctrineQuery } from './doctrine'
-import { PlanLessonSkeleton, PlanOutput, PlanUnit, WireLsgPlan, WireLsgPlanLesson } from './schemas'
+import {
+  CourseMap,
+  DeferredItem,
+  PlanLessonSkeleton,
+  PlanOutput,
+  PlanUnit,
+  WireLsgPlan,
+  WireLsgPlanLesson,
+} from './schemas'
 
 /**
  * Prompt assembly (spec §6: "Every stage prompt is assembled from: relevant
@@ -299,52 +307,140 @@ const standardsEvidenceBlocks = (set: StandardSet, sourceSets: StandardSet[]): s
 // Stage prompts
 // ---------------------------------------------------------------------------
 
-export function planPrompt(
+/** The mode-specific scope charter — shared by both planning passes. */
+const requestDescriptionOf = (set: StandardSet, scope: Scope): string =>
+  scope.request.mode === 'course'
+    ? `Whole-course scope: cover every published content standard of the set over the full grade span (${set.gradeSpan}), TOGETHER WITH the full skill chain each standard requires (P4 — atomize the entire standard). The introductory, foundational, and scaffolding atoms (preskills, first-instance lessons, bridges, application tiers) that build toward each skill are FIRST-CLASS lessons and are included even when no released item aligns to them — no evidence is not no lesson (P5); released items are demand evidence, never the inclusion filter. Untested components stay in scope on flagged inference with generated exemplars. Released-item demand profiles calibrate how hard each lesson goes (never past the standard's own limits, P1), never whether the atoms that build the assessed skills appear in the course.`
+    : scope.request.mode === 'standard'
+      ? `Standard scope: exactly the selected standard(s) "${scope.request.params}" and their skill chains (preskills, bridges, application tiers directly serving them). When several standards are selected, produce ONE coherent scope — a single sequenced set of units covering all of them together, ordered per the sequencing rules across the whole selection, never one disconnected mini-scope per standard.`
+      : `Topic scope: the request "${scope.request.params}" — map it onto the set's hierarchy and include exactly the standards that constitute that topic.`
+
+/**
+ * Planning pass 1 — the course map. Scope resolution and unit architecture
+ * WITHOUT lesson skeletons: atomization runs per unit in dedicated follow-up
+ * calls (unitPlanPrompt), each with its own full output budget. This is what
+ * lets a full course atomize at guide depth — a single whole-course planning
+ * call must compress its plan into one output window and produced
+ * under-atomized courses (~60 lessons where guide fidelity demands 100+).
+ */
+export function courseMapPrompt(
   set: StandardSet,
   scope: Scope,
   sourceSets: StandardSet[] = [],
   userUploadNames: string[] = [],
 ): Prompt {
-  const requestDescription =
-    scope.request.mode === 'course'
-      ? `Whole-course scope: cover every published content standard of the set over the full grade span (${set.gradeSpan}), TOGETHER WITH the full skill chain each standard requires (P4 — atomize the entire standard). The introductory, foundational, and scaffolding atoms (preskills, first-instance lessons, bridges, application tiers) that build toward each skill are FIRST-CLASS lessons and are included even when no released item aligns to them — no evidence is not no lesson (P5); released items are demand evidence, never the inclusion filter. Untested components stay in scope on flagged inference with generated exemplars. Released-item demand profiles calibrate how hard each lesson goes (never past the standard's own limits, P1), never whether the atoms that build the assessed skills appear in the course.`
-      : scope.request.mode === 'standard'
-        ? `Standard scope: exactly the selected standard(s) "${scope.request.params}" and their skill chains (preskills, bridges, application tiers directly serving them). When several standards are selected, produce ONE coherent scope — a single sequenced set of units covering all of them together, ordered per the sequencing rules across the whole selection, never one disconnected mini-scope per standard.`
-        : `Topic scope: the request "${scope.request.params}" — map it onto the set's hierarchy and include exactly the standards that constitute that topic.`
-
+  // Compact corpus digest — scope-level review only; the per-unit calls get
+  // the full records for their own standards.
+  const itemDigest = set.items.map((it) => ({
+    id: it.id,
+    alignmentCode: it.alignmentCode,
+    scopeClass: it.scopeClass,
+    demandProfile: it.demandProfile,
+  }))
   return {
     system: systemCore(
-      'Stages 2–4: scope resolution, atomization (the Atom Discovery Process), sequencing, the Cumulative Mastery Ledger, the Item Alignment Algorithm, and dependency extraction for the coherence webs',
+      'planning pass 1 of 2 — Stage 2 scope resolution and course architecture: unit formation, unit ordering, and grade-progression topics (atomization follows per unit)',
     ),
-    user: `Run Stages 2–4 for the scope request below, following the engine document's pipeline strictly and in order: atom discovery → split decisions → ordering → the Cumulative Mastery Ledger → the Item Alignment Algorithm (with Exclusion Triage repairs looping back into the sequence) → dependency extraction for the coherence webs.
+    user: `Build the COURSE MAP for the scope request below. This is planning pass 1: resolve the scope and architect the units — NO lesson skeletons yet. Atomization (Stage 3), the ledger, and item placement run in dedicated follow-up calls, ONE PER UNIT, on exactly the standards this map assigns to each unit — so a standard this map drops is a standard the course will never teach, and COVERAGE IS THE COMPLETION TEST: the map is defective if any in-scope most-granular content standard is missing from every unit's standardCodes.
 
-Stage 2 — Scope Resolution & Item Decomposition: resolve the request to standards + governing decomposition keys (or the sub-part fallback), classify every supplied item per P2 against the governing standard's wording (veto detection per P1), and build the component evidence map. Released items play their FIRST role here (the engine's Sources of Evidence): they are evidence of observable performance — the behaviors, representations, and decisions the state actually tests — never curriculum authority, and lessons are never distorted to absorb them (No-Forcing Rule). Decompose every in-boundary item now: one TARGET demand (the single behavior it is designed to elicit) plus its complete EMBEDDED demands across the six categories (computations, representations to read or construct, vocabulary, decisions, coordinations of procedures, contextual knowledge); weight patterns that RECUR across items over any single item. Difficulty calibrates from observed demand profiles and decomposition defaults, never past the standard's own limits (P1) — log every ceiling call in scopeDecisions with its basis. Item absence NEVER drives structure and NEVER removes an atom (P5): granularity comes solely from the A1–A6 procedure, and every atom or preskill that constitutes the scoped standards stays in the plan at full quality even when no released item aligns to it directly. You MUST enumerate the introductory, foundational, and scaffolding atoms (the preskill lessons, the concept/vocabulary atoms, the first-instance lessons that introduce each new routine, the representation atoms, the bridges between confusables, and the application tiers) as their own lesson skeletons — these are the atoms most likely to lack a directly-aligned item, and they are exactly the ones that must not be dropped. Mark them evidenceStatus inferred; the cards fill the gap with generated assessment exemplars at state rigor over ledger scope. A plan that contains only item-backed atoms is a defect.
+Responsibilities, in order:
+1. Scope resolution (Stage 2): resolve the request to every most-granular content standard in scope (governing decomposition keys or the sub-part fallback).
+2. Corpus review: item_digest below carries every extracted item's P2 classification and demand profile. Log scope-level calls in scopeDecisions — P1 veto events (rigor-signal-only items and what they signal), corpus coverage observations, partition rationale. Do NOT place items — the per-unit calls run the Item Alignment Algorithm with the full records.
+3. Unit formation (the engine's Ordering rule 8): units group closely related atoms building toward a common mathematical idea; unit boundaries minimize prerequisite crossings and maximize instructional coherence, traceable to the set's theme/emphasis statements or progression streams. Assign EVERY resolved standard to exactly ONE unit's standardCodes (its most-granular code, verbatim from the evidence).
+4. UNIT SIZE IS BINDING: each unit must atomize comfortably inside one follow-up call. At guide depth (the engine document's worked example: ONE standard → 14 lessons) that means AT MOST 3–4 most-granular standards per unit — fewer when a standard is dense (multi-part, representation-heavy). Prefer MORE, SMALLER, strand-coherent units over fewer large ones; a 2-standard unit is normal, an 8-standard unit is a defect.
+5. Unit ordering (the engine's Ordering rules): prerequisites first, concepts before procedures, confusables separated, the sequence a coherent dependency graph — never the order of the standards document.
+6. Grade-progression context per unit (guide §23 — topics ONLY, short noun phrases at progressions-document grain, ≤3 per side, [] when the evidence genuinely names none): topic, priorGradeTopics, nextGradeTopics.
 
-Stage 3 — Atomization:
-${APPENDIX_A}
-Calibrate atomization DEPTH to the engine document's worked example ("Worked Example: CCSS 6.RP.A.3"): ONE standard yielded 14 lessons — concept and vocabulary atoms (Understand Ratios), notation atoms (Write Ratios), interpretation atoms, first-instance procedure atoms (Generate Equivalent Ratios, Find Unit Rates), representation atoms (Represent Ratios Using Tables, Graph Ratio Relationships), decision atoms (Compare Unit Rates), two bridges, and two application tiers — each justified by a named split rule. A partition that collapses a standard into one or two catch-all lessons is under-atomized; a partition that splits on quantitative-only variation (bigger numbers, changed context or wording, more practice) is over-atomized.
-
-Stage 4 — Ordering & Unit Formation:
-${SEQUENCING}
-
-Stage 4b — Ledger & Item Placement (this produces itemRefs):
-${LEDGER_AND_ALIGNMENT}
-
-Stage 4c — Dependency Extraction (this produces dependsOn, prereqs, and the grade-progression topics):
-${WEB_EXTRACTION}
-
-${requestDescription}
+${requestDescriptionOf(set, scope)}
 ${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
 ${jsonBlock('scope_request', scope.request)}
 ${standardsEvidenceBlocks(set, sourceSets)}
-${jsonBlock('item_bank', set.items)}
+${jsonBlock('item_digest', itemDigest)}
 
-Output: ordered units with lesson skeletons.
-- Unit ids "U1", "U2", … in teaching order; lesson ids "<unitId>.L1", "<unitId>.L2", … in teaching order.
-- Each unit: id, title (Title Case), rationale (traceable to theme/emphasis statements or progression streams, strand-coherent), strand, topic + priorGradeTopics + nextGradeTopics (Stage 4c — topics only, [] when the evidence genuinely names none), prereqs (the unit's M(0) nodes per Stage 4c), lessons.
-- Each lesson skeleton: id, title (Title Case, engineered per the engine's How Lessons Are Named rules: the shortest string that says what the lesson covers and what makes it unique — lead with the observable behavior, carry a constraint only when a sibling lesson differs on it, no pedagogy filler like "Introduction to" or "Exploring"; bridge titles carry the competing atoms "A vs. B" or the explicit selection behavior, never "Mixed Practice" or "Review"), type (preskill | new-learning | representation | bridge | application-tier, per the engine's Types of Lessons), evidenceStatus (observed | inferred | mixed), standardCodes (canonical and/or normalized codes this lesson serves), itemRefs (the items PLACED or DEFERRED here by the Stage 4b algorithm — never rigor-signal-only, adjacent-grade, or EXCLUDED items), planningNotes (the reasoning to hand to card generation: which split rules fired, the item placement/deferral justifications in one sentence each — target match + ledger check, single strategy expectation, ceiling inputs, contradiction events, inference basis when evidenceStatus is inferred), objective (ONE sentence — the lesson's single instructional objective), newEntries (the lesson's new ledger entries: its objective plus vocabulary/representations explicitly taught in it), dependsOn (Stage 4c edges), flags (["inserted-by-triage"] only when Triage Q2 inserted this atom, else []).
-- Released-item coverage is MANDATORY but is NOT the inclusion filter: every in-boundary item in the item bank whose standard is in scope must either be attached to exactly ONE lesson skeleton's itemRefs (PLACED or DEFERRED) or be EXCLUDED by the triage with the exclusion logged in scopeDecisions — an item that is neither placed nor triaged is a planning defect. Coverage runs one way only: items must find a lesson or an exclusion, but lessons need NOT have items — the preskill, concept, and scaffolding lessons with itemRefs [] are expected and required, not omissions to be pruned.
-- scopeDecisions: terse records of scope-level calls (P1 vetoes, P2 classifications, P5 inferences, partition used, triage outcomes — every Q1 M(0) addition, Q2 atom insertion, and Q3 exclusion with its basis, and the grade-progression topic sources), each tagged with its rule id (P#/A#).`,
+Output:
+- units: in teaching order, ids "U1", "U2", …; each { id, title (Title Case), rationale (strand-coherent, traceable to theme/emphasis statements or progression streams), strand, topic, priorGradeTopics, nextGradeTopics, standardCodes }.
+- scopeDecisions: terse records of scope-level calls (P1 vetoes, P2 corpus observations, the partition used, unit-formation and ordering rationale, grade-progression topic sources${sourceSets.length >= 2 ? ', and EVERY union crosswalk classification — each standard unique-to-set or overlapping, per the union rules' : ''}), each tagged with its rule id (P#/A#).`,
+  }
+}
+
+/**
+ * Planning pass 2 — one unit's full plan: atomization (A1–A6 per standard),
+ * within-unit ordering, the Cumulative Mastery Ledger (seeded with every
+ * prior unit's entries), the Item Alignment Algorithm over this unit's items
+ * (deferrals thread across units), and dependency extraction.
+ */
+export function unitPlanPrompt(
+  set: StandardSet,
+  scope: Scope,
+  map: CourseMap,
+  unitIndex: number,
+  priorUnits: { id: string; lessons: PlanLessonSkeleton[] }[],
+  pendingDeferrals: (DeferredItem & { fromUnit: string })[],
+  /**
+   * The unit's item records, partitioned IN CODE (pipeline
+   * partitionItemsByUnit) so every in-scope item reaches exactly one unit
+   * call — includes coarse-grain-aligned items this unit owns and the
+   * records behind pendingDeferrals.
+   */
+  evidenceItems: ItemRecord[],
+  sourceSets: StandardSet[] = [],
+  userUploadNames: string[] = [],
+): Prompt {
+  const unit = map.units[unitIndex]
+  // The prior units' ledger contributions, compact: one line per lesson. The
+  // sole authority on "taught before this unit" (guide §15).
+  const ledgerLines = priorUnits.flatMap((u) =>
+    u.lessons.map(
+      (l) =>
+        `${l.id} [${l.type}] ${l.title} — objective: ${l.objective ?? l.planningNotes.slice(0, 120)}${
+          l.newEntries && l.newEntries.length > 0 ? ` — new entries: ${l.newEntries.join('; ')}` : ''
+        }`,
+    ),
+  )
+  return {
+    system: systemCore(
+      'planning pass 2 of 2 — Stages 3–4 for ONE unit: atomization (the Atom Discovery Process), sequencing, the Cumulative Mastery Ledger, the Item Alignment Algorithm, and dependency extraction for the coherence webs',
+    ),
+    user: `Plan unit ${unit.id} — "${unit.title}" ONLY, following the engine document's pipeline strictly and in order: atom discovery → split decisions → ordering → the Cumulative Mastery Ledger → the Item Alignment Algorithm (with Exclusion Triage repairs looping back into the sequence) → dependency extraction. The course map below fixes this unit's standards, its position in the course, and its neighbors; sibling calls plan the other units.
+
+Stage 3 — Atomization. Run the Atom Discovery Process EXPLICITLY AND SEPARATELY FOR EACH standard in unit_assignment.standardCodes — all eight considerations, in order, per standard:
+${APPENDIX_A}
+DEPTH DISCIPLINE (binding):
+- Calibrate atomization DEPTH to the engine document's worked example ("Worked Example: CCSS 6.RP.A.3"): ONE standard yielded 14 lessons — concept and vocabulary atoms (Understand Ratios), notation atoms (Write Ratios), interpretation atoms, first-instance procedure atoms (Generate Equivalent Ratios, Find Unit Rates), representation atoms (Represent Ratios Using Tables, Graph Ratio Relationships), decision atoms (Compare Unit Rates), two bridges, and two application tiers — each justified by a named split rule. A partition that collapses a standard into one or two catch-all lessons is under-atomized; a partition that splits on quantitative-only variation (bigger numbers, changed context or wording, more practice) is over-atomized.
+- A standard that resolves to fewer than three lessons is PRESUMPTIVELY under-atomized: it is legitimate only when the standard is genuinely a single atom, and its planningNotes must name the Don't-Split rules holding each would-be boundary together (the distinct behaviors, concepts, representations, vocabulary, decisions, and applications the standard names, and why each shares the same cognitive routine). Silence is a defect.
+- You MUST enumerate the introductory, foundational, and scaffolding atoms (the preskill lessons, the concept/vocabulary atoms, the first-instance lessons that introduce each new routine, the representation atoms, the bridges between confusables, and the application tiers) as their own lesson skeletons — these are the atoms most likely to lack a directly-aligned item, and they are exactly the ones that must not be dropped (P4, P5). Item absence NEVER drives structure and NEVER removes an atom: mark them evidenceStatus inferred; the cards fill the gap with generated assessment exemplars at state rigor over ledger scope. A unit plan that contains only item-backed atoms is a defect.
+
+Stage 4 — Ordering within the unit:
+${SEQUENCING}
+
+Stage 4b — Ledger & Item Placement (this produces itemRefs, placedDeferrals, deferredOut):
+${LEDGER_AND_ALIGNMENT}
+Cross-unit mechanics for THIS call:
+- cumulative_ledger below lists EVERY lesson of the prior units (id, type, title, objective, new entries). The ledger for this unit starts from those entries plus this unit's M(0) prereqs — it is the sole authority on "taught before this unit"; if a skill is not there and not in M(0), it is untaught, no matter how plausible.
+- Decompose every in-boundary item in item_bank_subset now (one TARGET demand + complete EMBEDDED demands across the six categories: computations, representations to read or construct, vocabulary, decisions, coordinations of procedures, contextual knowledge), then run the Placement Rule against this unit's lessons.
+- An item whose Condition B fails on a demand this unit does not teach but a LATER unit's standards plausibly cover (see course_map) → emit a deferredOut entry ({ itemRef, missingDemands, note }) instead of forcing it; the later unit's call sees it as a pending deferral. Never place an item whose embedded demands are untaught.
+- pending_deferrals below carries items deferred FROM earlier units. For each: if this unit teaches the missing demands, place it per the Placement Rule at the earliest qualifying review/bridge/application lesson — emit { itemRef, lessonId, justification } in placedDeferrals (lessonId must be one of THIS unit's lessons; do NOT also list it in a lesson's itemRefs — assembly merges it). If it still cannot be placed, ignore it — it stays pending for later units, and items pending after the last unit become end-of-course exclusions automatically.
+- Exclusion Triage outcomes: Q1 prior-grade prerequisite → a SEPARATE prereqs entry flagged addedByTriage, then re-place. Q2 missing in-scope atom → insert the atom into THIS unit flagged "inserted-by-triage", rebuild, re-place. Q3 beyond the standard and grade → EXCLUDE silently, logged ONLY in scopeDecisions.
+
+Stage 4c — Dependency Extraction (this produces dependsOn and prereqs):
+${WEB_EXTRACTION}
+dependsOn edges may name EARLIER lessons of THIS unit, lessons of PRIOR units (by their ids in cumulative_ledger), or this unit's prereq node ids — never later lessons.
+
+${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
+${jsonBlock('scope_request', scope.request)}
+${standardsEvidenceBlocks(set, sourceSets)}
+${jsonBlock('course_map', map)}
+${jsonBlock('unit_assignment', unit)}
+${jsonBlock('cumulative_ledger', ledgerLines)}
+${jsonBlock('pending_deferrals', pendingDeferrals)}
+${jsonBlock('item_bank_subset', evidenceItems)}
+
+Output:
+- lessons: this unit's complete lesson skeletons in teaching order, ids "${unit.id}.L1", "${unit.id}.L2", … . Each: id, title (Title Case, engineered per the engine's How Lessons Are Named rules: the shortest string that says what the lesson covers and what makes it unique — lead with the observable behavior, carry a constraint only when a sibling lesson differs on it, no pedagogy filler like "Introduction to" or "Exploring"; bridge titles carry the competing atoms "A vs. B" or the explicit selection behavior, never "Mixed Practice" or "Review"), type (preskill | new-learning | representation | bridge | application-tier, per the engine's Types of Lessons), evidenceStatus (observed | inferred | mixed), standardCodes (canonical and/or normalized codes this lesson serves), itemRefs (the items PLACED or DEFERRED-IN here by the Stage 4b algorithm — never rigor-signal-only, adjacent-grade, or EXCLUDED items), planningNotes (the reasoning to hand to card generation: which split rules fired — and for any standard kept under three lessons, the Don't-Split defense — the item placement justifications in one sentence each (target match + ledger check), single strategy expectation, ceiling inputs, contradiction events, inference basis when evidenceStatus is inferred), objective (ONE sentence — the lesson's single instructional objective), newEntries (the lesson's new ledger entries: its objective plus vocabulary/representations explicitly taught in it), dependsOn (Stage 4c edges), flags (["inserted-by-triage"] only when Triage Q2 inserted this atom, else []).
+- prereqs: the unit's M(0) nodes — id "${unit.id}.M0" for the standing prerequisite set (label summarizing the prior-grade skills), plus one SEPARATE entry per Triage-Q1-added prerequisite (ids "${unit.id}.M0b", "${unit.id}.M0c", …, addedByTriage true).
+- placedDeferrals / deferredOut: per the cross-unit mechanics above ([] when none).
+- Released-item coverage is MANDATORY but is NOT the inclusion filter: every in-boundary item in item_bank_subset aligned to this unit's standards must be PLACED at exactly one lesson's itemRefs, DEFERRED out, or EXCLUDED by triage with the exclusion logged in scopeDecisions — an item that is none of these is a planning defect. Coverage runs one way only: items must find a lesson or an exclusion, but lessons need NOT have items.
+- scopeDecisions: terse records of this unit's calls (P1 vetoes, P5 inferences, triage outcomes — every Q1 M(0) addition, Q2 atom insertion, and Q3 exclusion with its basis), each tagged with its rule id (P#/A#).`,
   }
 }
 

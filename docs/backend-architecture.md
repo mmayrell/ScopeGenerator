@@ -185,9 +185,9 @@ all units done reports it; finalize itself is idempotent).
   `mutateLsgCourse` (blob ETag If-Match + retry)
 - `lsg/runs/<runId>.json` — current `LsgRun` (snapshot captured at create; output + `applied` written
   by the worker). Mutations go through `mutateLsgRun`
-- `jobs/<jobId>/plan.json`, `jobs/<jobId>/unit-<i>-lesson-<lessonId>.json`,
-  `jobs/<jobId>/unit-<i>.json` — pipeline checkpoints (legacy `unit-<i>-batch-<b>.json` batch
-  checkpoints are still read on resume)
+- `jobs/<jobId>/plan-map.json`, `jobs/<jobId>/plan-unit-<i>.json`, `jobs/<jobId>/plan.json`,
+  `jobs/<jobId>/unit-<i>-lesson-<lessonId>.json`, `jobs/<jobId>/unit-<i>.json` — pipeline
+  checkpoints (legacy `unit-<i>-batch-<b>.json` batch checkpoints are still read on resume)
 - `jobs/<jobId>/lsg-plan.json`, `jobs/<jobId>/lsg-batch-<i>.json` — LSG pipeline checkpoints
 
 **Blob container `uploads`**: `<setId>/<role>/<fileName>` — uploaded PDFs;
@@ -239,24 +239,66 @@ every selected set to have a covering lesson. Single-set scopes are unchanged ([
 Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeout
 (`host.json`: `functionTimeout: "00:10:00"`):
 
-1. **`plan`** (Stages 2–4): one Claude call (effort `high`). Input: the published set's tree (with
-   limits), items (with scope classes/demand profiles), artifact usage notes, and the
-   request (course/standard/topic). Output (structured): ordered units with lesson skeletons,
-   produced by the Engine v4.0 atomization pipeline (scope resolution → item decomposition →
-   atom discovery/split rules → ordering → Cumulative Mastery Ledger + item placement →
-   dependency extraction). Each skeleton may carry `objective`, `newEntries` (ledger),
-   `dependsOn` (within-unit + cross-unit prerequisite edges with `carries` skills), and `flags`;
-   each unit may carry `topic`, `priorGradeTopics`, `nextGradeTopics`, and `prereqs` (assumed
-   prior-grade M(0) skills) — all optional so lower-effort re-runs and legacy plans still parse.
-   Checkpoint to `jobs/<jobId>/plan.json`; set `totalUnits`; enqueue one `cards` message per unit.
-   The call is **deadline-bounded** (aborted in-process at 8.5 minutes — a host kill at 10:00
-   skips all settlement) with a **cut-escalation ladder** riding the queue message
-   (`payload.cuts`): each cut re-runs the plan at lower effort (`high → medium → low`); a third
-   cut fails terminally ("did not fit the 10-minute execution window", matched by the worker's
-   TERMINAL_ERROR so it fails fast) instead of burning the dequeue budget on a call that can
-   never fit. **Output truncation (`max_tokens`) escalates down the SAME ladder**: reasoning
-   tokens share the max_tokens budget, so a lower-effort re-run leaves more room for the plan
-   itself; exhausting the ladder fails terminally ("exceeded the model's output budget").
+1. **`plan`** (Stages 2–4): **checkpointed multi-call**. (A single whole-course plan call had to
+   compress every unit's atomization into one output window under the execution deadline — the
+   direct cause of under-atomized courses: ~60 lessons where the engine document's depth
+   calibration demands 100+.) Input across the passes: the published set's tree (with limits),
+   items (with scope classes/demand profiles), artifact usage notes, and the request
+   (course/standard/topic).
+   - **Pass 1 — course map** (one small call, effort `high`): scope resolution + unit
+     architecture, NO lesson skeletons. Output: ordered units `{ id, title, rationale, strand,
+     topic, priorGradeTopics, nextGradeTopics, standardCodes }` plus scope-level `scopeDecisions`
+     (P1 vetoes, P2 corpus observations, union crosswalk). Every resolved most-granular standard
+     must land in exactly one unit's `standardCodes`, and unit size is bound to 3–4 standards so
+     each unit atomizes comfortably inside one follow-up call. Validated before checkpointing —
+     non-empty, unique unit ids, no standard-less units, DISJOINT `standardCodes` across units
+     (an overlap would command two unit calls to place the same items), and in course mode full
+     leaf coverage (every content-standard leaf owned by some unit directly or via an ancestor
+     code — a dropped standard would be silently untaught); a throw gets queue retries. Written
+     **create-only** (`putJsonIfAbsent`, If-None-Match `*`) to `jobs/<jobId>/plan-map.json`: two
+     overlapping deliveries can generate DIFFERENT maps, so first writer wins and the loser
+     adopts the persisted map — otherwise unit checkpoints from two architectures could mix.
+   - **Pass 2 — per-unit plans** (one call per unit, effort `high`, SEQUENTIAL): the full A1–A6
+     Atom Discovery Process run explicitly per standard, within-unit ordering, the Cumulative
+     Mastery Ledger (seeded with a compact one-line-per-lesson digest of every prior unit), the
+     Item Alignment Algorithm over the unit's items, and dependency extraction (`dependsOn` may
+     reference prior units' lesson ids and the unit's M(0) prereq node ids). Items are
+     partitioned across units **in code** (`partitionItemsByUnit`): a unit owns items aligned to
+     its standards or their descendants, and a coarse-grain alignment (cluster/KS-level) resolves
+     to the LATEST unit owning a descendant — deterministic, exactly one call sees each in-scope
+     item (per-call code matching both dropped coarse-grain items and double-fed overlaps).
+     Cross-unit deferrals thread through the passes: each unit's `deferredOut` rides forward as
+     `pending_deferrals` to later units, which absorb them via `placedDeferrals`. Skeleton fields
+     per lesson: `objective`, `newEntries` (ledger), `dependsOn` (with `carries` skills), `flags`
+     — all optional in the TS shape so legacy plan checkpoints still parse. Validated before
+     checkpointing to `jobs/<jobId>/plan-unit-<i>.json` (a throw gets queue retries): lesson ids
+     unique and unit-prefixed; every `placedDeferrals` entry targets one of THIS unit's lessons
+     with a pending item id (a hallucinated id would silently convert a placeable item into a
+     false end-of-course exclusion); every `deferredOut` names a supplied item id. Repairable
+     slips are sanitized instead: out-of-scope/duplicate `itemRefs` dropped, `deferredOut`
+     entries contradicting an in-unit placement dropped. A reused checkpoint that does not match
+     the current map's unit id is discarded and regenerated. Unit calls run inside a 4.5-minute
+     launch budget with plain same-message re-enqueue between units (the cards pattern); a call
+     aborted at the deadline after launching >60s into the window re-runs at the SAME effort in
+     a fresh execution (a late start says nothing about whether the call fits — only an
+     early-started cut burns a ladder rung).
+   - **Pass 3 — assembly** (programmatic, no Claude): unit metadata from the map + lessons and
+     prereqs from the unit plans; `placedDeferrals` merged into their target lessons' `itemRefs`;
+     every `itemRefs` filtered to real item ids and deduped course-wide (one item, one lesson —
+     first placement in course order wins, as a backstop behind the per-unit sanitation);
+     never-absorbed deferrals logged in `scopeDecisions` as end-of-course exclusions
+     (guide §16.2). Checkpoint to `jobs/<jobId>/plan.json`; set `totalUnits`; enqueue one `cards`
+     message per unit.
+   Every planning call is **deadline-bounded** (aborted in-process at 8.5 minutes — a host kill
+   at 10:00 skips all settlement) with a **per-call cut-escalation ladder** riding the queue
+   message (`payload.cuts` + `payload.cutUnit`, −1 = the map call): each cut re-runs THAT call at
+   lower effort (`high → medium → low`); exhausting the ladder fails terminally ("did not fit the
+   10-minute execution window", matched by the worker's TERMINAL_ERROR so it fails fast).
+   **Output truncation (`max_tokens`) escalates down the SAME ladder**: reasoning tokens share
+   the max_tokens budget, so a lower-effort re-run leaves more room for the plan itself;
+   exhausting the ladder fails terminally ("exceeded the model's output budget"). Because each
+   unit now plans in its own call, cross-framework union full-course planning fits the window
+   (the former known failure case).
 2. **`cards`** (Stage 5, parallel per unit): one Claude call per lesson slice (effort `medium`,
    max_tokens 48000 — sized to fit the 10-minute consumption cap). The lessons-per-call count is
    **adaptive** (starts at 4, rides re-enqueued messages as `payload.callSize`): on truncation it
@@ -301,6 +343,14 @@ Failure at any step (after the queue's built-in retries, `maxDequeueCount` 12) i
   watches for it); the set stays unpublished.
 - `lsg`: run settled `failed` + `error`; the course registry is untouched (persist only happens on
   success).
+
+**Attempt-error visibility** (`worker.ts`): every caught, retryable step error is logged onto the
+job row before rethrowing (`Attempt N failed: … — retrying`), and the attempt circuit breaker
+(dequeue > RUN_ATTEMPT_CAP) surfaces the LAST recorded error in its failure message when one
+exists — the canned "killed by the 10-minute execution cap" guess is reserved for genuinely
+silent kills. Without this, a deterministic validation throw (e.g. malformed unit-plan lesson
+ids) reached the breaker with nothing recorded and the user got timeout advice that could not
+help.
 
 **Poison-queue settlement** (`genjobs-poison` trigger in `worker.ts`): a message the host poisons
 means every delivery died WITHOUT the worker recording anything — in practice the 10-minute

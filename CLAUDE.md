@@ -58,9 +58,11 @@ longer needed.
   blobs and re-enqueue rather than doing more in one invocation. The worker circuit-breaks any
   message on its 4th delivery (RUN_ATTEMPT_CAP in worker.ts) — a step whose Claude call cannot
   finish inside 10 minutes will fail with a "killed 3 times" error rather than retry forever.
-  KNOWN CASE (2026-07-07): cross-framework **union** full-course scoping doubles the plan-stage
-  evidence and does not fit — split union planning into one plan call per framework (checkpoint
-  each) plus a merge step, or lower the plan call's effort for union requests.
+  RESOLVED CASE (2026-07-09): whole-course planning (worst for cross-framework union) could not
+  fit one call — planning is now checkpointed multi-call (course map → one atomization call per
+  unit → programmatic assembly, `plan-map.json`/`plan-unit-<i>.json`). Do not collapse planning
+  back into a single call: it silently under-atomizes (a grade-3 course came out at 63 lessons
+  against a guide-fidelity ~100+) before it ever hits the timeout.
 
 ## Frontend rules (`src/`)
 

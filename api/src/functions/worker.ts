@@ -56,18 +56,32 @@ app.storageQueue('genjobs-worker', {
     const dequeueCount = Number(
       (context.triggerMetadata?.dequeueCount as number | string | undefined) ?? 1,
     )
-    // Circuit breaker: a high dequeue count means previous attempts died WITHOUT
-    // reaching the catch below — the host kills the invocation at the 10-minute
-    // functionTimeout (typically a Claude call that cannot fit) and the catch
-    // never runs. Re-running just repeats the same expensive doomed call up to
-    // maxDequeueCount times; fail the job visibly instead.
+    // Circuit breaker: a high dequeue count means previous attempts either
+    // died WITHOUT reaching the catch below (the host kills the invocation at
+    // the 10-minute functionTimeout and the catch never runs) or threw
+    // retryable errors that keep recurring. Re-running just repeats the same
+    // expensive doomed call up to maxDequeueCount times; fail the job visibly
+    // instead — and when the prior attempts DID record their errors (the
+    // catch below logs each one onto the job row), surface the real error
+    // rather than the timeout guess, which used to misdiagnose deterministic
+    // validation failures as "killed by the 10-minute cap".
     if (dequeueCount > RUN_ATTEMPT_CAP) {
+      let lastError = ''
+      try {
+        const rec = await getJob(msg.jobId)
+        const logged = [...rec.log].reverse().find((l) => /^Attempt \d+ failed:/.test(l.detail))
+        if (logged) lastError = logged.detail.replace(/^Attempt \d+ failed:\s*/, '').replace(/ — retrying$/, '')
+      } catch {
+        /* job row may be gone — fall back to the generic message */
+      }
       context.error(
-        `genjobs-worker: job ${msg.jobId} ${msg.kind}/${msg.step} exceeded ${RUN_ATTEMPT_CAP} attempts (dequeue ${dequeueCount}); previous attempts were killed before error handling could run - failing the job without re-running`,
+        `genjobs-worker: job ${msg.jobId} ${msg.kind}/${msg.step} exceeded ${RUN_ATTEMPT_CAP} attempts (dequeue ${dequeueCount}) - failing the job without re-running${lastError ? ` (last recorded error: ${lastError})` : ''}`,
       )
       await markFailed(
         msg,
-        `Step was killed ${RUN_ATTEMPT_CAP} times before completing - almost certainly the 10-minute execution cap on a Claude call that does not fit. Reduce the request scope (e.g. plan one framework at a time), lower CLAUDE_EFFORT, or split the step.`,
+        lastError
+          ? `Step failed on ${RUN_ATTEMPT_CAP} straight attempts. Last error: ${lastError}`
+          : `Step was killed ${RUN_ATTEMPT_CAP} times before completing - almost certainly the 10-minute execution cap on a Claude call that does not fit. Reduce the request scope (e.g. plan one framework at a time), lower CLAUDE_EFFORT, or split the step.`,
         context,
       )
       return
@@ -82,6 +96,15 @@ app.storageQueue('genjobs-worker', {
       if (dequeueCount >= MAX_DEQUEUE_COUNT || TERMINAL_ERROR.test(message)) {
         await markFailed(msg, message, context)
         return // consume the message — the failure is now recorded
+      }
+      // Record the attempt's error on the job row BEFORE rethrowing for retry:
+      // without this, a repeated deterministic throw reaches the circuit
+      // breaker with nothing recorded and the user sees a timeout guess
+      // instead of the actual defect.
+      try {
+        await mutateJob(msg.jobId, (r) => pushLog(r, `Attempt ${dequeueCount} failed: ${message} — retrying`))
+      } catch {
+        /* best-effort — never mask the original error */
       }
       throw e // let the host retry
     }

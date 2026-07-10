@@ -1,18 +1,23 @@
 import { InvocationContext } from '@azure/functions'
-import { JobMessage, Lesson, Unit } from '../domain/types'
-import { getJsonOrUndefined, putJson } from '../data/blobs'
+import { ItemRecord, JobMessage, Lesson, StandardNode, StandardSet, Unit } from '../domain/types'
+import { getJsonOrUndefined, putJson, putJsonIfAbsent } from '../data/blobs'
 import { dataContainer } from '../data/clients'
 import { getScope, getScopeEvidenceSet, getScopeSourceSets, mutateScope, saveScope, snapshotScope } from '../data/entities'
 import { completeUnit, getJob, mutateJob, pushLog } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { generateStructured } from '../services/claude'
-import { cardsPrompt, planPrompt } from '../services/prompts'
+import { cardsPrompt, courseMapPrompt, unitPlanPrompt } from '../services/prompts'
 import {
-  PLAN_SCHEMA,
+  COURSE_MAP_SCHEMA,
+  CourseMap,
+  DeferredItem,
   PlanLessonSkeleton,
   PlanOutput,
+  PlanUnit,
   toLesson,
   UNIT_CARDS_BATCH_SCHEMA,
+  UNIT_PLAN_SCHEMA,
+  UnitPlanOutput,
   WireLessonBatch,
 } from '../services/schemas'
 import { today } from '../shared/util'
@@ -23,7 +28,17 @@ import { buildCoherenceWebs, coherenceQcCheck } from './webs'
 
 // Generation pipeline (contract §Generation pipeline), checkpointed for the
 // 10-minute consumption timeout:
-//   plan     (Stages 2–4, one Claude call)  → jobs/<jobId>/plan.json
+//   plan     (Stages 2–4, checkpointed multi-call)
+//            pass 1: the course map (scope resolution + unit architecture,
+//                    one small call)        → jobs/<jobId>/plan-map.json
+//            pass 2: per-unit atomization/ledger/placement (one call PER
+//                    unit, sequential — each with its own full output
+//                    budget)                → jobs/<jobId>/plan-unit-<i>.json
+//            pass 3: programmatic assembly  → jobs/<jobId>/plan.json
+//            A single whole-course plan call had to compress every unit into
+//            one output window under the execution deadline — the direct
+//            cause of under-atomized courses (~60 lessons where the engine
+//            document's depth calibration demands 100+).
 //   cards    (Stage 5, parallel per unit)   → jobs/<jobId>/unit-<i>-lesson-<id>.json per lesson,
 //                                             then the assembled jobs/<jobId>/unit-<i>.json
 //   finalize (Stage 6, programmatic QC)     → the assembled Scope, v1 snapshot
@@ -35,6 +50,8 @@ const STAGE_FINALIZE = 'Stage 6 — Assembly & auto-QC'
 export const GENERATE_TOTAL_STAGES = 3
 
 const planPath = (jobId: string) => `jobs/${jobId}/plan.json`
+const planMapPath = (jobId: string) => `jobs/${jobId}/plan-map.json`
+const planUnitPath = (jobId: string, i: number) => `jobs/${jobId}/plan-unit-${i}.json`
 const unitPath = (jobId: string, i: number) => `jobs/${jobId}/unit-${i}.json`
 // Legacy fixed-size batch checkpoint (pre per-lesson checkpoints) — still READ
 // so runs that failed under the old batching resume without regenerating.
@@ -82,6 +99,13 @@ const EXECUTION_DEADLINE_MS = 8.5 * 60 * 1000
 // that provably cannot fit.
 const PLAN_EFFORT_LADDER = ['high', 'medium', 'low'] as const
 const MAX_CARD_CUTS = 3
+// Planning calls (course map + one per unit) run sequentially inside one
+// execution until this budget, then re-enqueue — same pattern as cards.
+const PLAN_TIME_BUDGET_MS = 4.5 * 60 * 1000
+// A planning call aborted at the execution deadline after launching this far
+// into the window was cut by SCHEDULING, not by its own size — it re-runs at
+// the same effort in a fresh execution instead of burning a ladder rung.
+const LATE_START_GRACE_MS = 60 * 1000
 
 const isAbort = (e: unknown): boolean =>
   /abort/i.test((e as { name?: string }).name ?? '') || /abort/i.test(e instanceof Error ? e.message : String(e))
@@ -100,6 +124,161 @@ function readCallSize(msg: JobMessage): number {
   const raw = (msg.payload ?? {}) as { callSize?: unknown }
   const n = Math.trunc(Number(raw.callSize ?? CARDS_LESSON_BATCH))
   return Number.isFinite(n) && n >= 1 && n <= CARDS_LESSON_BATCH ? n : CARDS_LESSON_BATCH
+}
+
+/**
+ * Plan-step cut state: `cutUnit` scopes the effort-ladder escalation to the
+ * one planning call that was cut (-1 = the course-map call, i = unit i).
+ * Legacy messages carrying only `cuts` (pre-split planning) map to the course
+ * map, which is where a legacy single-call plan job resumes anyway.
+ */
+function readPlanCuts(msg: JobMessage): { cuts: number; cutUnit: number } {
+  const raw = (msg.payload ?? {}) as { cuts?: unknown; cutUnit?: unknown }
+  const cuts = Math.trunc(Number(raw.cuts ?? 0))
+  const cutUnit = Math.trunc(Number(raw.cutUnit ?? -1))
+  return {
+    cuts: Number.isFinite(cuts) && cuts > 0 ? cuts : 0,
+    cutUnit: Number.isFinite(cutUnit) && cutUnit >= -1 ? cutUnit : -1,
+  }
+}
+
+/**
+ * Unit ownership of the standards tree: a node is owned by the unit whose
+ * standardCodes carry its code/norm, ownership inherits down the subtree
+ * (sub-part-aligned items belong to the unit that owns the parent), and an
+ * un-owned ANCESTOR node (cluster/KS-level) resolves to the LATEST owning
+ * unit among its descendants — the first point in the course where all of a
+ * coarse-grain item's prerequisite instruction can exist (the same rule
+ * ingestion applies to multi-standard items). Also reports content-standard
+ * leaves (wording, no children) no unit covers — silently untaught scope.
+ */
+function unitOwnershipOf(
+  set: StandardSet,
+  map: CourseMap,
+): { nodeOwner: Map<string, number>; uncoveredLeaves: string[] } {
+  const codeOwner = new Map<string, number>()
+  map.units.forEach((u, i) => {
+    for (const c of u.standardCodes) codeOwner.set(c.toUpperCase(), i)
+  })
+  const nodeOwner = new Map<string, number>()
+  const uncoveredLeaves: string[] = []
+  const walk = (node: StandardNode, inherited: number | undefined): Set<number> => {
+    const own = codeOwner.get(node.code.toUpperCase()) ?? codeOwner.get(node.norm.toUpperCase()) ?? inherited
+    const owners = new Set<number>()
+    if (own !== undefined) owners.add(own)
+    const children = node.children ?? []
+    for (const child of children) for (const o of walk(child, own)) owners.add(o)
+    if (own !== undefined) {
+      nodeOwner.set(node.code.toUpperCase(), own)
+      nodeOwner.set(node.norm.toUpperCase(), own)
+    } else if (owners.size > 0) {
+      const latest = Math.max(...owners)
+      nodeOwner.set(node.code.toUpperCase(), latest)
+      nodeOwner.set(node.norm.toUpperCase(), latest)
+    } else if (children.length === 0 && (node.wording ?? '').trim().length > 0) {
+      uncoveredLeaves.push(node.code)
+    }
+    return owners
+  }
+  for (const root of set.tree) walk(root, undefined)
+  return { nodeOwner, uncoveredLeaves }
+}
+
+/** Deterministic item partition: each item lands in exactly ONE unit's bucket (or none, when out of scope). */
+function partitionItemsByUnit(set: StandardSet, map: CourseMap): ItemRecord[][] {
+  const { nodeOwner } = unitOwnershipOf(set, map)
+  const buckets: ItemRecord[][] = map.units.map(() => [])
+  for (const item of set.items) {
+    const owner = nodeOwner.get(item.alignmentCode.toUpperCase())
+    if (owner !== undefined) buckets[owner].push(item)
+  }
+  return buckets
+}
+
+/**
+ * Items deferred out of earlier units and not yet absorbed — the pending list
+ * the next unit's call tries to place (guide §16.3, the Deferral Rule run
+ * across unit boundaries).
+ */
+function pendingDeferralsOf(
+  map: CourseMap,
+  unitPlans: UnitPlanOutput[],
+): (DeferredItem & { fromUnit: string })[] {
+  const absorbed = new Set<string>()
+  for (const up of unitPlans) {
+    for (const l of up.lessons) for (const r of l.itemRefs) absorbed.add(r)
+    for (const pd of up.placedDeferrals) absorbed.add(pd.itemRef)
+  }
+  const out: (DeferredItem & { fromUnit: string })[] = []
+  const seen = new Set<string>()
+  unitPlans.forEach((up, j) => {
+    for (const d of up.deferredOut) {
+      if (absorbed.has(d.itemRef) || seen.has(d.itemRef)) continue
+      seen.add(d.itemRef)
+      out.push({ ...d, fromUnit: map.units[j]?.id ?? 'U?' })
+    }
+  })
+  return out
+}
+
+/**
+ * Pass 3 — programmatic assembly of the final PlanOutput: unit metadata from
+ * the map, lessons/prereqs from the unit plans, placedDeferrals merged into
+ * their target lessons' itemRefs, itemRefs filtered to real item ids, and
+ * every never-absorbed deferral logged as an end-of-course exclusion
+ * (guide §16.2 — cumulative items never distort the atomization).
+ */
+function assemblePlan(map: CourseMap, unitPlans: UnitPlanOutput[], validItemIds: Set<string>): PlanOutput {
+  const units: PlanUnit[] = map.units.map((mu, i) => {
+    const up = unitPlans[i]
+    return {
+      id: mu.id,
+      title: mu.title,
+      rationale: mu.rationale,
+      strand: mu.strand,
+      topic: mu.topic,
+      priorGradeTopics: mu.priorGradeTopics,
+      nextGradeTopics: mu.nextGradeTopics,
+      prereqs: up.prereqs,
+      lessons: up.lessons.map((l) => ({ ...l, itemRefs: l.itemRefs.filter((r) => validItemIds.has(r)) })),
+    }
+  })
+  const lessonById = new Map(units.flatMap((u) => u.lessons.map((l) => [l.id, l] as const)))
+  const decisions: string[] = [...map.scopeDecisions]
+  for (const up of unitPlans) {
+    decisions.push(...up.scopeDecisions)
+    for (const pd of up.placedDeferrals) {
+      const lesson = lessonById.get(pd.lessonId)
+      if (!lesson || !validItemIds.has(pd.itemRef)) continue
+      if (!lesson.itemRefs.includes(pd.itemRef)) lesson.itemRefs.push(pd.itemRef)
+      decisions.push(`Deferral placed (engine Deferral Rule): item ${pd.itemRef} → ${pd.lessonId} — ${pd.justification}`)
+    }
+  }
+  // Backstop: one item, one lesson, course-wide (first placement in course
+  // order wins). Per-unit sanitation makes cross-unit duplicates structurally
+  // impossible for fresh plans, but assembly is the last gate before cards.
+  const seenRefs = new Set<string>()
+  for (const u of units) {
+    for (const l of u.lessons) {
+      l.itemRefs = l.itemRefs.filter((r) => {
+        if (seenRefs.has(r)) return false
+        seenRefs.add(r)
+        return true
+      })
+    }
+  }
+  const placedAll = new Set(units.flatMap((u) => u.lessons.flatMap((l) => l.itemRefs)))
+  const noted = new Set<string>()
+  unitPlans.forEach((up, i) => {
+    for (const d of up.deferredOut) {
+      if (placedAll.has(d.itemRef) || noted.has(d.itemRef) || !validItemIds.has(d.itemRef)) continue
+      noted.add(d.itemRef)
+      decisions.push(
+        `End-of-course exclusion (engine Placement Doctrine §16.2): item ${d.itemRef}, deferred out of ${map.units[i]?.id ?? 'U?'} on untaught demands (${d.missingDemands.join('; ') || 'unstated'}), was never absorbable by a later lesson — treated as end-of-course/cumulative assessment, not lesson-aligned.`,
+      )
+    }
+  })
+  return { units, scopeDecisions: decisions }
 }
 
 /** Bound a Claude call to the execution deadline; the caller escalates on abort. */
@@ -125,71 +304,288 @@ export async function generatePlanStep(msg: JobMessage, ctx: InvocationContext):
   const sourceSets = await getScopeSourceSets(scope) // [] unless multi-set (cross-framework union)
   const userDocs = await loadScopeUploadDocs(scope, ctx) // user-attached released-question PDFs (topic requests)
 
-  await mutateJob(msg.jobId, (r) => {
-    r.status = 'running'
-    r.stage = STAGE_PLAN
-    pushLog(r, `Planning ${scope.request.mode} scope against ${set.name}`)
-  })
-
   // Checkpoint reuse keeps retries idempotent (a prior attempt may have failed
   // between the checkpoint write and the fan-out).
   let plan = await getJsonOrUndefined<PlanOutput>(dataContainer(), planPath(msg.jobId))
   if (!plan) {
-    // Deadline-cut effort ladder: each aborted execution retries one level
-    // lower (a lower-effort plan of the same request is far better than a
-    // generation that dies). The ladder's end fails terminally.
-    const cuts = readCuts(msg)
-    const effort = PLAN_EFFORT_LADDER[Math.min(cuts, PLAN_EFFORT_LADDER.length - 1)]
-    const { signal, dispose } = bounded(started)
-    try {
-      plan = await generateStructured<PlanOutput>({
-        ...planPrompt(set, scope, sourceSets, userDocs.names),
-        schema: PLAN_SCHEMA,
-        effort,
-        signal,
-        ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
-      })
-    } catch (e) {
-      // Truncation escalates down the SAME effort ladder as a deadline cut:
-      // reasoning tokens share the max_tokens budget, so a lower-effort re-run
-      // of the identical request leaves far more room for the plan itself —
-      // a plain retry would repeat the identical overflowing call forever.
+    // Deadline-cut effort ladder, per CALL: `cutUnit` (-1 = the course-map
+    // call, i = unit i's call) scopes `cuts` to the one call that was cut, so
+    // an escalation never lowers the effort of the calls that fit fine.
+    const { cuts, cutUnit } = readPlanCuts(msg)
+    let calls = 0
+
+    /**
+     * Shared escalation for a planning call that overflowed or was cut:
+     * truncation and deadline cuts both retry one effort level lower
+     * (reasoning tokens share the max_tokens budget, so a lower-effort re-run
+     * of the identical request leaves far more room for the plan itself — a
+     * plain retry would repeat the identical overflowing call forever). The
+     * ladder's end fails terminally. Log BEFORE enqueueing: if either write
+     * fails, the error rethrows and the host redelivers THIS message —
+     * enqueue-first could strand a continuation alongside the redelivery.
+     */
+    const escalatePlanCall = async (e: unknown, label: string, callCuts: number, unitIdx: number): Promise<boolean> => {
       const truncated = isTruncation(e)
-      if (!truncated && !isAbort(e)) throw e
-      if (cuts + 1 >= PLAN_EFFORT_LADDER.length) {
+      if (!truncated && !isAbort(e)) return false
+      if (callCuts + 1 >= PLAN_EFFORT_LADDER.length) {
         throw new Error(
-          truncated
-            ? `Planning exceeded the model's output budget after ${PLAN_EFFORT_LADDER.length} attempts (effort ${PLAN_EFFORT_LADDER.join(' → ')}). The request resolves to a plan too large for one call — narrow it (fewer standards, a single framework, or a smaller grade span) and retry.`
-            : `Planning did not fit the 10-minute execution window after ${PLAN_EFFORT_LADDER.length} attempts (effort ${PLAN_EFFORT_LADDER.join(' → ')}). The request is too large for one planning call — narrow it (fewer standards, a single framework, or a smaller grade span) and retry.`,
+          `Planning (${label}) ${
+            truncated ? "exceeded the model's output budget" : 'did not fit the 10-minute execution window'
+          } after ${PLAN_EFFORT_LADDER.length} attempts (effort ${PLAN_EFFORT_LADDER.join(' → ')}) — narrow the request (fewer standards or a smaller grade span) and retry.`,
         )
       }
-      // Log BEFORE enqueueing: if either write fails, the error rethrows and
-      // the host redelivers THIS message — enqueue-first could strand a
-      // continuation alongside the redelivery.
       await mutateJob(msg.jobId, (r) =>
         pushLog(
           r,
-          truncated
-            ? `Planning overflowed the output budget — retrying at ${PLAN_EFFORT_LADDER[cuts + 1]} effort in a fresh execution (less reasoning leaves the budget to the plan itself)`
-            : `Planning ran long and was cut at the execution deadline — retrying at ${PLAN_EFFORT_LADDER[cuts + 1]} effort in a fresh execution`,
+          `Planning (${label}) ${
+            truncated ? 'overflowed the output budget' : 'ran long and was cut at the execution deadline'
+          } — retrying at ${PLAN_EFFORT_LADDER[callCuts + 1]} effort in a fresh execution`,
         ),
       )
-      await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'plan', scopeId, payload: { cuts: cuts + 1 } })
-      ctx.log(
-        `generate/plan ${msg.jobId}: call ${truncated ? 'overflowed the output budget' : 'cut at the execution deadline'} (cut ${cuts + 1}) — re-enqueued`,
+      await enqueueJob({
+        jobId: msg.jobId,
+        kind: 'generate',
+        step: 'plan',
+        scopeId,
+        payload: { cuts: callCuts + 1, cutUnit: unitIdx },
+      })
+      ctx.log(`generate/plan ${msg.jobId}: ${label} ${truncated ? 'overflowed' : 'cut'} (cut ${callCuts + 1}) — re-enqueued`)
+      return true
+    }
+
+    // ---- Pass 1: the course map (scope resolution + unit architecture) ----
+    let map = await getJsonOrUndefined<CourseMap>(dataContainer(), planMapPath(msg.jobId))
+    await mutateJob(msg.jobId, (r) => {
+      r.status = 'running'
+      r.stage = STAGE_PLAN
+      if (!map) pushLog(r, `Planning ${scope.request.mode} scope against ${set.name} — building the course map`)
+    })
+    if (!map) {
+      const mapCuts = cutUnit === -1 ? cuts : 0
+      const { signal, dispose } = bounded(started)
+      try {
+        map = await generateStructured<CourseMap>({
+          ...courseMapPrompt(set, scope, sourceSets, userDocs.names),
+          schema: COURSE_MAP_SCHEMA,
+          effort: PLAN_EFFORT_LADDER[Math.min(mapCuts, PLAN_EFFORT_LADDER.length - 1)],
+          signal,
+          ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
+        })
+      } catch (e) {
+        if (await escalatePlanCall(e, 'course map', mapCuts, -1)) return
+        throw e
+      } finally {
+        dispose()
+      }
+      calls++
+      if (!map.units || map.units.length === 0) {
+        throw new Error('planning produced no units — the request resolved to an empty scope')
+      }
+      // A malformed map poisons every downstream unit call — fail loudly so
+      // normal queue retries regenerate it instead of checkpointing it.
+      const unitIds = map.units.map((u) => u.id)
+      if (new Set(unitIds).size !== unitIds.length) {
+        throw new Error(`course map has duplicate unit ids: ${unitIds.join(', ')}`)
+      }
+      const emptyUnits = map.units.filter((u) => u.standardCodes.length === 0).map((u) => u.id)
+      if (emptyUnits.length > 0) {
+        throw new Error(`course map units carry no standards: ${emptyUnits.join(', ')}`)
+      }
+      // Exclusivity: a standard assigned to two units would feed its items to
+      // two independent unit calls, each COMMANDED to place them — the same
+      // released item would land on two lessons with nothing downstream able
+      // to tell which placement is right.
+      const codeOwner = new Map<string, string>()
+      const overlaps: string[] = []
+      for (const u of map.units) {
+        for (const c of u.standardCodes) {
+          const k = c.toUpperCase()
+          const prior = codeOwner.get(k)
+          if (prior && prior !== u.id) overlaps.push(`${c} (${prior} + ${u.id})`)
+          codeOwner.set(k, u.id)
+        }
+      }
+      if (overlaps.length > 0) {
+        throw new Error(
+          `course map assigns the same standard to multiple units: ${overlaps.slice(0, 8).join('; ')}${overlaps.length > 8 ? '; …' : ''}`,
+        )
+      }
+      // Whole-course coverage: a standard the map drops from every unit is a
+      // standard NO unit call will ever see — silently untaught. Coverage is
+      // the completion test (map prompt), so enforce it where the full scope
+      // is known (course mode = every content standard of the set).
+      if (scope.request.mode === 'course') {
+        const { uncoveredLeaves } = unitOwnershipOf(set, map)
+        if (uncoveredLeaves.length > 0) {
+          throw new Error(
+            `course map assigns no unit to ${uncoveredLeaves.length} content standard${uncoveredLeaves.length === 1 ? '' : 's'}: ${uncoveredLeaves
+              .slice(0, 10)
+              .join(', ')}${uncoveredLeaves.length > 10 ? ', …' : ''}`,
+          )
+        }
+      }
+      // Create-only write: two overlapping deliveries can both reach here with
+      // DIFFERENT maps (the call is non-deterministic); an overwrite would mix
+      // unit checkpoints from two architectures. First writer wins — the loser
+      // adopts the persisted map so everything it writes agrees with it.
+      if (!(await putJsonIfAbsent(dataContainer(), planMapPath(msg.jobId), map))) {
+        const winner = await getJsonOrUndefined<CourseMap>(dataContainer(), planMapPath(msg.jobId))
+        if (!winner) throw new Error('course map checkpoint vanished after a write conflict — retrying')
+        map = winner
+      }
+      const standardCount = new Set(map.units.flatMap((u) => u.standardCodes.map((c) => c.toUpperCase()))).size
+      const mapUnitCount = map.units.length
+      await mutateJob(msg.jobId, (r) =>
+        pushLog(r, `Course map: ${mapUnitCount} units covering ${standardCount} standards — atomizing each unit in its own call`),
       )
-      return
-    } finally {
-      dispose()
     }
-    if (!plan.units || plan.units.length === 0) {
-      throw new Error('planning produced no units — the request resolved to an empty scope')
+
+    // ---- Pass 2: per-unit atomization, ledger, item placement (sequential —
+    // each unit's call reads the cumulative ledger of everything before it) ----
+    // Items are partitioned across units IN CODE (not per-call itemsForCodes):
+    // deterministic, exactly one unit sees each in-scope item — per-unit code
+    // matching both dropped coarse-grain-aligned items (cluster/KS-level
+    // official alignments match no most-granular unit code) and double-fed
+    // items when codes overlapped.
+    const itemBuckets = partitionItemsByUnit(set, map)
+    const unitPlans: UnitPlanOutput[] = []
+    for (let i = 0; i < map.units.length; i++) {
+      const mu = map.units[i]
+      let up = await getJsonOrUndefined<UnitPlanOutput>(dataContainer(), planUnitPath(msg.jobId, i))
+      // A checkpoint written against a DIFFERENT course map (a pre-guard
+      // concurrent delivery, or index drift) is discarded, not trusted — the
+      // fresh-call validation below never ran against THIS map.
+      if (up && !(up.lessons.length > 0 && up.lessons.every((l) => l.id.startsWith(`${mu.id}.`)))) {
+        ctx.warn(`generate/plan ${msg.jobId}: unit checkpoint ${i} does not match map unit ${mu.id} — regenerating`)
+        up = undefined
+      }
+      if (!up) {
+        if (calls > 0 && (await pauseRequested(msg.jobId))) {
+          await settlePaused(msg)
+          return
+        }
+        if (calls > 0 && Date.now() - started > PLAN_TIME_BUDGET_MS) {
+          await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'plan', scopeId })
+          ctx.log(
+            `generate/plan ${msg.jobId}: paused before unit ${i + 1}/${map.units.length} (time budget) — re-enqueued`,
+          )
+          return
+        }
+        const unitCuts = cutUnit === i ? cuts : 0
+        const priorUnits = map.units.slice(0, i).map((muPrior, j) => ({ id: muPrior.id, lessons: unitPlans[j].lessons }))
+        const pending = pendingDeferralsOf(map, unitPlans)
+        const pendingRefs = new Set(pending.map((d) => d.itemRef))
+        const unitItems = [
+          ...itemBuckets[i],
+          ...set.items.filter((it) => pendingRefs.has(it.id) && !itemBuckets[i].some((b) => b.id === it.id)),
+        ]
+        const allowedRefs = new Set(unitItems.map((it) => it.id))
+        const callStarted = Date.now()
+        const { signal, dispose } = bounded(started)
+        try {
+          up = await generateStructured<UnitPlanOutput>({
+            ...unitPlanPrompt(set, scope, map, i, priorUnits, pending, unitItems, sourceSets, userDocs.names),
+            schema: UNIT_PLAN_SCHEMA,
+            effort: PLAN_EFFORT_LADDER[Math.min(unitCuts, PLAN_EFFORT_LADDER.length - 1)],
+            signal,
+            ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
+          })
+        } catch (e) {
+          // A call cut after launching LATE in the window (earlier calls ate
+          // the runway) says nothing about whether it fits — continue in a
+          // fresh execution at the SAME effort, where it runs first and gets
+          // the full window. Only an early-started cut burns a ladder rung.
+          if (isAbort(e) && callStarted - started > LATE_START_GRACE_MS) {
+            await mutateJob(msg.jobId, (r) =>
+              pushLog(
+                r,
+                `Unit ${mu.id}: planning call started late in the execution window and was cut — continuing in a fresh execution at the same effort`,
+              ),
+            )
+            await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'plan', scopeId })
+            ctx.log(`generate/plan ${msg.jobId}: unit ${mu.id} cut after a late start — re-enqueued without escalation`)
+            return
+          }
+          if (await escalatePlanCall(e, `unit ${mu.id}`, unitCuts, i)) return
+          throw e
+        } finally {
+          dispose()
+        }
+        calls++
+        // Off-target output must fail loudly BEFORE checkpointing — a
+        // checkpointed bad unit would be reused by every retry forever; a
+        // throw gets normal queue retries (each attempt's error now lands on
+        // the job log via the worker).
+        if (!up.lessons || up.lessons.length === 0) {
+          throw new Error(`unit planning for ${mu.id} produced no lessons`)
+        }
+        const ids = up.lessons.map((l) => l.id)
+        const foreign = ids.filter((id) => !id.startsWith(`${mu.id}.`))
+        if (foreign.length > 0 || new Set(ids).size !== ids.length) {
+          throw new Error(
+            `unit planning for ${mu.id} returned malformed lesson ids [${ids.join(', ')}] — expected unique ids prefixed "${mu.id}."`,
+          )
+        }
+        // Deferral outputs are load-bearing across units (pendingDeferralsOf
+        // treats a placedDeferral as absorption; assembly trusts lessonId) —
+        // a hallucinated id here would silently convert a placeable item into
+        // a false end-of-course exclusion. Same fail-loudly bar as lesson ids.
+        const idSet = new Set(ids)
+        const seenPd = new Set<string>()
+        const badPlaced = up.placedDeferrals.filter((pd) => {
+          const dup = seenPd.has(pd.itemRef)
+          seenPd.add(pd.itemRef)
+          return dup || !idSet.has(pd.lessonId) || !pendingRefs.has(pd.itemRef)
+        })
+        const badOut = up.deferredOut.filter((d) => !allowedRefs.has(d.itemRef))
+        if (badPlaced.length > 0 || badOut.length > 0) {
+          throw new Error(
+            `unit planning for ${mu.id} returned invalid deferral refs: ${[
+              ...badPlaced.map((pd) => `placed ${pd.itemRef} → ${pd.lessonId}`),
+              ...badOut.map((d) => `deferred-out ${d.itemRef}`),
+            ]
+              .slice(0, 8)
+              .join('; ')} — placements must target this unit's lessons with pending item ids; deferrals must name supplied item ids`,
+          )
+        }
+        // Repairable model slips are sanitized (not thrown): itemRefs outside
+        // this unit's supplied items (cross-unit duplicates by construction),
+        // duplicate refs, and deferredOut entries contradicting an in-unit
+        // placement of the same item.
+        const seenRef = new Set<string>()
+        for (const l of up.lessons) {
+          const kept = l.itemRefs.filter((r) => allowedRefs.has(r) && !seenRef.has(r))
+          if (kept.length !== l.itemRefs.length) {
+            ctx.warn(
+              `generate/plan ${msg.jobId}: unit ${mu.id} lesson ${l.id} dropped ${l.itemRefs.length - kept.length} out-of-scope/duplicate itemRef(s)`,
+            )
+          }
+          for (const r of kept) seenRef.add(r)
+          l.itemRefs = kept
+        }
+        up.deferredOut = up.deferredOut.filter((d) => !seenRef.has(d.itemRef))
+        await putJson(dataContainer(), planUnitPath(msg.jobId, i), up)
+        const placed = up.lessons.filter((l) => l.itemRefs.length > 0).length
+        const lessonCount = up.lessons.length
+        const progressLine = `Unit ${i + 1}/${map.units.length} planned — ${mu.id} ${mu.title}: ${lessonCount} lesson atoms (${placed} carrying placed items)`
+        await mutateJob(msg.jobId, (r) => pushLog(r, progressLine))
+      }
+      unitPlans.push(up)
     }
+
+    // ---- Pass 3: programmatic assembly (deferral threading, end-of-course
+    // exclusions, item-ref hygiene) ----
+    plan = assemblePlan(
+      map,
+      unitPlans,
+      new Set(set.items.map((it) => it.id)),
+    )
     await putJson(dataContainer(), planPath(msg.jobId), plan)
   }
   const totalUnits = plan.units.length
 
   await mutateJob(msg.jobId, (r) => {
+    r.status = 'running' // a redelivery can reach here with the row still 'queued'
     r.stagesDone = 1
     r.stage = STAGE_CARDS
     r.totalUnits = totalUnits

@@ -193,7 +193,13 @@ const PLAN_PREREQ = obj({
   addedByTriage: BOOL,
 })
 
-export const PLAN_SCHEMA = obj({
+/**
+ * Planning pass 1 — the course map: scope resolution and unit architecture
+ * WITHOUT lessons. Atomization runs per unit in later calls (pass 2), each
+ * with its own output budget, so plan depth is never squeezed by what one
+ * call can emit — the failure mode that produced under-atomized courses.
+ */
+export const COURSE_MAP_SCHEMA = obj({
   units: arr(
     obj({
       id: STR,
@@ -206,11 +212,29 @@ export const PLAN_SCHEMA = obj({
       topic: STR,
       priorGradeTopics: arr(STR),
       nextGradeTopics: arr(STR),
-      // The unit's M(0) prerequisite nodes (guide §21.1).
-      prereqs: arr(PLAN_PREREQ),
-      lessons: arr(PLAN_LESSON),
+      // Every most-granular content standard this unit owns (the atomization
+      // pass runs the discovery process on exactly these).
+      standardCodes: arr(STR),
     }),
   ),
+  scopeDecisions: arr(STR),
+})
+
+/**
+ * Planning pass 2 — one unit's atomization, ledger, item placement, and
+ * dependency extraction. Deferrals cross unit boundaries via
+ * placedDeferrals/deferredOut; the assembly pass threads them through.
+ */
+export const UNIT_PLAN_SCHEMA = obj({
+  // The unit's M(0) prerequisite nodes (guide §21.1).
+  prereqs: arr(PLAN_PREREQ),
+  lessons: arr(PLAN_LESSON),
+  // Pending items from EARLIER units placed into THIS unit (Deferral Rule).
+  placedDeferrals: arr(obj({ itemRef: STR, lessonId: STR, justification: STR })),
+  // This unit's items whose ledger check fails on a demand taught LATER —
+  // carried forward; still unplaced after the last unit = end-of-course
+  // exclusion (guide §16.2), logged at assembly.
+  deferredOut: arr(obj({ itemRef: STR, missingDemands: arr(STR), note: STR })),
   scopeDecisions: arr(STR),
 })
 
@@ -475,6 +499,42 @@ export interface PlanUnit {
 
 export interface PlanOutput {
   units: PlanUnit[]
+  scopeDecisions: string[]
+}
+
+export interface CourseMapUnit {
+  id: string
+  title: string
+  rationale: string
+  strand: string
+  topic: string
+  priorGradeTopics: string[]
+  nextGradeTopics: string[]
+  standardCodes: string[]
+}
+
+export interface CourseMap {
+  units: CourseMapUnit[]
+  scopeDecisions: string[]
+}
+
+export interface PlacedDeferral {
+  itemRef: string
+  lessonId: string
+  justification: string
+}
+
+export interface DeferredItem {
+  itemRef: string
+  missingDemands: string[]
+  note: string
+}
+
+export interface UnitPlanOutput {
+  prereqs: PlanPrereq[]
+  lessons: PlanLessonSkeleton[]
+  placedDeferrals: PlacedDeferral[]
+  deferredOut: DeferredItem[]
   scopeDecisions: string[]
 }
 

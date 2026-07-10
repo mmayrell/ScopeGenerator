@@ -40,6 +40,29 @@ export async function getJsonWithEtag<T>(
   }
 }
 
+/**
+ * Create-only upload (If-None-Match: *) — returns false when the blob already
+ * exists instead of overwriting. First writer wins; the caller re-reads the
+ * winner's document. Guards checkpoints that concurrent deliveries of the
+ * same queue message must AGREE on (e.g. the plan course map: two overlapping
+ * deliveries can generate different maps, and a late overwrite would mix unit
+ * checkpoints from two architectures).
+ */
+export async function putJsonIfAbsent(container: ContainerClient, path: string, doc: unknown): Promise<boolean> {
+  const body = JSON.stringify(doc)
+  try {
+    await container.getBlockBlobClient(path).upload(body, Buffer.byteLength(body), {
+      blobHTTPHeaders: { blobContentType: 'application/json' },
+      conditions: { ifNoneMatch: '*' },
+    })
+    return true
+  } catch (e) {
+    const status = (e as { statusCode?: number }).statusCode
+    if (status === 409 || status === 412) return false
+    throw e
+  }
+}
+
 /** Uploads JSON conditionally on the blob's ETag — throws a 412 RestError when it changed. */
 export async function putJsonIfMatch(
   container: ContainerClient,
