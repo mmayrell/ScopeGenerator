@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundError, UnauthorizedError, api, clearAccessCode, type JobStatus } from '../api'
+import { useStore } from '../store'
 import type {
   LsgCourse,
+  Scope,
   VideoScript,
   VsgChannel,
   VsgConflict,
@@ -220,15 +222,19 @@ function Overview({ onNew, onOpenRun }: { onNew: () => void; onOpenRun: (id: str
 // ---------------------------------------------------------------------------
 
 function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onBack: () => void }) {
+  const { scopes } = useStore()
   const [courses, setCourses] = useState<VsgCourseRow[] | null>(null)
   const [courseId, setCourseId] = useState<string>('')
+  // Bumped when an import refreshes the ALREADY-selected course — same id,
+  // new content, so the id alone can't retrigger the load effect.
+  const [courseNonce, setCourseNonce] = useState(0)
   const [course, setCourse] = useState<LsgCourse | null>(null)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [steering, setSteering] = useState('')
   const [launching, setLaunching] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const loadCourses = useCallback(() => {
     api
       .listVsgCourses()
       .then(setCourses)
@@ -240,6 +246,7 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
         setError(errText(e, 'Could not load the course registry.'))
       })
   }, [])
+  useEffect(loadCourses, [loadCourses])
 
   useEffect(() => {
     if (!courseId) return
@@ -257,7 +264,7 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
     return () => {
       stale = true
     }
-  }, [courseId])
+  }, [courseId, courseNonce])
 
   const active = (course?.lessons ?? []).filter((l) => l.status === 'ACTIVE').sort((a, b) => a.lessonOrder - b.lessonOrder)
   const units: { unitName: string; lessons: typeof active }[] = []
@@ -324,11 +331,20 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
             ))}
             {courses !== null && courses.length === 0 && (
               <p className="rounded-xl border border-hairline bg-panel px-4 py-3 text-[12.5px] text-ink-3">
-                The course registry is empty — generate a course in Lesson Scope Edits first.
+                The course registry is empty — import a published scope below, or generate a course in Lesson Scope
+                Edits.
               </p>
             )}
             {courses === null && <p className="text-[12.5px] text-ink-3">Loading courses…</p>}
           </div>
+          <ImportScopePanel
+            scopes={scopes}
+            onImported={(id) => {
+              loadCourses()
+              setCourseId(id)
+              setCourseNonce((n) => n + 1) // same-id refresh must reload Step 2
+            }}
+          />
         </div>
 
         {courseId && (
@@ -410,6 +426,85 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
           </Btn>
         </div>
       </div>
+    </div>
+  )
+}
+
+/**
+ * Course missing, or its lesson count stale against a newer scope? The
+ * registry only updates through LSG runs — this panel imports a published
+ * scope's lessons MECHANICALLY (no generation, instant): matched lessons keep
+ * their ids and take the scope's content, absentees deactivate.
+ */
+function ImportScopePanel({ scopes, onImported }: { scopes: Scope[]; onImported: (courseId: string) => void }) {
+  const published = scopes.filter((s) => s.status === 'complete')
+  const [scopeId, setScopeId] = useState('')
+  const [name, setName] = useState('')
+  // The prefill follows the picked scope until the user types a name of
+  // their own — switching chips must never leave scope A's title silently
+  // targeting an import of scope B (an existing name is an in-place update).
+  const [nameTouched, setNameTouched] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  if (published.length === 0) return null
+
+  const pick = (id: string) => {
+    setScopeId(id)
+    const sc = published.find((s) => s.id === id)
+    if (sc && !nameTouched) setName(sc.title)
+  }
+
+  const run = async () => {
+    setBusy(true)
+    setError(null)
+    try {
+      const { course } = await api.importScopeCourse(scopeId, name.trim())
+      setScopeId('')
+      setName('')
+      setNameTouched(false)
+      onImported(course.courseId)
+    } catch (e) {
+      setError(
+        e instanceof NotFoundError
+          ? 'The backend is still rolling out this feature — try again in a couple of minutes.'
+          : errText(e, 'Could not import the scope.'),
+      )
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="mt-3 rounded-xl border border-hairline bg-panel/50 p-4">
+      <p className="text-[11.5px] leading-relaxed text-ink-3">
+        Course missing, or showing fewer lessons than its latest scope? Import a published scope — the course takes
+        the scope's lessons instantly (no generation). Importing under an existing course name refreshes that course
+        in place.
+      </p>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {published.map((s) => (
+          <Chip key={s.id} on={scopeId === s.id} onClick={() => pick(s.id)}>
+            {s.title} · {s.units.reduce((n, u) => n + u.lessons.length, 0)} lessons
+          </Chip>
+        ))}
+      </div>
+      {scopeId && (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <input
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value)
+              setNameTouched(true)
+            }}
+            placeholder="Course name (existing name updates that course)"
+            className="w-full max-w-md rounded-lg border border-hairline bg-panel px-3 py-2 text-[12.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
+          />
+          <Btn kind="primary" disabled={busy || !name.trim()} onClick={() => void run()}>
+            {busy ? 'Importing…' : 'Import as Course'}
+          </Btn>
+        </div>
+      )}
+      {error && <p className="mt-2 text-[12px] text-rust">{error}</p>}
     </div>
   )
 }

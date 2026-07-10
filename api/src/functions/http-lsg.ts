@@ -1,10 +1,13 @@
 import { LsgDataModelLesson, LsgMode, LsgRequestType, LsgRun } from '../domain/types'
-import { getScopeOrUndefined } from '../data/entities'
+import { getScopeOrUndefined, getSetOrUndefined } from '../data/entities'
+import { listVsgRuns } from '../data/vsg'
 import {
+  courseIdFromName,
   deleteLsgCourseDocs,
   deleteLsgRunDocs,
   getLsgCourse,
   getLsgRun,
+  importScopeIntoRegistry,
   listLsgCourses,
   listLsgRuns,
   saveLsgRun,
@@ -53,6 +56,74 @@ api({
   handler: async () => {
     const courses = await listLsgCourses()
     return ok(courses.sort((a, b) => b.updated.localeCompare(a.updated)))
+  },
+})
+
+// POST /api/lsg/courses/import-scope { scopeId, courseName } → { course } —
+// MECHANICAL import (no generation): the published scope's lessons become the
+// named course's ACTIVE lesson set (existing ids kept on unit+title matches,
+// absentees deactivated). Course context derives from the scope's evidence
+// set; the Video Script Generator's course picker reads the result instantly.
+api({
+  name: 'lsg-course-import-scope',
+  methods: ['POST'],
+  route: 'lsg/courses/import-scope',
+  handler: async (req) => {
+    const body = await readJson<{ scopeId?: string; courseName?: string }>(req)
+    const scopeId = cap(body.scopeId, 120)
+    const courseName = cap(body.courseName, 200)
+    if (!scopeId) throw new HttpError(400, 'scopeId is required')
+    if (!courseName) throw new HttpError(400, 'courseName is required')
+    const scope = await getScopeOrUndefined(scopeId)
+    // 409, not 404: a plain 404 reads as "endpoint not deployed yet" to the
+    // deploy-skew shims; a vanished scope is a stale picker, not a rollout.
+    if (!scope) throw new HttpError(409, `scope ${scopeId} no longer exists — refresh and pick again`)
+    if (scope.status !== 'complete') {
+      throw new HttpError(409, 'only a completed scope can be imported as a course')
+    }
+    // A video-script run generating against this course reads it at every
+    // execution — importing mid-run would deactivate/replace the lessons it
+    // holds ids for and split one run across two doctrine inputs.
+    const courseId = courseIdFromName(courseName)
+    const liveVsg = (await listVsgRuns()).filter((r) => r.courseId === courseId && r.status === 'generating')
+    if (liveVsg.length > 0) {
+      throw new HttpError(409, `a video-script run is generating against "${courseName}" — wait for it or delete it first`)
+    }
+    // The import is mechanical — it needs only three metadata strings from
+    // the scope's evidence set(s), and a DELETED set (an allowed operation
+    // that leaves scopes untouched) must not block it. Missing sets degrade
+    // to scope-title fallbacks.
+    const setIds = scope.setIds ?? (scope.setId ? [scope.setId] : [])
+    const sets = (await Promise.all(setIds.map((id) => getSetOrUndefined(id)))).filter(
+      (s): s is NonNullable<typeof s> => s !== undefined,
+    )
+    const gradeSpan = sets.map((s) => s.gradeSpan).join(' + ')
+    const gradeNums = [...(gradeSpan + ' ' + (sets.length === 0 ? scope.title : '')).matchAll(/\d+/g)].map((m) =>
+      Number(m[0]),
+    )
+    const hasK = /\bK\b/i.test(gradeSpan)
+    // Single grade → that grade; K-only → 'K'; a genuine span keeps the span
+    // (the grade-band profile is per-course; a multi-grade course is
+    // inherently approximate and the span at least says so).
+    const grade =
+      gradeNums.length === 0
+        ? hasK
+          ? 'K'
+          : ''
+        : new Set(gradeNums).size === 1
+          ? String(gradeNums[0])
+          : `${Math.min(...gradeNums)}-${Math.max(...gradeNums)}`
+    const course = await importScopeIntoRegistry(
+      {
+        subject: sets[0]?.subject || 'Mathematics',
+        grade,
+        curriculumFramework: sets[0]?.codingScheme || sets[0]?.name || '',
+        courseName,
+      },
+      sets.map((s) => s.name).join(' + ') || scope.title,
+      scope,
+    )
+    return ok({ course }, 201)
   },
 })
 

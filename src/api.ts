@@ -288,6 +288,10 @@ export const api = {
 
   deleteLsgRun: (id: string) => request<{ ok: true }>('DELETE', `/lsg/runs/${encodeURIComponent(id)}`),
 
+  /** Mechanical registry import (no generation): a published scope's lessons become the named course. */
+  importScopeCourse: (scopeId: string, courseName: string) =>
+    request<{ course: LsgCourse }>('POST', '/lsg/courses/import-scope', { scopeId, courseName }),
+
   // ---- Video Script Generator ----
 
   listVsgCourses: () => request<VsgCourseRow[]>('GET', '/vsg/courses'),

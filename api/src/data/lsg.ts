@@ -1,9 +1,9 @@
 import { odata } from '@azure/data-tables'
 import { LsgCourse, LsgCourseLesson, LsgDataModelLesson, LsgRun, LsgRunSummary, LsgSnapshot, Scope } from '../domain/types'
 import { HttpError } from '../shared/errors'
-import { sleep } from '../shared/util'
+import { newId, nowIso, sleep } from '../shared/util'
 import { dataContainer, entitiesTable } from './clients'
-import { getJsonOrUndefined, getJsonWithEtag, putJson, putJsonIfMatch } from './blobs'
+import { getJsonOrUndefined, getJsonWithEtag, putJson, putJsonIfAbsent, putJsonIfMatch } from './blobs'
 
 // Lesson Scope Generation storage (contract §Storage layout):
 //   lsg/courses/<courseId>.json   current LsgCourse (the course registry)
@@ -159,6 +159,96 @@ export function snapshotFromScope(
     }),
   )
   return seededSnapshot(courseContext, lessons)
+}
+
+/**
+ * MECHANICAL registry import from a published scope — no generation, no
+ * Claude call. The scope's lessons (the snapshotFromScope card-field mapping)
+ * become the course's ACTIVE lesson set under full-course semantics:
+ * existing lessons matched by (unitName, lessonTitle) keep their platform
+ * lessonIds and take the scope's field content; unmatched scope lessons are
+ * CREATED with fresh platform ids; previously ACTIVE lessons absent from the
+ * scope are DEACTIVATED (never deleted). This is how the registry catches up
+ * with a regenerated scope instantly — the Video Script Generator reads the
+ * registry, and a stale course (e.g. 97 lessons against a 224-lesson
+ * regenerated scope) would otherwise need a full paid LSG run to refresh.
+ */
+export async function importScopeIntoRegistry(
+  courseContext: LsgRun['courseContext'],
+  standardSet: string,
+  scope: Scope,
+): Promise<LsgCourse> {
+  const snapshot = snapshotFromScope(courseContext, scope)
+  const courseId = courseIdFromName(courseContext.courseName)
+  const now = nowIso()
+  const existing = await getLsgCourseOrUndefined(courseId)
+  if (!existing) {
+    const course: LsgCourse = {
+      courseId,
+      courseName: courseContext.courseName,
+      subject: courseContext.subject,
+      grade: courseContext.grade,
+      curriculumFramework: courseContext.curriculumFramework,
+      standardSet,
+      lessons: snapshot.lessons.map((l) => ({ ...l, lessonId: newId('lesson') })),
+      created: now,
+      updated: now,
+    }
+    // Create-only: a concurrent LSG-run apply (or a double-clicked import)
+    // observing "not exists" at the same moment must not be clobbered — the
+    // loser falls through to the ETag-protected mutate path below.
+    if (await putJsonIfAbsent(dataContainer(), courseBlobPath(courseId), course)) {
+      await upsertCourseRow(course)
+      return course
+    }
+  }
+  return mutateLsgCourse(courseId, (course) => {
+    const keyOf = (unitName: string, lessonTitle: string) => `${unitName}|${lessonTitle}`.trim().toLowerCase()
+    // SYMMETRIC suffix keying on both sides: duplicate (unit, title) pairs —
+    // in the incoming scope or already in the registry — each keep their own
+    // row, and RE-imports converge onto the same rows instead of creating a
+    // fresh duplicate per import.
+    const suffixed = (base: string, seen: Map<string, number>): string => {
+      const n = (seen.get(base) ?? 0) + 1
+      seen.set(base, n)
+      return n === 1 ? base : `${base}#${n}`
+    }
+    const byKey = new Map<string, LsgCourseLesson>()
+    const existingKeys = new Map<LsgCourseLesson, string>()
+    const seenExisting = new Map<string, number>()
+    for (const l of course.lessons) {
+      const k = suffixed(keyOf(l.unitName, l.lessonTitle), seenExisting)
+      existingKeys.set(l, k)
+      byKey.set(k, l)
+    }
+    const importedKeys = new Set<string>()
+    const seenIncoming = new Map<string, number>()
+    for (const inc of snapshot.lessons) {
+      const key = suffixed(keyOf(inc.unitName, inc.lessonTitle), seenIncoming)
+      importedKeys.add(key)
+      const cur = byKey.get(key)
+      if (cur) {
+        // The platform owns lesson identity — keep the id, take the content.
+        Object.assign(cur, { ...inc, lessonId: cur.lessonId, status: 'ACTIVE' as const })
+      } else {
+        const created: LsgCourseLesson = { ...inc, lessonId: newId('lesson') }
+        course.lessons.push(created)
+        byKey.set(key, created)
+      }
+    }
+    for (const l of course.lessons) {
+      const k = existingKeys.get(l)
+      if (k !== undefined && l.status === 'ACTIVE' && !importedKeys.has(k)) l.status = 'INACTIVE'
+    }
+    course.lessons.sort((a, b) =>
+      a.status === b.status ? a.lessonOrder - b.lessonOrder : a.status === 'ACTIVE' ? -1 : 1,
+    )
+    if (standardSet) course.standardSet = standardSet
+    if (courseContext.subject) course.subject = courseContext.subject
+    if (courseContext.grade) course.grade = courseContext.grade
+    if (courseContext.curriculumFramework) course.curriculumFramework = courseContext.curriculumFramework
+    course.updated = now
+  })
 }
 
 /** Snapshot seeded from an uploaded existing data model (rows already normalized/capped by the HTTP layer). */

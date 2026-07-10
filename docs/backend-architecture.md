@@ -493,6 +493,18 @@ update an existing course when only some lessons change.
      `applied: true`.
 - Output lessons keep `lessonId: null` on CREATE (the registry, not the output, holds the assigned
   ids), and echo the snapshot id verbatim on UPDATE/DEACTIVATE.
+- **Mechanical scope import** — `POST lsg/courses/import-scope` `{ scopeId, courseName }` → `{ course }`
+  (201): a COMPLETED scope's lessons become the named course's ACTIVE lesson set with **no
+  generation call** (`importScopeIntoRegistry`, reusing the snapshotFromScope card-field mapping).
+  Existing lessons matched by lowercased (unitName, lessonTitle) keep their platform ids and take
+  the scope's content; unmatched imports are created (`newId('lesson')`); previously ACTIVE
+  lessons absent from the scope are DEACTIVATED (never deleted); duplicate (unit, title) pairs
+  inside one scope are suffix-keyed so no lesson is lost. Course context (subject/grade/framework/
+  standardSet) derives from the scope's evidence set. This is how the registry catches up with a
+  regenerated scope instantly — the Video Script Generator reads the registry, and its builder
+  offers the import inline (a stale 97-lesson course against a 224-lesson regenerated scope was
+  the motivating case). Importing under an existing course name refreshes that course in place;
+  a new name creates a sibling course.
 
 ## Video Script Generator (kind `vsg`, step `run`)
 
