@@ -31,7 +31,9 @@ const EXECUTION_DEADLINE_MS = 8.5 * 60 * 1000
 const EVAL_TIME_BUDGET_MS = 4.5 * 60 * 1000
 /** Full lesson cards shown to the lesson-band call — stratified across units. */
 const SAMPLE_LESSONS = 10
-const EVAL_MAX_TOKENS = 16000
+// Shared with reasoning (effort 'high' thinks long on big bands) — 16k has
+// truncated a lesson band in production; keep real headroom.
+const EVAL_MAX_TOKENS = 32000
 
 /**
  * Stratified sample, round-robin across units: every unit contributes one

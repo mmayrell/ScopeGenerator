@@ -103,6 +103,13 @@ export async function fetchEvalSheetModel(): Promise<EvalSheetModel> {
     const { heading, hardGate } = headingOf(rubric)
     columns.push({ index: i, group, heading, rubric, hardGate, role: 'rubric' })
   }
+  // The scopeId parked in a far data column widens Google's CSV export to the
+  // sheet's full grid, padding the header rows with empty cells. Trailing
+  // heading-less columns are NOT part of the model — without this trim the
+  // "last three columns are the SME's" rule slides off the real SME columns
+  // and 'SME Verdict'/'SME Notes' start matching the results patterns.
+  while (columns.length > 0 && columns[columns.length - 1].rubric.trim() === '') columns.pop()
+  if (columns.length <= SME_COLUMN_COUNT) throw new Error('rubric sheet header row has too few headed columns')
   // Roles: trailing SME columns are the human's; the Results band computes
   // programmatically; short-headed leading columns are administrative.
   const n = columns.length
