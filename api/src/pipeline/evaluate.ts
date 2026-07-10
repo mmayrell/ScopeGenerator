@@ -276,10 +276,32 @@ export async function evalRunStep(msg: JobMessage, ctx: InvocationContext): Prom
     statedGates !== undefined && statedGates !== hardGates.length
       ? `Sheet inconsistency: the verdict formula says "all ${gateWord} hard gates" but ${hardGates.length} columns are bold-marked as gates (${hardGates.map((c) => c.heading).join(', ')}) — this evaluation used the bold-marked set.`
       : ''
-  const notes = [
-    ...cells.filter((c) => c.note.length > 0).map((c) => `${c.heading}: ${c.note}`),
-    ...(gateMismatchNote ? [gateMismatchNote] : []),
-  ].join('\n')
+  // The AI-QC Notes column explains the verdict, not just a defect dump: the
+  // verdict line with the criterion it followed, every failed hard gate with
+  // the agent's reasoning, other failing columns, then remaining flags.
+  const noteOf = (heading: string): string => cellByHeading.get(heading.trim().toLowerCase())?.note ?? ''
+  const verdictLine =
+    failCells.length > 0
+      ? `VERDICT: FAIL — ${failCells.length} of ${cells.length} rubric columns scored a failing mark${
+          hardGateFails.length > 0
+            ? `, including ${hardGateFails.length} hard gate${hardGateFails.length === 1 ? '' : 's'}`
+            : ''
+        }. Any column scored 1 fails the scope.`
+      : allGatesPass && average >= goodThreshold
+        ? `VERDICT: PASS — GOOD. Every hard gate scored 3 and the average ${averageScore} meets the ${goodThreshold.toFixed(2)} bar.`
+        : `VERDICT: PASS — GOOD ENOUGH. No column failed, but ${
+            allGatesPass
+              ? `the average ${averageScore} falls short of the ${goodThreshold.toFixed(2)} bar for GOOD`
+              : 'not every hard gate reached a 3'
+          }.`
+  const gateLines = hardGateFails.map((h) => `HARD GATE FAILED — ${h}: ${noteOf(h) || 'scored 1 against its rubric.'}`)
+  const otherFailLines = failCells
+    .filter((c) => !hardGateFails.some((h) => h.trim().toLowerCase() === c.heading.trim().toLowerCase()))
+    .map((c) => `FAILED — ${c.heading}: ${c.note || 'scored 1 against its rubric.'}`)
+  const flagLines = cells
+    .filter((c) => !isFail(c.verdict) && c.note.length > 0)
+    .map((c) => `${c.heading} (scored ${c.verdict}): ${c.note}`)
+  const notes = [verdictLine, ...gateLines, ...otherFailLines, ...flagLines, ...(gateMismatchNote ? [gateMismatchNote] : [])].join('\n')
 
   // Host the scope document for the JSON column (anonymous-read container —
   // the same one that already serves item screenshots publicly).
