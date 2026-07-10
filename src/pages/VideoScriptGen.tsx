@@ -360,8 +360,26 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
             <SectionLabel>Step 2 — Lessons</SectionLabel>
             <p className="mt-0.5 text-[11.5px] text-ink-3">
               {selected.size === 0
-                ? `All ${active.length} of the scope's lessons are available — select the ones to script.`
-                : `${selected.size} selected of ${active.length}.`}
+                ? `All ${active.length} of the scope's lessons are available — select the ones to script. `
+                : `${selected.size} selected of ${active.length}. `}
+              {active.length > 0 && (
+                <span className="inline-flex items-center gap-2">
+                  <button
+                    onClick={() => setSelected(new Set(active.map((l) => l.lessonId)))}
+                    className="cursor-pointer font-medium text-accent-deep hover:underline"
+                  >
+                    Select all
+                  </button>
+                  {selected.size > 0 && (
+                    <button
+                      onClick={() => setSelected(new Set())}
+                      className="cursor-pointer font-medium text-ink-3 hover:text-ink-2 hover:underline"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </span>
+              )}
             </p>
             {syncing && <p className="mt-2 text-[12.5px] text-ink-3">Syncing the scope's lessons…</p>}
             {!course && !syncing && <p className="mt-2 text-[12.5px] text-ink-3">Loading lessons…</p>}
