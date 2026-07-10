@@ -640,6 +640,37 @@ ${jsonBlock('item_bank_subset', itemsForCodes(set, [], unit.lessons.flatMap((l) 
 }
 
 // ---------------------------------------------------------------------------
+// Scope Evaluation prompts — the rubric text comes from the evaluation
+// spreadsheet's column headings, fetched at evaluation time. The agent's job
+// is to APPLY each rubric exactly as written, not to invent criteria.
+// ---------------------------------------------------------------------------
+
+export function evalScorePrompt(
+  bandName: string,
+  columns: { heading: string; rubric: string; hardGate: boolean }[],
+  evidence: Record<string, unknown>,
+): Prompt {
+  return {
+    system: `You are the ScopeGenerator quality-evaluation agent. You score ONE generated scope against a fixed set of rubric columns from the team's evaluation spreadsheet. Each rubric below is the COMPLETE and BINDING scoring instruction for its column — apply it exactly as written (including its own scoring scale and any categorical terms it defines); never substitute your own criteria, never average away specific defects you can name.
+
+Scoring discipline:
+- verdict: exactly "3", "2", or "1" per the rubric's scale — except where a rubric defines its own categorical terms (e.g. Accurate / Inaccurate), in which case use that term verbatim.
+- Judge from the supplied evidence ONLY. Where the evidence is a SAMPLE of the scope's lessons, score the sample and treat a defect found in the sample as representative; do not speculate beyond it.
+- note: one line per defect or deviation, naming the specific lesson/unit and the concrete problem ("U3.L4 objectives include a percentage threshold"); '' when the column is a clean pass. A score of 2 or 1 with an empty note is a defect in YOUR output.
+- Echo each column's heading EXACTLY as given.
+
+${OUTPUT_DISCIPLINE}`,
+    user: `Score the ${bandName} rubric columns for the scope below. One entry per column, headings echoed exactly, in the given order.
+
+${columns.map((c) => `<rubric_column heading="${c.heading}"${c.hardGate ? ' hard-gate="true"' : ''}>\n${c.rubric}\n</rubric_column>`).join('\n')}
+
+${Object.entries(evidence)
+  .map(([label, data]) => jsonBlock(label, data))
+  .join('')}`,
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Ingestion prompts (Stage 1)
 // ---------------------------------------------------------------------------
 

@@ -16,6 +16,7 @@ import type {
   PacketSummary,
   Proposal,
   Scope,
+  ScopeEvaluationSummary,
   VideoScript,
   VsgCourseRow,
   VsgRun,
@@ -322,6 +323,18 @@ export const api = {
 
   getVideoScript: (courseId: string, lessonId: string) =>
     request<VideoScript>('GET', `/vsg/scripts/${encodeURIComponent(courseId)}/${encodeURIComponent(lessonId)}`),
+
+  // ---- Scope Evaluations (rubric-sheet QC) ----
+
+  listEvals: () =>
+    request<{ sheetUrl: string; connected: boolean; evaluations: ScopeEvaluationSummary[] }>('GET', '/evals'),
+
+  setEvalsWebhook: (webhookUrl: string) =>
+    request<{ connected: boolean }>('PUT', '/evals/config', { webhookUrl }),
+
+  runEval: (scopeId: string) => request<{ jobId: string }>('POST', `/evals/${encodeURIComponent(scopeId)}/run`),
+
+  pushEval: (scopeId: string) => request<{ exported: boolean }>('POST', `/evals/${encodeURIComponent(scopeId)}/push`),
 
   // ---- Reference Library (framework → grade → four document slots) ----
 

@@ -455,6 +455,29 @@ export interface WireVsgScript {
   qa: { hardFails: string[]; flags: string[] }
 }
 
+// ---------------------------------------------------------------------------
+// Scope Evaluations — the agent scores rubric columns fetched live from the
+// evaluation spreadsheet; every column echoes its heading so replies bind to
+// the sheet model positionally-independently.
+// ---------------------------------------------------------------------------
+
+export const EVAL_SCORES_SCHEMA: Schema = obj({
+  columns: arr(
+    obj({
+      /** Echo of the column heading being scored (validated against the sheet model). */
+      heading: STR,
+      /** '3' | '2' | '1', or the rubric's own categorical term where the rubric defines one. */
+      verdict: STR,
+      /** One line per defect/deviation; '' when the score is a clean pass. */
+      note: STR,
+    }),
+  ),
+})
+
+export interface WireEvalScores {
+  columns: { heading: string; verdict: string; note: string }[]
+}
+
 // Flat StandardNode list — parentCode '' marks a root; the tree is rebuilt in code.
 export const INGEST_STANDARDS_SCHEMA = obj({
   nodes: arr(

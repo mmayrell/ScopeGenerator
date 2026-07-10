@@ -11,6 +11,7 @@ import { huntPacketStep } from '../pipeline/packets'
 import { applyProposalRunStep, iterateRunStep, proposalRunStep } from '../pipeline/proposals'
 import { rerunRunStep } from '../pipeline/rerun'
 import { vsgRunStep } from '../pipeline/vsg'
+import { evalRunStep } from '../pipeline/evaluate'
 import { mutateVsgRun } from '../data/vsg'
 import { nowIso, today } from '../shared/util'
 
@@ -192,6 +193,8 @@ async function dispatch(msg: JobMessage, context: InvocationContext): Promise<vo
       return lsgRunStep(msg, context)
     case 'vsg/run':
       return vsgRunStep(msg, context)
+    case 'eval/run':
+      return evalRunStep(msg, context)
     case 'ingest/lexicon':
       // The lexicon step was removed from the pipeline; settle legacy queued
       // messages cleanly instead of poisoning them.
@@ -239,6 +242,11 @@ async function markFailed(msg: JobMessage, error: string, context: InvocationCon
   }
   if (msg.kind === 'vsg') {
     await markVsgFailed(msg, error, context)
+    return
+  }
+  if (msg.kind === 'eval') {
+    // Evaluation is an observer — its failure must never touch the scope it
+    // was scoring; the failed job row (plus its log) is the whole record.
     return
   }
   if (!msg.scopeId) return

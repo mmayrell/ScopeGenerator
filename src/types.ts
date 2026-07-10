@@ -761,6 +761,22 @@ export interface VsgRunSummary {
   updated: string
 }
 
+// ---------------------------------------------------------------------------
+// Scope Evaluations — rubric-sheet QC rows. Mirrors api/src/domain/types.ts.
+// ---------------------------------------------------------------------------
+
+export interface ScopeEvaluationSummary {
+  scopeId: string
+  scopeTitle: string
+  autoVerdict: string
+  failCount: number
+  hardGateFails: string[]
+  averageScore: string
+  exportStatus: 'pending-export' | 'exported'
+  exportError?: string
+  updated: string
+}
+
 /** GET /vsg/courses row — the LSG registry shaped for the course picker. */
 export interface VsgCourseRow {
   courseId: string

@@ -566,6 +566,35 @@ doctrine versions.
   else `complete` if any script was written, else `failed`. `markVsgFailed` (worker terminal
   failure) fails only still-open lessons — finished scripts and reconciliation flags survive.
 
+## Scope Evaluations (kind `eval`, step `run`)
+
+The rubric-sheet QC layer: after every scope generation (enqueued best-effort by finalize — a
+dispatch failure never fails the generation) and on demand, an agent scores the scope against the
+**rubrics written into the evaluation spreadsheet's column headings** (`services/evalsheet.ts`
+fetches the sheet's public CSV export at evaluation time, so editing a rubric in Google retunes
+the agent with no deploy). Column roles derive from the sheet itself: trailing 3 columns = the
+human SME's (always blank); the `Results` band computes programmatically; short-headed leading
+columns are administrative; bold `**…**` headings are hard gates. Two Claude calls per
+evaluation: the lesson band scores a stratified ~10-lesson sample of full cards; the course band
+scores the full course structure + standards digest + the auto-QC results. Replies bind by echoed
+heading; a skipped column scores a fail-loud `1`. Results follow the sheet's own Automatic
+Verdict formula (FAIL on any `1`/`Inaccurate`; PASS — GOOD when no fails, all hard gates `3`,
+average ≥ 2.70; else PASS — GOOD ENOUGH); AI-QC Notes carry one line per defect. The scope
+document is hosted for the sheet's JSON column in the anonymous `screenshots` container
+(`evals/<scopeId>.json`).
+
+- **Storage**: `evals/records/<scopeId>.json` (latest evaluation wins) + `evals/config.json`
+  (webhook config); index partition `eval`.
+- **Sheet writes** go through a user-pasted **Apps Script web-app webhook** (Google's API needs
+  OAuth for writes; the bound script is the zero-secret bridge). The script upserts by scopeId
+  kept in column 30, outside the visible rubric, so re-evaluations update their row. Until
+  connected, rows keep `exportStatus: 'pending-export'` and the Evaluations page offers a push.
+- **Routes** (`http-evals.ts`): `GET evals` (sheet URL + connected + summaries) · `PUT
+  evals/config` (webhook URL, must be script.google.com) · `POST evals/{scopeId}/run` (202,
+  completed scopes only) · `POST evals/{scopeId}/push` (retry a pending row).
+- Worker: evaluation is an observer — a terminal `eval` job failure records only on the job row,
+  never on the scope.
+
 ## Guardrails (synchronous, data-driven)
 
 A scope carries an optional `protectedBoundaries: string[][]` list — derived at finalize time from

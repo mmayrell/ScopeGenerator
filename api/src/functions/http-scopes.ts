@@ -1,6 +1,7 @@
 import { Proposal, Scope } from '../domain/types'
-import { uploadsContainer } from '../data/clients'
+import { screenshotsContainer, uploadsContainer } from '../data/clients'
 import { deleteScopeDocs, getScope, getSet, mutateScope, saveScope, snapshotScope } from '../data/entities'
+import { deleteEvaluationDocs } from '../data/evals'
 import { getPacketOrUndefined } from '../data/packets'
 import { createJob, latestJobForScope, mutateJob, pushLog, toJobStatus } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
@@ -162,6 +163,14 @@ api({
     const id = requireParam(req, 'id')
     if (req.method === 'DELETE') {
       await deleteScopeDocs(id)
+      // Best-effort cleanup of the scope's evaluation record and the publicly
+      // hosted JSON copy — a stale eval row for a deleted scope is worse than
+      // a failed cleanup here.
+      await deleteEvaluationDocs(id).catch(() => undefined)
+      await screenshotsContainer()
+        .getBlockBlobClient(`evals/${id}.json`)
+        .deleteIfExists()
+        .catch(() => undefined)
       return ok({ ok: true })
     }
     return ok(await getScope(id))

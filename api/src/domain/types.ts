@@ -868,7 +868,59 @@ export interface VsgRunSummary {
   updated: string
 }
 
-export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg' | 'vsg'
+// ---------------------------------------------------------------------------
+// Scope Evaluations — after every scope generation, an evaluation agent
+// scores the scope against the rubric spreadsheet's column headings (the
+// rubrics live IN the sheet, fetched at evaluation time, so editing the
+// sheet retunes the agent without a deploy) and appends a row. The last
+// three columns (SME / SME Verdict / SME Notes) belong to the human reviewer
+// and are always left blank. Writes reach Google through a user-provided
+// Apps Script webhook; evaluations compute and store locally either way.
+// ---------------------------------------------------------------------------
+
+/** One evaluated rubric column: the sheet heading's first line + the agent's cell value. */
+export interface EvalCell {
+  heading: string
+  /** The cell value: '3' | '2' | '1', or the rubric's own categorical term (e.g. 'Accurate'). */
+  verdict: string
+  /** One-line note (only defects/deviations carry one; '' otherwise). */
+  note: string
+}
+
+export interface ScopeEvaluation {
+  scopeId: string
+  scopeTitle: string
+  /** The sheet row in column order, truncated BEFORE the trailing SME columns (never pushed). */
+  values: string[]
+  /** Headings the row was built against (same truncation) — the push endpoint 409s on drift. */
+  headings?: string[]
+  cells: EvalCell[]
+  /** Computed results: fails, hard-gate fails (bold ** headings scored 1), average, verdict. */
+  failCount: number
+  hardGateFails: string[]
+  averageScore: string
+  autoVerdict: string
+  /** 'pending-export' until the webhook accepts the row; 'exported' after. */
+  exportStatus: 'pending-export' | 'exported'
+  exportError?: string
+  created: string
+  updated: string
+}
+
+/** Slim row for the evaluations list. */
+export interface ScopeEvaluationSummary {
+  scopeId: string
+  scopeTitle: string
+  autoVerdict: string
+  failCount: number
+  hardGateFails: string[]
+  averageScore: string
+  exportStatus: ScopeEvaluation['exportStatus']
+  exportError?: string
+  updated: string
+}
+
+export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg' | 'vsg' | 'eval'
 
 export interface JobStatus {
   jobId: string

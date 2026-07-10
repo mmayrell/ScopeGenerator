@@ -3,7 +3,7 @@ import { ItemRecord, JobMessage, Lesson, StandardNode, StandardSet, Unit } from 
 import { getJsonOrUndefined, putJson, putJsonIfAbsent } from '../data/blobs'
 import { dataContainer } from '../data/clients'
 import { getScope, getScopeEvidenceSet, getScopeSourceSets, mutateScope, saveScope, snapshotScope } from '../data/entities'
-import { completeUnit, getJob, mutateJob, pushLog } from '../data/jobs'
+import { completeUnit, createJob, getJob, mutateJob, pushLog } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { generateStructured } from '../services/claude'
 import { cardsPrompt, courseMapPrompt, unitPlanPrompt } from '../services/prompts'
@@ -20,7 +20,7 @@ import {
   UnitPlanOutput,
   WireLessonBatch,
 } from '../services/schemas'
-import { today } from '../shared/util'
+import { newId, today } from '../shared/util'
 import { ensureSetItemsExtracted } from './items'
 import { loadScopeUploadDocs } from './scope-uploads'
 import { countLessons, deriveProtectedBoundaries, runQc } from './qc'
@@ -881,6 +881,33 @@ export async function generateFinalizeStep(msg: JobMessage, ctx: InvocationConte
     r.stage = 'Complete'
     pushLog(r, `Scope complete: ${units.length} units, ${lessons} lessons, QC ${qc.filter((c) => c.status === 'pass').length}/${qc.length} pass`)
   })
+  // Every generated scope gets an evaluation row (Scope Evaluations sheet) —
+  // best-effort observer: a dispatch failure must never fail the generation.
+  const evalJobId = newId('job')
+  let evalJobCreated = false
+  try {
+    await createJob({
+      jobId: evalJobId,
+      kind: 'eval',
+      scopeId,
+      totalStages: 3,
+      stage: 'Queued',
+      detail: `Rubric evaluation dispatched for "${scope.title}"`,
+    })
+    evalJobCreated = true
+    await enqueueJob({ jobId: evalJobId, kind: 'eval', step: 'run', scopeId })
+  } catch (e) {
+    ctx.warn(`generate/finalize ${msg.jobId}: evaluation dispatch failed (scope unaffected): ${String(e)}`)
+    if (evalJobCreated) {
+      // The job record exists but no queue message will ever pick it up —
+      // mark it failed rather than leaving an eternal 'Queued'.
+      await mutateJob(evalJobId, (r) => {
+        r.status = 'failed'
+        r.error = 'Failed to dispatch the evaluation job'
+        pushLog(r, 'Dispatch failed; re-run from the Scope Evaluations page')
+      }).catch(() => undefined)
+    }
+  }
   ctx.log(`generate/finalize ${msg.jobId}: scope ${scopeId} complete`)
 }
 
