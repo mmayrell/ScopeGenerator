@@ -99,12 +99,14 @@ function interactionParas(interaction: VsgInteraction): Paragraph[] {
   return out
 }
 
-export async function buildScriptDocxBlob(script: VideoScript): Promise<Blob> {
+/** One script's full paragraph sequence; `pageBreak` starts it on a fresh page (multi-script docs). */
+function scriptChildren(script: VideoScript, pageBreak = false): Paragraph[] {
   const children: Paragraph[] = []
 
   children.push(
     new Paragraph({
       heading: HeadingLevel.HEADING_1,
+      pageBreakBefore: pageBreak,
       spacing: { after: 80 },
       children: [new TextRun({ text: xmlSafe(`Video Script — ${script.lessonTitle}`), bold: true, color: ACCENT })],
     }),
@@ -154,22 +156,59 @@ export async function buildScriptDocxBlob(script: VideoScript): Promise<Blob> {
       if (line.interaction) children.push(...interactionParas(line.interaction))
     }
   }
-
-  const doc = new Document({
-    styles: { default: { document: { run: { font: 'Calibri' } } } },
-    sections: [{ children }],
-  })
-  return Packer.toBlob(doc)
+  return children
 }
 
-export async function downloadScriptDocx(script: VideoScript): Promise<void> {
-  const blob = await buildScriptDocxBlob(script)
+const toDoc = (children: Paragraph[]): Promise<Blob> =>
+  Packer.toBlob(
+    new Document({
+      styles: { default: { document: { run: { font: 'Calibri' } } } },
+      sections: [{ children }],
+    }),
+  )
+
+export async function buildScriptDocxBlob(script: VideoScript): Promise<Blob> {
+  return toDoc(scriptChildren(script))
+}
+
+/** Every script of a run in ONE document — cover page, then one script per page break, in lesson order. */
+export async function buildAllScriptsDocxBlob(courseName: string, scripts: VideoScript[]): Promise<Blob> {
+  const children: Paragraph[] = [
+    new Paragraph({
+      heading: HeadingLevel.HEADING_1,
+      spacing: { after: 80 },
+      children: [new TextRun({ text: xmlSafe(`Video Scripts — ${courseName}`), bold: true, color: ACCENT })],
+    }),
+    para(`${scripts.length} script${scripts.length === 1 ? '' : 's'} · exported ${new Date().toISOString().slice(0, 10)}`, {
+      color: INK2,
+    }),
+    ...scripts.map((s, i) => para(`${i + 1}. ${s.lessonTitle} (${s.unitName} · ${s.durationEstimate || '—'})`, { color: INK, size: 20 })),
+  ]
+  for (const s of scripts) children.push(...scriptChildren(s, true))
+  return toDoc(children)
+}
+
+const triggerDownload = (blob: Blob, fileName: string): void => {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `${script.lessonTitle.replace(/[^\w\- ]+/g, '').trim() || 'video-script'} — Video Script.docx`
+  a.download = fileName
   document.body.appendChild(a)
   a.click()
   a.remove()
   URL.revokeObjectURL(url)
+}
+
+export async function downloadScriptDocx(script: VideoScript): Promise<void> {
+  triggerDownload(
+    await buildScriptDocxBlob(script),
+    `${script.lessonTitle.replace(/[^\w\- ]+/g, '').trim() || 'video-script'} — Video Script.docx`,
+  )
+}
+
+export async function downloadAllScriptsDocx(courseName: string, scripts: VideoScript[]): Promise<void> {
+  triggerDownload(
+    await buildAllScriptsDocxBlob(courseName, scripts),
+    `${courseName.replace(/[^\w\- ]+/g, '').trim() || 'course'} — All Video Scripts.docx`,
+  )
 }

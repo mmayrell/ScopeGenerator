@@ -514,6 +514,22 @@ function RunDetail({ id, onBack }: { id: string; onBack: () => void }) {
     setPollNonce((n) => n + 1)
   }
 
+  const [exportingAll, setExportingAll] = useState(false)
+  const downloadAll = async (r: VsgRun) => {
+    setExportingAll(true)
+    setError(null)
+    try {
+      const ready = [...r.lessons].filter((l) => l.status === 'complete').sort((a, b) => a.lessonOrder - b.lessonOrder)
+      const scripts = await Promise.all(ready.map((l) => api.getVideoScript(r.courseId, l.lessonId)))
+      const { downloadAllScriptsDocx } = await import('../export/script-docx')
+      await downloadAllScriptsDocx(r.courseName, scripts)
+    } catch (e) {
+      setError(errText(e, 'Could not build the combined document.'))
+    } finally {
+      setExportingAll(false)
+    }
+  }
+
   if (!run) {
     return (
       <div className="mx-auto max-w-4xl px-10 py-10">
@@ -535,7 +551,14 @@ function RunDetail({ id, onBack }: { id: string; onBack: () => void }) {
     <div className="mx-auto max-w-4xl px-10 py-10">
       <div className="flex items-center justify-between gap-3">
         <Btn onClick={onBack}>← Back to runs</Btn>
-        {runStatusPill(run.status)}
+        <div className="flex items-center gap-2">
+          {run.lessons.some((l) => l.status === 'complete') && (
+            <Btn kind="primary" disabled={exportingAll} onClick={() => void downloadAll(run)}>
+              {exportingAll ? 'Preparing…' : 'Download All Scripts'}
+            </Btn>
+          )}
+          {runStatusPill(run.status)}
+        </div>
       </div>
       {error && <ErrorStrip text={error} />}
 
