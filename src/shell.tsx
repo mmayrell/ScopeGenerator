@@ -5,7 +5,6 @@ import lwaiLogo from './assets/lwai-logo.png'
 
 const nav = [
   { to: '/', label: 'Home', end: true },
-  { to: '/system', label: 'Engine & Doctrine' },
   { to: '/packets', label: 'Item Repository' },
   { to: '/library', label: 'Reference Library' },
   { to: '/sets', label: 'Standard Sets' },

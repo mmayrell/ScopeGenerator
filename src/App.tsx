@@ -8,7 +8,6 @@ import NewScope from './pages/NewScope'
 import ScopeView from './pages/ScopeView'
 import EvidencePackets from './pages/EvidencePackets'
 import ReferenceLibrary from './pages/ReferenceLibrary'
-import System from './pages/System'
 import LessonScopeGen from './pages/LessonScopeGen'
 import VideoScriptGen from './pages/VideoScriptGen'
 
@@ -24,7 +23,6 @@ export default function App() {
         <Route path="/scopes/:id" element={<ScopeView />} />
         <Route path="/library" element={<ReferenceLibrary />} />
         <Route path="/packets" element={<EvidencePackets />} />
-        <Route path="/system" element={<System />} />
         <Route path="/lsg" element={<LessonScopeGen />} />
         <Route path="/videos" element={<VideoScriptGen />} />
       </Route>

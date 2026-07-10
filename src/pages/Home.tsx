@@ -5,30 +5,24 @@ import heroBanner from '../assets/hero-banner.png'
 const workspace = [
   {
     n: '01',
-    title: 'Engine & Doctrine',
-    text: 'The governing instructional framework. Built on evidence-based Direct Instruction best practices.',
-    to: '/system',
-  },
-  {
-    n: '02',
     title: 'Item Repository',
     text: 'A research assistant that hunts the public web for released items.',
     to: '/packets',
   },
   {
-    n: '03',
+    n: '02',
     title: 'Reference Library',
     text: 'The document shelf — four roles, filed by framework and grade.',
     to: '/library',
   },
   {
-    n: '04',
+    n: '03',
     title: 'Standard Sets',
     text: 'The evidence libraries scopes are built from. Create, curate, publish.',
     to: '/sets',
   },
   {
-    n: '05',
+    n: '04',
     title: 'Scope',
     text: 'Evidence-locked course designs, unit by unit, card by card.',
     to: '/scopes',
