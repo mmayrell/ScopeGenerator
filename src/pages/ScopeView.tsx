@@ -403,9 +403,10 @@ export default function ScopeView() {
     }
   }
 
-  // Download JSON: the canonical machine-readable scope (spec "Exporting the
-  // Scope") — one structured object per lesson card, released items as
-  // structured references with persistent screenshot URLs.
+  // Download JSON: the canonical machine-readable scope — the course-operation
+  // envelope ({ courseOperation, targetCourse, lessons[] }, every lesson
+  // operation CREATE), released items as structured references with
+  // persistent screenshot URLs.
   const exportJson = async () => {
     if (!scope) return
     setExporting('json')
