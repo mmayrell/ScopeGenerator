@@ -16,6 +16,10 @@ import type {
   PacketSummary,
   Proposal,
   Scope,
+  VideoScript,
+  VsgCourseRow,
+  VsgRun,
+  VsgRunSummary,
   StandardSet,
 } from './types'
 
@@ -50,7 +54,7 @@ export class NotFoundError extends Error {
 
 export interface JobStatus {
   jobId: string
-  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg'
+  kind: 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg' | 'vsg' | 'lsg'
   status: 'queued' | 'running' | 'complete' | 'failed' | 'cancelled'
   cancelRequested?: boolean
   stage: string // human-readable current stage, e.g. "Stage 3-4 - Atomization & sequencing"
@@ -283,6 +287,37 @@ export const api = {
   getLsgRunJob: (id: string) => request<JobStatus>('GET', `/lsg/runs/${encodeURIComponent(id)}/job`),
 
   deleteLsgRun: (id: string) => request<{ ok: true }>('DELETE', `/lsg/runs/${encodeURIComponent(id)}`),
+
+  // ---- Video Script Generator ----
+
+  listVsgCourses: () => request<VsgCourseRow[]>('GET', '/vsg/courses'),
+
+  createVsgRun: (body: { courseId: string; lessonIds: string[]; steering: string }) =>
+    request<{ run: VsgRun; jobId: string }>('POST', '/vsg/runs', body),
+
+  listVsgRuns: () => request<VsgRunSummary[]>('GET', '/vsg/runs'),
+
+  getVsgRun: (id: string) => request<VsgRun>('GET', `/vsg/runs/${encodeURIComponent(id)}`),
+
+  getVsgRunJob: (id: string) => request<JobStatus>('GET', `/vsg/runs/${encodeURIComponent(id)}/job`),
+
+  deleteVsgRun: (id: string) => request<{ ok: true }>('DELETE', `/vsg/runs/${encodeURIComponent(id)}`),
+
+  reconcileVsgLesson: (
+    runId: string,
+    lessonId: string,
+    resolutions: { conflictId: string; resolution: string; resolvedBy: 'default' | 'custom' }[],
+  ) =>
+    request<{ jobId: string }>('POST', `/vsg/runs/${encodeURIComponent(runId)}/reconcile`, {
+      lessonId,
+      resolutions,
+    }),
+
+  regenerateVsgLesson: (runId: string, lessonId: string) =>
+    request<{ jobId: string }>('POST', `/vsg/runs/${encodeURIComponent(runId)}/regenerate`, { lessonId }),
+
+  getVideoScript: (courseId: string, lessonId: string) =>
+    request<VideoScript>('GET', `/vsg/scripts/${encodeURIComponent(courseId)}/${encodeURIComponent(lessonId)}`),
 
   // ---- Reference Library (framework → grade → four document slots) ----
 

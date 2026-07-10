@@ -10,6 +10,8 @@ import { mutateLsgRun } from '../data/lsg'
 import { huntPacketStep } from '../pipeline/packets'
 import { applyProposalRunStep, iterateRunStep, proposalRunStep } from '../pipeline/proposals'
 import { rerunRunStep } from '../pipeline/rerun'
+import { vsgRunStep } from '../pipeline/vsg'
+import { mutateVsgRun } from '../data/vsg'
 import { nowIso, today } from '../shared/util'
 
 /** Must match host.json → extensions.queues.maxDequeueCount. */
@@ -188,6 +190,8 @@ async function dispatch(msg: JobMessage, context: InvocationContext): Promise<vo
       return huntPacketStep(msg, context)
     case 'lsg/run':
       return lsgRunStep(msg, context)
+    case 'vsg/run':
+      return vsgRunStep(msg, context)
     case 'ingest/lexicon':
       // The lexicon step was removed from the pipeline; settle legacy queued
       // messages cleanly instead of poisoning them.
@@ -231,6 +235,10 @@ async function markFailed(msg: JobMessage, error: string, context: InvocationCon
   }
   if (msg.kind === 'lsg') {
     await markLsgFailed(msg, error, context)
+    return
+  }
+  if (msg.kind === 'vsg') {
+    await markVsgFailed(msg, error, context)
     return
   }
   if (!msg.scopeId) return
@@ -341,6 +349,35 @@ async function markLsgFailed(msg: JobMessage, error: string, context: Invocation
   } catch (e) {
     const status = (e as { status?: number }).status
     if (status !== 404) context.error(`genjobs-worker: could not record failure on lsg run ${msg.lsgRunId}`, e)
+  }
+}
+
+/**
+ * Terminal VSG failure: settle the run, but keep every per-lesson outcome
+ * already checkpointed on it — finished scripts and reconciliation flags
+ * survive; only still-open lessons fail.
+ */
+async function markVsgFailed(msg: JobMessage, error: string, context: InvocationContext): Promise<void> {
+  if (!msg.vsgRunId) return
+  try {
+    await mutateVsgRun(msg.vsgRunId, (run) => {
+      if (run.status === 'generating') {
+        for (const l of run.lessons) {
+          if (l.status === 'pending' || l.status === 'generating') {
+            l.status = 'failed'
+            l.error = error
+          }
+        }
+        const needsRec = run.lessons.some((l) => l.status === 'needs-reconciliation')
+        const complete = run.lessons.some((l) => l.status === 'complete')
+        run.status = needsRec ? 'needs-reconciliation' : complete ? 'complete' : 'failed'
+        if (run.status === 'failed') run.error = error
+      }
+      run.updated = nowIso()
+    })
+  } catch (e) {
+    const status = (e as { status?: number }).status
+    if (status !== 404) context.error(`genjobs-worker: could not record failure on vsg run ${msg.vsgRunId}`, e)
   }
 }
 

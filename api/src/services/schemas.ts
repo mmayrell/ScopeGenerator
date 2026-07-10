@@ -7,6 +7,9 @@ import {
   Lesson,
   LessonType,
   ProposalChange,
+  VsgChannel,
+  VsgInteraction,
+  VsgSegmentKind,
 } from '../domain/types'
 
 /**
@@ -351,6 +354,105 @@ export interface WireLsgFields {
 
 export interface WireLsgFieldsBatch {
   lessons: WireLsgFields[]
+}
+
+// ---------------------------------------------------------------------------
+// Video Script Generator (playbook §2.5): script → segments → channel-tagged
+// lines, with interactions as first-class objects (shared $defs). A segment's
+// interaction objects are matched to its INTERACTION-channel lines BY ORDER —
+// the Nth interaction belongs to the Nth INTERACTION line; index fields
+// invite off-by-one hallucinations, order is deterministic. Conflicts
+// (playbook §2.4) ride the same reply: a non-empty unresolved conflict list
+// means NO script — the lesson pauses for reconciliation.
+// ---------------------------------------------------------------------------
+
+const VSG_INTERACTION = obj({
+  type: enums(['mcq', 'numeric-entry', 'click-to-highlight', 'simple-drag']),
+  prompt: STR,
+  options: arr(STR),
+  answer: STR,
+  correctFeedback: STR,
+  try1Hint: STR,
+  try2ShowAndMoveOn: STR,
+  resumeState: STR,
+  modelAccess: BOOL,
+  modelAccessNote: STR,
+})
+
+const VSG_LINE = obj({
+  channel: enums(['SAY', 'TEXT', 'VISUAL', 'INTERACTION', 'NOTE']),
+  content: STR,
+  // "M:SS" moment the line lands — simultaneity = adjacent lines sharing a
+  // stamp (playbook §2.5/§3); also powers the 30s-interaction-cadence QA.
+  time: STR,
+})
+
+const VSG_SEGMENT = obj({
+  kind: enums(['title', 'intro', 'i-do', 'we-do', 'wrap']),
+  start: STR,
+  end: STR,
+  purpose: STR,
+  lines: arr(ref('vsgLine')),
+  interactions: arr(ref('vsgInteraction')),
+})
+
+const VSG_CONFLICT = obj({
+  kind: enums(['card-internal', 'card-vs-doctrine', 'card-vs-playbook', 'steering']),
+  summary: STR,
+  sideA: STR,
+  sideB: STR,
+  proposal: STR,
+  rationale: STR,
+})
+
+export const VSG_SCRIPT_SCHEMA: Schema = {
+  ...obj({
+    conflicts: arr(ref('vsgConflict')),
+    gradeBand: STR,
+    durationEstimate: STR,
+    segments: arr(ref('vsgSegment')),
+    formatRefs: arr(STR),
+    qa: obj({ hardFails: arr(STR), flags: arr(STR) }),
+  }),
+  $defs: {
+    vsgLine: VSG_LINE,
+    vsgInteraction: VSG_INTERACTION,
+    vsgSegment: VSG_SEGMENT,
+    vsgConflict: VSG_CONFLICT,
+  },
+}
+
+export interface WireVsgConflict {
+  kind: 'card-internal' | 'card-vs-doctrine' | 'card-vs-playbook' | 'steering'
+  summary: string
+  sideA: string
+  sideB: string
+  proposal: string
+  rationale: string
+}
+
+export interface WireVsgLine {
+  channel: VsgChannel
+  content: string
+  time: string
+}
+
+export interface WireVsgSegment {
+  kind: VsgSegmentKind
+  start: string
+  end: string
+  purpose: string
+  lines: WireVsgLine[]
+  interactions: VsgInteraction[]
+}
+
+export interface WireVsgScript {
+  conflicts: WireVsgConflict[]
+  gradeBand: string
+  durationEstimate: string
+  segments: WireVsgSegment[]
+  formatRefs: string[]
+  qa: { hardFails: string[]; flags: string[] }
 }
 
 // Flat StandardNode list — parentCode '' marks a root; the tree is rebuilt in code.

@@ -647,3 +647,127 @@ export interface LsgRunSummary {
   created: string
   updated: string
 }
+
+// ---------------------------------------------------------------------------
+// Video Script Generator (VSG). Mirrors api/src/domain/types.ts.
+// ---------------------------------------------------------------------------
+
+export type VsgChannel = 'SAY' | 'TEXT' | 'VISUAL' | 'INTERACTION' | 'NOTE'
+
+export type VsgInteractionType = 'mcq' | 'numeric-entry' | 'click-to-highlight' | 'simple-drag'
+
+export interface VsgInteraction {
+  type: VsgInteractionType
+  prompt: string
+  options: string[]
+  answer: string
+  correctFeedback: string
+  try1Hint: string
+  try2ShowAndMoveOn: string
+  resumeState: string
+  modelAccess: boolean
+  modelAccessNote: string
+}
+
+export interface VsgLine {
+  channel: VsgChannel
+  content: string
+  time?: string // "M:SS" moment the line lands (simultaneous lines share a stamp)
+  interaction?: VsgInteraction
+}
+
+export type VsgSegmentKind = 'title' | 'intro' | 'i-do' | 'we-do' | 'wrap'
+
+export interface VsgSegment {
+  kind: VsgSegmentKind
+  start: string
+  end: string
+  purpose: string
+  lines: VsgLine[]
+}
+
+export interface VsgConflict {
+  id: string
+  kind: 'card-internal' | 'card-vs-doctrine' | 'card-vs-playbook' | 'steering'
+  summary: string
+  sideA: string
+  sideB: string
+  proposal: string
+  rationale: string
+  resolution?: string
+  resolvedBy?: 'default' | 'custom'
+  resolvedAt?: string
+}
+
+export interface VideoScript {
+  courseId: string
+  lessonId: string
+  lessonTitle: string
+  unitName: string
+  standardId: string
+  gradeBand: string
+  durationEstimate: string
+  segments: VsgSegment[]
+  interactionCount: number
+  formatRefs: string[]
+  qa: { hardFails: string[]; flags: string[] }
+  conflictsResolved: VsgConflict[]
+  playbookVersion: string
+  doctrineVersion: string
+  version: number
+  created: string
+}
+
+export type VsgLessonStatus = 'pending' | 'generating' | 'needs-reconciliation' | 'complete' | 'failed'
+
+export interface VsgRunLesson {
+  lessonId: string
+  lessonTitle: string
+  unitName: string
+  lessonOrder: number
+  status: VsgLessonStatus
+  claimedAt?: string // backend exclusive-claim stamp
+  error?: string
+  conflicts: VsgConflict[]
+  scriptVersion?: number
+}
+
+export interface VsgRun {
+  id: string
+  courseId: string
+  courseName: string
+  subject: string
+  grade: string
+  standardSet: string
+  steering: string
+  status: 'generating' | 'needs-reconciliation' | 'complete' | 'failed'
+  error?: string
+  lessons: VsgRunLesson[]
+  playbookVersion: string
+  doctrineVersion: string
+  created: string
+  updated: string
+}
+
+export interface VsgRunSummary {
+  id: string
+  courseName: string
+  status: VsgRun['status']
+  error?: string
+  lessonCount: number
+  completeCount: number
+  needsReconciliationCount: number
+  created: string
+  updated: string
+}
+
+/** GET /vsg/courses row — the LSG registry shaped for the course picker. */
+export interface VsgCourseRow {
+  courseId: string
+  courseName: string
+  subject: string
+  grade: string
+  standardSet: string
+  activeLessonCount: number
+  updated: string
+}

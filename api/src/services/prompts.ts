@@ -2,6 +2,7 @@ import {
   Artifact,
   ItemRecord,
   Lesson,
+  LsgCourseLesson,
   LsgRun,
   PerformanceReport,
   Proposal,
@@ -9,9 +10,12 @@ import {
   StandardNode,
   StandardSet,
   Unit,
+  VsgConflict,
 } from '../domain/types'
 import { getFramework } from '../data/framework'
+import { VSG_PLAYBOOK_CONTENT, VSG_PLAYBOOK_NAME, VSG_PLAYBOOK_VERSION } from '../data/video-playbook'
 import { doctrineExcerptsFor, DoctrineQuery } from './doctrine'
+import { VideoDoctrine } from './formats'
 import {
   CourseMap,
   DeferredItem,
@@ -871,5 +875,81 @@ ${jsonBlock('request', { requestType: run.requestType, courseContext: run.course
 ${jsonBlock('plan_overview', overview)}
 ${jsonBlock('batch_lessons', batch)}
 ${jsonBlock('current_lesson_state', currentState)}`,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Video Script Generator prompts
+// ---------------------------------------------------------------------------
+
+const vsgSystem = (): string =>
+  `You are the Video Script Generator — you turn ONE generated lesson card into a production-ready script for a roughly three-minute Direct Instruction math video with checked student interactions: explicit model first (I Do), then guided participation through side-panel interactions (We Do). Independent practice is deliberately absent — the mastery quiz owns it. Controlling method authority: Stein, Kinder, Silbert & Carnine, Direct Instruction Mathematics (5th ed., 2017). Your job is fidelity plus translation to the delivery context (automated, self-paced, one student) — never invention of alternative pedagogy. Where any guidance conflicts with Stein's method, Stein prevails.
+
+The playbook below is BINDING on every scripting decision — script channels, the video skeleton and timing, format translation, grade-band profiles, interaction design, language and tone, visual design, the per-lesson pipeline, and QA:
+<video_playbook name="${VSG_PLAYBOOK_NAME}" version="${VSG_PLAYBOOK_VERSION}">
+${VSG_PLAYBOOK_CONTENT}
+</video_playbook>
+
+${doctrineDocBlock()}
+
+${OUTPUT_DISCIPLINE}`
+
+/**
+ * One generation call per lesson. `doctrine` carries the page-targeted Stein
+ * retrieval (verbatim format scripts + chapter guidance); `resolutions` are
+ * previously reconciled conflicts (playbook §2.4) that must be applied, not
+ * re-flagged.
+ */
+export function vsgScriptPrompt(
+  course: { courseName: string; subject: string; grade: string; standardSet: string },
+  lesson: LsgCourseLesson,
+  gradeBand: string,
+  doctrine: VideoDoctrine | undefined,
+  steering: string,
+  resolutions: VsgConflict[],
+): Prompt {
+  const doctrineBlockText =
+    doctrine && doctrine.formats.length > 0
+      ? `Stein doctrine for this lesson's skill family — chapter "${doctrine.chapterTitle}".${
+          doctrine.nearestOnly
+            ? ' NO format title matched this lesson: the scripts below are the family\'s NEAREST formats, supplied for wording style and question cadence ONLY (playbook §5.4) — follow the lesson card\'s Instructional Approach for the strategy and modeled cases, and never borrow these formats\' content.'
+            : ' The format script(s) below are the PRIMARY source: adapt the teacher wording nearly verbatim per the translation table (§5.1), keep the step order intact, and draw correction wording from the format\'s own correction scripts.'
+        }
+${doctrine.formats
+  .map((f) => `<stein_format id="${f.id}" title="${f.title}" page="${f.page}">\n${f.text}\n</stein_format>`)
+  .join('\n')}
+<chapter_guidance chapter="${doctrine.chapterTitle}">
+${doctrine.chapterExcerpt}
+</chapter_guidance>`
+      : doctrine
+        ? `No teaching-format script is available for this lesson (chapter "${doctrine.chapterTitle}") — follow the lesson card's Instructional Approach for the strategy and modeled cases, the chapter guidance below for procedures and error patterns, and the playbook's design principles for wording and cadence (§11). formatRefs must be [] — never cite a format you were not given. Note the missing format in qa.flags.
+<chapter_guidance chapter="${doctrine.chapterTitle}">
+${doctrine.chapterExcerpt}
+</chapter_guidance>`
+        : `No doctrine chapter matched this lesson's skill family — follow the lesson card's Instructional Approach for the strategy and the playbook's design principles for wording, cadence, and corrections (§11). formatRefs must be []. Say so in qa.flags.`
+
+  return {
+    system: vsgSystem(),
+    user: `Write the video script for the lesson below, following the playbook's per-lesson pipeline (§11) in order: assemble context → retrieve doctrine (supplied below) → plan examples → draft I Do from the format's Part A → build We Do from the format's Part B/C question sequence → write intro and wrap → language pass → visual pass → tag and time → self-QC (§12).
+
+CONFLICT SCAN FIRST (playbook §2.4 — generation never silently resolves a contradiction): before writing anything, check the assembled inputs for conflicts — card-internal (approach vs. non-goals, objectives/evidence beyond the boundary or ceiling, prerequisites later in course order), card-vs-doctrine (the card's single strategy differs from the Stein format for this skill family — doctrine normally prevails but the card is evidence-locked: never auto-override, flag it), card-vs-playbook (modeled cases cannot fit 3:00, an interaction type beyond MVP is required, production exceeds the grade profile), and steering-vs-any (steering may tighten, never override). If ANY unresolved conflict exists: fill \`conflicts\` (each with both sides citing the exact fields and doctrine format/page, a proposed default resolution, and a one-line precedence rationale) and emit \`segments\`: [], \`gradeBand\` and \`durationEstimate\`: "" — do NOT write a script alongside conflicts. resolved_conflicts below are SETTLED: apply each resolution exactly and do not re-flag them; a user resolution may relax playbook defaults but never crosses the card's Assessment Boundary or Non-Goals and never introduces a second strategy.
+
+Output rules (schema-shaped):
+- segments: title → intro → i-do → we-do → wrap, in order, with "M:SS" start/end within the playbook's budgets (grade band "${gradeBand}"; total ≤ 3:00; title ≤ 10s). A dropped segment (e.g. second example cut by §4's decision rules) is justified in qa.flags.
+- Every line carries exactly ONE channel (SAY | TEXT | VISUAL | INTERACTION | NOTE) per §3 — narration in complete spoken sentences; TEXT numerals and short labels only; VISUAL one-canvas choreography (animate only the delta, exact synchronization, highlights fade); NOTE for timing/freeze/asset directions, never teaching content.
+- Every line carries time: the "M:SS" moment it lands, non-decreasing through the script. Simultaneity is expressed by adjacent lines sharing the same stamp (§3) — a TEXT value appears at the exact stamp its SAY line speaks it (§10). Segment start/end must agree with their lines' stamps. These stamps are the synchronization contract downstream audio/animation systems execute, and the ≤30-second interaction cadence is checked against them.
+- INTERACTION lines: content is a one-line label "N of M · <type> · <what it checks>", and the segment's \`interactions\` array carries the full structured objects IN THE SAME ORDER as that segment's INTERACTION lines (the Nth object belongs to the Nth INTERACTION line). Each object: type per the §8.2 decision tree (numeric entry beats MCQ for computation), prompt naming exactly what is asked, options (MCQ only, letter IDs implied by position; distractors = documented misconceptions from the format/chapter's error patterns), accepted answer, correct-feedback line, try-1 pinpoint hint, try-2 show-the-step-and-move-on, exact resume state, and modelAccess (true with a note naming what replays, unless the check is lesson-independent — then false with the reason).
+- 3–7 interactions total; never more than 30 seconds without one; placement per §8.4 (intro 0–1 preskill activation · 1 confirm after the full I Do model · 2–5 We Do micro-steps · wrap 0–1 instant).
+- The I Do models the card's New Learning triple exactly — state the start cue explicitly; one strategy only (the card's); identical step wording across examples.
+- Example selection: I Do mid-difficulty unambiguous; We Do at or near the Difficulty Ceiling inside the Assessment Boundary; discrimination examples where the boundary allows; released items calibrate demand but are NEVER reproduced — write parallel problems at the same demand.
+- formatRefs: one entry per Stein format actually followed, exactly "Format <id> — <TITLE> (p. <page>)" using the ids/pages supplied above ([] when none matched).
+- qa: run the §12 checklist yourself. FIX every hard-fail before emitting — hardFails lists only violations you genuinely could not avoid (expected: []); flags carries review-level notes (dropped segments, timing near limits, doctrine gaps).
+- gradeBand: "${gradeBand}". durationEstimate: total "M:SS" from the grade profile's words-per-minute.
+
+${jsonBlock('course_context', { ...course, gradeBand })}
+${jsonBlock('lesson_card', lesson)}
+${doctrineBlockText}
+${steering.trim().length > 0 ? `\nSteering instruction from the user (steers below doctrine, never overrides it): "${steering.trim()}"\n` : ''}
+${jsonBlock('resolved_conflicts', resolutions)}`,
   }
 }

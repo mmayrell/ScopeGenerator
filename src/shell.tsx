@@ -11,6 +11,7 @@ const nav = [
   { to: '/sets', label: 'Standard Sets' },
   { to: '/scopes', label: 'Scopes' },
   { to: '/lsg', label: 'Lesson Scope Edits' },
+  { to: '/videos', label: 'Video Script Generator' },
 ]
 
 export default function Shell() {

@@ -10,6 +10,7 @@ export interface JobRecord extends JobStatus {
   setId?: string
   packetId?: string
   lsgRunId?: string
+  vsgRunId?: string
   created: string
   /** comma-separated unit indexes already counted — makes unit increments idempotent */
   unitsMask?: string
@@ -37,6 +38,7 @@ function toEntity(r: JobRecord): EntityShape {
   if (r.setId !== undefined) e.setId = r.setId
   if (r.packetId !== undefined) e.packetId = r.packetId
   if (r.lsgRunId !== undefined) e.lsgRunId = r.lsgRunId
+  if (r.vsgRunId !== undefined) e.vsgRunId = r.vsgRunId
   if (r.unitsDone !== undefined) e.unitsDone = r.unitsDone
   if (r.totalUnits !== undefined) e.totalUnits = r.totalUnits
   if (r.unitsMask !== undefined) e.unitsMask = r.unitsMask
@@ -69,6 +71,7 @@ function fromEntity(e: TableEntityResult<Record<string, unknown>>): JobRecord {
   if (e.setId !== undefined) rec.setId = String(e.setId)
   if (e.packetId !== undefined) rec.packetId = String(e.packetId)
   if (e.lsgRunId !== undefined) rec.lsgRunId = String(e.lsgRunId)
+  if (e.vsgRunId !== undefined) rec.vsgRunId = String(e.vsgRunId)
   if (e.unitsDone !== undefined) rec.unitsDone = Number(e.unitsDone)
   if (e.totalUnits !== undefined) rec.totalUnits = Number(e.totalUnits)
   if (e.unitsMask !== undefined) rec.unitsMask = String(e.unitsMask)
@@ -88,6 +91,7 @@ export async function createJob(init: {
   setId?: string
   packetId?: string
   lsgRunId?: string
+  vsgRunId?: string
   totalStages: number
   stage: string
   detail: string
@@ -106,6 +110,7 @@ export async function createJob(init: {
   if (init.setId !== undefined) rec.setId = init.setId
   if (init.packetId !== undefined) rec.packetId = init.packetId
   if (init.lsgRunId !== undefined) rec.lsgRunId = init.lsgRunId
+  if (init.vsgRunId !== undefined) rec.vsgRunId = init.vsgRunId
   pushLog(rec, init.detail)
   await jobsTable().createEntity(toEntity(rec))
   return rec
@@ -191,6 +196,17 @@ export async function latestJobForScope(scopeId: string): Promise<JobRecord | un
 /** Mirrors latestJobForScope for set-bound jobs (ingest) — used to make publish idempotent. */
 export async function latestJobForSet(setId: string): Promise<JobRecord | undefined> {
   const filter = odata`PartitionKey eq ${'job'} and setId eq ${setId}`
+  let latest: JobRecord | undefined
+  for await (const e of jobsTable().listEntities({ queryOptions: { filter } })) {
+    const rec = fromEntity(e as TableEntityResult<Record<string, unknown>>)
+    if (!latest || rec.created > latest.created) latest = rec
+  }
+  return latest
+}
+
+/** Mirrors latestJobForLsgRun for VSG-run-bound jobs (Video Script Generator). */
+export async function latestJobForVsgRun(vsgRunId: string): Promise<JobRecord | undefined> {
+  const filter = odata`PartitionKey eq ${'job'} and vsgRunId eq ${vsgRunId}`
   let latest: JobRecord | undefined
   for await (const e of jobsTable().listEntities({ queryOptions: { filter } })) {
     const rec = fromEntity(e as TableEntityResult<Record<string, unknown>>)

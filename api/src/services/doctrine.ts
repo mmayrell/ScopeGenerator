@@ -85,11 +85,14 @@ function chapterText(slug: string): string | undefined {
   return undefined
 }
 
-const truncateAtParagraph = (text: string, max: number): string => {
+export const truncateAtParagraph = (text: string, max: number): string => {
   if (text.length <= max) return text
   const cut = text.lastIndexOf('\n', max)
   return `${text.slice(0, cut > max / 2 ? cut : max)}\n\n[… chapter text truncated for length — the procedures above are the primary formats]`
 }
+
+/** Read access for sibling services (the video generator's format retrieval). */
+export const chapterTextOf = (slug: string): string | undefined => chapterText(slug)
 
 export interface DoctrineQuery {
   unitTitle: string
@@ -99,11 +102,11 @@ export interface DoctrineQuery {
 }
 
 /**
- * Returns the doctrine block for a unit's card generation: the top-matching
- * chapter excerpts, or undefined when nothing matches (or the library is
- * missing — a degraded deploy must not fail generation).
+ * Chapter matching, exported for reuse: the video generator selects its format
+ * scripts from the same chapter this scoring picks for card generation, so the
+ * two features can never disagree about a lesson's skill family.
  */
-export function doctrineExcerptsFor(query: DoctrineQuery): string | undefined {
+export function matchChapters(query: DoctrineQuery): { slug: string; title: string; score: number }[] {
   // Titles only — strand names ("Measurement and Data", "Operations and
   // Algebraic Thinking") are domain labels, and matching keywords against them
   // pulled the wrong chapters into every unit of a strand. Domains from the
@@ -122,14 +125,24 @@ export function doctrineExcerptsFor(query: DoctrineQuery): string | undefined {
     const escaped = escape(prefix ? trimmed.slice(0, -1) : trimmed)
     return new RegExp(`\\b${escaped}${prefix ? '\\w*' : '\\b'}`).test(haystack)
   }
-  const scored = CHAPTERS.map((ch) => {
+  return CHAPTERS.map((ch) => {
     let score = 0
     for (const kw of ch.keywords) if (matches(kw)) score += 3
     for (const d of ch.domains) if (domains.has(d)) score += 2
-    return { ch, score }
+    return { slug: ch.slug, title: ch.title, score }
   })
     .filter((s) => s.score > 0)
     .sort((a, b) => b.score - a.score)
+}
+
+/**
+ * Returns the doctrine block for a unit's card generation: the top-matching
+ * chapter excerpts, or undefined when nothing matches (or the library is
+ * missing — a degraded deploy must not fail generation).
+ */
+export function doctrineExcerptsFor(query: DoctrineQuery): string | undefined {
+  const scored = matchChapters(query)
+    .map((s) => ({ ch: { slug: s.slug, title: s.title }, score: s.score }))
     .slice(0, MAX_CHAPTERS)
 
   const texts = scored

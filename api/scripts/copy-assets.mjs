@@ -26,3 +26,14 @@ if (existsSync(doctrineSrc)) {
   console.error('copy-assets: assets/doctrine is missing - the doctrine library must ship with the API')
   process.exit(1)
 }
+
+// Teaching-format script library (Stein et al., all 122 verbatim formats with
+// page numbers) — the Video Script Generator's page-targeted doctrine source.
+const formatsSrc = join(here, '..', 'assets', 'formats.json')
+if (existsSync(formatsSrc)) {
+  cpSync(formatsSrc, join(dstDir, 'formats.json'))
+  console.log(`copy-assets: copied formats.json -> ${join(dstDir, 'formats.json')}`)
+} else {
+  console.error('copy-assets: assets/formats.json is missing - the format library must ship with the API')
+  process.exit(1)
+}

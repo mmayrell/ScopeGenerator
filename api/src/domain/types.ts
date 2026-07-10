@@ -711,7 +711,164 @@ export interface LsgRunSummary {
   updated: string
 }
 
-export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg'
+// ---------------------------------------------------------------------------
+// Video Script Generator (VSG) — turns generated lesson cards into
+// production-ready scripts for ~3-minute DI math videos with checked student
+// interactions, per the versioned "DI Math Video Script Generator Playbook".
+// Courses come from the LSG registry; scripts are stored per (course, lesson)
+// with a version, stamped with the playbook + doctrine versions they ran
+// under. Conflict handling is flag → propose → reconcile: generation never
+// silently resolves a contradiction in its inputs.
+// ---------------------------------------------------------------------------
+
+/** Script line channels (playbook §3) — every line carries exactly one. */
+export type VsgChannel = 'SAY' | 'TEXT' | 'VISUAL' | 'INTERACTION' | 'NOTE'
+
+export type VsgInteractionType = 'mcq' | 'numeric-entry' | 'click-to-highlight' | 'simple-drag'
+
+/** A checked student interaction (playbook §8) — structured, never prose. */
+export interface VsgInteraction {
+  type: VsgInteractionType
+  /** Names exactly what is asked, restating the on-screen question. */
+  prompt: string
+  /** MCQ options in order (letter IDs implied by position); [] for other types. */
+  options: string[]
+  /** Accepted answer: the correct option letter, the numeric answer, or the target/move description. */
+  answer: string
+  correctFeedback: string
+  /** Try-1 pinpoint hint. */
+  try1Hint: string
+  /** Try-2: show the step and move on. */
+  try2ShowAndMoveOn: string
+  /** The exact frame state on resume. */
+  resumeState: string
+  /** Whether "Replay last step / Show model" is offered (false only for lesson-independent checks). */
+  modelAccess: boolean
+  /** What the model replay shows, or why access is not needed. */
+  modelAccessNote: string
+}
+
+/** One channel-tagged script line; INTERACTION lines carry the structured block. */
+export interface VsgLine {
+  channel: VsgChannel
+  /** The line's content (for INTERACTION lines: a one-line label, e.g. "3 of 7 · Numeric entry · step result"). */
+  content: string
+  /** "M:SS" moment the line lands (simultaneous lines share a stamp). */
+  time?: string
+  interaction?: VsgInteraction
+}
+
+export type VsgSegmentKind = 'title' | 'intro' | 'i-do' | 'we-do' | 'wrap'
+
+export interface VsgSegment {
+  kind: VsgSegmentKind
+  /** Timing estimate "M:SS" from the grade profile's words-per-minute. */
+  start: string
+  end: string
+  /** What this segment accomplishes (one line). */
+  purpose: string
+  lines: VsgLine[]
+}
+
+/** A flagged input contradiction (playbook §2.4) — resolved by the user, never silently. */
+export interface VsgConflict {
+  id: string
+  kind: 'card-internal' | 'card-vs-doctrine' | 'card-vs-playbook' | 'steering'
+  /** One line: why generation cannot proceed cleanly. */
+  summary: string
+  /** Both sides, citing the exact fields / doctrine formats-pages involved. */
+  sideA: string
+  sideB: string
+  /** The proposed default resolution (always offered). */
+  proposal: string
+  /** One-line rationale derived from the precedence rules. */
+  rationale: string
+  /** Filled when reconciled. */
+  resolution?: string
+  resolvedBy?: 'default' | 'custom'
+  resolvedAt?: string
+}
+
+/** One production-ready video script for one lesson (the production contract). */
+export interface VideoScript {
+  courseId: string
+  lessonId: string
+  lessonTitle: string
+  unitName: string
+  standardId: string
+  /** Grade-band profile applied (playbook §7), e.g. "3-5". */
+  gradeBand: string
+  /** Total run-time estimate "M:SS" (≤ 3:00). */
+  durationEstimate: string
+  segments: VsgSegment[]
+  interactionCount: number
+  /** Stein formats consulted, page-stamped (e.g. "Format 7.6 — ADDING TWO NUMERALS WITH RENAMING (p. 213)"). */
+  formatRefs: string[]
+  /** Programmatic QA results (playbook §12): hard-fail findings + review flags. */
+  qa: { hardFails: string[]; flags: string[] }
+  /** Reconciled conflicts recorded in the script header (both sides, rule, resolution, who). */
+  conflictsResolved: VsgConflict[]
+  playbookVersion: string
+  doctrineVersion: string
+  /** Per (course, lesson) version counter. */
+  version: number
+  created: string
+}
+
+export type VsgLessonStatus = 'pending' | 'generating' | 'needs-reconciliation' | 'complete' | 'failed'
+
+/** Per-lesson state inside a run; the script itself lives in its own blob. */
+export interface VsgRunLesson {
+  lessonId: string
+  lessonTitle: string
+  unitName: string
+  lessonOrder: number
+  status: VsgLessonStatus
+  /**
+   * Exclusive-claim stamp: set when an execution takes the lesson. A
+   * 'generating' lesson is reclaimable only when this is stale (host-killed
+   * execution) — concurrent duplicate deliveries must not double-generate.
+   */
+  claimedAt?: string
+  error?: string
+  /** Open + resolved conflicts for this lesson (resolutions persist and pre-fill regeneration). */
+  conflicts: VsgConflict[]
+  /** Version of the script this run produced (set when status is complete). */
+  scriptVersion?: number
+}
+
+export interface VsgRun {
+  id: string
+  courseId: string
+  courseName: string
+  subject: string
+  grade: string
+  standardSet: string
+  /** Optional user steering — steers below doctrine, never overrides it. */
+  steering: string
+  status: 'generating' | 'needs-reconciliation' | 'complete' | 'failed'
+  error?: string
+  lessons: VsgRunLesson[]
+  playbookVersion: string
+  doctrineVersion: string
+  created: string
+  updated: string
+}
+
+/** Slim row for the run list (scripts are large; the list stays light). */
+export interface VsgRunSummary {
+  id: string
+  courseName: string
+  status: VsgRun['status']
+  error?: string
+  lessonCount: number
+  completeCount: number
+  needsReconciliationCount: number
+  created: string
+  updated: string
+}
+
+export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg' | 'vsg'
 
 export interface JobStatus {
   jobId: string
@@ -732,11 +889,12 @@ export interface JobStatus {
 export interface JobMessage {
   jobId: string
   kind: JobKind
-  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'lexicon' | 'hunt' // 'run' for single-step kinds (incl. kind 'lsg'); 'lexicon' only for legacy queued messages; 'hunt' for kind 'packet'
+  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'lexicon' | 'hunt' // 'run' for single-step kinds (incl. kinds 'lsg' and 'vsg'); 'lexicon' only for legacy queued messages; 'hunt' for kind 'packet'
   scopeId?: string
   setId?: string
   packetId?: string
   lsgRunId?: string // for kind 'lsg'
+  vsgRunId?: string // for kind 'vsg'
   unitIndex?: number // for step 'cards'
   payload?: Record<string, unknown> // kind-specific (rerun target/mode, report text, feedback, proposalId…)
 }

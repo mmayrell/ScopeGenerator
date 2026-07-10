@@ -189,6 +189,10 @@ all units done reports it; finalize itself is idempotent).
   `jobs/<jobId>/unit-<i>-lesson-<lessonId>.json`, `jobs/<jobId>/unit-<i>.json` — pipeline
   checkpoints (legacy `unit-<i>-batch-<b>.json` batch checkpoints are still read on resume)
 - `jobs/<jobId>/lsg-plan.json`, `jobs/<jobId>/lsg-batch-<i>.json` — LSG pipeline checkpoints
+- `vsg/runs/<runId>.json` — current `VsgRun` (per-lesson statuses + conflicts; the run doc IS the
+  pipeline checkpoint). Mutations via `mutateVsgRun` (ETag If-Match + retry)
+- `vsg/scripts/<courseId>/<lessonId>.json` — latest `VideoScript` per (course, lesson), `version`
+  increments on every save
 
 **Blob container `uploads`**: `<setId>/<role>/<fileName>` — uploaded PDFs;
 `library/<framework>/<grade>/<role>/<fileName>` — Reference Library documents (no index — the
@@ -489,6 +493,61 @@ update an existing course when only some lessons change.
      `applied: true`.
 - Output lessons keep `lessonId: null` on CREATE (the registry, not the output, holds the assigned
   ids), and echo the snapshot id verbatim on UPDATE/DEACTIVATE.
+
+## Video Script Generator (kind `vsg`, step `run`)
+
+Turns generated lesson cards into production-ready scripts for ~3-minute DI math videos with
+checked student interactions, per the versioned **"DI Math Video Script Generator Playbook"**
+(embedded as `api/src/data/video-playbook.ts`, `VSG_PLAYBOOK_VERSION`; the access-details section
+of the source PDF is deliberately stripped). Courses come from the **LSG registry** (VSG owns no
+course store); scripts persist per (course, lesson) with a version, stamped with the playbook +
+doctrine versions.
+
+- **Routes** (`api/src/functions/http-vsg.ts`): `GET vsg/courses` (registry shaped for the picker:
+  active-lesson counts) · `POST vsg/runs` `{ courseId, lessonIds ≤ 60, steering }` → `{ run, jobId }`
+  (201; lessons must be ACTIVE in the course) · `GET vsg/runs` (summaries) · `GET/DELETE
+  vsg/runs/{id}` (delete flags a live job `cancelRequested`) · `GET vsg/runs/{id}/job` ·
+  `POST vsg/runs/{id}/reconcile` `{ lessonId, resolutions[{conflictId, resolution, resolvedBy}] }`
+  (every open conflict must be resolved; lesson re-opens `pending`) ·
+  `POST vsg/runs/{id}/regenerate` `{ lessonId }` (keeps resolved conflicts — they pre-fill; drops
+  unresolved flags) · `GET vsg/scripts/{courseId}/{lessonId}`. Reconcile/regenerate re-dispatch via
+  the packet-retry pattern (reuse the latest job row; a provably-live job is left alone — the
+  worker's settle-time pending check hands off).
+- **Storage**: `vsg/runs/<runId>.json` (mutations via `mutateVsgRun`, ETag retry) +
+  `vsg/scripts/<courseId>/<lessonId>.json` (latest script, `version` increments per save); index
+  rows partition `vsg-run` with the self-healing list sweep.
+- **Pipeline** (`api/src/pipeline/vsg.ts`): ONE Claude call per lesson (effort medium, low after a
+  deadline cut; 40k max tokens; truncation → one low-effort rescue; refusal/second truncation →
+  that lesson alone fails, the rest continue). **The run document is the checkpoint**: lesson
+  statuses advance `pending → generating → complete | needs-reconciliation | failed`; redelivery
+  resumes at the still-open lessons. Same deadline machinery as the other pipelines (8.5-minute
+  in-process abort, `payload.cuts`+`cutLesson` per-lesson escalation, 4.5-minute launch budget
+  with same-message re-enqueue).
+- **Doctrine retrieval is page-targeted, never whole-book** (playbook §6): `services/formats.ts`
+  loads `assets/formats.json` — all **122 verbatim Stein teaching-format scripts** (two-column
+  TEACHER/STUDENTS blocks) extracted from the full 5th-edition text, page-stamped — picks the
+  lesson's chapter via the SAME `matchChapters` scoring card generation uses (`services/doctrine.ts`),
+  scores the chapter's format titles against lesson title + Instructional Approach, and supplies
+  the top 1–3 scripts verbatim (≤ 40k chars) plus a bounded chapter-procedures excerpt (≤ 32k).
+  When no title matches, the family's nearest formats ship flagged `nearestOnly` — wording style
+  and cadence only (§5.4). `assets/formats.json` must ship with the API (copy-assets fails the
+  build without it).
+- **Conflict handling — flag → propose → reconcile (playbook §2.4)**: the generation reply carries
+  `conflicts[]`; non-empty (after dropping any that match an already-recorded resolution) →
+  the lesson pauses `needs-reconciliation` with NO script — generation never silently resolves a
+  contradiction. Each conflict names both sides, a proposed default, and a precedence rationale;
+  the user accepts the default or writes custom handling; resolutions persist per (lesson,
+  conflict), ride the regeneration prompt as settled, and are recorded in the script header
+  (`conflictsResolved`).
+- **Script QA (§12)**: the model self-QCs, then code re-checks hard limits (≤ 3:00 total, title
+  ≤ 10s, 3–7 interactions, interaction-object/line pairing). Hard failures trigger ONE corrective
+  call naming the failures; a script still failing ships with `qa.hardFails` visible (UI banner)
+  rather than blocking the run. Wire shape: segments carry `lines` (channel-tagged) and
+  `interactions` (structured objects) matched BY ORDER to the segment's INTERACTION lines
+  (schemas `VSG_SCRIPT_SCHEMA`, shared `$defs`).
+- **Settlement**: all lessons terminal → run `needs-reconciliation` if any lesson awaits the user,
+  else `complete` if any script was written, else `failed`. `markVsgFailed` (worker terminal
+  failure) fails only still-open lessons — finished scripts and reconciliation flags survive.
 
 ## Guardrails (synchronous, data-driven)
 
