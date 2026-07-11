@@ -714,7 +714,7 @@ export interface LsgRunSummary {
 // ---------------------------------------------------------------------------
 // Video Script Generator (VSG) — turns generated lesson cards into
 // production-ready scripts for ~3-minute DI math videos with checked student
-// interactions, per the versioned "DI Math Video Script Generator Playbook".
+// interactions, per the versioned "No-HITL DI Video Script Generator Playbook".
 // Courses come from the LSG registry; scripts are stored per (course, lesson)
 // with a version, stamped with the playbook + doctrine versions they ran
 // under. Conflict handling is flag → propose → reconcile: generation never
