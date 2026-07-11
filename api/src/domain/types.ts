@@ -793,6 +793,13 @@ export interface VsgConflict {
 export interface VideoScript {
   courseId: string
   lessonId: string
+  /**
+   * The run that authored this stored version — the ownership proof for
+   * permanent deletion. Version numbers recycle after a delete (the counter
+   * lives in the blob), so only this id can say whose script the blob holds.
+   * Optional: scripts stored before the field existed lack it.
+   */
+  runId?: string
   lessonTitle: string
   unitName: string
   standardId: string

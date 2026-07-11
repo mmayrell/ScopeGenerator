@@ -9,7 +9,7 @@ import {
   VsgSegment,
 } from '../domain/types'
 import { getLsgCourseOrUndefined } from '../data/lsg'
-import { getVideoScriptOrUndefined, getVsgRunOrUndefined, mutateVsgRun, saveVideoScript } from '../data/vsg'
+import { deleteVideoScriptDocs, getVideoScriptOrUndefined, getVsgRunOrUndefined, mutateVsgRun, saveVideoScript } from '../data/vsg'
 import { getJob, mutateJob, pushLog } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { generateStructured } from '../services/claude'
@@ -345,15 +345,28 @@ export async function vsgRunStep(msg: JobMessage, ctx: InvocationContext): Promi
     const prior = await getVideoScriptOrUndefined(run.courseId, lesson.lessonId)
     const script = toVideoScript(wire, run, card, gradeBand, resolutions, (prior?.version ?? 0) + 1)
     await saveVideoScript(script)
-    await mutateVsgRun(runId, (r) => {
-      const l = r.lessons.find((x) => x.lessonId === lesson.lessonId)
-      if (l) {
-        l.status = 'complete'
-        l.scriptVersion = script.version
-        delete l.error
+    try {
+      await mutateVsgRun(runId, (r) => {
+        const l = r.lessons.find((x) => x.lessonId === lesson.lessonId)
+        if (l) {
+          l.status = 'complete'
+          l.scriptVersion = script.version
+          delete l.error
+        }
+        r.updated = nowIso()
+      })
+    } catch (e) {
+      if ((e as { status?: number }).status === 404) {
+        // The run was permanently deleted while this script was being
+        // written — the blob just saved must not outlive it (deletion means
+        // gone from everywhere). The runId ownership guard keeps the blob if
+        // another run already overwrote it.
+        await deleteVideoScriptDocs(run.courseId, runId, [{ lessonId: lesson.lessonId, scriptVersion: script.version }])
+        await settleJobQuietly(msg.jobId, 'Run was deleted — the in-flight script was discarded')
+        return
       }
-      r.updated = nowIso()
-    })
+      throw e
+    }
     await mutateJob(msg.jobId, (r) => {
       r.stagesDone = Math.min(r.stagesDone + 1, r.totalStages)
       pushLog(
@@ -551,6 +564,7 @@ function toVideoScript(
   return {
     courseId: run.courseId,
     lessonId: card.lessonId,
+    runId: run.id,
     lessonTitle: card.lessonTitle,
     unitName: card.unitName,
     standardId: card.standardId,

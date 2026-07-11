@@ -132,3 +132,51 @@ export async function getVideoScriptOrUndefined(
 export async function saveVideoScript(script: VideoScript): Promise<void> {
   await putJson(dataContainer(), scriptBlobPath(script.courseId, script.lessonId), script)
 }
+
+/**
+ * Permanently delete stored script documents — but ONLY those the given run
+ * owns. The blob is shared per (course, lesson) across runs, so deleting an
+ * old run must not destroy a newer run's current script. Ownership is proven
+ * by the runId stamped on the stored script (version numbers RECYCLE after a
+ * delete — the counter lives in the blob — so version comparison alone can
+ * ratify a false owner). Legacy blobs without a runId fall back to the
+ * version rule against the run's recorded scriptVersion. Deletes are
+ * ETag-conditional so a concurrent regeneration always wins. Returns `kept`
+ * (another run owns the latest script) and `failed` (transient storage
+ * errors — orphans are invisible and get overwritten by regeneration, so
+ * failures must never fail the user's delete).
+ */
+export async function deleteVideoScriptDocs(
+  courseId: string,
+  ownerRunId: string,
+  lessons: { lessonId: string; scriptVersion?: number }[],
+): Promise<{ kept: string[]; failed: string[] }> {
+  const kept: string[] = []
+  const failed: string[] = []
+  await Promise.all(
+    lessons.map(async ({ lessonId, scriptVersion }) => {
+      try {
+        const found = await getJsonWithEtag<VideoScript>(dataContainer(), scriptBlobPath(courseId, lessonId))
+        if (!found) return
+        const owned =
+          found.doc.runId !== undefined
+            ? found.doc.runId === ownerRunId
+            : scriptVersion !== undefined && found.doc.version <= scriptVersion
+        if (!owned) {
+          kept.push(lessonId)
+          return
+        }
+        await dataContainer().getBlockBlobClient(scriptBlobPath(courseId, lessonId)).delete({ conditions: { ifMatch: found.etag } })
+      } catch (e) {
+        const status = (e as { statusCode?: number }).statusCode
+        if (status === 404) return
+        if (status === 412) {
+          kept.push(lessonId) // overwritten concurrently — the latest script is now someone else's
+          return
+        }
+        failed.push(lessonId)
+      }
+    }),
+  )
+  return { kept, failed }
+}

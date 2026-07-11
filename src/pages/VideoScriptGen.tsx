@@ -191,8 +191,9 @@ function Overview({ onNew, onOpenRun }: { onNew: () => void; onOpenRun: (id: str
 
       <Modal open={confirmDelete !== null} onClose={() => setConfirmDelete(null)} title="Delete Run?">
         <p className="text-[13px] leading-relaxed text-ink-2">
-          This removes the run record for <span className="font-semibold text-ink">{confirmDelete?.courseName}</span>.
-          Scripts already written stay stored per lesson and remain reachable from newer runs.
+          This permanently deletes the run for <span className="font-semibold text-ink">{confirmDelete?.courseName}</span>{' '}
+          and the stored script documents of every lesson in it. This cannot be undone — download anything you want to
+          keep first.
         </p>
         <div className="mt-5 flex justify-end gap-2">
           <Btn onClick={() => setConfirmDelete(null)}>Cancel</Btn>
@@ -514,15 +515,77 @@ function RunDetail({ id, onBack }: { id: string; onBack: () => void }) {
     setPollNonce((n) => n + 1)
   }
 
+  const [deleteMode, setDeleteMode] = useState(false)
+  const [toDelete, setToDelete] = useState<Set<string>>(new Set())
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+
+  // The 3s poll keeps mutating lesson statuses under an open selection: a
+  // checked pending lesson the worker just claimed would become a disabled
+  // checkbox that can never be unchecked (and would 409 every delete), and
+  // lessons removed by another tab would leave stale ids that skew the
+  // whole-run check. Prune the selection to currently-deletable lessons.
+  useEffect(() => {
+    if (!run) return
+    setToDelete((prev) => {
+      if (prev.size === 0) return prev
+      const selectable = new Set(run.lessons.filter((l) => l.status !== 'generating').map((l) => l.lessonId))
+      const next = new Set([...prev].filter((id) => selectable.has(id)))
+      return next.size === prev.size ? prev : next
+    })
+  }, [run])
+
+  const toggleDelete = (lessonId: string) =>
+    setToDelete((prev) => {
+      const next = new Set(prev)
+      if (next.has(lessonId)) next.delete(lessonId)
+      else next.add(lessonId)
+      return next
+    })
+
+  const deleteSelection = async () => {
+    setConfirmOpen(false)
+    setDeleting(true)
+    setError(null)
+    try {
+      const { runDeleted } = await api.deleteVsgLessons(id, [...toDelete])
+      if (runDeleted) {
+        onBack()
+        return
+      }
+      setDeleteMode(false)
+      setToDelete(new Set())
+      await refresh()
+    } catch (e) {
+      setError(errText(e, 'Could not delete the selected scripts.'))
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   const [exportingAll, setExportingAll] = useState(false)
   const downloadAll = async (r: VsgRun) => {
     setExportingAll(true)
     setError(null)
     try {
       const ready = [...r.lessons].filter((l) => l.status === 'complete').sort((a, b) => a.lessonOrder - b.lessonOrder)
-      const scripts = await Promise.all(ready.map((l) => api.getVideoScript(r.courseId, l.lessonId)))
+      // allSettled, not all: a script deleted through another run must not
+      // sink the whole export. ONLY a 404 counts as "deleted" — auth and
+      // transient failures rethrow so they surface (and 401 re-gates)
+      // instead of masquerading as deletions in an incomplete document.
+      const settled = await Promise.allSettled(ready.map((l) => api.getVideoScript(r.courseId, l.lessonId)))
+      const hardFailure = settled.find(
+        (s): s is PromiseRejectedResult => s.status === 'rejected' && !(s.reason instanceof NotFoundError),
+      )
+      if (hardFailure) throw hardFailure.reason
+      const scripts = settled.filter((s): s is PromiseFulfilledResult<VideoScript> => s.status === 'fulfilled').map((s) => s.value)
+      if (scripts.length === 0) throw new Error('No stored scripts found for this run — they may have been deleted.')
       const { downloadAllScriptsDocx } = await import('../export/script-docx')
       await downloadAllScriptsDocx(r.courseName, scripts)
+      const missing = ready.length - scripts.length
+      if (missing > 0) {
+        setError(`${missing} script${missing === 1 ? ' was' : 's were'} no longer stored (deleted elsewhere) and ${missing === 1 ? 'was' : 'were'} skipped.`)
+      }
     } catch (e) {
       setError(errText(e, 'Could not build the combined document.'))
     } finally {
@@ -546,20 +609,59 @@ function RunDetail({ id, onBack }: { id: string; onBack: () => void }) {
     else unitGroups.push({ unitName: l.unitName, lessons: [l] })
   }
   const done = run.lessons.filter((l) => l.status !== 'pending' && l.status !== 'generating').length
+  const deletable = run.lessons.filter((l) => l.status !== 'generating')
+  // Membership, not size: stale selection ids (pruned above, but never trust
+  // a count) must not make the modal promise a whole-run delete it won't do.
+  const wholeRun = run.lessons.length > 0 && run.lessons.every((l) => toDelete.has(l.lessonId))
 
   return (
     <div className="mx-auto max-w-4xl px-10 py-10">
       <div className="flex items-center justify-between gap-3">
         <Btn onClick={onBack}>← Back to runs</Btn>
         <div className="flex items-center gap-2">
-          {run.lessons.some((l) => l.status === 'complete') && (
-            <Btn kind="primary" disabled={exportingAll} onClick={() => void downloadAll(run)}>
-              {exportingAll ? 'Preparing…' : 'Download All Scripts'}
-            </Btn>
+          {deleteMode ? (
+            <>
+              <button
+                onClick={() =>
+                  setToDelete((prev) =>
+                    prev.size === deletable.length ? new Set() : new Set(deletable.map((l) => l.lessonId)),
+                  )
+                }
+                className="cursor-pointer text-[12px] font-medium text-accent-deep hover:underline"
+              >
+                {toDelete.size === deletable.length && deletable.length > 0 ? 'Clear selection' : 'Select all'}
+              </button>
+              <Btn
+                onClick={() => {
+                  setDeleteMode(false)
+                  setToDelete(new Set())
+                }}
+              >
+                Cancel
+              </Btn>
+              <Btn kind="danger" disabled={toDelete.size === 0 || deleting} onClick={() => setConfirmOpen(true)}>
+                {deleting ? 'Deleting…' : `Delete Selected (${toDelete.size})`}
+              </Btn>
+            </>
+          ) : (
+            <>
+              {run.lessons.some((l) => l.status === 'complete') && (
+                <Btn kind="primary" disabled={exportingAll} onClick={() => void downloadAll(run)}>
+                  {exportingAll ? 'Preparing…' : 'Download All Scripts'}
+                </Btn>
+              )}
+              <Btn onClick={() => setDeleteMode(true)}>Delete…</Btn>
+              {runStatusPill(run.status)}
+            </>
           )}
-          {runStatusPill(run.status)}
         </div>
       </div>
+      {deleteMode && (
+        <p className="mt-3 rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12px] leading-relaxed text-rust">
+          Select the scripts to remove from this run, or use "Select all" and Delete Selected to remove the whole
+          run. Lessons currently generating can't be selected.
+        </p>
+      )}
       {error && <ErrorStrip text={error} />}
 
       <div className="mt-6 rounded-2xl border border-hairline bg-panel p-6 shadow-(--shadow-lift)">
@@ -601,13 +703,57 @@ function RunDetail({ id, onBack }: { id: string; onBack: () => void }) {
               <h2 className="font-display text-[18px] font-semibold text-ink">{g.unitName}</h2>
             </div>
             <div className="mt-3 space-y-3">
-              {g.lessons.map((l) => (
-                <LessonRow key={l.lessonId} run={run} lesson={l} onChanged={restartPolling} />
-              ))}
+              {g.lessons.map((l) =>
+                deleteMode ? (
+                  <div key={l.lessonId} className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      checked={toDelete.has(l.lessonId)}
+                      disabled={l.status === 'generating'}
+                      onChange={() => toggleDelete(l.lessonId)}
+                      title={l.status === 'generating' ? 'Generating — wait for it to settle' : `Select ${l.lessonTitle}`}
+                      className="mt-5 size-4 shrink-0 cursor-pointer accent-rust disabled:cursor-not-allowed"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <LessonRow run={run} lesson={l} onChanged={restartPolling} />
+                    </div>
+                  </div>
+                ) : (
+                  <LessonRow key={l.lessonId} run={run} lesson={l} onChanged={restartPolling} />
+                ),
+              )}
             </div>
           </div>
         ))}
       </div>
+
+      <Modal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        title={wholeRun ? 'Delete This Run?' : 'Delete Selected Scripts?'}
+      >
+        <p className="text-[13px] leading-relaxed text-ink-2">
+          {wholeRun ? (
+            <>
+              Every lesson is selected, so this permanently deletes the whole run for{' '}
+              <span className="font-semibold text-ink">{run.courseName}</span> and its stored scripts.
+            </>
+          ) : (
+            <>
+              This permanently deletes <span className="font-semibold text-ink">{toDelete.size}</span> script
+              {toDelete.size === 1 ? '' : 's'} — the lesson{toDelete.size === 1 ? '' : 's'} leave{toDelete.size === 1 ? 's' : ''} this
+              run and the stored script document{toDelete.size === 1 ? '' : 's'} {toDelete.size === 1 ? 'is' : 'are'} deleted.
+            </>
+          )}{' '}
+          This cannot be undone — download anything you want to keep first.
+        </p>
+        <div className="mt-5 flex justify-end gap-2">
+          <Btn onClick={() => setConfirmOpen(false)}>Cancel</Btn>
+          <Btn kind="danger" onClick={() => void deleteSelection()}>
+            Delete
+          </Btn>
+        </div>
+      </Modal>
       <div className="h-16" />
     </div>
   )

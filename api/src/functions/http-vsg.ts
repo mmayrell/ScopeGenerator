@@ -1,9 +1,11 @@
 import { VsgRun, VsgRunLesson } from '../domain/types'
 import { getLsgCourse, listLsgCourses } from '../data/lsg'
 import {
+  deleteVideoScriptDocs,
   deleteVsgRunDocs,
   getVideoScriptOrUndefined,
   getVsgRun,
+  getVsgRunOrUndefined,
   listVsgRuns,
   mutateVsgRun,
   saveVsgRun,
@@ -147,13 +149,117 @@ api({
 })
 
 // GET /api/vsg/runs/{id} → VsgRun   |   DELETE → { ok: true }
+// DELETE is permanent and complete: the run doc, its index row, AND the
+// stored script documents of every lesson in the run. A lesson's script blob
+// holds only the LATEST version regardless of which run wrote it, so an
+// older run listing the same lesson shows "no script" afterwards — that is
+// the requested semantic (delete means gone from everywhere).
 api({
   name: 'vsg-run-get-delete',
   methods: ['GET', 'DELETE'],
   route: 'vsg/runs/{id}',
-  handler: async (req) => {
+  handler: async (req, ctx) => {
     const id = requireParam(req, 'id')
     if (req.method === 'DELETE') {
+      const run = await getVsgRunOrUndefined(id)
+      const job = await latestJobForVsgRun(id)
+      if (job && (job.status === 'queued' || job.status === 'running')) {
+        await mutateJob(job.jobId, (r) => {
+          r.cancelRequested = true
+          pushLog(r, 'Run deleted — scripting stops at its next checkpoint')
+        })
+      }
+      // Run doc FIRST, blobs second: once the doc is gone, an in-flight
+      // worker's post-save mutate 404s and its own cleanup discards the
+      // script it just wrote — purging blobs before the doc would leave a
+      // window where a save+successful-mutate lands between the two and the
+      // blob outlives the "permanent" delete.
+      await deleteVsgRunDocs(id)
+      if (run) {
+        const { kept, failed } = await deleteVideoScriptDocs(
+          run.courseId,
+          run.id,
+          run.lessons.map((l) => ({ lessonId: l.lessonId, ...(l.scriptVersion !== undefined ? { scriptVersion: l.scriptVersion } : {}) })),
+        )
+        if (kept.length > 0) ctx.log(`vsg delete ${id}: kept ${kept.length} script blobs owned by other runs`)
+        if (failed.length > 0) {
+          ctx.warn(`vsg delete ${id}: ${failed.length} script blob deletes failed (orphans overwrite on regeneration): ${failed.slice(0, 5).join(', ')}`)
+        }
+      }
+      return ok({ ok: true })
+    }
+    return ok(await getVsgRun(id))
+  },
+})
+
+// POST /api/vsg/runs/{id}/delete-lessons { lessonIds } → { ok, removed, runDeleted }
+// Multiselect deletion within a run — permanent: removes the lessons from
+// the run AND deletes their stored script documents. Lessons mid-generation
+// are refused (a worker claim is live on them); deleting every lesson
+// deletes the run itself.
+api({
+  name: 'vsg-run-delete-lessons',
+  methods: ['POST'],
+  route: 'vsg/runs/{id}/delete-lessons',
+  handler: async (req, ctx) => {
+    const id = requireParam(req, 'id')
+    const body = await readJson<{ lessonIds?: string[] }>(req)
+    const requested = new Set(Array.isArray(body.lessonIds) ? body.lessonIds.map((x) => cap(x, 120)) : [])
+    if (requested.size === 0) throw new HttpError(400, 'select at least one lesson to delete')
+    let removed = 0
+    let remaining = 0
+    let removedLessons: { lessonId: string; scriptVersion?: number }[] = []
+    let courseId = ''
+    await mutateVsgRun(id, (run) => {
+      const generating = run.lessons.filter((l) => requested.has(l.lessonId) && l.status === 'generating')
+      if (generating.length > 0) {
+        throw new HttpError(
+          409,
+          `${generating.length} selected lesson${generating.length === 1 ? ' is' : 's are'} generating right now — wait for the run to settle first`,
+        )
+      }
+      const before = run.lessons.length
+      removedLessons = run.lessons
+        .filter((l) => requested.has(l.lessonId))
+        .map((l) => ({ lessonId: l.lessonId, ...(l.scriptVersion !== undefined ? { scriptVersion: l.scriptVersion } : {}) }))
+      run.lessons = run.lessons.filter((l) => !requested.has(l.lessonId))
+      removed = before - run.lessons.length
+      remaining = run.lessons.length
+      courseId = run.courseId
+      if (remaining > 0) {
+        // Recompute the run status from the remaining lessons (mirrors the
+        // worker's settle) — but NEVER promote toward 'generating': a
+        // dispatch-failed run has pending lessons with no queue message, and
+        // stamping it 'generating' would make an unsettleable zombie that
+        // also 409-blocks new runs for those lessons.
+        const open = run.lessons.filter((l) => l.status === 'pending' || l.status === 'generating').length
+        if (open === 0) {
+          const needsRec = run.lessons.filter((l) => l.status === 'needs-reconciliation').length
+          const complete = run.lessons.filter((l) => l.status === 'complete').length
+          run.status = needsRec > 0 ? 'needs-reconciliation' : complete > 0 ? 'complete' : 'failed'
+          if (run.status === 'failed') run.error = run.error ?? 'Every remaining lesson failed to script'
+          else delete run.error
+        }
+      } else {
+        // Emptied: stamp terminal BEFORE the doc is deleted below, so the
+        // brief window (or a crash inside it) never leaves a zero-lesson
+        // 'generating' zombie, and an in-flight worker quiet-settles.
+        run.status = 'failed'
+        run.error = 'Run deleted'
+      }
+      run.updated = nowIso()
+    })
+    // Permanent: the removed lessons' stored script documents go too (unless
+    // another run owns the latest version — the guard inside keeps those).
+    if (removedLessons.length > 0 && courseId) {
+      const { kept, failed } = await deleteVideoScriptDocs(courseId, id, removedLessons)
+      if (kept.length > 0) ctx.log(`vsg delete-lessons ${id}: kept ${kept.length} script blobs owned by other runs`)
+      if (failed.length > 0) {
+        ctx.warn(`vsg delete-lessons ${id}: ${failed.length} script blob deletes failed (orphans overwrite on regeneration): ${failed.slice(0, 5).join(', ')}`)
+      }
+    }
+    if (remaining === 0) {
+      // Nothing left — the run goes too, exactly like DELETE /vsg/runs/{id}.
       const job = await latestJobForVsgRun(id)
       if (job && (job.status === 'queued' || job.status === 'running')) {
         await mutateJob(job.jobId, (r) => {
@@ -162,9 +268,8 @@ api({
         })
       }
       await deleteVsgRunDocs(id)
-      return ok({ ok: true })
     }
-    return ok(await getVsgRun(id))
+    return ok({ ok: true, removed, runDeleted: remaining === 0 })
   },
 })
 

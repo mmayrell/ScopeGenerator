@@ -308,6 +308,13 @@ export const api = {
 
   deleteVsgRun: (id: string) => request<{ ok: true }>('DELETE', `/vsg/runs/${encodeURIComponent(id)}`),
 
+  deleteVsgLessons: (runId: string, lessonIds: string[]) =>
+    request<{ ok: true; removed: number; runDeleted: boolean }>(
+      'POST',
+      `/vsg/runs/${encodeURIComponent(runId)}/delete-lessons`,
+      { lessonIds },
+    ),
+
   reconcileVsgLesson: (
     runId: string,
     lessonId: string,

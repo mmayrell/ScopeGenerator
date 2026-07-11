@@ -523,11 +523,19 @@ doctrine versions.
   active-lesson counts; the UI now drives from scopes, the route remains for API consumers) ·
   `POST vsg/runs` `{ courseId, lessonIds ≤ 60, steering }` → `{ run, jobId }`
   (201; lessons must be ACTIVE in the course) · `GET vsg/runs` (summaries) · `GET/DELETE
-  vsg/runs/{id}` (delete flags a live job `cancelRequested`) · `GET vsg/runs/{id}/job` ·
+  vsg/runs/{id}` (delete is permanent: flags a live job `cancelRequested`, deletes the run docs
+  FIRST, then every script blob the run OWNS — ownership proven by the `runId` stamped on the
+  stored script (version numbers recycle after deletion, so version comparison alone cannot
+  prove ownership); blobs whose latest version was written by another run are kept, and a
+  worker whose post-save run-mutate 404s discards its own just-saved blob) ·
+  `GET vsg/runs/{id}/job` ·
   `POST vsg/runs/{id}/reconcile` `{ lessonId, resolutions[{conflictId, resolution, resolvedBy}] }`
   (every open conflict must be resolved; lesson re-opens `pending`) ·
   `POST vsg/runs/{id}/regenerate` `{ lessonId }` (keeps resolved conflicts — they pre-fill; drops
-  unresolved flags) · `GET vsg/scripts/{courseId}/{lessonId}`. Reconcile/regenerate re-dispatch via
+  unresolved flags) · `POST vsg/runs/{id}/delete-lessons` `{ lessonIds }` → `{ ok, removed,
+  runDeleted }` (multiselect permanent removal; 409s on lessons mid-generation, deletes the
+  removed lessons' script blobs, recomputes the run status from the remainder, and deletes the
+  run itself when emptied) · `GET vsg/scripts/{courseId}/{lessonId}`. Reconcile/regenerate re-dispatch via
   the packet-retry pattern (reuse the latest job row; a provably-live job is left alone — the
   worker's settle-time pending check hands off).
 - **Storage**: `vsg/runs/<runId>.json` (mutations via `mutateVsgRun`, ETag retry) +

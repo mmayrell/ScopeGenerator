@@ -702,6 +702,8 @@ export interface VsgConflict {
 export interface VideoScript {
   courseId: string
   lessonId: string
+  /** The run that authored this stored version (absent on scripts stored before the field existed). */
+  runId?: string
   lessonTitle: string
   unitName: string
   standardId: string
