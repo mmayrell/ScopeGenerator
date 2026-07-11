@@ -1,0 +1,1978 @@
+[p.245]
+Chapter
+12
+Measurement, Time, 
+and Money
+LEARNING OUTCOMES
+12.1 Outline the recommended sequence for introducing measurement, time, and 
+money and the rationale for that sequence.
+12.2 Discuss how the basic concepts of measurement, time, and money are related.
+12.3 Describe how the recommended teaching procedures for measurement are 
+organized for both metric and customary measurement systems.
+12.4 Outline the critical discriminations that students must make in order to tell time 
+on an analog clock accurately.
+12.5 Discuss the recommended sequence for teaching change-related money skills.
+12.6 Outline procedures for diagnosing and remediating common error patterns in 
+measurement, time, and money.
+SKILL HIERARCHY
+• ∙ ∙ ∙ ∙ ∙ ∙ ∙
+This chapter addresses three topics: measurement, time, and money. The measurement section 
+includes a discussion of both customary and metric systems focused on length, weight, and 
+capacity. The section on time provides guidance in teaching students to read both analog and 
+digital clocks. The final section on money emphasizes instruction related to efficiently working 
+with both coins and decimal notation.
+
+[p.246]
+246 Part II Basic Concepts and Skills
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type 1Performance Indicator
+Measurement
+2 Customary units: length _____ inches in a foot
+_____ feet in a yard
+About how long is a spoon? 
+6 inches 6 feet 6 yards
+About how tall is a person? 
+5 inches 5 feet 5 yards
+How long is the line?
+I ∣ I ∣ I ∣ I
+_________1________ 2________ 3
+How long is the line?
+1 II ∣ Γ 1 1 ∣ 1 1 1 ∣
+_________1________ 2________ 3
+2 Metric units: length _____ centimeters in a meter
+About how long is a pen? 
+8 mm 8 cm 2 m 2 km
+About how long is a car? 
+2 mm 2 cm 2 m 2 km
+About how much does a cat weigh? 
+8 ounces 8 pounds 8 tons
+About how much does a car weigh? 
+2 ounces 2 pounds 2 tons
+3 Customary units: liquid capacity _____ cups in a pint
+_____ pints in a quart 
+_____ quarts in a gallon
+3 Metric units: weight _____ grams in a kilogram
+About how much does a pencil weigh? 
+75 mg 75 g 75 kg 75 eg
+About how much does a newborn baby weigh? 
+4 mg 4 g 4 kg 4 eg
+3 Metric units: capacity _____ milliliters in a liter
+How much milk can we put in a baby bottle? 
+250 ml 250 dl 250 1 250 kl
+How much water would a basketball hold? 
+3 ml 3 dl 3 1 3 kl
+3 Customary units: area and volume What is the area of a room 8 feet long and 10 feet
+wide?_____
+
+[p.247]
+Chapter 12 Measurement, Time, and Money 247
+Time
+4 Customary units: length—using a ruler to the 
+nearest eighth-inch
+'∣ ' ∣∣ MT∏∏'∣ ' . .......... ..
+1_______ 2_______ 3
+Make an X over 2¼
+Make an R over 1½
+Make a T over 2⅜
+Make a B over 2¼
+4 Customary units: operations—regrouping Circle the correct answer,
+required 4 feet 5 inches
++3 feet 8 inches
+8 feet 3 inches
+8 feet 1 inch
+7 feet 3 inches
+4 Customary units: story problems—renaming Jasmine is 6 feet 2 inches. Her sister is 4 feet
+10 inches. How much taller is Jill?
+4 Conversions 4 feet =_____ inches
+2 yards =_____ feet
+36 inches =_____ feet
+20 meters =_____ centimeters
+5000 centigrams =_____ grams
+500 kilometers =______meters
+5 Metric equivalencies—less common units ’Circle the answer.
+A kilogram equals:
+1 gm 10 gm 100 gm 1,000 gm
+A milliliter equals:
+a tenth of a liter
+a hundredth of a liter
+a thousandth of a liter
+Time expressed with hour stated first2 Put an X on the line under the clock that says 7:25.
+continued
+
+[p.248]
+248 Part II Basic Concepts and Skills
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART (continued)
+Money
+Value of single coins Show students a penny, nickel, dime, and quarter. 
+Ask the students about the value of each coin:
+How much is a nickel?
+How much is a dime?
+1
+2
+Determining value of groups of like coins
+Determining value of groups of different 
+coins
+Ask students to count groups of pennies, nickels, 
+dimes, or quarters.
+Ask students to count groups of coins that include 
+pennies, nickels, dimes, and quarters.
+Write the coins you would need to make 27c.
+Write the coins you would need to make 79¢.
+2 Adding dollars and cents $1.32 $4.78
++ $2.43 +$6.92
+3 Determining change You bought a soda for 27¢ and gave the clerk 35¢. 
+How much change should you receive?
+3 Decimal notation: reading and writing dollar 
+and cents notations
+Write four dollars and six cents
+Write nine dollars and thirty cents
+Write one dollar and five cents
+4 Decimal notation: subtracting dollars and 
+cents from whole dollar figures
+$15.00 - $1.35 =
+$9.00 - $8.20 =
+$10.00 - $6.16 =
+4 Adding and subtracting whole dollars and 
+dollar and cents amounts
+Determining cost of purchase for two groups 
+of items
+DeAndre had $6. He spent $3.25. How much does 
+he have left?
+If you had $4 and you got $2.15 more, how much 
+would you have?
+4 You buy 3 pencils for 25¢ each and 5 pencils for 
+50¢ each. How much do you spend?
+You buy 5 pens for 75¢ each and 3 erasers for 
+48tf each. How much do you spend?
+4 Determining how much can be bought with 
+specified amount
+Yolanda wants to buy pencils that cost 27¢ each.
+She has 2 dollar bills and a dime.
+How many pencils can she buy?
+
+[p.249]
+Chapter 12 Measurement, Time, and Money 249
+CONCEPTUAL UNDERSTANDING
+This chapter is devoted to three related but separate topics that are relevant to the type of practical 
+math skills inherent in daily living. These topics are related in that each one uses numerical repre­
+sentations for concrete and abstract constructs required for general and workplace math literacy.
+Measurement
+Teachers working with beginning-level students should demonstrate with concrete objects how 
+to use consistent units of measurement. Length is often introduced first. To develop a deeper 
+conceptual understanding of measurement of length, the teacher may present an exercise in 
+which students measure the lengths of various strips of paper using paper clips as the unit of 
+measurement. The teacher demonstrates how to measure the paper strip by laying the clips along 
+the edge of the paper and determining how long the paper is in paperclip units. For example, in 
+the following illustration, the slip of paper is three clips long:
+Following the demonstration, students are given the opportunity to independently determine the 
+lengths of several strips of paper using paper clips.
+This exercise serves two purposes. First, it introduces students to the concept of measuring 
+a specific attribute, in this case, length. Second, it demonstrates how the units used for measure­
+ment are equivalent. The paper clips used in measuring length are always the same size.
+Teachers can introduce weight measurement in the same way with a balance scale. First, 
+the teacher demonstrates how the scale works, showing students that the weights on both sides 
+of the scale are the same when the trays of the scale are the same height. Similarly, the teacher 
+must show that when the weights are not the same, the side that is lower is heavier. Follow­
+ing the demonstration with a balance scale, the teacher introduces students to standard weights 
+against which they can measure various objects. For example, blocks that weigh an ounce can be 
+used as the measuring standard against which other objects can be measured.
+For demonstrating the concept of capacity, the teacher can set out a number of empty cups, 
+present a water-filled container, and pour the contents into the cups, one at a time, to determine 
+the container’s capacity. The teacher would then ask how many cups of water the container holds.
+Time
+Because the notion of time is not concrete, students have much more difficulty understanding 
+the concepts underlying various measures of time. Before teaching specific time-telling skills, 
+teachers may want to introduce the concept of duration of time by engaging students in a variety 
+of activities. For example, one activity might involve having students close their eyes and raise 
+their hands when they predict a minute has gone by. After students experience firsthand differ­
+ent lengths of time (seconds, minutes), they can be asked to predict how long various activities 
+might take and then check their predictions.
+Money
+The need for instruction in money-related skills is derived from their importance in daily activ­
+ities. Many students come to school having had some experience with money. Teachers often 
+build upon this prior experience through developing classroom or school stores. Students can 
+learn about the value of different currencies (tokens, school-based currency, or even coins) 
+through exercises of exchanging those currencies for goods or activities.
+MEASUREMENT: CUSTOMARY AND METRIC UNITS
+There are two basic measurement systems: the customary system, which is used in the United 
+States and a few other countries, and the metric system, which is used in the majority of coun­
+tries in the world.
+
+[p.250]
+250 Part II Basic Concepts and Skills
+Customary Units
+TABLE 12-1 Metric and Customary Units for Measuring Length, Weight, and Capacity
+Length Weight Capacity
+12 inches = 1 foot 
+3 feet = 1 yard 
+5,280 feet = 1 mile
+16 ounces = 1 pound 
+2,000 pounds = 1 ton
+2 cups = 1 pint
+2 pints = 1 quart
+4 quarts = 1 gallon
+Metric Units
+Meaning of Prefix Length Weight Capacity
+thousandth millimeter (mm) milligram (mg) milliliter (ml)
+hundredth centimeter (cm) centigram (eg) centiliter (cl)
+tenth decimeter (dm) decigram (dg) deciliter (dl)
+whole meter (m) gram (g) liter (I)
+10 wholes dekameter (dkm) dekagram (dkg) dekaliter (dkl)
+100 wholes hectometer (hm) hectogram (hg) hectoliter (hl)
+1,000 wholes kilometer (km) kilogram (kg) kiloliter (kl)
+The metric system has several advantages over the customary system. First, since the metric 
+system uses the base-10 place value system, instruction in decimals directly relates to measure­
+ment skills. With customary units, different place value base systems are required for weight 
+(16 ounces), length (12 inches, 3 feet), and so on. Second, in the customary system, there is no 
+commonality among the units for various measurements, while there is commonality among the 
+metric units. The prefixes in the metric system (“milli-,” “centi-,” “deci-,” “deka-,” “hecto-,” 
+“kilo-”) are used in each area: length, weight, and capacity.
+Table 12.1 includes the various customary and metric units for expressing length, weight, 
+and capacity. Note the consistency of the metric system. The prefix in front of a unit tells the 
+unit’s relation to the base unit. At the same time, note how the various units in the customary 
+system are different from one another.
+A concern of many teachers is not whether to teach about the metric system but rather 
+whether both systems should be taught simultaneously and, if not, which should be taught first. 
+Unfortunately, there is no simple answer to this question. However, we have noticed that lower- 
+performing students are likely to confuse facts from one system with facts from the other system 
+when both are introduced concurrently. This information leads us to recommend that the two 
+systems be taught independently of one another, preferably at different times during the year. 
+Low-performing students should be familiar with common units from one system before the 
+other system is introduced.
+During the early grades, measurement instruction is relatively simple. Common units and 
+equivalences are introduced, and students use tools to measure objects to the nearest whole unit. 
+During the later elementary grades, measurement instruction becomes more complex as less 
+commonly used units are introduced and more sophisticated uses of measuring tools are pre­
+sented. Conversion problems in which students must convert a quantity expressed as one unit to 
+a larger or smaller unit (5 meters = 500 centimeters) also are introduced.
+Common Units and Equivalencies
+During the early grades, students learn the more common units and their equivalencies. See 
+Figure 12.1 for a table of commonly taught measurement facts. The basic procedure for intro­
+ducing new units to students includes five steps. The teacher does the following:
+1. Tells the function of the specific unit; for example, “Inches tell how long something is. We 
+use inches to measure objects that are not very long. Feet also tell how long something is. 
+We use feet to measure objects that are pretty long.”
+
+[p.251]
+Chapter 12 Measurement, Time, and Money 251
+2. Illustrates the unit; for example, the teacher draws lines on the board and shows students the 
+length of an inch or a foot. For demonstrating weight, the teacher might give students blocks 
+weighing an ounce or a pound.
+3. Demonstrates how to use measuring tools, measuring to the nearest whole unit.
+4. Presents application exercises in which the students determine the appropriate tool to use 
+when measuring an object; for example, “What unit would we use to tell how long a piece 
+of paper is? What unit would we use to tell how long the whiteboard is?”
+5. Presents an equivalency fact, such as 12 inches equals one foot.
+FIGURE 12.1 Measurement facts
+U.S. System Metric System
+1 inch LENGTH 1 centimeter 1 millimeter
+1 foot is 12 inches
+1 yard is 3 feet
+1 yard is 36 inches
+1 mile is 1760 yards
+1 mile is 5280 feet
+1 centimeter is 10 millimeters
+1 meter is 1000 millimeters
+1 meter is 100 centimeters
+1 kilometer is 1000 meters
+5 nickels weigh 
+≡ about 1 ounce WEIGHT
+A large paperclip 
+weighs about 1 
+gram
+1 pound is 16 ounces 1 centigram is 10 milligrams
+1 ton is 2000 pounds 1 gram is 1000 milligrams
+1 gram is 100 centigrams
+1 kilogram is 1000 grams
+TIME
+/ Tablespoon
+1 cup is 16 tablespoons
+66666 A milliliter is
+CAPACITY 66666 about 20 drops
+66666 of water
+A milliliter is __
+1 cubic 
+centimeter
+θ ∕WW ________________________
+1 pint is 2 cups 0 e© 1 centiliter is 10 milliliters
+1 quart is 2 pints
+1 quart is 4 cups
+0 00 1 liter is 1000 milliliters
+1 gallon is 4 quarts
+1 gallon is 8 pints
+1 gallon is 16 cups
+∩ MM
+00000000
+ΘΘΘΘΘ9ΘΘ
+1 liter is 100 centiliters
+1 kiloliter is 1000 liters
+1 minute is 60 seconds
+1 hour is 60 minutes
+1 hour is 3600 seconds
+1 day is 24 hours
+1 week is 7 days
+1 year is 52 weeks
+1 year is 12 months
+1 year is 365 days
+
+[p.252]
+252 Part II Basic Concepts and Skills
+FIGURE 12.2 Measurement review worksheet
+Circle or fill in the answer.
+1. A pencil is about 6 long.
+2. A cat weighs about 8∙
+3. A woman is about 5__________ tall.
+4. He drinks a of milk every day.
+5. How many inches in a foot?
+6. How many feet in a yard?
+7. How many ounces in a pound?
+8. How many pints in a quart?
+9. About how many pounds does a dog weigh?
+10. About how many feet high is a door?
+feet pounds inches pints
+feet pounds inches pints
+feet pounds inches pints
+foot pound inch pint
+2 20 200
+8 80 800
+Application exercises (step 4) and equivalencies (step 5) should incorporate review of pre­
+viously introduced units from all areas. For example, if students have learned inch, foot, ounce, 
+pound, and pint, a representative set of questions might include: “What unit would we use to tell 
+how tall a person is? What unit would we use to tell how much a person weighs? What unit would 
+we use to tell how much a letter weighs? What unit would we use to tell how long a pencil is?”
+Equivalency review might include these questions: “How many ounces in a pound? How 
+many inches in a foot? How many pints in a quart?” Review can be provided daily in worksheet 
+exercises. A sample worksheet appears in Figure 12.2.
+In addition to worksheet exercises, the teacher should incorporate measurement tasks into 
+daily activities. Scales, thermometers, rulers, and liquid containers should be readily accessible. 
+Teachers should provide opportunities for students to use measuring skills with concrete objects.
+The sequence and rate of instruction for measurement facts and skills must be carefully 
+controlled. New information is introduced cumulatively. That is, a new piece of information is 
+not introduced until mastery of prior skills and information is demonstrated. Also, cumulative 
+review of previously introduced information should be incorporated into daily exercises that 
+introduce new skills.
+In later elementary grades, after decimals have been taught, exercises designed to teach 
+students about the structure of the metric system should be presented. Format 12.1: Metric 
+Prefixes shows the steps for teaching students the prefixes for the metric system. In Parts A and B, 
+the teacher presents the meaning of the prefixes. The prefixes for units less than 1 (“milli-,” 
+“centi-,” and “deci-”) are presented in Part A. Note that the teacher must emphasize the /th/ 
+ending of the words “thousandth,” “hundredth,” and “tenth” so that students will note they are 
+fractions and pronounce them correctly. In Part B, the teacher presents the prefixes indicating 
+units greater than 1 (“deka-,” “hecto-,” and “kilo-”). Depending on the level of students, a week 
+or more of practice may be required to teach the meanings of these prefixes. The teacher should 
+not go on to Part C until the students demonstrate knowledge of all the metric prefixes that have 
+been introduced.
+Part C teaches students to use their knowledge of metric prefixes to tell the value of metric 
+units. For example, the teacher models by saying, “Since milli- means “a thousandth,” milligram 
+refers to a thousandth of a gram.” Part D is a structured worksheet exercise in which students 
+must find and circle the numerical representation of a specific metric unit. For example, a work­
+sheet problem may ask students to identify the amount that equals a centimeter from the follow­
+ing choices: 100 meters, .01 meter, .10 meter. Note that the ability to read decimal numerals is a 
+prerequisite for this task. Daily worksheet exercises would continue for several weeks.
+Abbreviations for metric units also should be introduced in a worksheet exercise. Note that 
+students may have difficulty translating the abbreviation to its corresponding word. Prior to 
+introducing a worksheet exercise, teachers should devote instructional time to teaching metric 
+abbreviations.
+Measuring Tools
+Calibrated measurement instruments include rulers, scales, and thermometers. Every calibrated 
+instrument is divided into segments representing specific quantities. The easiest type of instru­
+ment to read is one in which each line represents one unit. For example, on most rulers found in
+
+[p.253]
+Chapter 12 Measurement, Time, and Money 253
+kindergarten classrooms, each line represents one inch; likewise, on many weather thermome­
+ters, each line represents one degree.
+Often, instruments label only some of the lines that stand for quantities:
+Those instruments require students to figure out what the unmarked lines represent before they 
+are able to read them. Instruments like the ruler and scales found in grocery stores often contain 
+lines that represent fractions of a unit (¼ inch, 1∕8 pound). In the early grades, students learn to 
+measure to the nearest whole unit, for example, length to the nearest inch (or centimeter) and 
+weight to the nearest pound (or kilogram).
+The ruler is often the first measuring tool introduced. The teacher would explain that the 
+numerals on the ruler indicate how many inches from the end of the ruler to the line correspond­
+ing to that numeral. The teacher then models using the ruler to measure several lines or objects, 
+pointing out the need to properly align the front end of the ruler and the beginning of the line or 
+object being measured. Finally, the teacher has the students practice using the ruler.
+For measuring weight using a calibrated scale, the students would put an object on the scale 
+and read the numeral closest to the pointer. For measuring capacity, the students would fill a 
+container with water, pour the water into a calibrated flask, and read the numeral closest to the 
+water level. When teaching students to use measuring tools on which a line represents each unit 
+but the relative value of each line is not shown:
+10 20
+the teacher models how to count from the last given unit to the target unit. In the example below, 
+the teacher models counting from 25, touching and counting each line—25, 26, 27, 28—to the 
+quantity.
+In later grades, students are taught to read fractional parts of units. For example, once stu­
+dents can read rulers to the nearest inch, they can be introduced to rulers that include fractional 
+parts. Rulers in the customary system are usually calibrated to allow measurement to the closest 
+sixteenth of an inch. Because the different marks on the rulers tend to confuse students, we rec­
+ommend preparing a set of rulers that includes a progression of fractional parts. In the first ruler, 
+each inch is divided into halves. In the second ruler, each inch is divided into fourths. In the 
+third and fourth rulers, each inch is divided respectively into eighths and sixteenths of an inch. 
+Figure 12.3 illustrates a recommended set of rulers. Note that a preskill for using these tools is 
+the ability to read and write mixed fractions.
+A ruler in which an inch is divided into a greater number of parts is introduced only after 
+students have demonstrated mastery in using the preceding ruler in the set.
+A simple model-test procedure can be used to teach students to read units to the nearest 
+half-inch. The teacher points out that since the line between the numerals divides the inch into 
+two equal parts, each line represents a half-inch. The same procedure is used to introduce rulers 
+divided into fourths. The teacher points out that since there are four parts between each inch, 
+each inch is divided into fourths. The teacher then models and tests, reading the ruler starting 
+at the ¼-inch mark: ¼, ¾, ¾, 1, 1¼, 1¾, 1¾, 2, and so on. Note that the teacher would not 
+have the students read ¾ as 1∕2 at this time to emphasize that ¼-inch is the unit of measurement.
+
+[p.254]
+254 Part 11 Basic Concepts and Skills
+a. Marked to the nearest half of an inch
+FIGURE 12.3 Recommended set of rulers
+b. Marked to the nearest quarter of an inch
+c. Marked to the nearest eighth of an inch
+d. Marked to the nearest sixteenth of an inch 
+(standard rulers)
+The teacher then presents an exercise in which she points to a line on the ruler and has students 
+identify the measurement.
+When students can identify the lengths represented by fourths on the ruler, the teacher 
+can present an exercise to teach that the line that indicates ¾ of an inch also is the line that 
+indicates 1∕2 of an inch. The teacher explains that the line is in the middle of the inch and so 
+divides it into halves. The teacher explains further that when using a ruler, the length is always 
+reported with the smallest numerical denominator. Therefore, instead of saying a line is 3¾ 
+inches, the line is said to be 3½ inches. A practice exercise in which the teacher has the stu­
+dents find the lines on the ruler that represent various distances would follow the explanation 
+(“Find the line on the ruler that shows 4½ inches. Find the line that shows 2¼ inches,” etc.). 
+Practice can be provided in worksheet exercises like the one in Figure 12.4.
+Rulers in which each inch is divided into eighths are introduced when students (a) can use 
+rulers in which each inch is divided into fourths and (b) have learned fraction equivalency skills. 
+Students should have had enough practice rewriting ⅝ as ¾, 4∕δ as ½, and ⅜ as ¼ so that they 
+can make these conversions with ease. The teacher introduces the ruler containing eighths by 
+pointing out that since each inch is divided into eight parts, the lines tell about eighths of an 
+inch. The teacher then has students read the lines on the ruler representing eighths (1∕δ, ⅜, ⅜, 
+4∕δ, ⅝, 6∕δ, 7∕δ, l1∕δ).
+After several days, the teacher presents exercises teaching students to express ⅜, 4∕δ, and ⅝ 
+as ¼, ½, and ¾, respectively. The teacher reminds students that length is always reported with 
+fractions expressed in their simplest, smallest possible terms, and then he models and tests the 
+various equivalencies.
+The same basic procedure is followed for introducing rulers in which each inch is divided 
+into sixteenths. These rulers should not be introduced, however, until students are comfortable 
+using the ruler divided into eighths. Daily practice over a long period is needed to develop stu­
+dent fluency in these skills.
+FIGURE 12.4 Worksheet exercise for determining length
+1 2 3 4 5
+Make an X over the line that indicates 3¾ inches.
+Make an R over the line that indicates 2⅛ inches.
+Make an S over the line that indicates ⅝ of an inch.
+Make a B over the line that indicates 2⅜ inches.
+
+[p.255]
+Chapter 12 Measurement, Time, and Money 255
+Conversion Problems
+This section addresses problems in which students must convert a quantity expressed as one 
+unit into an equal quantity expressed in terms of a larger or smaller unit; for example, 3 feet can 
+be converted to 36 inches, 2 meters to 200 centimeters. The preskill for conversion problems is 
+knowledge of equivalencies. Students cannot convert 5 kilograms to grams unless they know the 
+number of grams in 1 kilogram. Conversion problems should not be taught until students have 
+mastered the necessary equivalencies.
+There are four basic steps in any conversion problem: (a) determine whether the “new” unit 
+is larger or smaller than the original unit, (b) determine the operation, (c) determine the equiva­
+lency fact, and (d) solve the problem. These steps are listed in Summary Box 12.1.
+Converting Metric Units Early elementary grade teachers should limit examples of conversions 
+with small quantities of common units (5 meters =centimeters). In later grades, teachers 
+can present the conversion strategy with larger numbers. Below is a description of the procedure for 
+teaching conversion with metric units. Before the metric conversion strategy is introduced, students 
+should know the equivalencies of the metric units, be able to read and write mixed decimals and 
+decimal numerals, and be able to multiply and divide by multiples of 10 by moving the decimal point 
+to the right or the left. When dividing, the decimal point is moved to the left. For example, when 
+dividing by 10, the decimal point is moved one place to the left (75 ÷ 10 = 7.5); by 100, two places 
+(75 ÷ 100 = .75); by 1,000, three places to the left (75 ÷ 1000 = .075). When multiplying, the 
+decimal point is moved to the right. Instructions for teaching multiplying decimals by multiples of 10 
+appears in Chapter 14, “Decimals,” in Format 14.9: Preskill: Multiplying Decimals by Multiples 
+of 10. A similar exercise would be used to teach students to divide by multiples of 10.
+Before beginning conversion exercises, the teacher should give students worksheets like 
+the one in Figure 12.5, designed to provide practice in dividing and multiplying by multiples 
+of 10. The discussion in Chapter 14 on multiplying decimals by multiples of 10 specifies types 
+of examples to include in these worksheet exercises. In some multiplication problems, students 
+should have to add one or more zeros (100 × 3.5 = 350.0). In some division problems, stu­
+dents should have to add a zero in front of the original digits (3.5 ÷ 100 = .035). Such exam­
+ples are difficult and require initial modeling and extended practice over several weeks.
+SUMMARY, BOX 12.1
+Steps in Basic Conversion Problems
+Problem a Problem b Problem c Problem d
+1. Determine 
+whether 
+the new 
+quantity is 
+a bigger or 
+smaller unit.
+48 inches =___  
+feet
+Change inches 
+to feet. Feet is 
+a bigger unit.
+3 pounds =___  
+ounces
+Change pounds 
+to ounces. 
+Ounces is a 
+smaller unit.
+5 kilograms =___  
+grams
+Change kilograms 
+to grams. Grams is 
+a smaller unit.
+300 centimeters =___  
+meters
+Change centimeters 
+to meters. Meters is 
+a bigger unit.
+2. Determine 
+the opera­
+tion: Multiply 
+if changing 
+to a smaller 
+unit; Divide if 
+changing to a 
+bigger unit.
+Since change 
+is to a bigger 
+unit, division is 
+required.
+Since change 
+is to a smaller 
+unit, multi­
+plication is 
+required.
+Since change is 
+to a smaller unit, 
+multiplication is 
+required.
+Since change is to a 
+bigger unit, division 
+is required.
+3. Determine 
+the equiva­
+lency fact.
+12 inches in a 
+foot
+16 ounces in a 
+pound
+1,000 kilograms 
+in a gram
+100 centimeters in a 
+meter
+4. Solve the 
+problem.
+48 inches ÷ 12 =
+4 feet
+3 pounds × 16 =
+48 ounces
+5 kilograms × 1000 
+= 5,000 grams
+300 centimeters ÷ 100 
+= 3 meters
+
+[p.256]
+256 Part II Basic Concepts and Skills
+FIGURE 12.5 Worksheet on multiplying and dividing by 10
+a. 37 × 100 =_____ b. 4 ÷ 1000 =_____ c. 53.2 × 100 =___ _ d. 7.04 × 10 = .
+e. 4.8 × 1000 =___ _ f. 28.5 ÷ 10=___ _ g.72 × 1000 = ___ _ h. .37 × 100 = .
+i. 7 ÷ 100 =_____ j. .37 × 100 =____ k. 5.43 × 10 =____ I. .4 × 1000 = _
+m. 37 ÷ 10 =_____ n.4.2 ÷ 10 =____ o. 72 ÷ 10 =_____ p. 38 ÷ 10 = _
+q. 52 × 100 =____ r. 4.8 ÷ 1000 =__ __  s. 400 ÷ 1000 =___ t. 52 ÷ 100 = _
+Format 12.2B:
+Metric Conversions 
+Watch how Kristen introduces 
+the metric conversion rule.
+Format 12.2C: Metric 
+Conversions
+Watch how Kristen introduces 
+her students to all of the steps of 
+the conversion strategy.
+A format for presenting the conversion strategy appears in Format 12.2: Metric Conver­
+sions. As mentioned earlier, this format assumes that students have mastered the metric equiv­
+alencies. If students have not learned the equivalency preskills, they will find the conversion 
+exercises quite difficult and frustrating. The format contains four parts: Parts A and B teach 
+important component skills. Part A teaches students to determine whether they are changing the 
+original unit to a bigger or smaller unit. Part B presents the rules: When we change to a bigger 
+unit, we divide; when we change to a smaller unit, we multiply. Part B concludes with an exer­
+cise in which the teacher writes sets of units on the board, such as centigram → gram, and leads 
+the students in determining the appropriate operation.
+Part C is a structured board presentation in which the teacher presents all the steps 
+in the conversion strategy. After the students determine whether to multiply or divide, the 
+teacher leads them through using the equivalency fact to determine the number by which 
+to multiply or divide. “There are 100 centigrams in a gram, so we divide by 100.” Finally, 
+the teacher demonstrates moving the decimal as a quick way of multiplying or dividing by 
+multiples of 10. Part D is a structured worksheet exercise. Because this exercise incorpo­
+rates several difficult component skills, a great amount of practice is necessary to develop 
+mastery.
+Four example-selection guidelines are important in teaching conversion problems:
+1. In all problems, one of the units should be a base unit. The base units are grams, meters, or 
+liters.
+2. In half of the problems, the students should convert a unit to a larger unit; in the other half, 
+the students should convert to a smaller unit.
+3. In half of the problems, the quantity of original units should be a whole number; in the other 
+half, the quantity should be a decimal or mixed number.
+4. The amount the student multiplies or divides should vary from problem to problem, for 
+example, 10 in one problem, 1,000 in the next, 100 in the next.
+An example of an appropriate set of problems, following the guidelines, appears below. The 
+answers are in parentheses.
+142 centigrams =grams (1.42)
+9 .8 grams =______ milligrams (9,800)
+35 decigrams =grams (3.5)
+20 hectograms =grams (2,000)
+4.35 grams =_____ milligrams (4,350)
+Note that the examples shown in Format 12.2: Metric Conversions all refer to grams. 
+The next day’s unit of measurement might include liters or meters.
+Converting Customary Units Teaching students to convert quantities from one unit to 
+another is more difficult in the customary system than in the metric system for three specific 
+reasons. First, in metric conversions the students always multiply or divide by a multiple of 10, 
+but in conversion problems with customary units, the number to multiply or divide by varies 
+from problem to problem; converting inches to feet requires division by 12, and converting feet 
+to yards requires division by 3.
+A second reason for increased difficulty involves the procedures used when the converted 
+unit is not a multiple of the original unit. In that case, the answer must be expressed in terms of a 
+mixed number with two different units (7 feet — 2 yards, 1 foot).
+
+[p.257]
+Chapter 12 Measurement, Time, and Money 257
+A final reason why customary conversions are more difficult is that conversions are some­
+times made to a unit two or more steps removed. In the metric system, the original unit is simply 
+multiplied or divided by 10, 100, or 1,000. In the customary system, several conversions may 
+be required. For example, to convert gallons to cups, the student must first convert gallons to 
+quarts, quarts to pints, then pints to cups.
+The sequence for introducing conversion problems with customary units should be care­
+fully controlled, with easier problems introduced first. The three basic types of conversion prob­
+lems in the customary system are illustrated below:
+1. Converting a quantity of a specified unit into a quantity of the next larger or smaller unit 
+(examples involve whole numerals only):
+28 days equal weeks
+6 feet equal yards
+24 inches equal feet
+4 weeks equal days
+2 yards equal feet
+2 feet equal_______ inches
+2. Converting a unit into a mixed numeral (and vice versa) containing the next larger or smaller 
+quantity:
+27 inches equal feet_______ inches
+19 ounces equal pound(s)ounces
+13 days equal weeks(s)days
+2 feet 3 inches equal_______ inches
+1 pound 3 ounces equal ounces
+3. Converting a unit into a unit twice removed:
+2 yards equal inches
+2 quarts equal cups
+72 inches equal yards
+16 cups equal quarts
+The preskills for teaching conversion problems with customary units are knowledge of 
+equivalencies and knowledge of multiplication and division facts. Since measurement conver­
+sion tasks are usually introduced before students can divide by two-digit numbers, the teacher 
+may choose to teach the students to count by twelves. Knowing this count-by series will help 
+students in converting inches to feet and in determining dozens.
+The format for introducing the first type of customary conversion problems (problems in 
+which a unit is converted evenly into the next larger or smaller unit) is basically the same as that 
+for converting metric units (see Format 12.2: Metric Conversions). The teacher has students 
+(a) determine whether the “new” unit is larger or smaller than the original unit, (b) determine the 
+operation, (c) determine the equivalency fact, and (d) solve the problem. “We want to find how 
+many ounces in 6 pounds. We’re changing to a smaller unit, so we multiply. There are 16 ounces 
+in a pound, so we multiply by 16.”
+The procedure for problems in which the conversion results in a remainder (27 inches equal 
+2 feet 3 inches) is the same as for the previous type of problem except the teacher must explain 
+what to do with the remainder. For example, in solving the problem 27 inches = feet, 
+after the students determine that 27 must be divided by 12, the teacher points out that since 12 
+goes into 27 with a remainder, the remainder tells the number of inches left.
+A format for converting a mixed quantity to a lower unit appears in Format 12.3: Convert­
+ing from Mixed Numbers. When converting 2 feet 11 inches to inches, the teacher has the stu­
+dents cross out the 2 and write 24, the number of inches, above it. Then they add that quantity, 
+24 inches, to the 11 inches to end up with 35 inches.
+Problems in which students must convert to a unit twice removed are quite difficult (2 yards = 
+inches). The strategy we recommend involves having the students translate the quan­
+tity unit by unit. For example, in converting 2 yards to inches, the student would first convert 
+2 yards to 6 feet, then 6 feet to 72 inches.
+
+[p.258]
+258 Part II Basic Concepts and Skills
+Operations
+This section addresses addition, subtraction, multiplication, and division operations with me< .- 
+surement units. As with most measurement-related skills, performing operations with customaι y 
+units is more difficult than performing operations with metric units. The differences arise in 
+problems that require renaming. Since the metric system uses a base-10 place value system, 
+renaming presents no problems. Students merely apply the renaming skills they learned pre - 
+viously in decimal instruction. However, when working with customary units, there is not a 
+consistent base to use when renaming. For example, the base for pounds is 16 (16 ounces in on 2 
+pound); for feet, 12 (12 inches in one foot). Students must be taught to use these bases rather 
+than base 10 for problems that require renaming.
+Addition and subtraction problems with measurement units are usually introduced in fourt ι 
+or fifth grade. The operations cause little difficulty in measurement problems that do not involv 5 
+renaming:
+6 lb 4 oz 6 lb 4 oz 6 lb 4 oz
++1 lb 1 oz -1 lb 1 oz × 2
+7 lb 5 oz 5 lb 3 oz 12 lb 8 oz
+3 lb 2 oz 6.4 kg 6.4 kg
+2)6 lb 4 oz +1.1 kg +1.1 kg
+7.5 kg 5.3 kg
+6.4 kg 3.2 kg
+× 2 2)6.4 kg
+12.8 kg
+Problems that do require renaming, on the other hand, are quite difficult:
+4 18 / 4 14
+5, lb 2 oz 3 weeks 4 days 5 ft 2 in
+—3 lb 4 oz +1 weeks 5 days —2 ft 8 in
+1 lb 14 oz 5 weeks 9f days —2 ft 6 in
+2
+A preskill for renaming problems is converting units, which was discussed previously 
+When working an addition problem, the teacher instructs students to always start working with 
+the smaller unit. The difficult part of addition problems occurs after students have derived a sum 
+that includes enough of the smaller unit to form a larger unit. In the following problem,
+3 ft 8 in
++ 2 ft 6 in
+14 in
+the students add 8 and 6 to equal 14 inches, which is more than 1 foot. Because 12 inches 
+equals 1 foot, the student must add 1 unit to the feet column and subtract the 12 inches from the 
+14 inches, leaving the remaining 2 inches.
+1
+3 ft 8 in
++ 2 ft 6 in
+.14
+2
+The teacher leads students through sets of problems, renaming when needed: “Remember, we’re 
+adding inches. How many inches in a foot? Yes, 12 inches in a foot. So if we have 12 or more 
+inches in the inches column, we must rename 12 inches as one foot.”
+Format 12.4: Renaming Customary Units shows how to teach addition problems with 
+renaming. Teaching students when to rename and what numerals to use is critical when teach­
+ing operations with customary units. Part A of the structured board presentation focuses on 
+when renaming is appropriate. Part B is a structured worksheet that provides discrimination
+
+[p.259]
+Chapter 12 Measurement, Time, and Money 259
+practice in renaming with the appropriate numerals. Note that discrimination practice should 
+include problems that require renaming and problems that do not require renaming. The exam­
+ples in the format involve weight units; similar exercises should be done with length and capac­
+ity units.
+After students can rename a variety of units when adding, they are given problems with 
+subtraction. The difficult aspect of subtraction problems lies in renaming the minuend. For 
+example, to work the following problem,
+8 lb 4 oz
+—3 lb 8 oz
+students must rename 8 pounds 4 ounces, by taking a pound from 8 pounds (leaving 7 pounds), 
+and increasing the ounces by 16 ounces (a pound) so there are 20 ounces:
+7 20
+gib 4oz
+—3 lb 8 oz
+We recommend that teachers introduce this skill by first presenting problems in which a 
+mixed unit is subtracted from a whole unit. Following are examples of such problems:
+3 ft 8 lb
+-1 ft 4 in —2 lb 5 oz
+The teacher leads students through working these problems, pointing out the need to rename 
+and how to rename: “We must take a foot from 3 feet. I’ll cross out 3 feet and write 2. I took 
+a foot from 3 feet. How many inches in a foot? So I write 12 in the inches column.” After sev­
+eral days of practice, more difficult problems in which two mixed numbers are involved can be 
+introduced. An example of a structured worksheet part of a format for subtraction problems with 
+renaming appears in Format 12.5: Subtraction with Renaming.
+Multiplication and division problems that require renaming with measurement units are 
+quite difficult. A strategy for working multiplication problems involves teaching the students to 
+first multiply each unit. For example, in the problem
+5 ft 7 in 
+× 4
+the students first multiply 4 × 7 inches, then 4 × 5 feet, writing the products for each:
+5 ft 7 in 
+× 4
+20 ft 28 in
+After the products are written for each unit, the students rename, converting the smaller quantity 
+and adding:
+5 ft 7 in
+× 4
+20 ft 2X in 
+2ft 4 in 
+22 ft 4 in
+Division problems, on the other hand, require a unique strategy. The students rewrite 
+the quantity in terms of its lower units before working the problem. For example, in dividing 
+3 pounds 4 ounces by 2, we suggest converting 3 pounds 4 ounces to 52 ounces, dividing 52 by 
+2, which equals 26 ounces, then converting the 26 ounces to 1 pound 10 ounces.
+Word Problems
+Word problems involving measurement units can be introduced as soon as students have learned 
+to work the respective operations. The strategies are the same as outlined in Chapter 11. Students 
+may require explicit instruction when solving measurement word problems. Initial modeling and
+
+[p.260]
+260 Part II Basic Concepts and Skills
+extensive practice are required with the introduction of each operation. Following are examples 
+of measurement word problems for different operations:
+Division:
+Marshawn has 2 feet of ribbon. He wants to make kites. Each kite needs 4 inches of ribbon.
+How many kites can Marshawn make?
+Subtraction:
+Tania weighed 8 pounds, 4 ounces when she was born. Three months later, she weighed
+11 pounds, 7 ounces. How much weight did she gain in those 3 months?
+Multi-step:
+Rose’s plant is 4 feet tall. If it grows 3 inches a year for 5 years, how tall will it be?
+TIME
+Telling time is not as easy for all students to learn as teachers sometimes assume. Its difficulty is 
+due to the number of discriminations students must make. The following list outlines discrimi­
+nations that, if not properly taught, tend to cause errors, especially for low-performing students:
+1. Discriminating the direction the clock hands move (clockwise versus counter-clockwise);
+2. Discriminating the minute hand from the hour hand;
+3. Discriminating minutes (which are not represented by the numerals on the clock) from 
+hours (which are represented by the numerals on the clock) and;
+4. Discriminating time-related vocabulary; for example, when to use “after” and when to use 
+“before.”
+Because of these potentially troublesome discriminations, telling time is divided into two 
+stages. First, students are taught a strategy for figuring out the time and expressing it as min­
+utes after the hour. Second, when students have mastered minutes after the hour, alternate ways 
+of telling time are taught, such as reading a digital clock, using the terms “quarter past” and 
+“half past,” and expressing time as minutes before the hour. See the Instructional Sequence and 
+Assessment Chart for details and examples.
+Minutes After the Hour
+Preskills The four major preskills for telling time are (a) knowledge of the direction in 
+which the hands of the clock move, (b) discrimination of the hour hand from the minute hand, 
+(c) counting by fives, and (d) switching from counting by fives to counting by ones, which is 
+needed to determine the number of minutes (5, 10, 15, 16, 17, 18, 19).
+The preskill of knowing which direction the hands on a clock move is critical if students are 
+to figure out the correct hour. A convenient way to teach students about direction on a clock is to 
+have them fill in the missing numerals on several clocks containing boxes instead of numerals:
+By doing this exercise, students can develop the pattern of moving in a clockwise direction 
+around the clock face. In the first exercises, some of the numerals should be included as prompts 
+on the clock (3, 6, 9, 12). After several lessons, however, these prompts should be removed, and 
+the students should fill in all the numerals themselves. Teachers need to monitor students care­
+fully while they work to make sure they fill in numerals in the proper direction. Teachers also 
+can use a clock with movable hands and ask students to move the clock hands in the appropriate 
+direction to assess student understanding of the concept.
+
+[p.261]
+Chapter 12 Measurement, Time, and Money 261
+Counting by fives is the initial way students are taught to determine the number of minutes. 
+They are taught to start at the top of the clock, say, zero, and then count the numerals by fives 
+until they reach the minute hand. Later, the procedure is modified to teach students to determine 
+the number of minutes when the minute hand is not pointing to a multiple of 5. Procedures for 
+teaching counting by fives can be found in Chapter 4.
+Discrimination of the hour hand from the minute hand is taught by describing each hand 
+(the short hand is the hour hand, and the long hand is the minute hand) and then by providing 
+discrimination practice in which students identify the hands. The teacher should present pictures 
+of clocks and ask about each hand: “Which hand is this? How do you know it’s the minute hand? 
+Yes, the long hand is the minute hand.” Commercial instructional clocks are well-suited for this 
+exercise because teachers can manipulate the hands of the clock. The hands on the clocks used 
+for initial instruction should be easy to tell apart.
+Units of 5 Minutes The steps for teaching students to tell time by determining the number 
+of minutes (in units of 5) after the hour is divided into five parts. (See Format 12.6: Expressing 
+Time as Minutes After the Hour.) Part A teaches students to read the hour. The teacher reminds 
+students that the hour hand is the short hand and demonstrates how to figure out the hour by start­
+ing at the top of the clock and saying the numerals on the clock until reaching the hour hand.
+Part B teaches students to determine the number of minutes after the hour. The teacher instructs 
+students that the long hand is the minute hand and that the minute hand says to count by fives. The 
+teacher then models and tests figuring out the minutes. The students are taught to start at the 12, say 
+zero, and then count by 5 for each numeral, stopping at the numeral to which the minute hand is 
+pointing. All examples in this format would have the minute hand pointing directly to a numeral.
+Part C includes a board demonstration of how the strategies for determining minutes and 
+hours are combined into a complete strategy for figuring out the time. Parts D and E are struc­
+tured and less structured worksheet exercises in which the students are shown clocks and asked 
+to write the time. Daily practice with telling time should be continued for several weeks until 
+students have mastered the concepts.
+To help students discriminate the hour and minute hands, we recommend that for the first 
+several days, teachers use illustrations like the one below, in which the minute hand is drawn 
+longer than usual. Note that in the illustration, the minute hand extends outside the clock and is 
+written as a thin line so that it does not block students’ view of the numerals on the clock.
+When constructing a set of practice examples, the teacher must be quite careful to include a 
+wide range of problems. In half of the clocks, the hour hand should be pointing toward the right 
+side of the clock; on the other clocks, the hour hand should be pointing toward the left side of the 
+clock. The same recommendation holds true for the minute hand. Varying examples helps prevent 
+students from developing misrules that the strategies apply only to certain positions on the clock.
+Also, examples should be arranged so that in half of the examples, the minute hand is point­
+ing to a numeral larger than the one to which the hour hand is pointing. If the minute hand were 
+pointing to the smaller numeral in all the examples, students might inadvertently learn that the 
+hand pointing to the smaller numeral is the minute hand.
+For the first week or two, examples in which the minute hand is pointing to the 12 are 
+expressed as zero minutes after the hour. When students have demonstrated the ability to use 
+the minutes-after strategy, the teacher can present the convention for saying o’clock. “When it’s 
+zero minutes after 4, we say it is 4 o’clock.”
+As students learn multiplication facts, they should be encouraged to use their knowledge of 
+facts in determining the minutes rather than always starting at the top and counting by fives. The 
+teacher explains that in figuring out minutes, each numeral stands for a group of five. Therefore, 
+when the minute hand points to 4, it is the same as four groups of five. Instead of counting, the 
+minutes can be determined by solving 4 × 5.
+
+[p.262]
+262 Part II Basic Concepts and Skills
+Units of Single Minutes After several weeks of practice expressing time with examples in 
+which the minute hand points directly to a numeral, students can learn to express time when the 
+minute hand is pointing between numerals. Note the following example:
+No elaborate teaching format is required to introduce this skill. Students are told that when 
+they count the spaces in between the numerals, they are counting by ones. The teacher then 
+models the process of counting by fives and switching to ones: “5, 10, 15, 20, 21, 22, 23; the 
+time is 23 minutes after 7.”
+Alternate Ways of Expressing Time
+Digital Clocks When students are able to express time as minutes after the hour, digital 
+clocks may be introduced. The time on digital clocks is represented by the hour followed by the 
+minutes. For example, 3:14 is read as three-fourteen, which means 14 minutes after 3. Prior to 
+introducing digital clocks, students need to be taught to translate minutes after the hour to the 
+hour followed by the minutes. The teacher would model and have students practice expressing 
+time in both ways, such as:
+“IT1 say the time one way, and then say it another way. Listen: 8:24. I’ll say the time the 
+other way: 24 minutes after 8. Your turn: 8:24. Say the time the other way.” Repeat with 
+4:15,7:32,9:28.
+The purpose of this practice is to ensure that students understand the relationship between these 
+two ways of expressing time before they are introduced to digital clocks. To teach students to 
+read a digital clock, the teacher simply models and tests several examples of telling time on a 
+digital clock.
+After students have learned to read time from analog and digital clocks, students can be 
+taught how to write time using a colon. A written task, like the one below, in which students 
+are required to express the time as both minutes after the hour and as the hour and then minutes, 
+should be introduced next. This activity not only strengthens the relationship between telling 
+time as minutes after the hour and the hour followed by minutes but also provides practice in 
+writing time using a colon.
+ minutes after 
+Times representing less than 10 minutes after the hour are particularly difficult to write, 
+since a zero must be added when the time is expressed both verbally and in written form. For 
+example, 8 minutes after 6 is written as 6:08 and stated as six oh eight. This type of example 
+should not be introduced until students have mastered easier ones. Several of these more diffi­
+cult examples should appear thereafter on worksheet exercises.
+Quarter After and Half Past The terms “quarter after” and “half past” are introduced when 
+students master expressing time as minutes after the hour: A “quarter after” means 15 minutes 
+after; “half past” means 30 minutes after. Teachers working with struggling students would not
+
+[p.263]
+Chapter 12 Measurement, Time, and Money 263
+introduce both terms at the same time. The instructional procedure for teaching “quarter after” 
+consists of modeling and testing on several examples:
+1. Another way of saying 15 minutes after 2 is a quarter after two.
+2. What’s another way of saying 15 minutes after 2?
+3. What’s another way of saying 15 minutes after 8?
+Next, an exercise in which the teacher states the time as a quarter after and the students 
+restate it as minutes after is presented: “If it’s a quarter after 2, how many minutes after 2 is it?” 
+The same procedure is used to teach half past the hour. The final task consists of a discrimina­
+tion exercise including times representing both quarter after and half past the hour:
+1. What’s another way of saying 15 minutes after 6?
+2. What’s another way of saying 30 minutes after 6?
+3. If it’s half past 4, how many minutes after 4 is it?
+4. If it’s a quarter after 4, how many minutes after 4 is it?
+Minutes Before the Hour Teachers should not introduce telling time as minutes before the 
+hour until students can express time as minutes after the hour with accuracy and fluency. The 
+procedure for teaching students to express time as minutes before the hour is somewhat similar 
+to the one used for teaching students to express time as minutes after the hour. First, the teacher 
+presents a strategy to figure out the hour, then a strategy to figure out the minutes, and then 
+an exercise in which both strategies are applied to express the time. Format 12.7: Expressing 
+Time as Minutes Before the Hour outlines the steps in this strategy.
+In Part A, the teacher places the hour hand between two numerals and then models and 
+tests identifying the hour after and the hour before. For example, if the hour hand were pointing 
+between 5 and 6, the teacher would say the hour is after 5 and before 6. In Part B, the teacher 
+shows students how to figure out the number of minutes before the hour. He points in a coun­
+terclockwise direction and explains that in determining minutes before the hour, students need 
+to start at the 12 but count in “this” direction (pointing counterclockwise). He would model and 
+test several examples before introducing Part C, a structured board exercise in which the teacher 
+leads students through expressing time as minutes before the hour. Part D is a structured work­
+sheet that provides practice expressing time as minutes before the hour.
+During the first week that expressing time as minutes before the hour is presented, the min­
+ute hand should point directly to the numerals so that all minutes are multiples of five. Examples 
+in which the minute hand points to a line between the numerals are introduced later. Examples 
+should be limited to times that are 30 minutes or less before the hour because typically those are 
+the only times expressed as minutes before the hour.
+MONEY
+The need for instruction in money-related skills is derived from their importance in daily activ­
+ities. Included in this chapter are procedures for (a) determining the value of a group of coins, 
+(b) consumer-related instruction, and (c) decimal notation for money. A more in-depth list of 
+problem types appears in the Instructional Sequence and Assessment Chart.
+Determining the Value of a Group of Coins
+The preskills for determining the value of a group of coins include the ability to identify and 
+tell the value of individual coins and knowledge of the 5, 10, and 25 count-by series. Students 
+usually are taught to identify coins in the first grade. This is a fairly simple preskill to teach, 
+given that many students already will be able to recognize coins. A format similar to that used in 
+symbol identification is taught for coin identification. The teacher initially models and tests the 
+name of the coin and then models and tests its value: “This is a nickel. What is this? . .. A nickel 
+is worth 5¢. How much is a nickel worth? ...” For this task, the teacher can use either real coins 
+or pictures of coins.
+
+[p.264]
+264 Part II Basic Concepts and Skills
+The penny and nickel should be introduced first. After students can label and state their 
+values, dimes can be introduced, followed by quarters. Note that the coins are introduced cumu­
+latively, which implies that students must be able to discriminate the new coin from previously 
+introduced coins before the teacher can present a new example.
+The preskill required for counting groups of similar coins is knowledge of the respective 
+count-by series. Once students have learned the count-by series, they have little trouble apply­
+ing the skill to coin counting. In teaching students to count groups of similar coins for the first 
+time, the teacher indicates the value of the coin and then models counting. For example, “Here 
+is a group of nickels. Each nickel is worth 50. To find out how many cents this group of nickels 
+equals, I count by fives. My turn.” The teacher then counts by fives as she touches each coin. 
+After modeling, the teacher tests students on counting several sets of identical coins. Worksheet 
+exercises like the one in Figure 12.6 should follow the teacher’s presentation.
+Problems in which students determine the value of a set of mixed coins are usually intro­
+duced in second grade and contain just two or three coins. In later grades, the number of coins 
+counted can be increased. We recommend a two-step strategy: (a) grouping like coins together 
+and (b) starting with the coin worth the most and counting all like coins before counting the 
+lower valued coins. For example, in counting two quarters, three dimes, and two nickels, 
+students would begin counting the two quarters (25, 50), switch to the dimes (60, 70, 80), and 
+switch once more to the nickels (85, 90).
+Beginning with higher-valued coins is recommended over beginning with lower-valued 
+coins, since counting lower-valued coins first often results in a difficult counting sequence. For 
+example, to count a quarter, dime, nickel, and two pennies starting with the lower valued coins, 
+the student would count 1, 2, 7, 17, 42; as opposed to starting with higher-valued coins and 
+counting 25, 35, 40, 41, 42, which is much easier.
+A preskill for counting a group of unlike coins is knowledge of addition facts in which 10, 
+5, or 1 is added to a two-digit number ending in zero or 5 (70 and 10 more is. . . 70 and 5 more 
+is.. .). This preskill is taught using a model-test procedure in which the teacher models then tests 
+students on a set of problems (40 and 10 more, 45 and 5 more, 40 and 1 more).
+Facts in which 10 is added to a two-digit number ending in 5 (35 + 10, 65 + 10) are par­
+ticularly difficult because the sequence of counting by 10s that always yields a tens multiple
+FIGURE 12.6 Coin counting worksheet
+
+[p.265]
+Chapter 12 Measurement, Time, and Money 265
+(10, 20, 30) cannot be applied. Therefore, these facts should not be introduced until the easier 
+facts are mastered. If teachers use worksheets to provide this practice, they should write prob­
+lems horizontally and indicate to students that they are to complete the problems mentally.
+Determining equivalencies involving coins is a basic money skill that serves as a prereq­
+uisite for many consumer skills. Two kinds of equivalent change exercises are presented in 
+Format 12.8: Coin Equivalencies. In Part A of the format, the teacher has students deter­
+mine the number of smaller-valued coins equal to a larger-valued coin. In this exercise, stu­
+dents are always counting similar coins. In Part B of the format, the students must count 
+a set of mixed coins to determine whether a given amount of change is equivalent to the 
+amount stated. Initially, coin equivalency problems should include pennies, nickels, dimes, 
+and quarters (a quarter equals two dimes and a nickel). Larger values, including dollar bills, 
+are introduced later.
+Worksheet exercises like Figure 12.7 present a different application of the coin equiv­
+alency skill. In these exercises, students circle the appropriate more, less, or equal sign 
+between two groups of coins. To introduce this exercise, the teacher leads the students in 
+counting the coins in each group. After counting the coins, the students are instructed to 
+write above each group its value. If the values are equal, the student is instructed to circle the 
+equal sign. If the values of the groups are not equal, the students circle the appropriate more 
+than or less than sign.
+Consumer-Related Money Skills
+Two consumer-related money skills are discussed in this section: (a) verifying the change 
+received from a purchase and (b) counting change. These skills are generally taught in third 
+grade. The primary preskill for counting change is the ability to count groups of coins.
+Verifying Change Received The easiest way to verify change received when making a pur­
+chase is to begin at the price of the item(s) and then count the coins received as change. Format 
+12.9: Verifying Change outlines the teaching procedures for this strategy. Students begin count­
+ing from the price of the item starting with the least valued coin, continuing with greater valued 
+coins until the original amount given for the item is reached.
+Initial examples should be relatively easy, including small numbers of coins. An example 
+appropriate for the introduction of the skill might consist of paying 40¢ for an object costing 
+360. To verify the change in this example, students need to count only pennies: 37, 38, 39, 40. A 
+later example might involve paying a dollar for an object costing 360, for which students would 
+need to count pennies, dimes, and quarters.
+Problems involving more than one dollar are introduced last. Note that the same strategy 
+applies to counting change from dollars. The student counts the change to determine if the 
+object’s cost plus the change equals the payment price. For example, if an object costing 370 
+is paid for with a $10 bill, counting change would proceed as follows: 38, 39, 40, 50, 75, one 
+dollar, 2, 3, 4, 5, 10 dollars. Again, practice is provided on worksheet exercises and through 
+hands-on activities, such as a classroom store.
+Counting Change When purchasing an item in a store, the student should use a strategy 
+that allows her to figure out the coins to give as quickly as possible. We recommend that stu­
+dents begin counting with the largest valued coins. For example, if a student has an assortment 
+of coins and wants to buy something costing 280, the fastest way to count the exact amount is 
+to use a quarter and three pennies. We recommend that the teacher introduce the rule “When
+FIGURE 12.7 Worksheet on equivalent change
+
+[p.266]
+266 Part II Basic Concepts and Skills
+you count to reach an exact amount of money, you start with the coins that are worth the most.” 
+Next, the teacher models several examples and then gives students problems to solve. The steps 
+for teaching this skill appear in Part A of Format 12.10: Counting Coins to Reach an Exact 
+Amount. Because most cash registers display the exact amount of change to give, this procedure 
+also can be used to teach students to count change as a store clerk would.
+A mistake often made by students is inappropriately allocating only pennies for the value 
+of the ones. For example, when counting out 380, students might count out 300 using a quarter 
+and a nickel and then count out eight pennies instead of using a quarter (25), a dime (35), and 
+3 pennies. One way to prompt students to use larger coins when possible is to limit the num­
+ber of pennies they are given during practice exercises, thereby forcing students to use nickels 
+and dimes. Often, students will not have the appropriate coins to allow them to count an exact 
+amount. For these situations, students must be taught to count an amount that exceeds the pur­
+chase price. Part B of Format 12.10 teaches students to make a purchase when they don’t have 
+the exact amount of change.
+Decimal Notation in Money
+Money problems expressed in decimal notation generally are introduced in third grade. A typ­
+ical problem may state the following: A toy costs 390. You have a $5 bill. How much change 
+should you receive? The solution is computed by subtracting 390 from $5 and is expressed as 
+$4.61. Note that decimal notation for money is typically introduced before more comprehensive 
+decimal instruction is taught so that students are able to solve real-world problems, like the 
+one above. The students can be told that the two numerals to the right of the decimal tell about 
+cents, while the numerals to the left of the decimal tell about dollars. A format for teaching stu­
+dents to read and write dollar figures expressed with decimal notation appears in Format 12.11: 
+Decimal Notation for Money. Part A of the format involves teaching students to read decimal 
+notation, while Part B teaches students to write decimal notation.
+Practice should include examples without dollars ($.45, $.30) and examples without cents 
+($5.00, $13.00). Students can be expected to have difficulty writing amounts between 1 and 
+9 cents because of the need to place a zero after the decimal: $7.03, $14.08. These examples, 
+therefore, should not be introduced in the initial exercises. Concentrated practice on this type 
+of example should be provided in later lessons. At that time, the teacher explains that there 
+must always be two digits after the decimal when writing dollar amounts. The teacher then 
+models that when the number of cents is below 10, a zero and then the digit for the number of 
+cents are written.
+Word problems with money expressed in decimal notation should be introduced when stu­
+dents can read and write decimal notation for money. A common type of word problem that 
+deserves special attention is illustrated below:
+Scout bought a shirt for $13.62. She gave the clerk a $20 bill. How much change will Scout 
+receive?
+Atticus had $6. He was given $7.50 for working in his neighbor’s yard. How much money 
+does he have now?
+In these problems, a dollar amount is expressed without cents after the decimal point. When 
+working the problem, students must write the dollar amount with a decimal point and two zeros. 
+The teacher should model the critical skill of aligning the numerals according to the decimal 
+point before assigning students to work problems of this type independently.
+DIAGNOSIS AND REMEDIATION
+*∙∙∙∙∙∙∙
+Measurement, time, and money errors fall into the same categories as the errors for other math­
+ematics topics: fact errors, component-skill errors, and strategy errors. Note that the remedia­
+tion usually involves reviewing critical parts of the relevant formats and providing students with 
+additional practice. Examples of common errors for measurement, time, and money are outlined 
+in Figure 12.8, along with suggested remediation procedures.
+
+[p.267]
+Chapter 12 Measurement, Time, and Money 267
+FIGURE 12.8 Diagnosis and remediation of measurement, time, and money errors
+Error Pattern
+Measurement
+12 yards = 4 feet 4jl2
+Diagnosis
+Remediation
+Procedures
+3 lbs. 15 oz.
++_____ 6 oz.
+5 lbs. 1 oz.
+Time
+Students start count­
+ing by fives when 
+touching the 12 
+instead of saying 
+"zero."
+30 minutes after 1 45 minutes after 8
+Students confuse 
+the minute and hour 
+hands.
+15 minutes after 7 10 minutes after 4
+Money
+Jaleel pays for a candy bar that costs 79 
+cents with the following coins:
+Q, Q, D, D, P, Pf P, P, P, P, P, P, P
+Keisha has 7 dollars. She buys a piece of 
+candy for 5 cents. How much money does 
+she have left?
+$7.00
+- .50
+6.50
+Student does not 
+determine the appro­
+priate operation when 
+converting.
+Present Format 12.2, 
+Part B using custom­
+ary units.
+Student does not Present Format 12.4. 
+rename customary 
+units properly.
+Student incorrectly 
+applies the strategy of 
+paying for something 
+with coins of the high­
+est value.
+Student does not 
+write 5 cents correctly.
+Present Format 12.6.
+Review Part B to 
+determine minutes 
+after the hour.
+Present Format 12.6 
+The teacher may 
+initially elongate 
+the minute hand to 
+help students dis­
+criminate between 
+the two hands.
+Present Part A 
+of Format 12.10, 
+emphasizing the 
+strategy of starting 
+with the highest 
+valued coins and 
+using the fewest 
+coins.
+Present Format 
+12.11, Part B.
+Remediation 
+Examples
+Provide a set of 
+examples in which 
+students determine 
+the appropriate 
+operation.
+Provide a mix of 
+addition problems 
+that do and do not 
+require renaming 
+customary units.
+Provide worksheets 
+with pictures of 
+analog clocks and 
+a space labeled 
+"minutes after."
+Proved worksheets 
+with pictures of 
+analog clocks and 
+a space labeled 
+"minutes after."
+Present examples 
+of paying for items 
+by starting with 
+the highest valued 
+coins.
+Present a set of 
+examples that 
+includes values 
+that are less than 
+10 cents.
+
+[p.268]
+268 Part II Basic Concepts and Skills
+APPLY WHAT YOU LEARNED i
+Click on the V to answer the questions online.
+1. Explain how measurement, time, and money are related.
+2. Write a format for introducing the yard unit. Assume students have previously learned inches and 
+feet, ounces and pounds. Include all five steps discussed in the text. For step 4, write six questions 
+that you would ask your students.
+3. Below are errors made by students on conversion tasks. For each error, tell the probable cause and 
+specify a remediation procedure.
+7
+Julio: 6 feet = 75 inches 7 2
+× 6
+75
+Jamika: 6 feet — 60 inches 70
+× 6
+60
+Joelle: 9 yards = 3 feet
+4. A student says the x is over the line that shows 1¾ inches. Specify the wording in the correction 
+made by the teacher.
+5. Specify the wording in the correction to be made by the teacher.
+1 foot 7 inches
++8 inches
+2 faet 5 incited
+6. For each error, tell the probable cause and specify what the teacher says to correct.
+Junior: 148 meters equal_______ km ÷ 7000 = 7.48
+Flo: 148 meters equal_______ km 748 × 7000 = 748r000
+7. Write a structured-worksheet presentation to lead students through working this problem. 348 centi­
+meters = how many meters?
+8. Below are sets of examples prepared by teachers to use in initial exercises to teach telling time as 
+minutes after the hour. Which sets are inappropriate and why?
+Set A: 15 minutes after 8
+10 minutes after 9
+10 minutes after 7
+5 minutes after 7
+Set B: 13 minutes after 2
+37 minutes after 10
+25 minutes after 4
+10 minutes after 9
+SetC: 20 minutes after 7
+15 minutes after 2
+35 minutes after 4
+30 minutes after δ
+
+[p.269]
+Chapter 12 Measurement, Time, and Money 269
+9. Tell the probable cause of each student’s error.
+a. Jayde
+30 minutes after 3 50 minutes after 8 10 minutes after 11
+b. Iliya
+50 minutes after 12 20 minutes after 9 35 minutes after 5
+c. Xavi
+30 minutes after 2 15 minutes after 8 50 minutes after 6
+10. Specify the wording the teacher uses in correcting the first error made by each student in problem 8. 
+The wording will be different for each student.
+11. When counting a quarter, a dime, and two nickels, students count as specified below. Tell the proba­
+ble cause of the errors. Specify what the teacher says to correct each student. (Assume students know 
+the value of each coin.)
+Justine—25, 30, 35, 40
+Royce—5, 10, 20, 35
+12. Tell the probable cause for each error. Specify what the teacher says to correct each student.
+Sierra had 5 dollars. She buys a pencil for 4 cents. How much money does she have left?
+Austin:
+A 
+^.00 
+-.0⅛ 
+$4.06
+Lydia: 5
+/
+
+[p.270]
+270 Part II Basic Concepts and Skills
+Format 12.1
+METRIC PREFIXES
+TEACHER STUDENTS
+Part A: Prefixes for Less Than 1
+1. (Write the following prefixes on the board.)
+milli- —thousandth of
+centi- —hundredth of
+deci- —tenth of
+one whole
+2. These are prefixes used in the metric system. They tell us how 
+much of the base unit we have.
+3. (Point to milli-, centi-, deci-.) These prefixes say there is less than 
+one whole. What do these prefixes tell? There is less than one
+4. (Point to milli-.) This says milli-. What does it say?
+whole.
+Milli
+Milli means "a thousandth of." What does 
+mi Hi- mean? A thousandth of
+(Repeat step 3 with centi-, and deci-.)
+5. Let's read all of these prefixes and what they mean. 
+(Point to milli-, centi-, deci-.)
+6. (Erase the words thousandth of, hundredth of, 
+tenth of.) Milli
+(Point to milli-.) What is this prefix? A thousandth of
+What does milli- mean? Centi
+(Point to centi-.) What is this prefix? A hundredth of
+What does centi- mean? Deci
+(Point to deci-.) What is this prefix? A tenth of
+What does deci- mean?
+(Point to the three prefixes in random order until students identify all 
+three correctly.)
+Part B: Introducing Prefixes (More Than One Whole)
+1. (Write the following prefixes on the board.)
+milli-
+centi-
+deci-
+one whole
+deka- —ten wholes
+hecto- —one hundred wholes
+kilo- —one thousand wholes
+2. What does milli- mean? A thousandth of
+What does centi- mean? A hundredth of
+What does deci- mean? A tenth of
+
+[p.271]
+Chapter 12 Measurement, Time, and Money 271
+TEACHER STUDENTS
+3. Let's read the prefixes that tell about more than a whole.
+(Point to deka-.) This says deka-. What does it say? Deka
+What does deka- mean? 10 wholes
+(Point to hecto-.) This says hecto-. What does it say? Hecto
+What does hecto- mean? 100 wholes
+(Point to kilo-.) This says kilo-. What does it say? Kilo
+What does kilo- mean?
+(Erase the words: ten wholes, hundred wholes, thousand wholes.)
+1,000 wholes
+4. (Point to deka-.) What does this say? Deka
+What does deka- mean?
+(Repeat step 3 with hecto- and kilo-.)
+5. (Point to the prefixes in random order until students can identify them 
+all correctly.)
+Part C: Structured Board Presentation
+10 wholes
+1. What does kilo- mean?
+2. Kilo- means 1000 wholes. So kilometer means "1,000 meters." What
+1000 wholes
+does kilometer mean? 1000 meters
+Yes, a kilometer equals 1000 meters. Say that.
+(Repeat steps 1 and 2 with millimeter, hectogram, centigram.)
+A kilometer equals 1000 
+meters.
+3. What does deciliter mean?
+To correct: What does deci- mean? (Repeat step 3.)
+(Repeat step 3 with the following examples.)
+dekaliter—10 liters
+centigram—a hundredth of a gram
+kiloliter—1000 liters
+dekagram—10 grams
+centiliter—hundredth of a liter
+Part D: Structured Worksheet
+1. (Give students a worksheet with problems like the ones below.)
+a. A kilogram equals
+1,000 grams .001 gram 100 grams
+b. A millimeter equals
+1,000 meters .001 meters .01 meters
+c. A centigram equals
+100 grams .001 grams .01 grams
+d. A hectoliter equals
+.01 liters .1 liters 10 liters 100 liters
+A tenth of a liter
+2. Look at problem a. You have to circle what a kilogram equals. What 
+does kilo- mean?
+A thousand wholes
+So what does a kilogram equal?
+3. Circle the answer.
+(Repeat steps 2 and 3 with several examples.)
+A thousand grams
+
+[p.272]
+272 Part II Basic Concepts and Skills
+Format 12.2
+METRIC CONVERSIONS
+TEACHER
+Part A: Relative Sizes of Units
+1. (Write the following chart on the board.)
+milligram centigram decigram gram dekagram hectogram kilogram 
+1 1 1
+W00gm 100gm 10gm 1gm 10gm 100gm 1000gm
+2. These are the metric units for measuring weight. Milligram is a 
+thousandth of a gram. It is the smallest unit. What is the smallest unit?
+Kilogram is a thousand whole grams. It is the biggest unit.
+What is the biggest unit?
+3. (Start at gram and point to the left.) If we move this way, we're 
+changing to a smaller unit.
+(Point to the right.) If we move this way, we're changing to a 
+bigger unit.
+4. (Point to the left.) Which way am I changing?
+(Point to the right.) Which way am I changing?
+5. (Point to centigram.) If we have centigrams and we want to 
+change to grams, which way are we changing?
+(Repeat step 4 with grams to kilograms, grams to milligrams, 
+hectograms to grams, kilograms to grams, grams to decigrams.)
+6. (Erase the board.) I want to change centigrams to grams.
+What does a centigram equal?
+When I change centigrams to grams, which way are we changing? 
+(Repeat step 6 with same examples as in step 5.)
+w
+Part B: Determining Appropriate Operations
+1. Here are two important rules: When we change to a bigger unit, 
+we divide. Say that.
+When we change to a smaller unit, we multiply. Say that.
+2. What do we do when we change to a bigger unit?
+What do we do when we change to a smaller unit?
+3. (Write on board: gram to centigram.) When we change from grams to 
+centigrams, are we changing to a bigger unit or a smaller unit?
+Do we multiply or divide when we change from grams to centigrams?
+To correct: If we have grams and we change to centigrams, which 
+way are we changing? If we change to a smaller unit, what do 
+we do?
+(Repeat step 3 with these examples: g to kg, g to mg, hg to g, kg to g, 
+g to dg.)
+(See Videos Parts B & C)
+STUDENTS
+Milligram
+Kilogram
+To a smaller unit
+To a bigger unit
+To a bigger unit
+A hundredth of a gram
+To a bigger unit
+When we change to a bigger 
+unit, we divide.
+When we change to a 
+smaller unit, we multiply.
+Divide
+Multiply
+To a small unit
+Multiply
+
+[p.273]
+Chapter 12 Measurement, Time, and Money 273
+TEACHER STUDENTS
+Part C: Structured Board Presentation
+1. (Write the following problem on the board.)
+350 centigrams =_______grams
+2. This problem says, 350 centigrams equals how many grams? We're Changing centrigrams to
+changing centigrams to grams. What are we doing? grams
+3. Are we changing to a bigger or smaller unit? Bigger
+4. We're changing to a bigger unit, so do we multiply or divide?
+Yes, when we change to a bigger unit, we divide.
+Divide
+5. How many centigrams in each gram?
+So we divide by 100. Let's divide by moving the decimal. When we
+100
+divide by 100, what do we do to the decimal?
+6. (Write 350 next to grams.) If I move the decimal point two places to
+Move it to the left 2 places
+the left, where will it be?
+(Write on board: 350 centigrams = 350 grams)
+Between the 3 and 5
+7. Read the problem now.
+(Repeat steps 1-5 with the problems below.)
+314 grams =_______milligrams
+(Move decimal point 3 places to right.)
+315 grams =_______kilograms
+(Move decimal point 3 places to left.)
+7 centigrams =_______grams
+(Move decimal point 2 places to left.)
+18 kilograms =_______grams
+(Move decimal point 3 places to right.)
+30 meters =_______decimeters
+(Move decimal point 1 place to right.)
+Part D: Structured Worksheet
+1. (Give students a worksheet with problems like the one below.) 
+a. 232 centiliters equal_____liters
+350 eg = 3.5 g
+2. Read problem a. Are you changing to a bigger or smaller unit? Bigger
+3. So do you multiply or divide? Divide
+4. What do you divide by? 100
+Which way do you move the decimal point? To the left
+How many places do you move it?
+5. Write the answer. (Monitor responses.)
+Two
+Read the problem.
+(Repeat steps 2-5 with remaining problems.)
+232 centiliters = 2.32 liters
+
+[p.274]
+274 Part II Basic Concepts and Skills
+Format 12.3
+CONVERTING FROM MIXED NUMBERS
+TEACHER STUDENTS
+1. (Write the following problems on the board.)
+a. 3 feet 4 inches =_______inches
+b. 2 weeks 3 days =______ days
+c. 2 pounds 3 ounces =_______ounces
+d. 3 gallons 1 quart =_______quarts
+2. Read problem a. This problem asks us to change 
+3 feet 4 inches into inches in all. First we'll find 
+how many inches in 3 feet. Then we'll add it to 
+4 inches.
+(Write in. + over first problem.)
+in.+
+3 feet 4 inches =_______inches
+What do we do first? Find how many inches are in 3 feet
+Then what do we do? Add 4 inches
+3. Let's change 3 feet to inches. Are we changing 
+to a bigger or smaller unit? Smaller
+So what do we do? Multiply
+4. How many inches in a foot? 12
+So you'll multiply by 12. Everybody, how many 
+inches in 3 feet? 36
+Cross out 3 feet and write 36 above it.
+5. Now what do we do? Add it to 4 inches
+6. How many inches in all? 40
+Write it in front of inches.
+7. Read the problem. 3 feet 4 inches = 40 inches
+(Repeat with additional examples.)
+Format 12.4
+RENAMING CUSTOMARY UNITS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following problem on the board, with blanks for the ounces.)
+3 lbs_______oz
++2 lbs______ oz
+__ lbs_______ oz
+2. First, we add the ounces; then we add the pounds. How many ounces in a pound? 
+That means that if we end up with 16 or more ounces, we have to rename.
+3. I'll write numerals for ounces. Tell me if we have to rename.
+16
+
+[p.275]
+Chapter 12 Measurement, Time, and Money 275
+TEACHER STUDENTS
+4. (Write 7 and 5 in the blanks.)
+What's the answer for ounces? 12
+Do we have to rename 12 ounces as pounds? No
+(Repeat steps 3 and 4 with 9 + 9, 9 + 5, 8 + 9, 8 + 8, 9 + 6.)
+Part B: Structured Worksheet
+1. (Give students a worksheet with 8-10 problems such as the ones below.)
+5 lb 9 oz l 4lb 2oz
+3 b' +3 lb 9 oz ’ +3 lb 11 oz
+2. Touch problem a. Read The Problem. 5 pounds
+3. We start by adding ounces.
+4. What is 9 + 9?
+9 ounces plus
+3 pounds
+9 ounces
+18
+Write 18 under the line.
+5. How many ounces in a pound? 16
+6. Do we rename 18 ounces as pounds? Yes
+7. Cross out 18 and write a 1 over the pounds column.
+8. We had 18 ounces. We put a pound in the pounds column. How many ounces did we 
+take from 18 ounces when we renamed? 16
+To correct: A pound has 16 ounces.
+9. We had 18 ounces; we moved 16 ounces. How many ounces are left? 2 ounces
+Write 2 under the ounces.
+10. Now add the pounds. How many pounds? 9 pounds
+11. Read the whole answer. 9 pounds
+(Repeat steps 1-11 with additional problems.)
+2 ounces
+Format 12.5
+SUBTRACTION WITH RENAMING
+TEACHER STUDENTS
+1. (Write the following problem on the board.)
+5 lb 2 oz
+-2 lb 9 oz
+2. Read the problem.
+3. Can you start with 2 ounces and subtract 9 ounces?
+4. You must rename. Cross out 5 pounds and write 4.
+5. We took one pound from five pounds. How many 
+ounces in a pound?
+5 lb 2 oz minus 2 lb 9 oz
+No
+16
+continued
+
+[p.276]
+276 Part II Basic Concepts and Skills
+Format 12.5 (continued)
+SUBTRACTION WITH RENAMING
+TEACHER STUDENTS
+6. Write 16 + in front of the 2 ounces.
+7. How many ounces do we start with now?
+8. Cross out 16 + 2 and write 18 above it.
+9. And what does 18-9 equal?
+So how many ounces do you end up with?
+Write it.
+10. How many pounds do you end up with?
+Write it.
+11. What's the answer?
+(Repeat with additional examples.)
+18
+9
+9 ounces
+2 pounds
+2 lb 9 oz
+Format 12.6
+EXPRESSING TIME AS MINUTES AFTER THE HOUR
+(UNITS OF 5 MINUTES)______________________ __
+TEACHER STUDENTS
+Part A: Determining the Hour
+1. (Draw the following clock on the board.)
+2. One of the hands is missing on this clock. (Point to the 
+hour hand.) This short hand is the hour hand. What is the 
+short hand?
+3. Let's figure out what hour the hand is after. We start at the 
+top of the clock and say the numbers until we come to the 
+hour hand. I'll touch; you say the numbers. Say stop when 
+I come to the hour hand. (Starting with 12, touch each 
+numeral and then the hour hand as the children say the numbers.)
+4. What was the last numeral I touched?
+5. The hour hand is after 5. So, the hour is after 5. Tell me 
+about the hour.
+(Repeat steps 1-5 with after 8.)
+6. (Point the hour hand to after 5.) Now let's figure out the 
+hour a fast way, without counting. Look at the clock. 
+What numeral is the hour hand after?
+So tell me about the hour.
+(Repeat step 6 with several more examples: after 9, 
+after 2, after 6, after 3, after 10.)
+The hour hand
+12, 1, 2, 3, 4, 5, stop
+5
+After 5
+5
+After 5
+
+[p.277]
+Chapter 12 Measurement, Time, and Money 277
+TEACHER
+Part B: Minutes After the Hour
+1. (Draw the following clock on the board.)
+STUDENTS
+2. This long hand is the minute hand. What is the long hand called?
+The minute hand is very funny. It tells you to count by 5. What 
+does the minute hand tell you to do?
+3. Watch me figure out the minutes. (Point to the minute hand.)
+I touch the top of the clock and say zero. Then I count by 5 until
+I come to the minute hand. (Touch the clock above 12.) Zero.
+(Starting with 1, touch each numeral as you count: 5, 10, 15, 20, 25.)
+4. Tell me about the minutes.
+5. Your turn. I'll touch the numerals; you count by 5. Remember to 
+say zero when I touch the top of the clock. (Touch the clock 
+above 12 and then touch each numeral as the children count.)
+6. Tell me about the minutes.
+Yes, 25 minutes.
+(Repeat steps 4-6 with five more examples: hand points to 3, 
+hand points to 7, hand points to 2, hand points to 10, hand 
+points to 4.)
+Part C: Structured Board Presentation
+1. (Draw the following clock on the board.)
+The minute hand
+Count by 5
+25 minutes
+0, 5, 10, 15, 20, 25
+25 minutes
+2. We're going to figure out what time this clock shows. First we'll 
+figure out the minutes. Then we'll figure out the hour.
+3. First the minutes. Which hand is the minute hand, the
+short hand or the long hand?
+4. What does the minute hand tell you to count by?
+Where do you start counting?
+What do you say?
+(Repeat steps 3 and 4 until all questions are answered correctly.)
+5. Count by 5 to the minute hand. (Touch the top of the clock 
+and then the numerals as the children count.)
+How many minutes?
+I'll write the answer. (Write 15 minutes under the clock.)
+The long hand
+Count by 5
+At the top of the clock 
+Zero
+0, 5, 10, 15
+15
+continued
+
+[p.278]
+278 Part II Basic Concepts and Skills
+Format 12.6 (continued)
+EXPRESSING TIME AS MINUTES AFTER THE HOUR
+(UNITS OF 5 MINUTES)
+TEACHER
+6. We know it's 15 minutes, but we don't know about the hour. 
+Look at the hour hand. Tell me about the hour.
+7. Yes, after 6. I'll write the answer. (Write after 6.) That's the time the clock 
+shows, 15 minutes after 6. What time does the clock show? Say the time. 
+(Repeat steps 1-7 with 5 minutes after 7, 45 minutes after 4, 20 minutes 
+after 2, 25 minutes after 10.)
+Part D: Structured Worksheet
+1. (Give students a worksheet that includes about six to eight clocks 
+like those above.)
+STUDENTS
+After 6
+15 minutes after 6
+minutes after minutes after---------
+2. Everyone touch the first clock on your worksheet. First you'll figure 
+out the minutes, then you'll figure out the hour.
+3. Which is the minute hand?
+What does the minute hand tell you to count by?
+Where do you start counting?
+What do you say at the top of the clock?
+Let's figure out the minutes.
+4. Touch the 12. Count and touch as I clap. (Clap once each second.)
+How many minutes?
+Write 35 in front of the word "minutes."
+5. Touch the hour hand. Tell me about the hour.
+Yes, it says after 4. Write 4 in the next space.
+6. Now tell me what time that clock says.
+(Repeat steps 2-6 with each remaining clock.)
+Part E: Less Structured Worksheet
+1. (Give the students a worksheet with problems like the one below.)
+The long hand
+Count by 5
+At the top of the clock 
+zero
+0, 5, 10, 15, 20, 25, 30, 35
+35 minutes
+After 4
+35 minutes after 4
+minutes after----------
+2. Touch clock a. You're going to figure out the time and write it under the clock.
+3. Figure out the minutes and write the minutes in the first blank (Monitor 
+responses.) How many minutes?
+4. Now figure the hour and write it in the last blank.
+5. Read what time the clock says.
+20
+20 minutes after 6
+
+[p.279]
+Chapter 12 Measurement, Time, and Money 279
+continued
+Format 12.7
+EXPRESSING TIME AS MINUTES BEFORE THE HOUR
+TEACHER STUDENTS
+Part A: Determining the Hour
+1. (Draw the following clock on the board.)
+/10 2∖
+∣9 κ 31
+∖8 V
+2. In telling time, you've learned to say how many minutes 
+after the hour. Another way of telling time is to say the 
+number of minutes before the hour.
+3. Look at this clock. What hour is it after?
+4. The next bigger number tells you the hour it's before. Tell me 
+the hour it's before.
+Yes, it's before 5. What is the hour?
+5. (Move the hour hand between 7 and 8.) Tell me the hour 
+by saying what hour it is before.
+(Repeat step 5 moving the hand to five more positions: 
+between 2 and 3, between 10 and 11, between 6 and 7, 
+between 11 and 12, between 12 and 1.)
+Part B: Minutes Before the Hour
+1. (Draw the following clock on the board.)
+∕ιo 2∖
+19 >, 31
+∖8^ * 4∕
+Vey
+2. Now we'll figure out the minutes before the next hour. 
+When we figure the minutes before the hour, we start 
+at the 12 but we count this way (Points) until we 
+get to the minute hand. My turn: 0, 5, 10, 15, 20. It's 
+20 minutes before. How many minutes before?
+3. Show me which way you count to figure the minutes 
+before the hour. Where do we start counting?
+What do we say first?
+(Move minute hand to 10.) Tell me how many minutes before.
+To correct: We're figuring out minutes before, so we count 
+this way (<r"). I'll touch, you count.
+(Repeat step 3 with four more examples: hand pointing 
+to 10, 8, 11, 7.)
+4
+5
+Before 5
+Before 8
+20 minutes before
+At the 12
+Zero
+10 minutes before
+
+[p.280]
+280 Part II Basic Concepts and Skills
+Format 12.7 (continued)
+EXPRESSING TIME AS MINUTES BEFORE THE HOUR
+TEACHER
+Part C: Structured Board Presentation
+STUDENTS
+1. (Draw the following clock on the board.)
+minutes before
+2. Let's tell what time this clock says by telling how many 
+minutes before the hour.
+3. (Point to the hour hand.) Which hand is this?
+What hour is it before?
+4. (Write 4. Point to minute hand.) Which hand is this?
+How many minutes before 4 is it?
+(Write 20.)
+To correct: Show me which way we count when we figure 
+out minutes before. Count as I point.
+5. What time does the clock say?
+(Repeat steps 1-5 with additional times: 5 before 2, 25 
+before 8, 15 before 11,10 before 12, 20 before 5.)
+Part D: Structured Worksheet
+1. (Give students a worksheet with six to eight clocks.
+Under each clock is written minutes before.)
+2. Let's find out what time these clocks say by finding 
+out how many minutes before the hour.
+3. Find the hour hand on clock a. What hour is it before?
+4. Now let's find out how many minutes before 8. Start 
+at the top of the clock—remember which way to count. 
+How many minutes before 8?
+5. What time does this clock say?
+Fill in the blanks.
+(Repeat with remaining examples.)
+The hour hand
+4
+The minute hand
+20 minutes
+20 minutes before 4
+Before 8
+20 minutes
+20 minutes before 8
+
+[p.281]
+Chapter 12 Measurement Time, and Money 281
+Format 12.8
+COIN EQUIVALENCIES
+TEACHER STUDENTS
+Part A: Counting Similar Coins
+1. (Show students real or pretend coins.) I want to find out 
+how many nickels equal one dime. How much is a dime worth?
+So I count nickels until I get to 10. What do I count by 
+when I count nickels?
+Stop me when I get to 10. 5,10...
+How many nickels did I count?
+So how many nickels equal one dime?
+(Repeat step 1 to provide additional practice in counting similar coins to 
+demonstrate equivalencies.)
+2. (Review previously taught equivalencies.)
+How many pennies in a nickel?
+How many nickels in a dime?
+How many pennies in a dime?
+Part B: Counting Mixed Coins
+I gave a friend a quarter and he gave me two dimes and a nickel. Let's figure out 
+if these coins are worth the same as a quarter. How much is a quarter worth?
+Let's count the coins and see if they're worth 25c. I'll touch. You count. 
+(Touch each dime and then the nickel as the students count.)
+Are those coins worth 25c?
+(Repeat Part B with additional equivalency problems with mixed coins.)
+10 cents
+5
+Stop
+2
+2
+25 cents
+10, 20, 25
+Yes
+Format 12.9
+VERIFYING CHANGE
+TEACHER STUDENTS
+1. (Write the following on the board.)
+36¢ PP P P D Q Q
+2. (Point to P.) This stands for penny.
+(Point to D.) This stands for dime.
+(Point to Q.) This stands for quarter.
+(Point to each letter in random order and ask,) What does this 
+stand for?
+3. (Point to 36<t.) John bought apples that cost 36c. He gave the 
+cashier a dollar. We're going to count the change John got and 
+see if it's right. We'll count from 36 and see if we end with a dollar.
+(Point to P.) What do we count by for these?
+(Point to D.) What do we count by for this?
+(Point to Q.) What do we count by for these?
+4. Let's count the change. Start with 36—count. (Point to
+letters as students count.)
+Did we end with a dollar?
+(Repeat steps 1-4 with several more examples.)
+1
+10
+25
+37, 38, 39, 40, 50, 75, 100
+Yes
+
+[p.282]
+282 Part II Basic Concepts and Skills
+Format 12.10
+COUNTING COINS TO REACH AN EXACT AMOUNT
+TEACHER STUDENTS
+Part A: Choosing the Correct Coins
+(Have coins ready for each student to use.)
+1. Today you're each going to count out money. I'll tell you how 
+much something costs and you count out the money to buy 
+it. When you count to reach an exact amount of money, you 
+start with the coins that are worth the most so you can use the 
+fewest number of coins. If I want to buy something for 25c,
+would I use 25 pennies or 1 quarter? 1 quarter
+Why?
+Right, a quarter is worth more than a penny. If I want to buy
+A quarter is worth more than a 
+penny.
+something that costs 20c, would I use nickels or dimes? Dimes
+Why?
+2. My turn. I want to buy a balloon that costs 31c. I start 
+with a quarter: 25, 30, 31. (Write Q N P on board.)
+3. Your turn. (Pass out coins.) A toy car costs 28c. Start
+A dime is worth more than a nickel.
+with the coin that's worth the most and count out 28c
+(Monitor student responses.)
+(Repeat step 3 with several more examples.)
+Part B: Counting Coins When You Don't Have the Exact Amount
+1. I'm going to use the coins 1 have to buy something 
+that costs 56c.
+(Write 56¢. Below, write Q Q Q D D D.)
+This is all the money 1 have to use. 1 start with the coin 
+that has the greatest value. 1 get as close as 1 can. If 1 
+don't have the exact amount, 1 have to give more. I'll 
+get the extra money back as change. Watch.
+(Circle a coin each time you count: Q, Q, and D.)
+25, 50, 60.
+1 paid more than 56c, so I'll get some change back.
+(Give the students a worksheet with problems like the 
+following.)
+a. 36< Q D D N
+b. 72< Q D D D N N P
+c. 29¢ D D D N N P P
+2. Your turn. Point to problem a on your worksheet.
+Start with the coin worth the most. If you don't have exactly 
+36c, count more than 36. Circle the coins you'll use. Raise your 
+hand when you're done.
+Students should put out a quarter 
+and three pennies.
+(When most hands are raised) Tell me the coins you circled.
+3. (Repeat step 2 with the remaining problems.)
+Q, D, N
+
+[p.283]
+Chapter 12 Measurement, Time, and Money 283
+Format 12.11
+DECIMAL NOTATION FOR MONEY
+TEACHER STUDENTS
+Part A: Reading Decimal Notation
+1. (Write the following on the board.)
+$4.32
+2. Here is the way to write dollars and cents. (Point to the decimal 
+point in $4.32.) This dot is a decimal point. It divides dollars and 
+cents. (Point to 4.) This tells us four dollars. (Point to 32.) These 
+two numbers tell us about cents. I'll read the amount: Four 
+dollars and thirty-two cents.
+3. (Write the following on the board.)
+$3.62
+How many dollars? 3 dollars
+How many cents? 62 cents
+Say the whole amount. $3.62
+(Repeat step 3 with $7.20, $.45*, $6.00, $.30*.)
+*For examples with no dollars, the teacher should model the 
+response on the first day the format appears.
+Part B: Writing with Decimal Notation
+1. (Give each student a sheet of lined paper.) You're going to write 
+money amounts using a dollar sign and a decimal point.
+2. Listen: Eight dollars and thirty-two cents. Say that. $8.32
+How many dollars? 8 dollars
+Write a dollar sign, then an 8.
+3. Eight dollars and thirty-two cents. How many cents? 32 cents
+Write a decimal point on the line. Then write 32.
+4. What amount did you write? $8.32
+(Repeat steps 2-4 with these examples: $6.42, $.32, $4.10, $7.00, 
+$.57, and $9.00.)

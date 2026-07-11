@@ -1,0 +1,1444 @@
+[p.39]
+Chapter
+Symbol Identification 
+and Place Value
+LEARNING OUTCOMES
+5.1 Discuss the relationship between numeral identification and place value and why 
+place value is critical to mathematical understanding.
+5.2 Explain the importance of introducing place value charts prior to introducing 
+manipulatives when teaching place value concepts.
+5.3 Describe the general teaching procedures for reading and writing numerals.
+5.4 Explain how to teach students to read and write numerals beyond 20.
+SKILL HIERARCHY
+Symbol identification and place value are addressed together in this chapter because a numeral 
+has a different value depending on the column in which it is placed. For example, 4 in 483 has 
+the value of 400 but 4 in 64 has the value of 4. Symbol identification, especially reading and 
+writing numerals accurately, along with a strong conceptual understanding of place value con­
+cepts prepares students for more advance computation and problem solving.
+The Instructional Sequence and Assessment Chart provides a recommended progression 
+of skills that is designed to integrate critical place value concepts with numeral reading and 
+writing skills. Numeral identification and the concept of numeral/object correspondence form 
+the foundation of the Instructional Sequence and Assessment Chart. Numeral/object one-to- 
+one correspondence requires students to write the numeral that corresponds to the number of 
+objects in a group or, conversely, draw a group of lines to show the number represented by a 
+numeral.
+Place value concepts are introduced through the following instructional activities: reading 
+and writing tens, hundreds, thousands, and millions numerals; expanded notation; and column 
+alignment. In reading multi-digit numerals, students translate each digit into a value according 
+to its position and then identify the entire numeral. Writing numerals requires the reverse— 
+breaking into parts rather than putting parts together.
+
+[p.40]
+40 Part II Basic Concepts and Skills
+Expanded notation and column alignment are critical to reading and writing multi-digit 
+numerals. Expanded notation problems with hundreds numerals involve rewriting a numeral by 
+identifying its components:
+342 = 300 + 40 + 2
+When teachers see that students can read and write hundreds numerals, they then introduce 
+column alignment problems with hundreds numerals:
+342 + 8 is rewritten as 342
++8
+The Instructional Sequence and Assessment Chart lists specific skills, indicating their rel­
+ative order of introduction. Note that many of the tasks in kindergarten and first grade require 
+teachers to test students individually. In later grades, only tasks requiring students to read numer­
+als need be tested individually.
+........................... .............. -... ........ . . ............. — —
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type Performance Indicator
+K Reading numerals zero through 10 Read these numerals: 4261 73085910
+K Writing numerals zero through 10 Write these numerals: 426173085910
+κ
+κ
+Writing members of set (lines) to represent a 
+numeral
+Writing a numeral to represent members 
+of a set
+4 6
+III I I I I I I I
+κ Reading teen numerals Read these numerals: 15 11 13 12 17 19 14 16 18
+κ Writing teen numerals Write these numerals: 15 11 13 12 17 19 14 16 18
+K-1 Reading numerals from 20 to 99 Read these numerals: 64 81 44 29
+K-1 Writing numbers from 20 to 99 Write these numerals: 47 98 72 31
+1 Column alignment:
+Rewriting horizontal addition and 
+subtraction problems
+Rewrite the following problems vertically:
+85 + 3 =_____
+4 + 25 =_____
+37 - 2 =_____
+1 Expanded notation 63 =_____ +______
+92 =_____ +______
+2 Reading and writing numerals between 100 and 
+999 except those with a zero in the tens column
+Read: 320, 417, 521
+Write seven hundred fifteen_____
+Write four hundred thirty-six_____
+Write three hundred fifty_____
+2 Reading and writing numerals between 100 and 
+999 with zero in tens column
+Read: 502, 708, 303
+Write four hundred eight_____
+Write seven hundred two_____
+Write three hundred three_____
+
+[p.41]
+Chapter 5 Symbol Identification and Place Value 41
+2 Rewriting horizontal equations; one numeral is a 
+hundreds numeral
+305 + 8 + 42 =_____
+428 - 21 =_____
+31 + 142 + 8 =_____
+2 Expanded notation with hundreds numerals 382 =_____ +______ +______
+417 =_____ +______ +______
+215 =_____ +______ +______
+3 Reading and writing thousands numerals 
+between 1,000 and 9,999 with no zeros in 
+hundreds or tens column
+Read: 3,248; 7,151; 1,318
+Write five thousand three hundred fourteen_____
+Write two thousand six hundred forty-three_____
+Write one thousand one hundred forty-one_____
+3 Reading and writing thousands numerals 
+between 1,000 and 9,999 with a zero in the 
+hundreds column
+Read: 7,025; 8,014; 2,092
+Write five thousand seventy-two_____
+Write one thousand forty_____
+Write six thousand eighty-eight_____
+3 Reading and writing thousands numerals 
+between 1,000 and 9,999 with zeros in the 
+hundreds and/or tens columns
+Read: 7,025; 2,002; 1,409
+Write six thousand eight_____
+Write nine thousand four_____
+Write five thousand two_____
+3 Column alignment:
+Rewriting horizontal problems
+35 + 1,083 + 245 =_____
+4,035 - 23 =_____
+8 + 2,835 =_____
+4 Reading and writing all thousands numerals 
+between 10,000 and 999,999
+Read: 300,000
+90,230
+150,200
+Write two hundred thousand_____
+Write ninety thousand four hundred_____
+Write one hundred thousand two hundred_____
+4 Reading and writing numerals between 1 million 
+and 9 million
+Read: 6,030,000
+5,002,100
+1,340,000
+Write seven million_____
+Write three million, eighty thousand_____
+Write eight million, six hundred thousand_____
+5 Reading and writing numerals between 
+10 million and 999 million
+Read: 27,400,000
+302,250,000
+900,300,000
+Write ten million_____
+Write forty million two hundred thousand_____
+CONCEPTUAL UNDERSTANDING «•••••••
+In this chapter, we introduce reading and writing numerals using place value charts so that stu­
+dents can see how the numerals represent their respective values. These charts are used both by 
+the teacher to introduce place value concepts and by the students as they practice independently. 
+Once students have mastered these place value skills, the charts are no longer necessary but can 
+be reintroduced when correcting errors.
+
+[p.42]
+42 Part II Basic Concepts and Skills
+Although many commercial programs recommend introducing place value concepts using 
+manipulatives, we recommend delaying the use of manipulatives until after students demon­
+strate their ability to read and write numerals using place value charts. The manipulatives used 
+in this way provide students with further evidence of the value of the numeral and increase the 
+chances that students are using the manipulatives correctly.
+INSTRUCTIONAL PROCEDURES: SYMBOL IDENTIFICATION ∙∙∙∙∙∙..
+Format 5.1: 
+Introducing New
+Numerals
+Watch how Michaela uses a clear 
+point-and-touch signal along 
+with individual turns to ensure 
+all students are responding and 
+have mastered the new numeral.
+This section addresses skills typically taught during kindergarten and early first grade. These 
+skills are prerequisites for the equality-based strategies that provide a conceptual understanding 
+of addition and subtraction. The skills, listed in the order they are discussed in this section, are 
+as follows:
+1. Numeral identification (zero through 10)
+2. Numeral writing (zero through 10)
+3. Symbol identification and writing (+, —, =)
+4. Equation reading and writing
+5. Numeral/object correspondence
+Numeral Identification
+Numeral identification tasks usually begin when students can rote count at least to 10. The 
+reason for delaying numeral identification is to avoid the potential confusion that could occur 
+between counting and recognizing numerals. Students who enter school knowing how to count 
+can begin learning to identify numerals immediately.
+The sequence in which numerals are introduced is important. A basic guideline in sequenc­
+ing the introduction of numerals is to separate similar-looking and similar-sounding numerals. 
+Students are likely to confuse 6 and 9 because they look similar; likewise, students may have 
+difficulty discriminating 4 and 5 because they sound alike, both beginning with the same sound. 
+Therefore, a good sequence of introduction would separate both pairs of numerals by several 
+lessons. One possible sequence for introducing numerals 0 to 10 is 4, 2, 6, 1, 7, 3, 0, 8, 5, 9, 10. 
+Note the separation of 6 and 9; 1,0, and 10; and 4 and 5. This sequence is included as an exam­
+ple and is certainly not the only sequence that will minimize student errors.
+A second sequencing guideline is to introduce new numerals cumulatively. A new numeral 
+is not presented until students have demonstrated mastery of the previously introduced sym­
+bols. Teachers working with students who enter school with little or no previous knowledge of 
+numerals can generally introduce new symbols at a rate of one new symbol each three to five 
+lessons.
+Format 5.1: Introducing New Numerals consists of a model in which the teacher points 
+to the numeral and tells the students the name of the numeral; a test in which the teacher asks 
+the students to identify the new numeral; and discrimination practice in which the teacher asks 
+students to identify the new numeral and previously introduced numerals.
+In this format, the teacher first writes a set of numerals on the board. Each of the previously 
+introduced numerals is written once. The new numeral is written several times to ensure that 
+the student attends to the appearance of the numeral rather than its position on the board. The 
+most important part of the introduction is the discrimination practice in step 2 of the format.
+Note that the presentation of the numeral follows an alternating pattern: new numeral, one pre­
+viously introduced numeral, new numeral, two previously introduced numerals, new numeral, 
+three previously introduced numerals, and so on. The time the student has to remember the new 
+numeral is gradually increased by interspersing practice with more familiar numerals. This pat­
+tern is designed to help students better remember a new or difficult numeral. Individual turns are 
+given after the teacher presents the discrimination practice. If, when given an individual turn, 
+a student misidentifies or does not respond, the teacher models and tests the new numeral and 
+uses the alternating pattern as a delayed test, focusing on that numeral and previously identified 
+numerals.
+
+[p.43]
+Chapter 5 Symbol Identification and Place Value 43
+FIGURE 5.1 Point and touch signal
+A clear point-and-touch signal is essential for presentation of this format. The features of 
+a good point-and-touch signal are illustrated in Figure 5.1. When signaling, the teacher points 
+under the numeral (not touching the board), making sure that no student’s vision is blocked by 
+any part of the teacher’s hand or body. After pointing under the numeral for 1 to 2 seconds, the 
+teacher signals by moving her finger away from the board and then back toward it, touching 
+under the numeral. The out-and-in motion is done crisply with the finger moving away from the 
+board (about 6 inches) and then immediately moving back to the board. When the finger touches 
+below the numeral, the students are to respond. The out-and-in motion should be done the same 
+way every time it is used. Any hesitation or inconsistency makes unison responding difficult 
+because the students cannot tell when they are supposed to answer.
+As with rote counting, the numeral identification tasks are more efficiently taught if pre­
+sented for 3 to 5 minutes at several different times during the lesson rather than in one long 
+session. Numeral identification also can be practiced at various times of the day. Many teachers 
+put the symbols on a bulletin board or wall in the room. The teachers then ask the students to 
+identify the symbols during early morning exercises, before going to recess or lunch, or at other 
+opportune times. The practice provided by these brief tasks, interspersed throughout the day, can 
+make a great difference in how quickly low-performing students learn to identify symbols.
+Numeral Writing
+Numeral writing is an important skill in and of itself and also reinforces numeral identification. 
+As a general rule, a new numeral can be introduced into numeral writing exercises several les­
+sons after it first appears in a numeral identification format. As noted in numeral identification, 
+symbols are introduced cumulatively. Instructionally naive students will be ready to practice 
+writing a new numeral every three to five lessons. There are three basic stages in teaching stu­
+dents to write single-digit numerals:
+1. Tracing numerals written on worksheets
+2. Copying numerals
+3. Writing numerals from dictation
+For worksheet tracing exercises, we recommend that dots and dashes be used to prompt the 
+students in writing the numerals.
+
+[p.44]
+44 Part II Basic Concepts and Skills
+During the first several lessons, the teacher leads the students through tracing, monitor­
+ing them quite carefully and, if necessary, moving the students’ hands to help them make the 
+lines. The students say the name of the numeral each time they write it. When the students are 
+able to trace a numeral without assistance, the teacher introduces copying. In initial copying 
+exercises, dashed lines and dots appear for the first numeral but only dots for the remaining 
+numerals.
+When students can do this exercise, a more sophisticated copying exercise is introduced in 
+which no dots or dashed lines are used as prompts. The students should practice writing each 
+numeral many times each day for the first week the symbol is introduced. The number of repeti­
+tions can be gradually reduced as student performance improves.
+The third and final stage of numeral writing includes numeral dictation exercises in which 
+the teacher says a number and the students write the numeral. Some students find dictation exer­
+cises quite difficult in that they have to remember not only what a numeral looks like but also 
+how to write it. The prerequisites for introducing a numeral in dictation exercises are being able 
+to identify and copy the numeral.
+In a numeral dictation exercise, the teacher follows the same alternating pattern used in 
+numeral identification tasks. For example, if students have learned to write 4, 2, 6, 1 and are 
+being introduced to 7 in a dictation exercise, the sequence of examples presented by the teacher 
+might be 7, 4, 7, 6, 1, 7, 4, 2, 6, 7. The worksheet on which the students are to write the numerals 
+should have blank spaces or boxes large enough to write each symbol.
+Monitoring student writing is important when presenting numeral dictation exercises. The 
+teacher should check the responses of all low-performing students after each numeral is writ­
+ten. The responses of higher-performing students can be checked after every second or third 
+numeral. As soon as the last student has finished writing a symbol, if no mistakes were made, 
+the teacher should dictate the next numeral. Too much time between tasks can result in off-task 
+behavior.
+Correcting Errors The correction procedure for errors involves a model-test-alternating pat­
+tern procedure. The teacher shows the students how to write the numeral, has the students copy 
+it, and then alternates between having students write the missed numeral and other numerals, 
+which serves as the delayed test.
+Teachers must be careful in setting reasonable criteria for neatness. Students with little prior 
+writing experience may require many months of practice before they consistently write numer­
+als neatly. The teacher should gradually increase criteria for legibility and neatness. In initial 
+exercises, writing a reasonable facsimile of a numeral is the critical student behavior. If a stu­
+dent writes a numeral backward, the teacher may respond by acknowledging that the correct 
+numeral was written but address the positioning: “Good. That is a 4, but here’s how to write it.” 
+Note that the correction is made in a positive manner.
+Symbol Identification and Writing
+The symbols for plus, minus, equal sign, and empty box are taught with the same procedures 
+used for teaching numerals. An empty box can be introduced as “how many,” which facilitates 
+reading equations; for example, 6 + 5 = □ is read: “Six plus five equals how many?”
+Introduction of the various symbols should be interspersed throughout the lessons in 
+which numerals are introduced. The first symbol would be introduced after several numer­
+als; subsequent symbols would be introduced after two to three additional numerals had been 
+introduced.
+Equation Reading and Writing
+Equation reading and writing are prerequisite skills for problem solving and learning math facts. 
+Children may have difficulty reading a problem such as 6 — 3 = □, even though they can iden­
+tify each symbol in isolation. When they read a problem, they must connect the numerals and 
+symbols together. Reading and writing number sentences requires considerable practice.
+Equation reading is introduced when the students can identify numerals and symbols accu­
+rately and fluently. If students have not received adequate practice to quickly identify numerals 
+when they appear in isolation, they will have much difficulty reading equations.
+
+[p.45]
+Chapter 5 Symbol Identification and Place Value 45
+Because the procedure for teaching the reading of equations is quite straightforward, a for­
+mat is not included. The teacher simply writes several equations on the board and follows a 
+model-lead-test-delayed test procedure:
+4 + 3 = □ 7 - 3 = □
+The teacher models reading the first equation at a rate of about a numeral or symbol 
+each second. Reading at a faster rate should be avoided initially, since it may encourage 
+guessing. The teacher then leads by responding with the students as they read the statement. 
+Lower-performing students may need 10 or more repetitions. When the students can read the 
+statement by themselves, the teacher tests the group and then individuals. The teacher gives a 
+delayed test using previously introduced examples before introducing subsequent statements.
+Equation reading is practiced daily for several weeks. It can be discontinued when addition 
+is introduced, since the addition formats begin with the students reading an equation.
+Equation writing requires students to write equations dictated by the teacher; for example, 
+“Listen: Four plus three equals how many? Say that. . . Write it.” Equation writing is introduced 
+when the students can read equations with relative ease and are fluent in writing numerals and 
+symbols during dictation exercises.
+Format 5.2: Equation Writing involves the students repeating a statement at a normal 
+rate, then repeating the statement at a slow rate, and finally writing the statement. The purpose 
+of having students say the statement slowly is to help young students who write slowly remem­
+ber the latter part of the statement as they are writing the earlier part.
+Correcting Errors A common error is writing a numeral or symbol out of order. As soon as 
+the teacher notices an error in a written equation, she points to each symbol while saying the 
+correct statement. For example, if a student writes 6 + □ = 2 for 6 + 2 = □, the teacher says 
+“6” and points to 6; says “plus” and points to +; says “2” and points to the box that the student 
+has written. The teacher immediately says, “This is not 2. Let’s try the problem again.” The 
+teacher has the student cross out or erase the problem, then repeats the equation, has the student 
+say the equation, and then has the student write the equation. The teacher provides a delayed test 
+by dictating similar equations or returning to the missed equation at a later time.
+Numeral/Object Correspondence
+This section includes two types of one-to-one correspondence tasks. In the first task, the stu­
+dent identifies a symbol and then writes the appropriate number of lines; for example, the stu­
+dent identifies the numeral 2 and then draws two lines under the 2. For the second, the student 
+counts the number of lines or other objects and writes the numeral that represents the number of 
+objects; for the task below, the student writes a 2 in the box.
+Both tasks are component skills for the equality-based strategies students are taught to solve 
+addition and subtraction in which they write and count lines. Therefore, these tasks should be 
+taught relatively early in the instructional sequence. Both one-to-one correspondence skills can 
+be introduced within a short period of time, since they usually are easy for students to learn. As 
+soon as the students learn to identify a new numeral, teachers should incorporate it into these 
+tasks.
+Identifying a Number and Drawing Lines Prior to introducing tasks in which the 
+students draw lines to correspond to a numeral, the teacher may need to provide practice for 
+lower-performing students in simply drawing lines. The teacher gives students a piece of paper 
+with a series of dots about 1 /4 inch apart and 1/2 inch above a horizontal line. The teacher then 
+models how to draw Unes. This initial exercise is followed by an exercise in which students write 
+a line each time the teacher claps.
+
+[p.46]
+46 Part II Basic Concepts and Skills
+Students may write crooked lines or crowd them together—for instance, ∖ΛV∖. Either 
+error may cause overlapping or crossed lines, which makes accurate counting difficult. The 
+teacher should carefully monitor and correct by modeling and then, if necessary, guiding the 
+student’s pencil as the student makes the lines. When students can draw lines as the teacher 
+claps, the teacher introduces an exercise in which the students also count as they draw lines. 
+When the students can count and draw lines as the teacher claps, exercises with numerals can 
+be introduced.
+Format 5.3: Identifying a Symbol and Drawing Lines teaches students to draw lines 
+for numerals. In the format, students first identify a numeral, state that the numeral tells them 
+to draw a certain number of lines, and then draw the lines. Since most students readily learn 
+this skill, they require only two to four lessons before teachers can include this type of task on 
+independent worksheets. Note that a how-many box is included as an example in the teacher 
+presentation because students must understand that not every symbol tells them to draw lines.
+If students make errors on independent worksheet items, the teacher should test them to 
+determine the cause of the error. Did the student identify the numeral correctly? If not, the mis­
+identification caused the error. If the student identified the numeral correctly, the error resulted 
+from a line drawing error, which is corrected by reviewing Format 5.3.
+Counting Objects and Writing a Numeral Writing a numeral to represent a set of objects 
+is an integral part of the conceptual strategy we recommend for teaching addition. This strategy 
+involves drawing lines for each addend, counting all of the lines, drawing that number of lines 
+under the box on the other side of the equals, and finally writing the numeral for those lines 
+(the sum) in the box (see below). Note that a more detailed explanation of this initial strategy 
+designed to teach conceptual understanding of addition is provided in Chapter 7.
+£ Format 5.4:
+Writing a Numeral 
+for a Set of Objects 
+Watch how Tristan closely 
+monitors his students.
+4 + 2 = 6
+Illi II Hill
+Format 5.4: Writing a Numeral for a Set of Objects begins with an explanation of the 
+function of the objects under a box: “The objects under a box tell what numeral goes in the box.” 
+The students are then told to count the objects under the box and write the numeral for the num­
+ber they end up with. If students have mastered the necessary preskills of rational counting and 
+numeral writing, they will have little difficulty. After practicing this skill in two or three lessons, 
+tasks of this kind can be included on worksheets as independent activities.
+The two mistakes students might make on this task are miscounting the objects and writing 
+the wrong numeral. Often it is not clear by looking at a worksheet how a student derived an 
+answer. In this case, the teacher should ask the student to work several items while counting 
+aloud so that the cause of the error can be identified and an appropriate correction provided. If 
+the student cannot correctly count objects in several problems, the teacher should provide prac­
+tice on object counting (see Chapter 4). If a student writes the wrong numeral, the teacher needs 
+to provide practice in numeral identification and numeral dictation. Mistakes involving mechan­
+ics such as writing a numeral backward are not critical. However, the teacher should have the 
+student rewrite the backward numeral. As mentioned earlier, some students need months of 
+practice writing numerals before they consistently write them in the correct form.
+Practice and Review
+Once students are proficient with drawing lines for a symbol and writing a numeral for a group 
+of objects, the tasks may be extended to similar tasks using manipulatives. For example, rather 
+than drawing Unes for a symbol, students may be provided with counters or other objects. They 
+place the appropriate number of objects in a space below or next to each numeral. Students can 
+work in pairs to check one another’s work by reading each numeral and counting the corre­
+sponding objects.
+A large display can also be provided at a workstation with numerals and an empty box 
+below each numeral. A variety of objects could be made available with the display (10 each of 
+pencils, identical plastic toys, blocks, etc.). Students can create sets of objects for each numeral,
+
+[p.47]
+Chapter 5 Symbol Identification and Place Value 47
+placing the correct number of similar objects in each box. Other students then can check the sets 
+and create different sets for each numeral. The purpose of these types of activities is to provide 
+additional independent practice opportunities.
+INSTRUCTIONAL PROCEDURES: PLACE VALUE ∙∙∙∙**..
+Three skills related to place value discussed in this section are: (1) reading and writing numerals, 
+(2) expanded notation, and (3) column alignment. The teaching procedures discussed for reading 
+and writing numerals address the following: teens, tens, hundreds, thousands, and millions. The 
+teaching procedures are quite similar for reading and writing numerals. In reading numerals, the 
+students identify the numerals in each column (two tens and four ones) and their value (two tens 
+equal 20) and then combine the values to read the entire numeral (20 and 4 = 24). In writing 
+numerals, students first expand the number into its component parts (24 = two tens and four 
+ones) and then write each component.
+Variations in the teaching procedures are needed with teen numerals and numerals with 
+zero. With teen numerals, students say the ones number first (16 is read “sixteen,” not “teensix”) 
+but write the tens numeral first (in writing 16, students write the 1, then the 6). Numerals with 
+zeros are difficult because students must omit the zeros when reading (306 is read “three hun­
+dred six,” not “three hundred zero six”) but include them when writing, even though the students 
+don’t hear them. Instructions in reading and writing numerals should be carefully coordinated. 
+Students should be introduced to numeral identification first and then to numeral writing for 
+those types of numerals.
+Reading and Writing Teen Numerals
+Reading Teen Numerals Reading teen numerals is introduced when the students can read 
+all numerals between zero and 10. Regular teens are introduced before irregular teens. The 
+numerals 14, 16, 17, 18, and 19 are regular teens. The irregular teens are 11, 12, 13, and 15. Note 
+that 14 is regular because it is pronounced fourteen. But 12 is not pronounced Λt^teen, and 15 is 
+not pronounced fiveteen, so they are considered irregular.
+Format 5.5: Reading Teen Numerals Using Place Value Concepts is constructed in three 
+parts. In Part A, a structured board exercise, the teacher makes a chart on the board with spaces 
+for the tens and ones columns. The teacher tells the students that they read one 10 as “teen” 
+and models reading teen numerals. Then the students read them. On the first day of instruction, 
+examples are limited to regular teen numerals: 14, 16, 17, 18, and 19. The next day, one irregu­
+lar teen is introduced. A new irregular teen is introduced each day unless students have difficulty 
+with previously introduced teens. When a new irregular teen is introduced, the teacher alternates 
+between the new numeral and previously introduced numerals (13, 14, 13, 16, 18, 13, 17, 14, 19, 13) 
+to provide practice and facilitate retention.
+Part B is a less structured exercise in which the students read teen numerals without prompt­
+ing. Part B is presented daily for several weeks. Part C is a worksheet exercise designed to 
+emphasize place value concepts. In Part C, the students are shown pictures of counters and 
+instructed to circle the appropriate numeral. After writing teen numerals has been introduced, 
+students can write the appropriate numeral rather than circle it.
+Writing Teen Numerals Writing teen numerals is introduced when students can read teen 
+numerals accurately and fluently. As in the procedure for reading teen numerals, regular teen 
+numerals (14, 16, 17, 18, and 19) are introduced first, then irregular teen numerals (11, 12, 13, 
+and 15). Irregular teens can be introduced about two days after regular teens. If students have no 
+or little difficulty, a new irregular teen can be taught each day.
+Format 5.6: Writing Teen Numerals Using Place Value Concepts has four parts. Part A, 
+a preskill, contains a model-test procedure for teaching students to tell the component parts of 
+a teen numeral: 14 equals a 1 for the teen (10) and a 4. Part B is a structured board presentation. 
+The teacher refers to the place value chart on the board and writes the digits in the appropriate 
+columns. Part C is a structured worksheet exercise in which the teacher prompts the students as
+
+[p.48]
+48 Part II Basic Concepts and Skills
+they write numerals. Part D is an independent dictation exercise in which the teacher says teen 
+numbers and the students write them. If students are able to read the words fluently, the dictation 
+exercise can be replaced with a written worksheet in which students write the numerals indi­
+cated by written words.
+Practice in writing teen numerals is continued daily for several weeks to facilitate mastery. 
+The place value chart is included in writing exercises only for the first several weeks and then 
+dropped.
+Practice and Review
+The worksheet exercise in Figure 5.2 contains pictures of a group of 10 objects and several 
+single objects. The students are to fill in numerals in the tens and ones columns. This exercise, 
+which reinforces the place value concept, can be introduced after students become proficient in 
+writing dictated numerals.
+Additional worksheets to reinforce place value may include pictures of groups of common 
+objects, such as a bundle of pencils, a box of 10 crayons, and single objects. Finally, students 
+can be presented with groups of manipulative objects—for instance, a bundle of 10 toothpicks 
+with six single toothpicks, a bouquet of 10 flowers and individual flowers—or, if students know 
+the value of dimes and pennies, a dime and nine pennies. Students write the teen numeral for 
+each example.
+Reading and Writing Tens Numerals
+Reading Numerals 20-99 Reading numerals from 20 through 99 is introduced when 
+students can read teen numerals accurately and fluently. Students also should be able to count 
+by ones and skip count by tens to 100 (10, 20, 30, 40, 50, 60, 70, 80, 90, 100). Format 5.7: 
+Reading Tens Numerals Using Place Value Concepts is designed to teach students to read 
+numerals between 20 and 99.
+Parts A and B utilize piles of 10 blocks to emphasize the place value concept for tens num­
+bers. In Part A, the teacher draws several sets of 10 blocks. The teacher then has the students 
+count by tens to figure out the total number of blocks and verifies the tens place value (five tens 
+equal 50).
+In Part B, the teacher uses a model-test procedure to facilitate memorization of the various 
+place value facts for tens numbers. Some students can be expected to have difficulty with trans­
+lating two tens, three tens, and five tens, since the names for these numbers are irregular. While 
+four tens equal forty and eight tens equal eighty, two tens do not equal “twoty.”
+Parts C and D involve reading numerals in the place value chart. In Part C, the teacher 
+instructs students to start reading in the tens column. She asks students to identify the numeral in 
+the tens column and its value. Finally, the teacher asks students to read the entire numeral.
+
+[p.49]
+Chapter 5 Symbol Identification and Place Value 49
+In Part D, students read numerals with no prompting from the teacher. If students have a 
+lot of difficulty with Part D, they may have transitioned too quickly from Part C to Part D. The 
+teacher should return to the structured board presentation and provide additional practice. When 
+students demonstrate mastery, the teacher can continue to the less structured format in Part D. 
+When students can correctly identify the numerals using a place value chart, the teacher should 
+eliminate the prompt of the chart and have students read numerals without it. About a fourth 
+of the examples in Part D should be teen numerals to provide the appropriate discrimination 
+practice.
+In Part E, the student is to select the numeral that represents a group of blocks. The work­
+sheet shows diagrams with sets of 10 and individual blocks. The students determine the total by 
+first counting the piles of 10. Then they figure out what number the groups of 10 equal (three 
+tens equal 30). Finally, they count the single blocks, starting with the tens number they ended 
+with (31, 32, 33, 34), which requires that students have mastered the preskill of counting from 
+different numbers.
+Writing Numerals 20-99 Writing numerals for 20 through 99 is introduced after students 
+can read these numerals. The procedures for teaching students to write these numerals appear in 
+Format 5.8: Writing Tens Numerals Using Place Value Concepts. Parts A and B are preskills. 
+Part A teaches the student to say the composite parts of the numeral (97 is 90 and 7). Part B 
+teaches the students to tell how many tens in a tens number (50 is five tens). Part C introduces 
+writing numerals from 20 through 99 using a place value chart. The teacher says a number and 
+has the students say its component parts. For example, the teacher asks how many tens in 84 and 
+writes 8 in the tens column. The teacher then says, “Eighty equals 8 tens. Listen: 84 equals 80 
+and what else?” After the students say “4,” the teacher writes the 4 in the ones column. Part D 
+has the same steps as Paid C, except the students write the numerals. Part E is a dictation exer­
+cise. The teacher dictates numbers, and the students write the appropriate numerals in the place 
+value chart.
+About a third of the examples in Part D should be teen numbers. As with reading numer­
+als, if students make frequent mistakes with the less structured exercise, they have moved too 
+quickly from the prompted to the unprompted task. The teacher should then return to the struc­
+tured board presentation (Part C) before returning to Part D. When students respond confidently 
+to several consecutive examples in Part D, the teacher then can present the dictation exercise in 
+Part E.
+Teachers working with struggling students can expect these students to have reversal prob­
+lems, specifically with numerals ending in 1. For example, students may write 31 as 13, 71 as 
+17, or 21 as 12. To remedy these reversal problems, the teacher presents Parts B, C, and D from 
+Format 5.6: Writing Teen Numerals Using Place Value Concepts for one or two lessons con­
+currently with Format 5.8: Writing Tens Numerals Using Place Value Concepts, excluding 
+all tens numerals ending with 1 (21, 31, 41, 51). The purpose of excluding those tens numerals 
+is to ensure that students master the easier numerals before reintroducing numerals that students 
+have reversed.
+After the students write teen and tens numerals without assistance for several days, 
+the teacher can begin working directly on the reversal problem. She would return to Part E 
+of Format 5.8: Writing Tens Numerals Using Place Value Concepts but include minimally 
+different examples, focusing on the discrimination between tens and teen numerals like 13 and 
+31, 17 and 71. Part E may have to be reviewed daily for several weeks for students who are con­
+fused. Note that minimally different pairs are used only for struggling students, not for younger 
+students learning the skill for the first time.
+Reading and Writing Hundreds Numerals
+Reading Numerals 100-999 Reading hundreds numerals is usually taught during second 
+grade. Students should be able to read and write numerals for numbers below 100 prior to 
+the introduction of numerals from 100 to 999. The teaching procedure is very similar to that 
+used for teaching students to read tens numerals. The procedures for reading hundreds appear 
+in Format 5.9: Reading Hundreds Numerals Using Place Value Concepts. In Part A, the
+
+[p.50]
+50 Part II Basic Concepts and Skills
+Circle the correct numeral:
+FIGURE 5.3 Worksheet exercise for reading hundreds numerals
+three hundred sixty-two 320 362 360
+four hundred eighty-six 48 468 486
+two hundred seventy-one 217 270 271
+nine hundred thirty-two 732 932 923
+teacher introduces the hundreds column using a place value chart, explaining that numerals 
+in that column tell how many hundreds. The teacher then leads students in reading numerals. 
+He points to the digit farthest to the left, asks what column it is in, and then asks what number 
+the digit represents: “What column does this numeral start in?. . . How many hundreds do we 
+have?. . . What do five hundreds equal?” The teacher then does the same for each remaining 
+digit in the numeral. “How many tens do we have?. . . What do four tens equal?. . . How many 
+ones do we have?. . . What do eight ones equal?” A slight modification of the basic procedure is 
+used for numerals with a 1 in the tens column. This modification involving a prompt appears at 
+the end of Part A of Format 5.9. In Part B, the students read the numerals without that prompt.
+Daily exercises in reading numerals are continued for several weeks. Thereafter, practice in 
+reading numerals is incorporated into the formats for teaching computation strategies in which 
+the first step always involves reading the problem. Practice also can be provided through work­
+sheet exercises like that in Figure 5.3 where students read numerical words and then circle the 
+correct numeral. Obviously, such written exercises are appropriate only for students who can 
+decode the words.
+The sequence in which hundreds numerals are introduced is important. Hundreds numerals 
+that do not include a zero in the tens column should be introduced first. Numerals with a zero in 
+the tens column are difficult because the student says nothing for the zero. These more difficult 
+examples would be introduced in Part A about a week after introducing the easier numerals. A 
+slight modification to the format is required. In step 3 of Part A, the teacher would say, “We 
+have zero tens, so we don’t say anything when I point to the numeral zero.” For example, for 
+608, students say “600” when the teacher points to 6, remain quiet when the teacher points to 0, 
+and then say “8” when the teacher points to 8.
+When presenting exercises to teach students to read hundreds numerals with a zero in the 
+tens column, the teacher would include several sets of examples like these: 38, 308, 380; 42, 
+420, 402; 703, 730, 73. Note that each set contains three minimally different numerals: a tens 
+numeral and two hundreds numerals. The hundreds numerals include the same digits that appear 
+in the tens numeral plus a zero. In one of the hundreds numerals, the zero appears in the tens col­
+umn, and in the other hundreds numeral, the zero appears in the ones column. Minimally differ­
+ent examples, such as those above, are introduced only after students have been systematically 
+taught to read hundreds numerals with zeros. Students who correctly read minimally different 
+sets of examples have demonstrated mastery of this skill.
+Writing Numerals 100-999 Students usually have more difficulty learning to write hun­
+dreds numerals than to read them. The sequence in which hundreds numerals are introduced 
+in writing tasks is the same sequence recommended for reading numerals. We recommend that 
+hundreds numerals be introduced in two stages. During the first stage, hundreds numerals with 
+a zero in the tens column should be excluded; 248 would be acceptable, but 208 would not be. 
+Two hundred eight is troublesome because no tens number is heard. During the second stage, 
+numerals with a zero in either the tens or the ones column may be used.
+Format 5.10: Writing Hundreds Numerals Using Place Value Concepts includes the 
+procedures for teaching students to write hundreds numerals without a zero in the tens column. 
+In Part A, the teacher guides the students in writing numerals for numbers through 999. For 
+example, for writing 486, the teacher asks students to say the first part of the number (400) and 
+points out that since it’s a hundreds number, they are to start writing the numeral in the hun­
+dreds column. The teacher asks how many hundreds and has the students write the numeral (4) 
+in the hundreds column. The teacher then asks what column comes next (tens). This question
+
+[p.51]
+Chapter 5 Symbol Identification and Place Value 51
+is designed to remind students that they must always write a numeral in the tens column. The 
+teacher has the students say the tens number (80), asks how many tens in that number (8), and 
+has the students write that numeral (8) in the tens column. The ones column is completed next. 
+The students write 6 in that column.
+Part B is a supervised practice exercise in which numbers are written as words and students 
+must write the numerals. Teachers working with students struggling with decoding may read the 
+words to the students. Daily practice continues for several weeks. A place value chart is incorpo­
+rated into exercises for the first several weeks and then should be eliminated.
+Note that several tens numbers are included in Part B to reinforce the concept of proper col­
+umn alignment. The first digit in a tens number is written in the tens column, while the first digit 
+in a hundreds number is written in the hundreds column.
+Hundreds numbers with a zero in the tens column are introduced in writing exercises after 
+students can accurately write three-digit numerals without a zero in the tens column. For num­
+bers with a zero in the tens or ones column, step 3 in Pail A of Format 5.10 must be modified. 
+For example, after the students indicate that they do not hear a tens number, the teacher asks, 
+“So what do we write in the tens column?” “Zero.” “Write a zero in the tens column.” The 
+teacher then proceeds to step 4.
+Examples would be the same as for exercises focusing on reading numerals with a zero in 
+the tens column; minimally different sets such as 902, 92, 920; 48, 480, 408; and 702, 72, 720 
+should be used. Note that for the tens numbers, once students identify the tens column as the 
+column they start writing in (step 2), they can simply write the numeral.
+Reading and Writing Thousands Numerals
+Reading Numerals 1,000-9,999 Thousands numerals are usually introduced during third 
+grade. Format 5.11: Reading Thousands Numerals Using Place Value Concepts introducing 
+students to reading thousands numerals is fairly simple. Students are taught that the numeral in 
+front of the comma tells how many thousands. They read that numeral, say “thousand” for the 
+comma, and then read the rest of the numeral. For example, in reading 3,286, students say “3,” 
+then “thousand” for the comma, and finally “286.”
+Students should practice reading 8 to 10 numerals in this format. The sequence in which 
+thousands numerals are introduced should be carefully designed. We recommend that thousands 
+numerals be introduced in this sequence:
+1. Numerals between 1,000 and 9,999 without zeros in the tens or hundreds column
+2. Numerals between 1,000 and 9,999 that have zeros in the tens and/or hundreds column
+3. Numerals between 10,000 and 99,999
+4. Numerals between 100,000 and 999,999
+We recommend not including numerals with zeros in the tens or hundreds column initially, 
+since students may mistakenly develop the misrule that thousands have something to do with the 
+number of zeros in a numeral rather than the number of places. When numerals with zeros are 
+introduced, the teacher should pay careful attention to example selection. A fourth of the numer­
+als should have a zero in the hundreds and a zero in the tens columns, a fourth should have a 
+zero in just the hundreds column, another fourth should have a zero in just the tens column, and 
+a final fourth should have no zeros at all. A sample set of examples might include 2,000, 2,058, 
+2,508, 2,815; 7,002, 7,020, 7,200, 7,248; and 9,040, 9,400, 9,004, 9,246.
+During fourth grade, students should be introduced to thousands numerals between 1,000 
+and 9,999 that do not have a comma because some reference materials that students encounter 
+will have thousands numerals written without a comma. In presenting thousands numerals with­
+out a comma, the teacher tells the students that when a numeral has four digits, it is a thousands 
+numeral and then presents a list that includes a mix of thousands and hundreds numerals.
+Writing Numerals 1,000-9,999 We recommend teaching writing thousands in the same 
+sequence as identified previously for teaching reading thousands. Because teaching writing 
+thousands is very similar to teaching writing hundreds, we do not include a separate format. 
+Please see Format 5.10: Writing Hundreds Numerals Using Place Value Concepts for those
+
+[p.52]
+52 Part II Basic Concepts and Skills
+teaching procedures. The only change needed to that format is adding a thousands column in 
+the place value chart and adjusting examples accordingly. Note that initially, all numerals in 
+the teaching examples would have a digit other than zero in the hundreds and tens columns. 
+Subsequently, numerals with a zero in the hundreds column and/or the tens column would be 
+introduced.
+Numerals with a zero in the hundreds column are difficult because students may omit 
+the zero. Students often will write the numeral four thousand eighty-five as the numbers they 
+hear: four thousand, eighty, and five (4, 85). The teaching procedure for writing numerals 
+must be designed to reinforce the place value concept of writing digits in each of the thou­
+sands, hundreds, tens, and ones columns. Writing numerals with a zero in the hundreds or 
+tens column may be introduced about a week after the easier examples are taught. Just as 
+with reading thousands numerals, sets of minimally different examples should be presented 
+in numeral writing exercises: 4,028, 4,208, 4,218, 4,280; 6,200, 6,002, 6,020, 6,224; 5,090, 
+5,900, 5,009, 5,994.
+Practice in writing thousands numerals should be continued daily for several weeks. Prac­
+tice can be provided through worksheet exercises similar to those in Figure 5.3 for reading hun­
+dreds. Students read number words and then write the appropriate numerals.
+Reading and Writing Millions Numerals
+Millions numerals are usually taught during late fourth grade and early fifth grade. Read­
+ing millions can be taught using a procedure similar to that used for reading thousands. The 
+teacher instructs students to identify millions by examining the number of commas in the 
+numeral. Students are taught that when two commas appear, the numerals in front of the first 
+comma signify millions, while the numerals in front of the second comma signify thousands. 
+The teacher initially prompts students by having them say the number a part at a time. See 
+Summary Box 5.1.
+Example selection for reading millions numerals should include a mix of millions numerals 
+and thousands numerals so that the students receive practice in discriminating what to do when 
+there are two commas instead one comma. Writing millions numerals is taught by using a blank 
+line for each digit in the number and placing the two commas correctly for students:
+The teacher leads the students through writing the numerals, focusing on each comma as she did 
+when teaching reading millions. “Listen. 5 million, 203 thousand, 450. How many million?. . . 
+Write 5 in the millions space before the millions comma. . . 5 million, 203 thousand. How 
+many thousands?. . . Write 203 in the spaces before the thousands comma . . . Listen. 5 million, 
+203 thousand, 450. Write the rest of the numeral.”
+Numerals with zeros in either the hundred thousands, the ten thousands, or the thousands, 
+such as 3,064,800; 2,005,000; or 8,000,124; are especially difficult for students to write. These 
+numerals are introduced in writing exercises only after the students can write easier numer­
+als and can read millions numerals. Again, as with thousands numerals, minimally different 
+sets should be used (6,024,000; 6,204,000; 6,024; 6,240,000; 6,240). The sets should include a 
+'summary . BOX 5.1
+Symbol Identification: Reading Millions
+1. Teacher asks students to identify how many commas are in the numeral.
+2. Teacher asks what the numeral in front of the first comma tells about and has students identify 
+that numeral.
+3. Teacher asks what the numerals in front of the second comma tell about and has students identify 
+that numeral.
+4. Teacher asks students to identify the entire numeral.
+
+[p.53]
+Chapter 5 Symbol Identification and Place Value 53
+mixture of millions and thousands numerals. Multiple practice opportunities to read and write 
+millions numerals are necessary in order for students to develop mastery. This practice should 
+be provided through oral and worksheet exercises over a period of several months.
+Expanded Notation
+Expanded notation involves rewriting a numeral as an addition problem composed of 
+the numerals that each digit represents. For example, the numeral 3,428 is rewritten as 
+3,000 + 400 + 20 + 8, or vertically as:
+3,000
+400
+20
++ 8
+g‰ Format 5.12 A/B: 
+Expanded Notation
+Watch how Tristan introduces 
+expanded notation.
+The sequence in which expanded notation problems are introduced parallels the sequence 
+in which students are taught to read and write numerals: teens, hundreds, thousands, then 
+millions.
+The initial teaching procedure for expanded notation is included in Part A of Format 5.12: 
+Expanded Notation. The teacher has students identify the number they hear in each place. 
+For example, the teacher asks, “Do you hear a hundreds number in 362? What hundreds 
+number? Do you hear a tens number in 362? What tens number? Do you hear a ones num­
+ber in 362? What ones number?” After students can accurately identify the values for a com­
+plex number, they should have relatively little trouble saying a number as an addition problem 
+(362 = 300 + 60 + 2), which is the focus of Part B. In Part C, students practice writing the 
+numerals as addition problems. Finally, in Part D, students are given independent worksheet 
+problems for which they apply their expanded notation skills.
+Column Alignment
+Column alignment involves writing a series of numerals so that the appropriate digits are ver­
+tically aligned. Column alignment is important because it is a prerequisite for advanced com­
+putation and for solving word problems in which the numerals do not appear in a column. For 
+example, “Pearl has 4,037 marbles. She gives 382 marbles to her younger brother. How many 
+does she have left?” Column alignment exercises also test students’ understanding of place 
+value. For example, students who try to solve the word problem about Pearl’s marbles by writ­
+ing the problem as:
+4,037 
+- 382
+not only will arrive at the wrong answer but also will have demonstrated that they do not have a 
+clear understanding of place value.
+Column alignment tasks usually involve numerals with different numbers of digits written 
+as horizontal problems. The complexity of these column alignment tasks increases as the num­
+ber of digits increases. Initially, exercises should involve adding tens numbers and ones num­
+bers (32 + 5 + 14); later, hundreds, tens, and ones (142 + 8 + 34); then thousands, hundreds, 
+tens, and ones (3,042 + 6 + 134 + 28).
+The strategy we recommend to teach column alignment involves teaching students to rear­
+range the order of the numerals. The numeral with the most digits is written first, and the other 
+numerals are written underneath. The purpose of writing the largest numeral first is to establish 
+the columns. Format 5.13: Teaching Column Alignment involves a simple model-test proce­
+dure in a structured worksheet format. The teacher introduces students to the rule about writing 
+the numeral with the most digits first and then guides the students in determining which column 
+to begin writing the other numerals. The structured worksheet exercise is presented for several 
+lessons. Thereafter, practice on about five problems daily should be given on independent work­
+sheets for several weeks.
+
+[p.54]
+54 Part II Basic Concepts and Skills
+APPLY WHAT YOU LEARNED
+Click on the V to answer the questions online.
+1. The numerals below are representative of various types. Tell the type each numeral illustrates. List 
+the order in which the types would be introduced.
+836; 13; 18; 305; 64; 5,024; 5,321
+2. Two teachers are introducing reading hundreds numerals. Below are the examples each included in 
+their lessons. Which set is more appropriate? Tell why.
+Teacher A: 306, 285, 532, 683, 504
+Teacher B: 724, 836, 564, 832, 138
+3. Explain the importance of introducing place value charts prior to introducing manipulatives when 
+teaching place value concepts.
+4. Construct a set of six to eight examples to be used in presenting Format 5.11: Reading Thousands 
+Numerals Using Place Value Concepts, Part B, including zeros in the hundreds and/or tens column.
+5. The teacher is presenting a task in which the numerals 4, 2, and 5 appear. When the teacher points to 
+4 and asks, “What numeral?” a student says, “5.” What is the correction procedure?
+6. A student writes a 7 in an empty box over a group of five Unes. Tell two possible causes of this error. 
+How could you determine the exact cause? Describe the correction procedure.
+7. During a test of writing numerals, a student writes a 2 as a 5. What should the teacher do?
+8. Below is a worksheet item done independently by a student. The item required the student to write 
+the appropriate number of lines to represent a numeral. Note the errors made by the student and 
+describe the probable cause. Describe the correction procedure.
+m ∣≡ m 000
+ιι ιιιι ιιιιιι ιιιιι m mini
+9. When reading numerals, a student identifies 71 as 17. What is the correction procedure?
+10. During the supervised practice for writing hundreds numerals, students make frequent errors (some 
+students write 38 for three hundred eight). How should the teacher respond to these errors?
+Format 5.1
+INTRODUCING NEW NUMERALS (See Video)
+TEACHER STUDENTS
+Note: This format is used with each new symbol. In this example, we assume 
+that the numerals 1, 4, 6, and 2 have been introduced and that the numeral 
+7 is being introduced.
+(Write the following numerals on the board.)
+7 2
+4 6 7
+7 1
+
+[p.55]
+Chapter 5 Symbol Identification and Place Value 55
+TEACHER STUDENTS
+(Model and test. Point to 7.)
+1. This is a seven. What is this? (Touch 7.)
+(Discrimination practice.)
+2. When I touch it, tell me what it is. (Point to 2, pause a second.)
+What numeral? (Touch 2.)
+(Repeat step 3 with these numerals: 7, 1, 6, 1, 7, 2, 1, 6, 7, etc.)
+3. (Individual turns: Ask individual students to identify several numerals.)
+7
+2
+Format 5.2
+EQUATION WRITING
+4 + 5 = □; 7 - 2 = □ J
+TEACHER STUDENTS
+(Give students paper and pencil.)
+1. You are going to write an equation. First you'll say it. Listen: Six plus 
+two equals how many? Listen again. Six plus two equals how many? 
+Say that.
+To correct: Respond with students until they can say the statement at 
+the normal rate of speech.
+2. Now we'll say it the slow way. Every time I dap, we'll say a part of the 
+statement. (Respond with the students.) Get ready. (Clap.) Six
+(Pause 2 seconds; clap.) plus
+(Pause 2 seconds; clap.) two
+(Pause 2 seconds; clap.) equals
+(Pause 2 seconds; clap.) how many?
+(Repeat step 2 until students appear able to respond on their own.)
+3. Now I'll dap and you say the statement by yourselves.
+(Pause.) Get ready. (Clap at 2-second intervals.)
+4. Now write the problem.
+5. (Repeat steps 1-5 with three more equations, e.g., 8 - 3 = □;
+Six plus two equals how 
+many?
+Six
+plus
+two
+equals
+how many?
+Six plus two equals how 
+many?
+Students write 6 + 2 = □
+Format 5.3
+IDENTIFYING A SYMBOL AND THEN DRAWING LINES
+TEACHER STUDENTS
+4 6 □ 2
+1. Everybody touch the first numeral on your worksheet. (Hold up worksheet and 
+point to 4.)
+What is it? 4
+continued
+
+[p.56]
+56 Part II Basic Concepts and Skills
+Format 5.3 (continued)
+IDENTIFYING A SYMBOL AND THEN DRAWING LINES
+TEACHER STUDENTS
+A 4 tells you to make four lines. What does a 4 tell you to do? Make 4 lines.
+Each time 1 clap, draw a line and count.
+(Signal by clapping once each 2 seconds.)
+1, 2, 3, 4
+How many did you end up with?
+Yes, 4.
+4
+2. Touch the next symbol. What is it? 6
+A 6 tells you to make six lines. What does a 6 tell you to do? Make 6 lines.
+Each time 1 clap, draw a line and count.
+(Signal by clapping once each two seconds.)
+1, 2, 3, 4, 5, 6
+How many did you end up with?
+Yes, 6.
+6
+3. Touch the next symbol. What is it?
+Does a box tell you to draw lines? No. A box does not tell you to draw lines.
+box
+Does a box tell you to draw lines? no
+So are you going to draw lines? no
+4. Touch the next symbol. What is it? 2
+What does 2 tell you to do?
+Do it.
+Get ready to count the lines. Get ready. (Signal by clapping once each
+Make two lines.
+2 seconds.) 1, 2
+How many did you end up with?
+(On subsequent days use step 4 wording to provide additional examples.)
+2
+Format 5.4
+WRITING A NUMERAL FOR A SET OF OBJECTS (See Video)
+TEACHER STUDENTS
+(Give students a worksheet similar to the one above.)
+
+[p.57]
+Chapter 5 Symbol Identification and Place Value 57
+TEACHER STUDENTS
+1. Everybody, here's a rule: The objects under a box tell what numeral goes in the 
+box. Get ready to count the objects under this box. (Point to the first set of objects 
+on the worksheet and pause while the students point to the first line.) Count as I 
+clap. Get ready. (Clap each second.)
+How many objects are under this box?
+So what numeral are you going to write in the box?
+Write that numeral.
+2. (Repeat step 1 for additional examples.)
+1, 2, 3
+3
+3
+Format 5.5
+READING TEEN NUMERALS USING PLACE VALUE CONCEPTS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+(Write the following chart on the board.)
+tens ones
+1 4
+1__________ 6
+1__________ 7
+1__________ 8
+1 9
+1. (Point to the tens column.) This is the tens column. (Point to the ones 
+column.) This is the ones column.
+2. These numerals all start with one ten. When we have one ten in the 
+tens column, we say teen. Listen to me read the numerals. (Point to 14)
+14 (Point to 16) 16 (Point to 17) 17 (Point to 18) 18 (Point to 19) 19
+3. Your turn to read these numerals. (Point to numerals in random order as 
+students read.)
+4. (Give individual turns to several students to read two numerals.)
+Part B: Less Structured Board Presentation
+1. (Write 14 on the board. Point to 14.) What numeral? 14
+2. (Repeat step 1 with 19, 17, 18, 16.)
+Part C: Worksheet
+(Give students worksheets with problems such as these.)
+continued
+
+[p.58]
+58 Part II Basic Concepts and Skills
+Format 5.5 (continued)
+READING TEEN NUMERALS USING PLACE VALUE CONCEPTS
+TEACHER STUDENTS
+1. Look at picture A. The big pile has 10 blocks in it. The small pile has
+4 blocks in it. I'll count: 10 (pause), 11, 12, 13, 14. How many blocks?
+2. There are 14 blocks. Put a circle around the numeral 14. (Check student 
+work.)
+3. Look at picture B. The big pile has 10 blocks in it. Start with 10 and 
+count. Get ready.
+4. How many blocks are there?
+5. Circle the numeral 17.
+(Repeat steps 4-6 with other examples.)
+14
+10, 11, 12, 13, 14, 15, 16, 17
+17
+Format 5.6
+WRITING TEEN NUMERALS USING PLACE VALUE CONCEPTS
+1. (Write the following place value chart on the board.) 
+tens ones
+TEACHER STUDENTS
+Part A: Preskill—Components of Teen Numbers
+1. You're going to write teen numerals. Remember, the ending "teen" 
+tells you the numeral has one ten in the tens column.
+Listen: 16. Write a 1 for the teen and then a 6. Listen: 19. What do I
+write for 19
+Listen: 14. What do I write for 14?
+2. Your turn. 14. What do you write? (Monitor students as they write.)
+3. (Repeat step 2 with 16, 19, 17, 18.)
+4. (Give individual turns to several students on step 3.)
+Part B: Structured Board Presentation
+I write a 1 for the teen and a 9.
+I write a 1 for the teen and a 4.
+A 1 for the teen and a 4.
+2. (Point to the tens column.) This is where we write a 1 for the ten.
+Remember, for one ten we say "teen." What do we say for one ten?
+3. What do I write for 14? (Write the numeral on the chart.)
+4. (Repeat step 3 with 17, 19, 16, 18.)
+5. (Call on students.) Read each numeral on the chart. (Point as 
+students read.)
+Part C: Structured Worksheet—Dictation
+(Give students a worksheet similar to the one below.)
+Teen
+A 1 for the teen and a 4.
+tens ones
+a.
+b.
+c.
+d.
+
+[p.59]
+Chapter 5 Symbol Identification and Place Value 59
+TEACHER STUDENTS
+1. Touch the space for problem a. You're going to write 14. What 
+number?
+2. What do you write for 14?
+3. Write 14. (Monitor students as they write.) Read the numeral you 
+just wrote.
+4. (Repeat steps 1-3 for 16, 19, 14, 17, 18.)
+Part D: Less Structured Worksheet—Dictation
+1. (Give students a worksheet with a place value chart.) You're going to 
+write 14 on the first line. What are you going to write?
+Write 14.
+2. (Repeat step 1 with 16, 18, 19, 17.)
+14
+A 1 for the teen and a 4.
+14
+14
+Format 5.7
+READING TENS NUMERALS USING PLACE VALUE CONCEPTS
+TEACHER STUDENTS
+Part A: Preskill-Counting by tens
+(Show students a diagram like the following.)
+1. Each pile has 10 blocks. How many blocks in each pile? 10
+2. Count by 10 each time I touch a pile. (Touch piles.) 10, 20, 30, 40, 50
+3. How many blocks in all?
+Right, five tens equal 50.
+(Repeat steps 2 and 3 with two tens and four tens.)
+Part B: Preskill-Tens Facts
+1. (Erase board from Part A.) Let's practice with groups of 10. Listen. Three tens
+50
+equal 30. What do three tens equal?
+2. What do two tens equal?
+(Repeat with five tens, three tens, six tens, eight tens, and four tens until
+30
+20
+students can respond correctly to all examples.)
+3. (Present individual turns on step 2.)
+Part C: Structured Board Presentation
+(Write the following place value chart on the board.) 
+tens ones
+4 6
+continued
+
+[p.60]
+60 Part II Basic Concepts and Skills
+Format 5.7 (continued)
+READING TENS NUMERALS USING PLACE VALUE CONCEPTS
+TEACHER STUDENTS
+1. (Point to tens column.) What column?
+(Point to ones column.) What column?
+2. How many tens?
+What do four tens equal?
+3. How many ones?
+What is 40 and 6?
+So what does the whole numeral say?
+(Repeat steps 2 and 3 with 52, 38, 93, 81.)
+Part D: Less Structured Board Presentation
+(Write the following place value chart on the board.) 
+tens ones
+7 2
+1. What does this whole numeral say?
+2. (Repeat step 1 with 95, 20, 16, 31, 47, 50, 12.)
+3. (Give individual turns to several students.)
+Part E: Less Structured Worksheet
+tens column 
+ones column 
+4
+40
+6
+46
+46
+1. (Hold up student worksheet.) Let's find out how many blocks are in this 
+picture. How many piles of tens are there?
+2. What do three tens equal?
+3. But we're not done. (Point to four remaining blocks.) We have to count these 
+blocks. (Point to tens group.) We have 30 blocks here. Start counting at 30 then 
+touch these blocks as we count. (Count 30, 31, 32, 33, 34.)
+4. How many blocks in the picture?
+Put a circle around the numeral 34.
+5. (Provide students with similar problems on worksheets for additional practice.)
+3
+30
+30, 31, 32, 33, 34
+34
+
+[p.61]
+Chapter 5 Symbol Identification and Place Value 61
+Format 5.8
+WRITING TENS NUMERALS USING PLACE VALUE CONCEPTS
+(Write the following place value chart on the board.) 
+tens ones
+TEACHER STUDENTS
+Part A: Preskill—Expanded Notation
+1. Say this number: 84.
+2. Eighty-four equals 80 and 4. What does 84 equal? 
+What's the first part of 84?
+3. Eighty-four equals 80 and what else?
+4. (Repeat steps 1-3 with 72, 95, 88, 43.)
+Part B: Preskill—Tens Facts
+84
+80 and 4
+80
+4
+1. Twenty has two tens. How many tens in 20?
+2. How many tens in 40?
+3. (Repeat step 3 with 80, 30, 60, 20, 50.)
+4. (Give individual turns to several students.)
+Part C: Structured Board Presentation
+2
+4
+1.1 want to write some big numerals. When we write big numerals, we write the 
+tens first. Then we write the ones. What do we write first?
+What do we write next?
+2. Listen: 84. What is the first part of 84?
+3. How many tens in 80?
+So I write 8 in the tens column. (Write 8 in the tens column.)
+Eighty equals eight tens.
+4. Listen: Eighty-four equals 80 and what else?
+So I write 4 in the ones column. (Write 4 in the ones column.)
+5. What numeral did I just write?
+6. How many tens in 84?
+How many ones in 84?
+7. (Repeat steps 2-6 with several examples.)
+Part D: Structured Worksheet Presentation
+(Give students the following place value chart.)
+the tens 
+the ones 
+80
+8
+4
+84
+8
+4
+tens ones
+a.
+b.
+c. __ ______
+d. _______
+e.
+f. J
+1. Touch a. Next to a, you are going to write 79. 
+What are you going to write?
+continued
+
+[p.62]
+62 Part II Basic Concepts and Skills
+Format 5.8 (continued)
+WRITING TENS NUMERALS USING PLACEVALUE CONCEPTS
+TEACHER STUDENTS
+2. What is the first part of 75 
+How many tens in 70?
+Write 7 in the tens columr 
+3. Seventy-nine equals 70 an
+Write 9 in the ones colum 
+4. What numeral did you wr 
+5. How many tens in 79? 
+6. How many ones in 79?
+7. (Repeat steps 1-6 with 45, 
+Part E: Less Structured Work: 
+(Have students write a-f on i
+1. You're going to write a nι 
+2. Touch line a.
+3. You're going to write 49., 
+4. Write 49.
+5. (Repeat steps 2-4 with 73,
+)?
+1.
+d what else?
+n.
+ite?
+19, 84, 76, and 12.)
+sheet—Dictation
+3 piece of paper similar to belo
+a_____________________
+b_____________________
+c.____________________
+d_____________________
+e_____________________
+f____ _ ____________ _ __ _
+jmeral on each line.
+What are you going to write?
+20, 99, 14, 51, 42, 61, 17.)
+w.)
+70
+7
+9
+79
+7
+9
+49
+Students write 49.
+Format 5.9
+READING HUNDREDS NUMERALS USING PLACE VALUE
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+(Show students a diagram like the following.) 
+hundreds tens ones
+5 4 8
+(Point to appropriate column as you say the following.)
+1. This is the hundreds column.
+This is the tens column.
+This is the ones column.
+Tell me the names of the columns. (Point to the columns, starting with hundreds; 
+repeat until students are firm.)
+hundreds, tens, 
+ones
+
+[p.63]
+Chapter 5 Symbol Identification and Place Value 63
+TEACHER STUDENTS
+2. The first thing we do when we read a numeral is identify the column the 
+numeral starts in. (Point to 5 in 548.)
+What column does this numeral start in?
+How many hundreds do we have?
+What do five hundreds equal?
+3. (Point to 4.) What column is this?
+How many tens do we have?
+What do four tens equal?
+4. (Point to 8.) What column is this?
+How many ones do we have?
+What do we say?
+5. Let's read the whole numeral. When I touch each numeral, you tell me what it says.
+(Point to 5, pause a second, touch 5.)
+(Point to 4, pause a second, touch 4.)
+(Point to 8, pause a second, touch 8.)
+6. Say the whole numeral.
+7. (Repeat steps 2-6 with 697, 351, 874, 932, all written in place value charts.)
+Note: When presenting examples with a 1 in the tens column, present the following 
+steps instead of steps 3, 4, and 5 in the format.
+The following example shows how to teach the number 514.
+What column is this?
+How many tens do we have?
+How many ones do we have?
+We have one 10 and four ones, so what do we say?
+Let's read the whole numeral. (Point to 5.) What do we say for this?
+(Point to 14.) What do we say for these?
+Say the whole numeral.
+Part B: Less Structured Board Presentation
+hundreds
+5
+500
+tens
+4
+40
+ones
+8
+8
+500
+40
+8
+548
+tens
+1
+4
+14
+500
+14
+514
+1. (Write the following chart on the board.) 
+hundreds tens ones
+4 4 6
+2. Now we are going to read the numerals without saying the parts first. 
+This time when I point, you are going to tell me the whole numeral. 
+(Point to 446 and then pause 2-3 seconds.)
+3. (Repeat step 2 with 249, 713, 321, 81, 720, 740.)
+4. (Give individual turns to several students.)
+446
+
+[p.64]
+64 Part II Basic Concepts and Skills
+Format 5.10
+WRITING HUNDREDS NUMERALS USING PLACE VALUE CONCEPTS
+TEACHER STUDENTS
+Part A: Structured Worksheet Presentation—Dictation
+(Give students a worksheet with a place value chart as illustrated.)
+hundreds tens ones
+a.
+b. _______
+c.
+d.
+e.
+1. You are going to write hundreds numerals. Touch the hundreds column. Touch the 
+tens column. Touch the ones column. (Monitor responses.)
+2. What's the first part of 648?
+So what column do you start writing in?
+How many hundreds in 600?
+Write 6 in the hundreds column.
+3. What column comes next?
+Do you hear a tens number in 648?
+How many tens?
+Write 4 in the tens column.
+4. What column comes next?
+Do you hear a ones number in 648?
+How many ones?
+Write 8 in the ones column.
+5. We finished. How many hundreds in 648?
+How many tens in 648?
+How many ones in 648?
+Read the numeral you wrote.
+6. (Repeat steps 2-5 with 326, 463, 825, 253, 866.)
+600 
+hundreds
+6
+tens
+yes
+4
+ones
+yes
+8
+6
+4
+8
+648
+
+[p.65]
+Chapter 5 Symbol Identification and Place Value 65
+TEACHER STUDENTS
+Part B: Supervised Practice
+(Give students a worksheet like the one below.)
+two hundred 
+sixty-one
+hundreds tens ones
+a. two hundred sixty-one
+b. four hundred eighteen
+c. eight
+d. nine hundred sixty-two
+e. forty-eight
+f. four hundred eighty
+g. twelve
+h. nine hundred seven
+i. forty-one
+j. three hundred ninety-seven
+1.
+2.
+3.
+4.
+The instructions tell you to write the numerals.
+Item a. Read the words.
+Write the numeral. (Monitor responses.)
+(Repeat steps 2 and 3 with a few examples and then have them complete the rest of 
+the worksheet independently.)
+Format 5.11
+READING THOUSANDS NUMERALS USING PLACE VALUE CONCEPTS
+TEACHER
+Part A: Structured Board Presentation
+1. When a big number has one comma, the comma tells about thousands. 
+Here's the rule: The numeral in front of the comma tells how many 
+thousands. What does the numeral in front of the comma tell?
+2. (Write 6,781 on the board.) What numeral comes in front of the comma?
+So what is the first part of the numeral?
+3. (Point to 781.) Get ready to read the rest of the numeral.
+4. Now you are going to read the whole numeral. (Point to 6, then comma, 
+then 781.)
+5. (Repeat steps 2-4 with these numerals: 2,145; 3,150; 5,820; 6,423.)
+6. (Give individual turns to several students.)
+Part B: Less Structured Board Presentation
+1. (Write 3,820 on the board.) Read this numeral.
+To correct: Repeat steps 2-4 from Part A.
+2. (Repeat step 1 with 9,270; 3,174; 3,271; 9,563; 4,812.)
+3. (Give individual turns to several students.)
+STUDENTS
+how many thousands
+6
+6 thousand
+781
+6,781
+3,820
+
+[p.66]
+66 Part II Basic Concepts and Skills
+Format 5.12
+EXPANDED NOTATION (See Video A∕B)
+TEACHER STUDENTS
+w
+Part A: Expanded Notation
+1. Count by hundreds to 900. Get ready, count.
+Now count by tens to 90. Get ready, count.
+2. Listen to this number: 428. Do you hear hundreds in 428?
+What hundreds number?
+3. Listen again: 428. Do you hear a tens number in 428?
+What tens number?
+4. Listen again: 428. Do you hear a ones number in 428?
+What ones number?
+5. 428 = 400 + 20 + 8. Say it with me. 428 = 400 + 20 + 8
+Say it by yourselves.
+100, 200, 300, 400, 500, 600, 700, 800, 900
+10, 20, 30, 40, 50, 60, 70, 80, 90
+Yes
+400
+Yes
+20
+Yes
+8
+428 = 400 + 20 + 8
+428 = 400 + 20 + 8
+6. (Repeat steps 2-5 with 362, 624, and 139.)
+7. (Give individual turns on steps 2-5 to several students.)
+Part B: Structured Board Presentation
+1. Listen to this number: 624. Say the number.
+2. Now listen to me say 624 as an addition problem:
+624
+600 + 20 + 4
+3. Your turn. Say 624 as an addition problem.
+4. (Repeat step 3 with 528, 55, 871, 29, and 314.)
+Part C: Structured Worksheet
+1. Listen. Say 472 as an addition problem.
+I'll write 472 as an addition problem. (Write on the board 
+400 + 70 + 2.)
+2. Listen. Say 528 as an addition problem.
+Write 528 as an addition problem (Monitor student 
+responses.)
+3. (Repeat step 2 with 94, 427, 35, 53, and 266.)
+Part D: Supervised Practice
+(Give the students worksheets with problems like the following. 
+Have students write each numeral on the worksheet as an 
+addition problem. Monitor students' responses.)
+a. 624 =_______ +________+_______
+b. 386 = + +
+600 + 20 + 4
+400 + 70 + 2
+500 + 20 + 8
+
+[p.67]
+Chapter 5 Symbol Identification and Place Value 67
+Format 5.13
+COLUMN ALIGNMENT
+TEACHER STUDENTS
+(Give students the following worksheet.)
+a. 42 + 361 + 9 361
+42
++ 9
+b. 7 + 604 + 32
+1. Touch problem a. I'll read it. 42 + 361 + 9. Problem a has been rewritten in a column. 
+When we write column problems we write the largest numeral first, followed by the 
+rest of the numerals. Touch the column problem. (Check.) The largest numeral is on 
+top. What is that numeral? 361
+Then the next largest numeral is written below. What numeral is that? 42
+The smallest numeral is on the bottom. What is the smallest numeral? 9
+2. Touch problem b. (Check.) Read the problem. 7 + 604 + 32
+3. You are going to write the numerals in a column. You will write the largest numeral 
+first. What is the largest numeral? 604
+Write it and then cross out 604 in the row problem. (Check.)
+4. What is the next largest numeral? 32
+What column does 32 start in? tens
+Write 32 and cross it out in the row problem. (Check.)
+5. Now get ready to write the smallest numeral. What is the smallest numeral? 7
+What column will you start writing in? ones
+Write 7 and cross it out in the row problem. (Check.)
+6. Have you crossed out all the numerals in the row problem? yes
+What kind of problem is this? addition
+Write in the sign. You are done writing the problem. Now work it. (Check.) 
+7. (Repeat steps 2-6 with four more problems.)

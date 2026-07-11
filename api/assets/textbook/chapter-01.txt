@@ -1,0 +1,462 @@
+[p.1]
+Chapter
+Direct Instruction
+LEARNING OUTCOMES
+1.1 Discuss the areas that comprise mathematical proficiency according to the 
+National Research Council.
+1.2 Outline the features of instructional design that are essential to mathematics 
+instruction.
+1.3 Discuss the four features of instructional delivery that are characteristic of Direct 
+Instruction.
+1.4 Explain the importance of explicitly teaching students mathematics vocabulary 
+and concepts.
+MATHEMATICAL PROFICIENCY
+«•••••••
+According to the National Research Council (2001), mathematical proficiency is represented by 
+competency in five areas: conceptual understanding, procedural fluency, strategic competence, 
+adaptive reasoning, and productive disposition. Many mathematics textbooks used in teacher 
+preparation discuss the philosophy and theory of mathematics instruction and provide instruc­
+tional activities, but few outline with specificity the means by which teachers can translate these 
+areas into explicit instruction. Direct Instruction Mathematics provides teachers with a com­
+prehensive blueprint to organize and teach specific content for major mathematical topics that 
+appear in elementary and middle school. The textbook also provides teachers with strategies to 
+address the needs of struggling learners. Each chapter in this text provides specific recommen­
+dations to promote conceptual understanding (teaching language concepts and providing visual 
+representations) and procedural fluency (teaching explicit strategies). Embedded in the chapters 
+are recommendations to promote adaptive reasoning (asking students to explain their answers) 
+and to determine strategic competence (monitoring student performance).
+Regarding a productive disposition, research has suggested that when students experience 
+success, they develop positive self-concepts (Stebbins, St. Pierre, Proper, Anderson, & Cerra, 
+1977). More specifically, research in the area of Direct Instruction (see Chapter 2) leads us 
+to conclude that well-designed instruction that promotes student mathematical proficiency, as 
+outlined in this text, will yield productive dispositions.
+In this chapter, we provide a detailed discussion of three critical components—instructional 
+design, instructional delivery, and instructional language—that are essential to understanding
+
+[p.2]
+2 Part I Perspective
+how Direct Instruction Mathematics addresses the five proficiency areas mentioned above. 
+Building mathematics instruction with these components as the foundation will ensure that 
+students acquire, retain, and generalize new learning in as humane, efficient, and effective a 
+manner as possible.
+INSTRUCTIONAL DESIGN ∙∙∙∙∙**∙
+To effectively teach mathematics, teachers must construct the kinds of lessons and develop the 
+specific teaching procedures that best meet the needs of their students. Throughout the chapters in 
+this text, we emphasize five essential instructional design features to assist teachers in designing 
+mathematics instruction and in evaluating and modifying the commercial programs that have 
+been adopted for use in their school or district. The learning theory underlying these features 
+is elaborated in detail in Theory of Instruction (Engelmann & Carnine, 1991) and serves as the 
+foundation for Direct Instruction programs. The website for the National Institute for Direct 
+Instruction (NIFDI) provides detailed information about the commercially available Direct 
+Instruction programs. Throughout this text we discuss the following features that represent 
+instructional design elements essential to well-designed mathematics instruction:
+1. Sequence of skills and concepts
+2. Explicit instructional strategies
+3. Preskills
+4. Example selection
+5, Practice and review
+Before designing instruction or modifying it, teachers must clearly identify the objectives 
+they want to teach. Most commercial programs specify student objectives for each instructional 
+unit. However, not all objectives are written so that teachers can determine when they have 
+been met. The objectives should be stated as specific, observable behaviors and include both 
+accuracy and rate criteria, if possible. For example, a clear first-grade objective for single-digit 
+addition is: “Given 25 single-digit addition problems, students will correctly solve at least 
+22 in 1 minute with no more than one error.” Poorly stated objectives contain vague descriptions 
+of student behavior that are difficult to measure, such as “Students will understand the concept 
+of addition.”
+Teachers can use the Instructional Sequence and Assessment Charts found at the begin­
+ning of most chapters in this book as a guide to selecting important grade-level objectives. 
+These charts, aligned with national Common Core State Standards for Mathematics (CCSSM) 
+(National Governors Association Center for Best Practices & Council of Chief State School 
+Officers, 2010), offer a sequence of instruction based on the difficulty level of the given prob­
+lem types. Teachers can use the charts to help prioritize objectives, deciding which problem 
+types to teach and in which sequence. Teachers of students who perform poorly should focus 
+their instruction on higher-priority skills, those that are used more frequently, or those that are 
+prerequisites for more advanced skills.
+Once the teacher has determined the types of problems students should be able to work 
+when they have completed the unit, the teacher must decide on appropriate levels of mastery. 
+Both accuracy and fluency must be considered when specifying levels of mastery. Unfortu­
+nately, there is little research available on determining accuracy and fluency criteria. Generally, 
+teachers should provide supervised practice until students reach an 85% to 90% accuracy level 
+for worksheet assignments containing a review of previously introduced types of problems. A 
+fluency criterion usually depends on the relative complexity of the problem type. Most educa­
+tors agree that students who work problems with relative fluency are more likely to retain strate­
+gies over a longer period of time. We present more detail about fluency criteria in the section on 
+progress monitoring later in this chapter.
+Sequence of Skills and Concepts
+The order in which information and skills are introduced affects the difficulty students have 
+in learning them. Sequencing involves determining the optimum order for introducing new
+
+[p.3]
+Chapter 1 Direct Instruction 3
+information and strategies. Following are three general guidelines for sequencing the introduction 
+of new skills:
+1. Teach preskills for a strategy before teaching the strategy.
+2. Teach easy skills before more difficult ones.
+3. Separate the introduction of information or strategies that students are likely to confuse.
+Generally, the more steps in a strategy and the greater the similarity of the new strategy to 
+previously taught strategies, the more likely students will have difficulty. For example, in column 
+subtraction, problems that require a regrouping strategy are more difficult than problems that 
+do not. But not all problems that require regrouping are of equal difficulty. A problem such as 
+3,002 — 89 is significantly more difficult than a problem such as 364 — 128, largely due to the 
+presence of zeros.
+One of the preskills we recommend teaching for regrouping with zeros in problems like 
+the one above is hundreds-minus-one problems (300 — 1 = 299). That preskill should be 
+taught prior to introducing problems such as 3,002 — 89, which requires renaming 300 tens as 
+299 tens. This example of identifying and teaching the appropriate preskills illustrates the first 
+sequencing guideline.
+299
+30012
+- 89
+The instruction of easier skills before more difficult ones is the second sequencing guideline. 
+For example, before teaching students to add fractions with unlike denominators, we recom­
+mend teaching students the easier skill of adding fractions with like denominators. Although 
+this guideline may seem obvious, many commercially available programs disregard its 
+importance.
+The third sequencing guideline is to separate the introduction of information and strate­
+gies that are likely to be confused. The more similar two skills are, the more likely students 
+are to confuse them. For example, because young students are likely to confuse identification 
+of the numerals 6 and 9, those numerals should not be introduced consecutively. Likewise, 
+the skip-counting series for 6s and 4s are quite similar in that they both contain 12, 24, and 
+36 (6, 12, 18, 24, 30, 36 and 4, 8,12, 16, 20, 24, 28, 32, 36). Introducing these series consecu­
+tively is likely to cause confusion for some students.
+Explicit Instructional Strategies
+Research suggests that teaching students explicit instructional strategies increases their per­
+formance in mathematics. (See Chapter 2 for this research.) According to Archer and Hughes, 
+explicit instruction is “instruction that is systematic, direct, engaging, and success-oriented” 
+(2011, p. vii). In addition to being explicit, well-designed instructional strategies must be gener­
+alizable. That is, a well-designed instructional strategy will apply to a range of different types of 
+problems. For example, many programs introduce fractions to students using a single representa­
+tion, such as a cookie, divided into thirds or fourths (1/3 or 2/4). When students are introduced 
+to improper fractions (5/4), they often are unable to generalize the fraction concept. Students 
+cannot conceptualize 5/4(1 ¼) if prior visual representations have been limited to one whole. A 
+well-designed strategy for teaching students fraction concepts is one that applies to both proper 
+and improper fractions. (See Chapter 13.)
+Some commercially developed mathematics programs suggest that students generate a num­
+ber of alternative strategies for the same problem. Rather than developing a conceptual founda­
+tion that highlights mathematical relationships, the introduction of alternative strategies often 
+confuses instructionally naive students. Teachers should select the most generalizable, useful, 
+and explicit strategies to teach their students—strategies that draw attention to the relationships 
+among the mathematical skills and concepts being taught.
+As mentioned previously, this text provides teachers with explicit instructional strategies to 
+teach content expected to be taught in elementary and middle school classrooms. The strategies 
+are translated into teaching procedures using teaching formats or scripts that provide specific
+
+[p.4]
+4 Part I Perspective
+teacher wording, examples, and often error-correction procedures. Formats are designed so that 
+teacher explanations are clear and unambiguous so teachers do not have to worry if the explana­
+tion they provide one day is consistent with explanations they’ve given previously.
+The teaching formats represent a carefully designed instructional sequence reflecting the 
+gradual release of responsibility from teacher to student. Most of the formats consist of four parts: 
+a structured board presentation, a structured worksheet presentation, a less structured worksheet 
+presentation, and supervised practice. A characteristic of the formats is the use of frequent ques­
+tioning that allows teachers to continuously check for student understanding and increases student 
+engagement. This text provides links to teaching formats for the instructional strategies discussed 
+in each chapter. In addition, some of the formats are accompanied by video demonstrations.
+Preskills
+As mentioned previously, instruction should be sequenced so that the requisite component skills of 
+a strategy are taught before the entire strategy is introduced. The component skills, therefore, can 
+be called preskills. For example, to solve a percent problem (What is 23% of 67?), the student must 
+be able to (a) convert percent to a decimal (23% = .23), (b) solve multiplication problems with 
+multi-digit factors (.23 × 67), and (c) place the decimal point correctly in the product (15.41).
+67
+× .23
+201
+134
+15.41
+The necessary preskills for many strategies may have been taught earlier or in previous 
+grades. Nonetheless, to ensure that students have mastered the preskills before introducing a 
+new instructional strategy, teachers should test students on those preskills. Each chapter in this 
+text identifies critical preskills for the strategies presented so that teachers can design tests to 
+determine whether the preskills have been mastered or must be taught.
+Example Selection
+Selecting examples involves constructing or choosing appropriate problems to be used during 
+teaching demonstrations and student practice. Two guidelines are particularly helpful in assist­
+ing teachers in selecting appropriate examples. The first example selection guideline is simply to 
+include only problems that students can solve by using a strategy that has been explicitly taught. 
+For example, if students have been taught a regrouping strategy for solving subtraction problems 
+without zeros, but they have not yet been taught to solve problems with zeros, the teacher should 
+not give them a problem such as 3,004 — 87. As mentioned previously, teaching students to 
+rename in problems containing zeros requires additional instruction in specific preskills.
+The second guideline is ultimately to include not only examples of the currently introduced 
+type (introductory examples) but also examples of previously introduced problem types that are 
+similar (discrimination examples). The purpose of including previously introduced problem types 
+is to provide students with practice in determining when to apply the new strategy and when to 
+apply previously taught strategies. For example, after students learn how to regroup from ones to 
+tens in column addition, their practice examples should include problems that require regrouping 
+and problems that do not. Working a set of discrimination problems encourages students to exam­
+ine the problems more carefully to determine when to apply the regrouping strategy instead of 
+reverting to the rote behavior of just “putting one on top of the tens column.” The importance of 
+including discrimination examples cannot be overemphasized. Unless previously taught problem 
+types are included, students will likely forget or misapply earlier taught strategies.
+Practice and Review
+Providing sufficient practice for initial mastery and adequate review for retention is an essential 
+aspect of instructional design. Two guidelines are fundamental in helping teachers provide 
+practice and review. First, teachers must provide massed practice (Dunlosky, Rawson, Marsh,
+
+[p.5]
+Chapter 1 Direct Instruction 5
+Nathan, & Willingham, 2013) on an individual skill until mastery is reached. Students demon­
+strate mastery on a particular skill when they can work problems accurately, fluently, and inde­
+pendently. Following this guideline requires that teachers monitor their students carefully and 
+frequently to determine if and when mastery has been achieved. If students have not mastered a 
+skill in the time originally allotted, teachers will need to provide additional practice opportunities.
+Second, teachers must provide systematic review of previously introduced skills. Once 
+students have reached a specified level of mastery on a given skill, the teacher can gradually 
+decrease the amount of practice on that skill. But practice should never entirely disappear. The 
+skill should be reviewed systematically over time to ensure retention. Reviewing a skill system­
+atically over time is called distributed practice. Distributed practice is a hallmark of all Direct 
+Instruction programs.
+The review of previously introduced skills requires deliberate planning, because many com­
+mercial programs do not provide an opportunity for that review. Often, review is naturally pro­
+vided because the newly taught skill serves as a component skill for a more advanced problem 
+type. For example, as subtraction problems with regrouping are mastered, those problems are 
+integrated into word problems, thereby providing practice on the component skill.
+In Chapter 3 we illustrate how the instructional design features discussed in this chapter 
+contribute to a framework for evaluating published mathematics programs.
+INSTRUCTIONAL DELIVERY
+Once teachers have planned their mathematics instruction using the five essential instructional 
+design features discussed above, they need to integrate instructional delivery features into their 
+teaching plans. While the instructional design focuses on what to teach, instructional delivery 
+addresses issues of implementation, that is, how best to teach. Four features are included in this 
+section on instructional delivery:
+1. Progress monitoring
+2. Presentation techniques
+3. Error-correction procedures
+4. Diagnosis and remediation
+Progress Monitoring
+A major goal of progress monitoring is to determine whether students have mastered the mate­
+rial. A second goal of progress monitoring is to determine whether students are progressing at an 
+optimal rate. One research-based approach to monitoring student progress that assists teachers 
+in determining an optimal rate is curriculum-based measurement, or CBM (Fuchs, Fuchs, & 
+Hamlett, 2015). CBM offers an alternative both to informal observations, which tend to lack 
+consistency, and to achievement tests, which are administered too infrequently to help teachers 
+make instructional decisions.
+Shinn and Walker (2010) explain that CBM has two distinctive features that separate it 
+from other curriculum-based assessments: First, the recommended CBM procedures are as reli­
+able and valid as most standardized achievement tests; second, the procedures are designed to be 
+administered frequently enough to provide teachers with ongoing performance data.
+One of the strongest advantages of using CBM is that by monitoring progress frequently, 
+teachers can identify and remedy problems by making instructional changes before students fall 
+too far behind their peers. Likewise, teachers can use CBM data to accelerate instruction. The 
+National Center for Intensive Intervention (NCII) offers educators online tools and resources to 
+assist them in implementing progress monitoring.
+Presentation Techniques
+A major aspect of Direct Instruction involves attention to a group of teaching or presentation 
+techniques. How skillfully a teacher presents instruction significantly affects both the student’s 
+rate of learning and the student’s self-concept. The relationship between success and self-concept,
+
+[p.6]
+6 Part I Perspective
+a primary tenet in the Direct Instruction approach to teaching, was articulated by Engelmann as 
+long ago as 1969:
+The sphere of self-confidence that can be programmed in the classroom has to do with the 
+child’s ability to stick to his guns, to have confidence in what he has learned, and to approach 
+school tasks with the understanding that he is smart and will succeed. For a child to maintain 
+such an impression of himself, he must receive demonstrations that these descriptions of 
+himself are valid. If he finds himself failing in school, displeasing the teacher, feeling unsure 
+about what he has learned, he must reevaluate himself and perhaps conclude that he is not a 
+complete success, (p. 68)
+The presentation techniques addressed here capture those skills needed for effective 
+teacher-directed group instruction. Several factors contribute to a successful teacher-directed 
+lesson. For example, the length of a teacher’s explanation or demonstration affects the likeli­
+hood that students will be attentive. Teachers should make explanations brief and concise. The 
+more time the teacher spends talking, the fewer opportunities for student involvement. Teachers 
+working with primary-grade and lower-performing students in the upper grades should structure 
+their presentations so that students are required to answer frequent questions.
+Because teachers cannot call on every individual student to answer each question, unison 
+responses should be incorporated into the teacher-directed lessons. Unison responses ensure that 
+all of the students in the classroom actively participate in the lesson. Two very specific presen­
+tation skills promote effective use of unison responses: appropriate use of signals and pacing.
+Signals A signal is a cue given by the teacher that tells students when to respond in unison. 
+The effective use of signals allows participation by all students, not just the highest-performing 
+students who, if allowed, tend to dominate the activity.
+To signal a unison response, the teacher (a) gives directions, (b) provides a thinking pause, 
+and (c) cues the response. For example, when presenting an addition fact task, the teacher might 
+say, “Listen. Get ready to tell me the answer to this problem: 4 + 6.” After the directions comes 
+the thinking pause. The duration of the thinking pause is determined by the length of time the 
+lowest-performing student needs to figure out the answer. (If one student takes significantly 
+longer to answer than the other students in the group, the teacher should consider providing 
+extra individual practice for that student.) For easier questions (simple tasks involving review of 
+previously taught skills), the thinking pause may be just a split second, while for more complex 
+questions the thinking pause may last longer. Carefully controlling the duration of the thinking 
+pause is a very important factor in maintaining student attention.
+The final step in the signaling procedure is the actual cue to respond. A cue or signal 
+to respond may be a clap, finger snap, hand drop, touch on the board, or any similar type of 
+action. This procedure can be modified for use with most tasks. On tasks calling for a long 
+thinking pause, the teacher would say, “Get ready” an instant before signaling. The purpose 
+of the get-ready prompt is to let the students know when to expect the cue to respond. Since 
+the length of thinking pauses varies with the difficulty of the question, a prompt is needed; 
+students may not know when to respond following a pause. Therefore, to elicit a group 
+response in which each student has an equal opportunity to respond, the cue “Get ready” is 
+given. An auditory signal (snap, clap, etc.) is necessary for teacher-directed worksheet tasks, 
+since students are looking at their worksheets and cannot see a silent hand signal from the 
+teacher.
+The essential feature of a good signal is its clarity. The signal must be given so that students 
+know exactly when they are expected to respond. If a signal is not clear, students cannot respond 
+in unison. The teacher can use the student responses to evaluate the clarity of her signals. A 
+repeated failure to respond together usually indicates that the signals are unclear or that the 
+teacher has not provided adequate thinking time.
+Giving individual turns (also called individual tests) is an essential part of any instructional 
+activity in which students are asked to respond in unison. Using only unison responses, a teacher 
+can never be absolutely certain whether each student has produced a correct response indepen­
+dent from the responses of nearby students. Giving individual turns helps teachers verify that all 
+students are participating appropriately in the activity.
+
+[p.7]
+Chapter ! Direct Instruction 7
+g‰ Format 5.12:
+Expanded Notation
+Watch for Tristan's use of clear 
+signals and lively pacing.
+The teacher should give individual tests only after all the students in the group appear to 
+be answering correctly during unison practice. Calling on a student who has not had enough 
+practice to master the task may needlessly embarrass the student in front of his peers. Since indi­
+vidual tests are time-consuming, they should not be given to every student after every task. As a 
+general rule, turns should be given to all lower-performing students each time a new or difficult 
+task is presented. Higher-performing students, on the other hand, can be tested less often.
+Pacing Anyone who has observed young children watching TV shows or playing video games 
+can attest to the role that pacing plays in maintaining attention. Teachers should be familiar 
+enough with their material to present it in a lively, animated manner and without hesitation. 
+Teachers who are well practiced with their instructional materials not only can teach at a livelier 
+pace but also can focus their attention more fully on student performance.
+Throughout this text, we have included videos of teaching demonstrations to illustrate 
+instructional delivery skills. For each video, we have identified a “watch-for” that highlights the 
+implementation of a specific presentation technique. For example, for the following video, note 
+that the watch-for calls attention to Tristan’s use of signals and pacing.
+Error-Correction Procedures
+The first step in correcting errors made by students during group instruction is to determine the 
+cause of the error. Teachers must decide if the error resulted from inattentiveness or from a lack 
+of knowledge. Teachers can determine whether student errors were caused by inattentiveness by 
+checking where the students were looking or what the students were doing when the question 
+was asked.
+Teachers should correct students who respond late or don’t respond at all during tasks 
+requiring unison responding. For these errors teachers should inform the students that because 
+not all students responded (or because some students failed to respond on signal), they have to 
+repeat the task. Teachers should not direct any attention to the students who made the errors but 
+should praise students who performed well and attended to the task.
+Most error corrections follow a three-step procedure of model, test, and delayed test. If 
+an error occurs when the teacher is presenting a strategy, the teacher would model the correct 
+response or ask leading questions from the strategy so that students can generate the correct 
+response. Next, the teacher would test the students by presenting the same task again—this 
+time providing no assistance. The teacher then would return to the beginning of the original 
+task and present the entire task again, the delayed test. The function of a delayed test is to 
+check whether the student remembers the correct responses when starting from the beginning 
+of the task.
+Specific recommendations are outlined in each chapter for corrections of errors students 
+are likely to make for a given topic. Specific teacher wording often can be found in the teaching 
+formats provided within each chapter along with additional recommendations to ensure that the 
+corrections are effective.
+Diagnosis and Remediation
+Diagnosis is determining the cause of a pattern of errors; remediation is the process of reteaching 
+the skill. Diagnosis and remediation, as used in this text, are not the same as a simple error 
+correction. An error correction immediately follows the mistake a student makes during teacher- 
+directed instruction and requires minimal diagnosis because the teacher knows exactly what 
+question the student missed.
+A diagnosis, on the other hand, consists primarily of an analysis of the errors students make 
+on independent work. The first decision to make in diagnosing errors is determining whether the 
+errors are “can’t-do” or “won’t-do” problems. Won’t-do problems occur when students have 
+the necessary skills but are careless, do not complete their work, or are inattentive. A diagnosis 
+of won’t-do errors requires a remediation that focuses on increasing student motivation. A diag­
+nosis of can’t-do problems requires a remediation that focuses on the student’s confusion or 
+skill deficit.
+
+[p.8]
+8 Part I Perspective
+The teacher diagnoses can’t-do errors by examining the missed problems on worksheets 
+and/or by interviewing the students about how they worked the problems they missed. The 
+following basic steps apply to diagnosing and remedying errors on most types of problems:
+1. Diagnosis: Analyze worksheet errors and hypothesize what the cause of the errors might be. 
+2. Confirmation: Interview the student to determine the cause of the errors if it is not obvious.
+3, Remediation: Provide re teaching through board and/or worksheet presentations.
+4. Assess: Test the student on a set of problems similar to the ones on which the original errors
+were made.
+An error usually is of three basic types: a fact error, a component-skill error, or a strategy 
+error. Students often miss problems only because they don’t know their basic math facts. 
+Basic facts are the addition and multiplication facts formed by adding or multiplying any two 
+single-digit numbers and their subtraction and division corollaries.
+Component skills are previously taught skills that are integrated as steps in a lengthier 
+problem-solving strategy. Below is an example of an addition problem with renaming that a 
+student missed due to a component-skill error:
+2
+67
++25
+1
+Note that in the incorrectly solved problem, the student knew to rename but did not know 
+the component skill related to place value for renaming appropriately (12 equals 1 ten and 
+2 ones). To remedy this component-skill error, the teacher would present instruction only on 
+the component skill of expanded notation. Once the student mastered the component skill, the 
+teacher would give students addition problems similar to the one originally missed.
+A strategy error occurs when the student demonstrates that she does not know the sequence 
+of steps required to solve the particular type of problem. In the following example, the stu­
+dent subtracts the denominator from the numerator when instructed to convert an improper frac­
+tion to a mixed number, indicating that the student does not have a viable strategy for reducing 
+improper fractions. To remedy this problem, the teacher must teach the entire strategy of rewrit­
+ing fractions to the student.
+The diagnosis and remediation procedures recommended here are designed to increase 
+instructional efficiency by helping teachers determine exactly how much additional teaching 
+is necessary to bring students to mastery. If a teacher determines that student errors are due to 
+deficient math fact knowledge, it is unnecessary to reteach lengthy problem-solving strategies. 
+Similarly, if an error pattern reflected in a student’s independent work is related to a single 
+component skill, then the teacher would reteach only that skill and not the entire instructional 
+strategy. These diagnosis and remediation procedures can save teachers valuable instructional 
+time by focusing on only those skills that require remediation.
+INSTRUCTIONAL LANGUAGE
+Attention to the need for instruction in discipline-based language has recently been extended to 
+the area of mathematics as evidenced by the CCSSM. Mathematical language practices required 
+by the CCSSM include engaging students in mathematical reasoning, developing viable argu­
+ments, and critiquing the reasoning of others—high expectations for math students and their 
+teachers. These higher-level language skills require that students understand basic mathematics 
+concepts and are able to use appropriate mathematics vocabulary.
+Attention to language has always been fundamental to Direct Instruction teaching (Engelmann, 
+Carnine, & Steely, 1991). For example, in a first-grade mathematics class asking students if 
+“3 is fewer than 5” may be problematic if students were taught the concept of “less than” and
+
+[p.9]
+Chapter 1 Direct Instruction 9
+not the term “fewer.” Consistency in language contributes to clarity of instruction, and that clar­
+ity of instruction is especially important for English language learners and students with math 
+disabilities.
+Sequencing Guidelines Applied to Language Instruction
+The three sequencing guidelines discussed earlier (see Sequence of Skills and Concepts) are 
+particularly relevant to a discussion of mathematics language. Below are three examples of the 
+application of these guidelines to the math language instruction.
+Teach Preskills of a Strategy Before the Strategy Teachers should consider what 
+vocabulary is necessary to teach prior to teaching a concept and what vocabulary can be taught 
+after the concept is introduced. Vocabulary terms that appear in the teaching formats should be 
+taught prior to the introduction of the format. For example, in teaching the equality rule—“we 
+must end with the same number on this side and the other side of the equal”—the terms “end 
+with,” “side,” “equal,” “ same,” and “other” are used. Therefore, the meaning of these terms 
+should be taught prior to the introduction of the equality rule.
+Teach Easy Skills Before More Difficult Ones Although precise terminology is critical 
+to mathematics, it is not necessary to teach precise, mathematically correct definitions initially; 
+rather it is important to provide students with the language that will permit them to take part 
+in math instruction. For example, the following definition for the area of a rectangle, although 
+correct, contains difficult vocabulary concepts and initially is not very useful to students: “To 
+find the area of a rectangle, multiply the length times the width resulting in an answer of square 
+units.” In contrast, applying the guideline of “easy before more difficult,” we recommend intro­
+ducing the area of a rectangle as “the number of squares it takes to cover the rectangle.” Using 
+student-friendly math vocabulary, appropriate to students’ age and skill level, results in clear 
+communication and promotes understanding.
+Separate the Introduction of Information or Strategies That Are Likely to Be 
+Confused The third sequencing guideline emphasizes separating confusing content. Teaching 
+the concept first and later attaching more precise terminology to the concept reduces possible con­
+fusion. For example, teaching students the concepts of fractions using the more student-friendly 
+terms “top numeral” and “bottom numeral” (rather than “numerator” and “denominator”) allows 
+students to focus on the concept rather than on the new terminology. The application of this 
+guideline prevents most students from confusing the two parts of a fraction.
+While teaching students mathematics language concepts is critical to mathematics profi­
+ciency, it is beyond the scope of this book to provide detailed instructional recommendations 
+for all math-related vocabulary. Teachers can find more information on how to teach specific 
+vocabulary in Direct Instruction Reading (Carnine, Silbert, Kame’enui, Slocum, & Travers, 
+2017). In this text, we address mathematics language by including an online glossary for teach­
+ers, presenting specific instructional procedures for teaching critical concepts, and ensuring that 
+all teaching formats adhere to the instructional design guidelines outlined above.
+APPLY WHAT YOU LEARNED
+Click on the V to answer the questions online.
+1. What are the areas that comprise mathematical proficiency according to the National Research 
+Council?
+2. Outline the essential features of instructional design.
+3. Describe the four features of instructional delivery characteristic of Direct Instruction.
+4. Describe how the Direct Instruction sequencing guidelines are applied to mathematical language.

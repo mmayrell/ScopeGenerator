@@ -37,3 +37,15 @@ if (existsSync(formatsSrc)) {
   console.error('copy-assets: assets/formats.json is missing - the format library must ship with the API')
   process.exit(1)
 }
+
+// Cover-to-cover textbook corpus (all 18 chapters + appendices, page-stamped)
+// — the VSG rulebook's doctrine source: the whole book is AVAILABLE, retrieval
+// stays page-targeted (rulebook §13.5).
+const textbookSrc = join(here, '..', 'assets', 'textbook')
+if (existsSync(textbookSrc)) {
+  cpSync(textbookSrc, join(dstDir, 'textbook'), { recursive: true })
+  console.log(`copy-assets: copied textbook/ -> ${join(dstDir, 'textbook')}`)
+} else {
+  console.error('copy-assets: assets/textbook is missing - the textbook corpus must ship with the API')
+  process.exit(1)
+}

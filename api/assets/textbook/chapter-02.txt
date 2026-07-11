@@ -1,0 +1,328 @@
+[p.10]
+Chapter
+Research Support for Direct 
+Instruction Mathematics
+By Kaitlyn Bundock and Timothy Slocum
+LEARNING OUTCOMES
+2.1 Discuss the rationale for improving U.S. math instruction.
+2.2 Compare the differences between di and DI and the research support for each.
+2.3 Outline three research-based recommendations for improving math instruction.
+THE NEED FOR EXCELLENT MATH INSTRUCTION
+Mathematical competence is important for living successfully in modern American society. 
+It is a gateway to higher education as well as to success in many other career paths (Child 
+Trends Databank, 2015). For example, studies have found that students who take higher- 
+level math courses in high school are more likely to graduate from college (Adelman, 1999; 
+Attewell & Domina, 2008). Our increasingly technological workplace raises the stakes for 
+math proficiency—those with strong math skills can access numerous exciting career options 
+in the new economy, while those who have weak math skills can be limited to fewer and 
+less desirable career options. A great deal of evidence points to the conclusion that math 
+competence is related to level and quality of employment (Finnie & Meng, 2006; Murnane, 
+Willett, Braatz, & Duhaldeborde, 2001; Tyler, 2004). Further, the relationship between high 
+school students’ math skills and their later earnings has grown stronger since 1976 (Murnane, 
+Willett, & Levy, 1995; Reyna & Brainerd, 2007). During the 1990s, growth in employment 
+in the math-intensive sectors of science and engineering tripled that in other areas of the 
+economy (National Science Board, 2008). And the personal implications of mathematical 
+proficiency are not limited to employment; math skills are required in everyday life for 
+selecting purchases, managing finances, and understanding interest rates (Kirsch, Jungeblut, 
+Jenkins, & Kolstad, 2002). Math skills are related to patients’ health behaviors and outcomes, 
+their understanding of medical issues, and their implementation of treatments (Reyna & 
+Brainerd, 2007).
+
+[p.11]
+Chapter 2 Research Support for Direct Instruction Mathematics 11
+In addition to its impact on individual outcomes, mathematic competence is increasingly 
+recognized as being important for the economic success of the nation (Reyna & Brainerd, 2007). 
+As the National Mathematics Advisory Panel (NMAP) stated in 2008:
+The eminence, safety, and well-being of nations have been entwined for centuries 
+with the ability of their people to deal with sophisticated quantitative ideas. Leading 
+societies have commanded mathematical skills that have brought them advantages in 
+medicine and health, in technology and commerce, in navigation and exploration, in 
+defense and finance, and in the ability to understand past failures and to forecast future 
+developments, (p. 29)
+Many states have responded to the importance of math proficiency by increasing demands 
+for the number and level of mathematics courses required for high school graduation (National 
+Mathematics Advisory Panel, 2008; Rasmussen et al., 2011). As a result, poor math skills can be 
+a considerable barrier to receiving a high school diploma (Rasmussen et al., 2011).
+Current Performance of U.S. Math Students
+Despite an increased focus on enhancing the rigor of K-12 mathematics instruction in recent 
+years, the math performance of students in the United States continues to be substandard. The 
+National Assessment of Educational Progress (NAEP) measures the performance of American 
+students in a variety of content areas (National Center for Education Statistics [NCES], 2015). 
+Students in grades 4 and 8 are assessed in mathematics every 2 years. The 2015 NAEP results 
+revealed that 49% of fourth graders and 57% of eighth graders failed to meet proficiency stan­
+dards. This represents a worse performance than was seen only 2 years earlier. The situation is 
+dire for underrepresented groups. For example, 87% of Black and 81% of Hispanic eighth grad­
+ers were not proficient in math in the 2015 assessment (NCES, 2015). The National Mathemat­
+ics Advisory Panel commented in 2008:
+There are large, persistent disparities in mathematics achievement related to race and 
+income—disparities that are not only devastating for individuals and families but also proj­
+ect poorly for the nation’s future, given the youthfulness and high growth rates of the largest 
+minority populations, (p. xii)
+Similarly, students with disabilities experience very poor math outcomes. From 5% to 8% 
+of U.S. students are identified as having learning disabilities in math (Bryant, 2005; Fuchs et al., 
+2008; Jitendra & Star, 2011; Judge & Watson, 2011). Results on the NAEP indicate that 84% of 
+fourth-grade students with disabilities and 92% of eighth-grade students with disabilities were 
+not proficient in mathematics (NCES, 2015). These results are consistent with research showing 
+that 95% of students with disabilities rank in the lowest 25th percentile on standardized math 
+assessments throughout all grade levels (Gersten et al., 2012; Judge & Watson, 2011).
+International comparisons consistently show that American students lag behind other 
+industrialized countries in math proficiency. The Organization for Economic Cooperation 
+and Development (OECD) administers the PISA test every 3 years in 65 countries to evalu­
+ate 15-year-olds’ performance in reading, mathematics, and science (OECD, 2014a). The 2012 
+PISA math results indicate that the United States ranked 27th among the 34 OECD member 
+nations assessed (OECD, 2014b). Additionally, U.S. math scores were below the average of 
+math scores calculated from all 65 countries assessed, and 25% of students in the United States 
+tested below the basic proficiency level established by the PISA. The 2015 PISA focused pri­
+marily on science, although data related to mathematics were obtained. The overall mathematics 
+results indicate that students in the United States continued to perform below average compared 
+to the other industrialized nations (OECD, 2016). The results of the PISA indicate that U.S. 
+students struggle with real-world math problems, mathematical modeling, geometry, and math­
+ematical literacy.
+When the math results of all U.S. students are considered together, they reveal a nationwide 
+need for instruction that improves the performance of students from all demographic groups. 
+The National Council of Teachers of Mathematics (NCTM) published an “Agenda for Action”
+
+[p.12]
+12 PartI Perspective
+in 1980, calling for a shift in mathematics education toward an emphasis on problem solving, 
+cooperative learning, the use of manipulatives, and alternative ways of assessing students; 
+these recommendations, however, were not based on research (NCTM, 1980). The NCTM later 
+released “Principles and Standards for School Mathematics” in 2000 (NCTM, 2000). This guide 
+presents a vision of mathematics education, as well as guidelines for educators, and includes 
+principles (foundational precepts for quality mathematics instruction) and content and process 
+standards.
+By far the most important policy development in response to poor math outcomes is the 
+Common Core State Standards for Mathematics (CCSSM). Produced by the National Gover­
+nors Association and the Council of Chief State School Officers in 2009, these standards were 
+intended to raise educational achievement by creating a coherent and consistent sequence of 
+standards that build to high-level achievement (Dingman, Teuscher, Newton & Kasmer, 2013; 
+National Governors Association & Council of Chief State School Officers, 2012).
+The majority of states have adopted the CCSSM, which are consistent with the NCTM 
+principles and standards. The CCSSM represent four main shifts in math education: changes to 
+the grade level in which certain math content is taught; adjustments made to the number of grade 
+levels certain math topics span; shifts in emphasis on certain math topics; and development of 
+the Standards for Mathematical Practice, which focus on problem-solving across the standards 
+(Dingman et al., 2013; National Governors Association & Council of Chief State School Offi­
+cers, 2012). The CCSSM are more rigorous than the previous standards that were in place in the 
+majority of states, in part because one of the goals reflected in the CCSSM is that students mas­
+ter higher-level algebra by the end of high school (Dingman et al., 2013; Schmidt & Houang, 
+2012). As such, math concepts that are foundations for algebra are introduced at earlier grades, 
+and they tend to be emphasized across a larger number of grade levels to provide more in-depth 
+coverage (Schmidt & Houang, 2012). The changes in content associated with the CCSSM, in 
+particular the increases in rigor, require educators to pay greater attention to effective teaching 
+practices in mathematics. When mathematics instruction is highly effective, many students will 
+meet the CCSSM standards and realize the benefits of high-level math competence. But if math­
+ematics instruction is not effective, the higher standards represented by CCSSM will simply 
+impose a barrier to school success and graduation. Therefore, these high standards increase the 
+consequences of the quality of instruction. Now more than ever, it is imperative that mathemat­
+ics instruction enable a wide range of students—including those at risk for failure in math—to 
+achieve high levels of proficiency.
+RESEARCH ON DIRECT INSTRUCTION
+• ∙ ∙ ∙ ∙ ∙ ∙ ∙
+Direct instruction is a research-based approach to instruction that has been shown to be highly 
+effective across many academic domains, including mathematics. This book is, of course, con­
+cerned with using this method to teach mathematics. The specific meaning of the term “direct 
+instruction” is somewhat complicated, however. When stated in lowercase letters, direct instruc­
+tion is an instructional strategy that includes:
+1. Content presented in small steps.
+2. Explicit teacher modeling or explanation.
+3. Guided student practice with gradually faded support.
+4. Use of feedback including explicit corrections of errors.
+5. Independent practice including cumulative review.
+These strategies also have been termed “explicit instruction,” “effective instruction,” and 
+“systematic teaching” (Archer & Hughes, 2011; Rosenshine & Stevens, 1986).
+When the term is written as a proper noun with capital letters (“Direct Instruction”), it pri­
+marily refers to instructional programs that include all the features of direct instruction (note 
+the lowercase) and also have additional instructional design features, as described in Chapter 1, 
+that make them even more effective for teachers and students. Commercially developed Direct 
+Instruction (capital letters) programs organize the content around generalizable strategies that 
+students can use to solve a wide variety of problems, and they implement detailed principles of
+
+[p.13]
+Chapter 2 Research Support for Direct Instruction Mathematics 13
+clear communication to ensure that these generalizable strategies are conveyed effectively to 
+students—including those at risk. Direct Instruction programs also include features to increase 
+student engagement such as unison student responding and signals to coordinate those responses.
+Explicit or direct instruction has been supported by hundreds of studies that describe the 
+specific teacher behaviors that are most closely associated with strong academic outcomes. 
+In 1986, Brophy and Good reviewed more than 200 publications that examined correlations 
+between particular teacher behaviors and student achievement and derived the following 
+recommendations:
+■ Students should receive frequent opportunities to respond to questions, and they should get 
+clear feedback about the correctness of their responses.
+■ Skills should be mastered to overlearning, with new ones gradually phased in while old ones 
+are being mastered.
+■ Both progress through the curriculum and pacing within specific activities should be brisk, 
+producing continuous progress achieved with relative ease (small steps, high success rate).
+■ Individual progress should be closely monitored so that all students, especially struggling 
+students, are checked, receive feedback, and achieve mastery.
+Rosenshine and Stevens (1986) reviewed dozens of experimental studies in which teachers 
+learned to use specific teaching techniques and student achievement was measured. Based on 
+this research, they recommended that teachers:
+■ Present new material in small steps, with student practice after each step.
+■ Give clear and detailed instructions and explanations. 
+■ Provide a high level of active practice for all students.
+■ Ask a large number of questions, check student understanding, and obtain responses 
+from all students.
+■ Guide students during initial practice.
+■ Provide systematic feedback and corrections.
+■ Provide explicit instruction and practice for seatwork exercises and, where necessary, 
+monitor students during seatwork.
+For teaching academic subjects and improving student outcomes, large bodies of research 
+converge upon the Direct Instruction model, which incorporates the above techniques.
+Direct Instruction programs also have been subjected to extensive research. Project 
+Follow Through, a federal education project, was implemented beginning in the late 1960s and 
+was the largest organized experiment in the history of education. It involved nearly 100,000 
+students in 170 communities across the country and cost nearly $1 billion (Watkins, 1997). 
+The goal of Project Follow Through was to identify models of instruction that could close 
+the gap in academic achievement between economically disadvantaged students and those 
+from higher-income families. Researchers tested nine instructional models including Direct 
+Instruction. Each was implemented in at least three schools, and each model school was paired 
+with a similar control school. Outcome measures included three domains: (a) basic academic 
+skills such as word knowledge, spelling, and math computations; (b) cognitive outcomes such as 
+reading comprehension, math concepts, and math problem solving; and (c) affective outcomes 
+such as responsibility and self-esteem.
+Figure 2.1 summarizes the overall results of Project Follow Through. This figure clearly 
+shows that Direct Instruction was the only model that demonstrated large positive effects in all 
+three domains. These data indicate that Direct Instruction can be effective with students who 
+are economically disadvantaged and that it can improve not only basic skills but also complex 
+cognitive and affective outcomes (Engelmann, Becker, Carnine, & Gersten, 1988; Stebbins, 
+St. Pierre, Proper, Anderson, & Cerva, 1977).
+Figure 2.2 illustrates the math performance of third-grade students from each of the nine 
+major models on the math subtest of the Metropolitan Achievement Test. The graph shows that 
+students taught using the Direct Instruction model significantly outperformed students taught 
+using the other models. In fact, the Direct Instruction students performed close to the 50th 
+percentile, an outstanding feat considering the 50th percentile is the median for students of all 
+income levels in the United States (Gersten & Carnine, 1984; Stebbins et al., 1977).
+
+[p.14]
+14 Part I Perspective
+FIGURE 2-1 Direct Instruction was found to be highly effective for improving basic 
+skills, cognitive skills, and affective outcomes in project follow through. Based on data 
+from Stebbins et al. (1977)
+Project Follow Through, 1967-1977
+Nine models of teaching K-3 compared in history’s largest experiment
+• Nine models grouped into three broad teaching approaches: academic focus, problem­
+solving focus, or self esteem focus.
+Findinαs, * τhrθθ cate9or∙θs of results were measured: basic academic skills, problem-solving skills, 
+$ ' and changes in self-esteem.
+• Direct Instruction produced the best results in all areas: basic skills, problem-solving, and 
+self-esteem.
+FIGURE 2.2 Direct Instruction was found to be highly effective for improving math 
+performance in low-income students. Based on data from Stebbins et al. (1977)
+Performance of Third-Grade Students on Math 
+Subtest of Metropolitan Achievement Test
+Students taught using the Direct Instruction model:
+Findings: ∙ Significantly outperformed students taught using other 
+models.
+• Approached the 50th percentile.
+
+[p.15]
+Chapter 2 Research Support for Direct Instruction Mathematics 15
+A great deal of research has been conducted on Direct Instruction since the time of Follow 
+Through:
+■ Adams and Engelmann (1996) conducted a meta-analysis of research studies in which one 
+group received Direct Instruction while a comparable control group was taught with other 
+methods. The work identified 37 such studies and found that, on average, they favored Direct 
+Instruction by a very large margin (effect size = .87). Further, across these studies, Adams 
+and Engelmann found 33 individual comparisons between a Direct Instruction group and 
+comparison group on a measure of math performance. On average, these comparisons fa­
+vored the Direct Instruction groups by an even larger margin (effect size = 1.11).
+■ Borman, Hewes, Overman, and Brown (2002) performed a meta-analysis of 29 compre­
+hensive school reform models based on 232 individual studies. They concluded that “the 
+combined quantity, quality, and statistical significance of evidence from three models, in 
+particular, set them apart from the rest” (p. 3). One of these models was Direct Instruction.
+■ In a similar review, the American Institutes for Research conducted an independent review of 
+24 prominent school reform models; it also concluded that Direct Instruction was one of only 
+three models with strong evidence of positive effects on achievement (Herman et al., 1999).
+■ The American Federation of Teachers (AFT) issued a series of research reviews that identi­
+fied (a) promising programs for teaching reading and language arts (AFT, 1998a), (b) effec­
+tive school reform models (AFT, 1998b), and (c) effective remedial reading programs (AFT, 
+1999). In each case, Direct Instruction was one of a small number of models that were found 
+to be well supported by research.
+Taken together, the large and diverse body of research on Direct Instruction strongly 
+supports its effectiveness for teaching a wide variety of academic subjects to diverse learners 
+including those who are at risk for academic failure.
+RESEARCH RECOMMENDATIONS FOR MATH INSTRUCTION
+In response to an increased emphasis on the importance of mathematics for individual and 
+national success, along with the need to address consistently poor student outcomes, President 
+George W. Bush commissioned the National Mathematics Advisory Panel (NMAP) in 2006. 
+Composed of respected education and mathematics experts, the panel was charged with rec­
+ommending ways “to foster greater knowledge of and improved performance in mathematics 
+among American students” based on “the best available scientific evidence” (NMAP, 2008, 
+p. xiii). The panel’s 2008 final report was based on a review of 16,000 research publications and 
+policy reports as well as public testimony from 110 individuals. This report provides recom­
+mendations on curricular content, learning processes, teacher preparation, instructional practice, 
+instructional materials, assessment, and research policies and mechanics (NMAP, 2008). With 
+respect to instructional practice, the panel’s recommendations for advancing student perfor­
+mance in mathematics included the use of explicit instruction, defined as:
+■ Clear teacher modeling of problem types using an array of examples.
+■ Extensive student practice of strategies and skills.
+■ Provision of opportunities to think aloud.
+■ Extensive feedback.
+All of these elements of instruction are consistent with Direct Instruction. The panel’s rec­
+ommendations confirm that the components of Direct Instruction are in fact highly effective for 
+mathematics instruction. The same components identified in early research on direct instruction 
+and built into the Direct Instruction programs are found in a careful examination of the research 
+on effective math instruction.
+More recent studies conducted by Slavin and his colleagues (Slavin & Lake, 2008; Slavin, Lake, 
+& Groff, 2009) also found these instructional practices effective for improving student achievement 
+in mathematics. Slavin and Lake (2008) reviewed 87 studies conducted with students in grades 
+K-6. They compared approaches that focused on (a) mathematics curricula, (b) computer-assisted 
+instruction, and (c) instructional process programs. Instructional process programs, they explained, 
+are characterized as approaches that “focus on teachers’ instructional practices and classroom
+
+[p.16]
+16 Part! Perspective
+management strategies rather than on curriculum or technology” (p. 430). For example, coopera­
+tive learning and direct instruction would be considered to be instructional process programs. The 
+authors then categorized the studies they reviewed as having strong, moderate, limited, or insuffi­
+cient evidence of effectiveness based on the quality and significance of the results of each study. 
+The studies showing the strongest evidence of effectiveness were all instructional process programs, 
+with the exception of one computer-assisted instructional program being included in the moderate 
+effectiveness category. The limited evidence of effectiveness category included only mathematics 
+curricula programs. These results indicate that instructional process programs such as direct instruc­
+tion have a greater potential to improve student performance than curricular or computer-assisted 
+instructional programs do alone (Slavin & Lake, 2008).
+Slavin and colleagues (2009) replicated this study with programs implemented in middle 
+and high schools and found similar results. The primary implication from these two studies is 
+that instructional process programs, such as direct instruction, are among the most promising 
+methods to improve student achievement in mathematics at any grade level (Slavin & Lake, 
+2008; Slavin et al., 2009).
+The Institute for Educational Sciences (IES) is the research arm of the U.S. Department of Edu­
+cation. Its mission is to provide scientific evidence to support practice and policy. The IES produces 
+practice guides to provide usable information to educators. These practice guides are developed by a 
+panel of leading researchers and are carefully reviewed for their scientific validity. The IES practice 
+guide Assisting Students Struggling with Mathematics (Gersten, Beckmann et al., 2009) outlines 
+specific recommendations to design and implement mathematics interventions including:
+■ Screening all students to identify those at risk of math failure.
+■ Using explicit and systematic instruction during intervention.
+■ Instructing students to solve word problems based on common underlying structures.
+■ Dedicating approximately 10 minutes of any intervention session to help students build flu­
+ent basic arithmetic fact retrieval.
+■ Monitoring students’ progress.
+■ Including motivational strategies within interventions.
+Again, these recommendations are closely aligned with Direct Instruction. In particular, the 
+IES practice guide reported strong evidence in support of the recommendation that:
+Instruction during the intervention should be explicit and systematic. This includes provid­
+ing models of proficient problem solving, verbalization of thought processes, guided prac­
+tice, corrective feedback, and frequent cumulative review, (p. 21)
+The NMAP, the IES practice guide, and the work of Slavin and colleagues were focused 
+mainly on students without disabilities. Gersten, Chard et al. (2009) conducted a meta-analysis 
+that evaluated the results of 42 interventions conducted with students with learning disabilities 
+in math. Of all of these interventions, Gersten and colleagues determined that the two instruc­
+tional components that resulted in statistically significant increases in effect sizes were teaching 
+students to use heuristics and the use of explicit instruction. The key elements of explicit instruc­
+tion identified by the authors included teacher demonstrations of step-by-step processes to solve 
+problems, the application of the strategies to a specific set of problems, and the requirement that 
+students then use a specific step-by-step protocol to solve problems (Gersten, Chard et al., 2009).
+While the particular purposes, methods, populations, and results of these various research 
+syntheses differ, their recommendations converge on the use of an explicit and systematic 
+approach to instruction that incorporates explicit teacher modeling, extensive student practice 
+with feedback, and assessment of student progress. These recommendations give strong support 
+to Direct Instruction Mathematics.
+APPLY WHAT YOU LEARNED
+Click on the V to answer the questions online.
+1. Why should improving U.S. mathematics instruction be a priority?
+2. Describe the differences between direct instruction and Direct Instruction.
+3. Outline three research-based recommendations for improving math instruction.

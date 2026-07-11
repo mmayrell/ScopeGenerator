@@ -1,0 +1,1057 @@
+[p.68]
+Chapter
+Basic Facts
+LEARNING OUTCOMES
+6.1 Discuss the sequencing guidelines for introducing fact series.
+6.2 Discuss the role that relationship activities play in teaching math facts to 
+students.
+6.3 Describe two types of relationship activities and how they promote efficient 
+math fact mastery.
+6.4 Discuss the components essential for promoting fact mastery.
+6.5 Outline the procedures for setting up a math facts mastery program.
+There are 380 basic arithmetic facts: 100 addition, 90 subtraction, 100 multiplication, and 
+90 division. Basic addition facts include all possible combinations in which each of the addends 
+is a whole number under 10. Basic subtraction facts include all possible combinations in which 
+the subtrahend and the difference (a and b in c — a = b) are one-digit numbers. Tables 6.1 
+and 6.2 include all the basic addition and subtraction facts.
+TABLE 6.1 Basic Addition Facts
+Addends
+Addends 0 1 2 3 4 5 El 7 8 9
+0 + 0 1 2 3 4 5 6 7 8 9
+1 + 1 2 3 4 5 6 7 8 9 10
+2 + 2 3 4 5 6 7 8 9 10 11
+3 + 3 4 5 6 7 8 9 10 11 12
+4+ 4 5 6 7 8 9 10 11 12 13
+5 + 5 6 7 8 9 10 11 12 13 14
+6+ 6 7 8 9 10 11 12 13 14 15
+≡ 7 8 9 10 11 12 O 14 15 16
+8+ 8 9 10 11 12 13 14 15 16 17
+9+ 9 10 11 12 13 14 15 16 17 18
+Note: Problems are formed by a numeral (addend) from the column on the left, a numeral (addend) from the 
+row on top, and their intersection; the numerals for 7 + 6 = 13 are boxed.
+
+[p.69]
+Chapter 6 Basic Facts 69
+TABLE 6.2 Basic Subtraction Facts
+Note: Problems are formed by a numeral (minuend) from the column on the left, followed by 
+a numeral (subtrahend) from the top row, and, finally, the difference, which is the intersection; the numerals 
+for 13 -7 = 6 are boxed.
+Subtrahends
+Minuends 0 1 2 3 4 5 6 s 8 9
+1- 1 0
+2- 2 1 0
+3- 3 2 1 0
+4— 4 3 2 1 0
+5— 5 4 3 2 1 0
+6— 6 5 4 3 2 1 0
+7— 7 6 5 4 3 2 1 0
+8— 8 7 6 5 4 3 2 1 0
+9— 9 8 7 6 5 4 3 2 1 0
+10- 9 8 7 6 5 4 3 2 1
+11- 9 8 7 6 5 4 3 2
+12— 9 8 7 6 5 4 3
+03 9 8 7 E 5 4
+14— 9 8 7 6 5
+15— 9 8 7 6
+16— 9 8 7
+17- 9 8
+18- 9
+TABLE 6.3 Basic Multiplication/Division Facts
+÷∕× 0 1 2 3 4 5 6 8 9
+0 0 0 0 0 0 0 0 0 0 0
+1 0 1 2 3 4 5 6 7 8 9
+2 0 2 4 6 8 10 12 14 16 18
+3 0 3 6 9 12 15 18 21 24 27
+4 0 4 8 12 16 20 24 28 32 36
+5 0 5 10 15 20 25 30 35 40 45
+0 6 12 18 24 30 36 ∣42∣ 48 54
+7 0 7 14 21 28 35 42 49 56 63
+8 0 8 16 24 32 40 48 56 64 72
+9 0 9 18 27 36 45 54 63 72 81
+Note: Problems are formed by a numeral from the column on the left, a numeral from the top row, 
+and their intersection; the row and column for the numerals 6 and 7 intersect at 42; these boxed 
+numerals form 6 × 7 = 42 and 42 ÷ 6 = 7.
+Basic multiplication facts include all possible combinations in which each of the factors 
+is a single-digit number (in a × b = c, a and b are single digits). Basic division facts include 
+all possible combinations in which the divisor and quotient are single-digit numbers (in 
+c ÷ a ~ b, a and b are single-digit numbers and a does not equal 0). Table 6.3 includes all 
+basic multiplication and division facts.
+SKILL HIERARCHY
+Basic facts should be introduced in a carefully planned sequence. New sets of facts should be 
+introduced systematically to avoid potential confusion. Figures 6.1, 6.2, 6.3, and 6.4 suggest
+
+[p.70]
+70 Part II Basic Concepts and Skills
+FIGURE 6.1 Sequence of addition facts
+Plus-one format is Format 6.1.
+Series-saying format is Format 6.2.
+Three-number format is Format 6.3.
+FIGURE 6.2 Sequence of subtraction facts
+Sets of Nev/ Facts Relationship Formats
+A. 2 + 1, 3 + 1, 4 + 1, 5 + 1 Plus-one, series saying
+B. 6 + 1, 7 + 1, 8 + 1,9+1 Plus-one, series saying
+C. 2 + 2,3 + 2, 4 + 2, 5 + 2 Series saying
+D. 6 + 2, 7 + 2, 8 + 2, 9 + 2 Series saying
+E. 3 + 3,4 + 4, 5 + 5z 6 + 6 Series saying
+F. 2 + 3, 3 + 3, 4 + 3, 5 + 3 Series saying
+G. 6 + 3, 7 + 3, 8 + 3, 9 + 3 Series saying
+H. 1 + 2, 1 + 3, 1 + 4, 1 + 5 Three numbers—addition (1, 2, 3) (1, 3, 4) (1, 4z 5) (1z 5z 6)
+I. 1 + 6, 1 + 7, 1 + 8, 1 + 9 Three numbers—addition (1, 6z 7) (1z 7z 8) (1z 8z 9) (1, 9z 10)
+J. 2 + 4, 2 + 5, 2 + 6 Three  numbers—addition (2, 3, 5) (2, 4z 6) (2, 5z 7) (2, 6z 8)
+K. 2 + 7, 2 + 8, 2 + 9 Three  numbers—addition (2, 7, 9) (2, 8z 10) (2, 9, 11)
+L. 3 + 4, 3 + 5, 3 + 6 Three  numbers—addition (3, 4z 7) (3, 5z 8) (3, 6, 9)
+M.3 + 7, 3 + 8, 3 + 9 Three numbers—addition (3, 7, 10) (3z 8z 11) (3z 9z 12)
+N. 7 + 7, 8 + 8, 9 + 9, 10 + 10 Series saying
+0. 1 + 0, 2 + 0, 3 + 0. . . 9 + 0 Series saying
+P. 0 + 1, o + 2, 0 + 3. . . 0 + 9 Three  numbers—addition (1z 0z 1) (2z 0z 2)
+Q. 5 + 4, 6 + 4, 7 + 4 Series saying
+R. 7 + 6, 8 + 6, 9 + 6 Series saying
+S. 4 + 5,4 + 6, 4 + 7 Three  numbers—addition (4z 5z 9) (4z 6z 10) (4z 7z 11)
+T. 6 + 7, 6 + 8, 6 + 9 Three  numbers—addition (6, 7z 13) (6z 8z 14) (6z 9z 15)
+U. 7 + 4, 8 + 4, 9 + 4 Series saying
+V. 7 + 7, 8 + 7, 9 + 7 Series saying
+W. 9 + 8, 8 + 9,4 + 8 Three  numbers—addition (8z 9z 17) (8z 4z 12)
+X. 6 + 5, 7 + 5, 8 + 5z 9 + 5 Series saying
+Y 7 + 8, 7 + 9, 4 + 9 Three  numbers—addition (7z 8z 15) (7z 9z 16) (9z 4z 13)
+Z. 5 + 6, 5 + 7, 5 + 8z 5 + 9 Three  numbers—addition (5, 6z 11) (5, 7z 12) (5z 8, 13) (5, 9, 14)
+Series-saying format is Format 6.2.
+Three-number format is Format 6.3.
+Sets of New Facts Relationship Format
+A. 3 - 1, 4 - 1, 5 - 1, 6 - 1
+B. 7 - 1, 8 - 1, 9 - 1, 10 - 1
+C. 4 - 2z 5 - 2, 6 - 2, 7 - 2
+D. 8 - 2, 9 - 2, 10 - 2, 11 - 2
+E. 1 - 0z 2 - 0z 3 - 0z 4 - 0, 5 - 0z
+6 — 0, 7 - 0, 8 - 0z 9-0
+F. 1 - 1, 2 - 2z 3 - 3z 4 - 4, 5 - 5,
+6-6z7-7z8-8z9-9
+G. 6 - 3z 8 - 4z 10 - 5z 12 - 6
+H. 5 - 3, 6 - 3, 7 - 3, 8 - 3
+I. 9 - 3, 10 - 3z 11 - 3, 12 - 3
+J. 3-2, 4 -3, 5 -4, 6-5
+K. 7 - 6z 8 - 7, 9 - 8, 10 - 9
+L. 5 - 3, 6 - 4, 7 - 5
+M.8 - 6z 9 - 7, 10 - 8z 11 -9
+N. 6 - 3, 7 - 4, 8 - 5, 9 - 6
+O. 10 — 7, 11— 8z12- 9
+P. 14 - 7z 16 - 8z 18 - 9
+Q. 8 - 4z 9 - 4z 10 - 4, 11 - 4
+R. 12 - 6z 13 - 6, 14 - 6, 15 - 6
+S. 9 - 5, 10 - 6z 11 - 7
+T. 13 - 7z 14 - 8, 15 - 9
+U. 10 - 4z 11 - 4z 12 — 4, 13 - 4
+V. 14 - 7, 15 - 7, 16 - 7
+W. 17 - 8z 17 - 9z 12 - 8
+X. 11 - 5, 12 - 5, 13 - 5z 14 - 5
+Y. 15 - 8z 16 - 9z 13 - 9
+Z. 11 2 6z 12 2 7z 13 2 8, 14 2 9
+Series saying
+Series saying
+Series saying
+Series saying
+Three numbers—subtraction (1, 0z 1) (2z 0z 2)
+(3z 0z 3) (4z 0z 4) . . .
+Three numbers—subtraction (1, 1z 0) (2z 2z 0) (3z 3z 0) (4z 4z 0) . . .
+Three numbers—subtraction (6z 3z 3) (8z 4z 4) (10, 5z 5) (12z 6, 6)
+Series saying
+Series saying
+Three numbers—subtraction (3z 2, 1z) (4, 3, 1) (5, 4z 1) (6z 5z 1)
+Three numbers—subtraction (7, 6, 1) (8z 7z 1) (9, 8z 1) (10z 9z 1)
+Three numbers—subtraction (5, 3, 2) (6, 4, 2) (7, 5, 2)
+Three numbers—subtraction (8, 6z 2) (9, 7z 2) (10z 8z 2) (11 z 9z 2)
+Three numbers—subtraction (6, 3, 3) (7, 4, 3) (8, 5, 3) (9z 6z 3)
+Three numbers—subtraction (10, 7, 3) (11z 8z 3) (12z 9z 3)
+Three numbers—subtraction (14, 7, 7) (16, 8, 8) (18, 9, 9)
+Series saying
+Series saying
+Three numbers—subtraction (9z 5, 4) (10, 6, 4) (11, 7, 4)
+Three numbers—subtraction (13, 7, 6) (14, 8, 6) (15, 9, 6)
+Series saying
+Series saying
+Three numbers—subtraction (17, 9, 8) (12, 8, 4)
+Series saying
+Three numbers—subtraction (15, 8, 7) (16, 9, 7) (13, 9, 4)
+Three numbers—subtraction (11, 6, 5) (12, 7, 5) (13, 8, 5) (14, 9, 5)
+
+[p.71]
+Chapter 6 Basic Facts 71
+FIGURE 6.3 Sequence of multiplication facts
+Series-saying format is Format 6.2.
+Three-number format is Format 6.3.
+Relationship FormatSets of New Facts
+A. Any problem with a one Series saying
+B. 5 × 2, 5 X 3, 5 × 4, 5 × 5 Series saying
+C. 2 × 2, 3 × 2, 4 × 2, 5 × 2 Series saying
+D. 2 × 5, 3 X 5, 4 × 5, 5 × 5 Three numbers—multiplication
+E. 2 × 2, 2 × 3, 2 × 4, 2 × 5 Three numbers—multiplication
+F. Any problem with a zerc) Series saying
+G. 5 × 6, 5 X 7, 5 × 8, 5 × 9 Series saying
+H. 2 × 6, 2 X 7, 2 × 8, 2 × 9 Series saying
+I. 6 × 5, 7 X 5, 8 × 5, 9 × 5 Three numbers—multiplication
+J. 6 × 2, 7 X 2, 8 × 2, 9 × 2 Three numbers—multiplication
+K. 2 × 0, 3 X 0, 4 × 0, 5 × 0 Series saying
+L. 0 × 6, 0 X 7, 0 × 8, 0 × 9 Three numbers—multiplication
+M.9 × 2, 9 X 3, 9 × 4, 9 × 5 Series saying
+N. 4 × 2, 4 X 3, 4 × 4, 4 × 5 Series saying
+O. 2 × 9, 3 X 9, 4 × 9, 5 × 9 Three numbers—multiplication
+P. 2 × 4, 3 X 4, 4 × 4, 5 × 4 Three numbers—multiplication
+Q. 9 × 6, 9 X 7, 9 × 8, 9 × 9 Series saying
+R. 4 × 6, 4 X 7, 4 × 8, 4 × 9 Series saying
+S. 6 × 9, 7 X 9, 8 × 9, 9 × 9 Three numbers—multiplication
+T. 6 × 4, 7 X 4, 8 × 4, 9 × 4 Three numbers—multiplication
+U. 3 × 6, 3 X 7, 3 × 8, 3 × 9 Series saying
+V. 6 × 6, 6 X 7, 6 × 8, 6 × 9 Series saying
+W. 6 × 3, 7 X 3, 8 × 3, 9 × 3 Three numbers—multiplication
+X. 7 × 6, 8 X 6, 9 × 6 Three numbers—multiplication
+Y. 7 × 7, 8 X 7, 9 × 7 Series saying
+Z. 7 × 8, 8 X 8, 9 × 8 Three numbers—multiplication
+FIGURE 6.4 Sequence of division facts
+Three-number format is Format 6.3.
+Sets of New Facts
+A. Any number divided by one 
+B. Any number divided by itself 
+C. 10 ÷ 5, 15 ÷ 5, 20 ÷ 5, 25 ÷ 5 
+D. 4÷2,6÷2f8÷2,10÷2
+E. 10 ÷ 2, 15 ÷ 3, 20 ÷ 4, 25 ÷ 5 
+F. Zero divided by any number 
+G. 4÷2,6÷3,8÷4,10÷5
+H. 30 ÷ 5, 35 ÷ 5, 40 ÷ 5, 45 ÷ 5
+I. 12 ÷ 2, 14 ÷ 2, 16 ÷ 2, 18 ÷ 2
+J. 30 ÷ 6, 35 ÷ 7, 40 ÷ 8,45 ÷ 9
+K. 12 ÷ 6, 14 ÷ 7, 16 ÷ 8, 18 ÷ 9
+L. 18 ÷ 9,27 ÷ 9,36 ÷ 9,45 ÷ 9 
+M. 8 ÷ 4, 12 ÷ 4, 16 ÷ 4, 20 ÷ 4 
+N. 18 ÷ 2, 27 ÷ 3, 36 ÷ 4,45 ÷ 5 
+O. 8 ÷ 2, 12 ÷ 3, 16 ÷ 4, 20 ÷ 5
+P. 54 ÷ 9, 63 ÷ 9, 72 ÷ 9, 81 ÷ 9
+Q. 24 ÷ 4, 28 ÷ 4, 32 ÷ 4, 36 ÷ 4
+R. 54 ÷ 6, 63 ÷ 7, 72 ÷ 8, 81 ÷ 9
+S. 24 ÷ 6, 28 ÷ 7, 32 ÷ 8, 36 ÷ 9
+T. 18 ÷ 3, 21 ÷ 3, 24 ÷ 3, 27 ÷ 3
+∪. 36 ÷ 6, 42 ÷ 6, 48 ÷ 6, 54 ÷ 6
+V. 18 ÷ 6, 21 ÷ 7, 24 ÷ 8, 27 ÷ 9
+W. 42 ÷ 7, 48 ÷ 8, 54 ÷ 9
+X. 49 ÷ 7, 56 ÷ 7, 63 ÷ 7
+Y. 56 ÷ 8, 64 ÷ 8, 72 ÷ 8
+Relationship Format
+Three numbers—division (8, 
+Three numbers—division (3, 
+Three numbers—division (2, 
+Three numbers—division 
+Three numbers—division
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division 
+Three numbers—division
+1,8) (4, 1,4) (7, 1,7)
+1, 3) (9, 1, 9) (8, 1, 8) (2, 1, 2)
+5, 10) (3, 5, 15) (4, 5, 20) (5, 5, 25)
+
+[p.72]
+72 Part II Basic Concepts and Skills
+orders for introducing addition, subtraction, multiplication, and division facts. Each figure lists 
+about 25 sets of facts, each set composed of three or four facts. The sets are lettered in their order 
+of presentation. The facts in Set A would be introduced first, followed by the facts in sets B, C, 
+D, and so on. Across from each set of facts is the relationship format recommended for introduc­
+ing the facts. For example, in Figure 6.2 for subtraction facts, the teacher presents the Set G facts 
+using the three-number subtraction format. For the 6-3 fact, the teacher writes
+in Part A. The teacher writes blanks for only one statement because only one subtraction state­
+ment, 6 — 3, can be generated from the numbers 6, 3, and 3. The teacher presents Part A with 
+all four sets of numbers and then presents Part B with the same four sets of numbers. While the 
+teacher is introducing the new set of facts, memorization exercises on the previous sets continue. 
+Each relationship exercise, as illustrated with Set G for subtraction, is presented for several days 
+before the facts are introduced into mastery exercises.
+In constructing these sequences, three guidelines were followed: (a) easier facts are intro­
+duced first, (b) related facts are introduced together, and (c) the reverse of specific series of facts 
+is taught relatively soon after the initial series was presented. Note that these sequences illustrate 
+just one possible order for introducing facts and are not intended to represent the only acceptable 
+sequence for teaching facts.
+In most commercial math programs, addition facts are introduced first, followed by subtrac­
+tion, multiplication, and division facts. The question of exactly when to introduce the other facts is 
+a difficult one. For example, should subtraction facts be introduced while students are still learning 
+addition facts (and, if so, when?), or should subtraction facts be introduced only after students have 
+mastered all addition facts? Similar questions can be raised about multiplication and division facts.
+Unfortunately, little experimental research has been done to answer questions about 
+sequencing the introduction of facts. In our observations of lower-performing students, we have 
+found that students have more difficulty when a set of addition facts and the inverse subtraction 
+facts are introduced concurrently. Consequently, we recommend introducing related subtraction 
+or division facts for a particular set a month or more after the original addition or multiplication 
+set has been introduced. More specifically, teachers might begin introducing subtraction facts 
+when the students have learned about half of their addition facts. The teacher then alternates 
+between introducing sets of addition and subtraction. Following this recommendation, teachers 
+first introduce addition sets A through M and then introduce subtraction Set A. Thereafter, the 
+teacher alternates between addition and subtraction fact sets. Addition Set N is followed by sub­
+traction Set B, which is followed by addition Set O, then subtraction Set C, and so on.
+The question of when to introduce multiplication is of particular importance. Many students 
+will not have mastered all basic addition and subtraction facts at the time a program calls for 
+the introduction of multiplication. We recommend teaching multiplication facts beginning in 
+third grade, even though addition and subtraction facts may not have been completely mastered. 
+Knowledge of basic multiplication facts is a critical prerequisite for more advanced operations 
+and should be mastered no later than the end of third grade. We recommend that teachers devote 
+extra time to fact instruction for students who have not mastered the basic addition and subtrac­
+tion facts by third grade. For example, two practice sessions might be conducted daily, one focus­
+ing on addition and subtraction facts and one focusing on multiplication and, later, division facts.
+For upper-elementary and middle school students who did not master basic addition and 
+subtraction facts by the end of third grade, we recommend presenting multiplication and divi­
+sion facts before returning to addition and subtraction. The reason for this recommendation is 
+that these students are likely to have some type of finger strategy that allows them to compute 
+addition and subtraction facts correctly. (More advice on the use of fingers appears at the end of 
+the chapter.) On the other hand, these students are likely to have no viable strategy for figuring 
+out multiplication and division facts. Teaching multiplication and division facts first allows the 
+teacher to present a wider range of operations during the school year. After multiplication and 
+division facts are mastered, the teacher can go back and work on addition and subtraction facts.
+
+[p.73]
+Chapter 6 Basic Facts 73
+CONCEPTUAL UNDERSTANDING AND ORGANIZATION
+Three different types of instructional activities designed for teaching basic facts are recom­
+mended in this text. These three types include activities that promote conceptual understanding, 
+emphasize relationships among facts, and facilitate mastery. The activities to promote concep­
+tual understanding involve demonstrations of the operations, similar to those we have included 
+in Chapters 7 through 10.
+Relationship activities are exercises designed to teach the relationships among various facts. 
+One way of teaching these relationships is by presenting facts in a series, such as the plus ones 
+(3 + 1, 4 + 1, 5 + 1, etc.), fours (4 + 5, 4 + 6, 4 + 7, etc.), and the plus doubles (2 + 2, 
+3 + 3, 4 + 4, etc.). Another way of teaching these relationships is through the introduction of 
+fact families. Fact families are sets of three related numbers that generate four facts. Following 
+are examples of fact families constructed from three related numbers:
+Addition and Subtraction 
+Using 3, 5, 8
+Multiplication and Division
+Using 3, 5, 15
+3 + 5 = 8
+5 + 3 = 8
+8-3 = 5
+8-5 = 3
+3jl5 =
+5jl5 =
+15
+15
+5
+3 × 5 =
+5 × 3 =
+Note how using the commutative property of addition (3 + 5 = 8, so 5 + 3 = 8) and 
+multiplication (3 × 5 = 15, so 5 × 3 = 15) greatly reduces the memorization load for stu­
+dents. Instead of memorizing each fact individually (5 + 3 and 3 + 5), students can be taught 
+that if they know one fact, they also know the reverse. Instructional procedures based on the 
+commutative property are discussed later.
+Our recommendations for grouping facts into sets of fact families appear in Figures 6.2 
+through 6.5. These sets form the basis for organizing instruction. The teaching formats for the 
+relationship activities listed in these figures are discussed in the next section.
+INSTRUCTIONAL PROCEDURES: RELATIONSHIP ACTIVITIES
+Because the activities to promote conceptual understanding of the major operations are pre­
+sented in the chapters for each respective operation, this chapter focuses only on relationship and 
+mastery activities. The teaching procedures for the relationship activities include (a) presenting 
+facts in a related series (3 × 1, 3 × 2, 3 × 3) and (b) introducing number fact family exercises 
+that utilize inverse relationships between addition and subtraction and between multiplication 
+and division (4 + 2 = 6, 2 + 4 = 6, 6 — 4 = 2, 6 — 2 = 4). The purpose of teaching rela­
+tionship activities is to make fact memorization easier and more efficient. Following a discus­
+sion of the teaching procedures for relationship activities, mastery activities are outlined.
+Plus-One Facts
+Prior to introducing basic addition facts, teachers should teach students a strategy to figure out 
+plus-one facts. (Students who know 30 or more facts do not need to receive instruction on this 
+preskill.) Prior to instruction in facts, students most likely have been using picture represen­
+tations or concrete objects to solve simple equations. Format 6.1: Plus-One Facts not only 
+teaches plus-one facts but also begins teaching students that numbers are related in systematic 
+ways. Plus-one facts, which should be introduced in kindergarten, are taught through the appli­
+cation of this rule: When you plus one, you say the next number. From the rule, students learn 
+that the first addend is systematically related to the sum:
+6 + 1=7 9 + 1 = 10
+
+[p.74]
+74 Part II Basic Concepts and Skills
+To prepare students for the plus-one rule, the term next number is taught in Part A of the 
+format. At first, the teacher counts several numbers, holding the last number for several seconds 
+(“3, 4, 5, sssiiixxx”). The students say the next number, 7. After presenting several examples 
+in which the teacher says a series of numbers and asks students the next number (step 2), the 
+teacher presents examples in which she says just a single number, not a series of numbers (step 3), 
+and the students say the next number. A common error made by students is that they continue 
+counting rather than stopping at the next number. The teacher should stop students immediately 
+if they say more than the next number, model saying just the next number, then repeat the same 
+example before presenting additional examples.
+Part B should not be introduced until students have mastered the next number skill taught 
+in Part A. In Part B, the teacher presents the plus-one rule, models several examples, and then 
+tests. As a prompt, the teacher emphasizes the first addend, stretching it out for several seconds, 
+and de-emphasizes the words plus one (in sssiiixxx plus one, the plus one is said quietly so that 
+students can make the six-seven counting association).
+In Part C, the teacher presents the plus-one facts without any prompting. The teacher ini­
+tially should pause for 2 to 3 seconds before signaling for a response so that the students have 
+time to figure out the answer. After several days of practice, the teacher can decrease the pause 
+to a second. The teacher continues to provide practice on plus-one facts until students can 
+respond instantly to any plus-one problem.
+Series Saying
+Series saying, one of the major relationship activities, involves teaching the students to say 
+a consecutively ordered set of fact statements. Series saying prompts students to notice the 
+counting relationship among facts, as indicated by the circled numerals in the following 
+series:
+®+ 2 = (8∖ 
+7 + 2 = 91 
+⅛J+ 2 =(ig
+Format 6.2A/B/C:
+Series Saying
+Watch for a crisp pace with 
+strategic pauses to allow the stu­
+dents to think.
+Series saying may be incorporated into instruction for any of the four types of basic facts: 
+addition, subtraction, multiplication, and division. Format 6.2: Series Saying illustrates the 
+series saying format for an addition series. Note that the same format can be used to present 
+other series.
+There are four parts to the series-saying format. In Part A, students read the consecutively 
+ordered statements. In Part B, the teacher erases the answers and the students read the state­
+ments. In Part C, the teacher erases everything and requires the students to say the series from 
+memory. Part D is a drill on randomly presented facts. The teacher writes the fact questions on 
+the board without the answers. Note that the facts are written in random order and vertically. 
+The facts are written in random order so the students will not memorize the order of the answers. 
+The vertical presentation is intended to help students transition from relationship activities to 
+mastery activities.
+Teaching students to read statements (Part A) in a rapid, crisp fashion is critical for student 
+success. If students cannot read the series of statements accurately and quickly, they will have 
+difficulty saying the series from memory and remembering facts during the random drill (Part D). 
+Providing adequate practice is essential to enable the students to say the series of statements at 
+a fast rate.
+The teacher should set a quick, rhythmic pace for saying the statements to help the students 
+memorize them. There should be a slight pause between each statement. The correction for 
+slow pacing is to keep leading (responding with the students) at a brisk pace and gradually 
+fade the lead so that the students are saying the statements independently. The teacher must 
+be careful to provide the adequate repetition in an engaging manner. Teachers working with 
+lower-performing students may find that several days of practice on Parts A and B are needed 
+before continuing on to Parts C and D. Teachers working with higher-performing students may 
+be able to present all parts in a day or two.
+
+[p.75]
+Chapter 6 Basic Facts 75
+g Format 6.3A: 
+Three-Number Fact
+Families: Addition and 
+Multiplication Facts
+Watch how addition statements 
+are made using three-number 
+fact families.
+Format 6.4A:
+Three-Number Fact
+Families: Subtraction and 
+Division Facts
+Watch how students generate 
+subtraction facts.
+Three-Number Fact Families
+The other major format designed to demonstrate the relationships among facts is taught through 
+the introduction of three-number fact families. These are sets of three numbers from which stu­
+dents can be taught to generate four statements, either addition and subtraction or multiplication 
+and division. For example, given the numbers 3, 4, and 7, students are taught to construct the 
+addition statements 3 + 4 = 7 and 4 + 3 = 7. Later, students learn to construct the subtrac­
+tion statements based on the same three numbers: 7 — 4 = 3, 7 — 3 = 4.
+There are two formats for teaching number families. Format 6.3: Three-Number Fact 
+Families: Addition and Multiplication teaches students to use the commutative properties of 
+addition (if a + b = c, then b + a = c) and multiplication (if a × b = c, then b × a = c). 
+The second, Format 6.4: Three-Number Fact Families: Subtraction and Division, teaches 
+students to generate subtraction statements from addition statements and division statements 
+from multiplication statements. Using the commutative property as the basis for generating fact 
+families is extremely important in that it greatly reduces the number of facts students need to 
+memorize. For every fact that students learn, they can derive the answer to the inverse fact 
+quickly and easily by using the commutative property. Note that the term commutative property 
+is not explicitly taught initially, only the function of the property.
+Format 6.3 consists of three parts. In Part A, students are taught how to construct a pair 
+of addition statements from a set of three numbers. For example, given 2, 5, and 7, the students 
+construct 2 + 5 = 7 and 5+2 = 7. One member of each pair has been previously presented 
+in a series-saying format. The second member of each pair is the reverse fact. For example, 
+if students have been taught the plus-two facts (5 + 2, 6 + 2, etc.), the new facts would be the 
+two-plus facts (2 + 5, 2 + 6, etc.). In Part B, the students are orally tested on the new “reversed” 
+facts. Part C is a worksheet exercise in which the students are given a diagram like this:
+∣-∣ Ξ
+∣-l ξ
+____+____ =____  
+___ +____ =____
+They are asked to fill in the sum (called the “big number”) and generate two addition statements.
+Format 6.4 demonstrates how facts can be related across operations. It is used to generate 
+subtraction facts from addition facts and division facts from multiplication facts. The teacher 
+demonstrates how to generate the subtraction or division statements. For example, after con­
+structing 3 + 4 = 7 and 4 + 3 = 7, students are taught to generate the subtraction statements 
+of 7 - 4 = 3 and 7 - 3 = 4.
+The format for subtraction and division facts includes two parts. Although examples in 
+Format 6.4 illustrate subtraction, the same format can be used to introduce division facts. In 
+Part A, the teacher demonstrates how three related numbers such as 3, 5, and 8 can generate 
+two subtraction statements. The teacher first has the students add the two smaller numbers 
+(3 and 5), then points out that two subtraction statements can be made. The teacher introduces 
+the rule: When you subtract, you always start with the big number, which helps avoid errors like 
+3 — 8 = 5. Part B is a worksheet exercise in which the students construct four statements, two 
+addition and two subtraction, from three numbers.
+INSTRUCTIONAL PROCEDURES: COORDINATING MASTERY 
+AND RELATIONSHIP ACTIVITIES
+Mastery activities are designed to facilitate fact memorization. The activities we have identi­
+fied for building mastery require the following components: designing a coherent sequence for 
+introducing facts as previously discussed, coordinating relationship activities with memorization 
+activities, establishing specific performance criteria that indicate when new facts can be intro­
+duced, providing intensive and systematic review, and implementing record-keeping procedures
+
+[p.76]
+76 Part II Basic Concepts and Skills
+for monitoring student performance and increasing motivation. As a general rule, new sets of 
+facts should be presented in relationship exercises before appearing in mastery exercises. The 
+teacher introduces a set of facts through a relationship exercise and then provides practice to 
+develop mastery on that set of facts.
+Memorization Activities
+Practice to promote memorization of basic facts can be provided in a number of ways: paired 
+practice in which students work with each other, teacher-directed practice in which the teacher 
+presents facts to a group, worksheet exercises, flash card exercises, fact games, and computer-based 
+activities. Memorization exercises should be cumulative; that is, newly introduced facts receive 
+intensive practice, while previously introduced facts receive less intensive, but still systemati­
+cally planned, practice.
+Performance Criteria
+Mastery is demonstrated by students’ ability to accurately and fluently recall facts. Students 
+should practice a new set of facts until they can answer each member of the new set and mem­
+bers of previously introduced sets quickly and correctly. Most teachers use written performance 
+tasks to determine mastery. The criterion for written exercises depends on the students’ motor 
+coordination. That is, rate criteria for written work should be based on the speed with which 
+students can write numerals. Obviously, a student who writes numerals slowly will not be able 
+to complete a worksheet as quickly as a student whose fine motor skills are more developed and 
+is able to write numerals more quickly. Our basic recommendation is that the criterion be set at 
+a rate that is about two-thirds of the rate at which the student can write digits. A student’s writ­
+ing ability can be easily determined by giving a 1-minute timed test. The student is instructed 
+to write the numerals 1 through 9 as many times as he can. It is appropriate to provide several 
+practice trials before the timing. The student’s writing rate is determined by counting the number 
+of digits written during this 1-minute period. By multiplying that number by 2/3, the teacher 
+can estimate how many digits a student should be able to write as answers during a 1-minute 
+fact timing. For example, a student who writes 60 digits in 1 minute should write 40 digits in 
+1 minute in a fact timing (60 × 2/3 = 40).
+Intensive Practice and Systematic Review
+As previously stated, in addition to providing intensive practice on new facts, the teacher must 
+provide practice on previously taught facts. Unless earlier introduced facts are systematically 
+reviewed, students are likely to forget them. We recommend that daily practice of new facts 
+be followed immediately by review of previously introduced facts. (See the section titled 
+“Instructional Procedures: Two Fact Mastery Programs” for more detail.)
+The amount of time allocated to fact practice must be sufficient. We recommend that teach­
+ers allocate at least 15-20 minutes per day for basic fact-learning activities throughout the entire 
+school year. This time allotment is much more than what is provided in most classroom sched­
+ules. Teachers should keep in mind that work on basic math facts is time well spent. Students 
+who know facts will be able to compute efficiently and are more likely to achieve success in 
+later problem-solving activities.
+Record-Keeping Procedures
+Record-keeping is needed to monitor student progress so that the teacher knows when a student 
+needs additional practice and when a student is ready to progress to the next set of facts. This 
+system should involve a minimum of paperwork so that little time is taken from actual fact prac­
+tice. A motivational system should be integrated with the record-keeping procedure. The motiva­
+tion system must be carefully designed so that students see a clear relationship between working 
+hard and receiving recognition for their work. Details about increasing motivation appear later 
+in the chapter.
+
+[p.77]
+Chapter 6 Basic Facts 77
+INSTRUCTIONAL PROCEDURES: TWO FACT
+MASTERY PROGRAMS • ∙ ∙..........
+Two examples of fact mastery programs are presented in this section. The first program is 
+designed for teachers working with homogeneous groups of students who are all performing 
+near the same instructional level. The second program is designed for teachers working with 
+heterogeneous groups, groups composed of students performing at different levels, or for one- 
+to-one tutoring.
+Homogenous Group Program
+The homogenous group program consists of teacher-directed instruction with students complet­
+ing daily exercises on a fact worksheet. In this program, the teacher first presents an exercise 
+in which the students orally practice newly introduced facts. The oral exercise is followed by a 
+written exercise on which the students are timed.
+O
+ Note 6.1:
+Math facts worksheets 
+designed according to the recom­
+mendations described above and 
+based on the sequences listed in 
+Figures 6.1 through 6.4 can be 
+found at [http√∕depts.washington 
+.edu∕spedtrac∕direct-instruction∕ 
+resources-for-teachers∕]
+Materials This program requires specially prepared sequences of worksheets for each type 
+of fact: addition, subtraction, division, and multiplication. A worksheet is prepared for each set 
+listed in Figures 6.1 through 6.4. Each worksheet is divided into two parts. The top half of the 
+worksheet should provide practice on new facts, including facts from the currently introduced 
+set and from the two preceding sets. More specifically, each fact from the new set should appear 
+four times. Each fact from the set introduced just earlier should appear three times, and each fact 
+from the set that preceded that one should appear twice. If this pattern were applied to sets, each 
+containing four facts, the top part of the worksheet would have 36 facts: 16 new facts (4 × 4), 
+12 facts from the previously learned set (4 × 3), and 8 facts from the set before that (4 × 2).
+The bottom half of the worksheet should include 30 problems. Each fact from the currently 
+introduced set should appear twice. The remaining facts are taken from previously introduced 
+sets. All previously introduced facts appear just one time. Note that at the beginning of a fact 
+program, students will not know many facts; therefore, facts from previous sets may appear 
+several times on the bottom half of the worksheet. Only when 30 facts have been introduced can 
+each fact appear just once. On the other hand, after more than 30 facts have been introduced, 
+review should be planned so that each fact appears at least once every second or third worksheet.
+Figure 6.5 is a sample worksheet for introducing facts according to the above guidelines for 
+worksheet construction. The new set consists of 5 + 6, 5 + 7, 5 + 8, and 5+9. Each of these 
+facts appears four times in the top half. The previously introduced set includes 7 + 8, 7 + 9, 
+and 4 + 9, each presented three times. Finally, the next earlier introduced set includes 6 + 5, 
+7 + 5,8 + 5, and 9 + 5, each presented twice. The top half of the worksheet has 33 facts. The 
+bottom half of the worksheet includes the four facts from the new set, each written twice, along 
+with previously introduced facts, each appearing just once.
+FIGURE 6.5 Sample worksheet
+5 8 5 6 7 5 4 5 7 5 7
++6 +5 +8 +5 +9 ÷7 +9 +6 +8 +9 +9— — — — — — — —
+5 7 5 7 5 5 4 5 4 7 5
++8 +5 +7 +8 +6 +8 +9 +9 +9 +9 +7— — — — — — —
+8 5 5 6 5 7 5 9 7 5 9
++5 +6 +9 +5 +7 +5 +8 +5 +8 +9 +5— — — — — —
+5 6 7 4 5 9 7 5 4 5
++8 +4 +5 +7 +6 +8 +9 +9 +8 +7— — — — —— — — —
+8 7 8 5 8 9 7 5 8 4
++9 +8 +5 +6 +7 +5 +7 +8 +4 +9— — — — — —
+9 6 5 7 6 4 5 9 6 6
++7 ÷7 +9 +4 +9 ÷6 +7 +4 +5 +8
+
+[p.78]
+78 Part II Basic Concepts and Skills
+Pretesting Before beginning instruction, teachers should determine which type of fact to 
+start with (addition, subtraction, multiplication, division) and where students should be placed in 
+that fact program.
+Groups with students who know few facts start at Set A. Students who know more facts 
+begin at later points. To determine the set at which students might begin, the teacher administers 
+a written pretest that includes the basic facts with the easier facts listed at the top. The teacher 
+allows students 2 minutes to work as many problems as they can. A teacher with 10 or more 
+students in a group must compromise when selecting a starting point. As a general rule, we rec­
+ommend a point lower than the average starting point for the students in the group. If pretesting 
+results indicate a wide range in students’ math facts skills, we recommend using the heteroge­
+neous group program. Visit the link mentioned above to find available pretests.
+Daily Practice The teacher begins the lesson with a group exercise in which the students 
+orally practice the facts on the top half of the worksheet. The teacher instructs the students to 
+touch the first problem. After allowing a brief time for students to think about the answer, the 
+teacher says, “Get ready,” and signals for students to respond. After the students respond, the 
+teacher repeats the procedures for the following facts. “Next problem” (pause). “Get ready” (sig­
+nal). “Next problem” (pause). “Get ready” (signal).
+The teacher repeats this procedure with each fact in the first row of the worksheet and 
+repeats the row until students are able to answer each fact quickly and correctly. This may take 
+several repetitions of the entire row. The same procedure may be repeated with each subsequent 
+row on the top half of the worksheet.
+Timed Test The timed test is done on the bottom half of the worksheet. The teacher sets a 
+specified time. A minute and 15 seconds is a realistic goal for upper-elementary students. The 
+teacher allows the students a minute or two to study the bottom half of the worksheet, then tells 
+them to get ready for the test. The teacher tells the students how much time they have and when 
+to start. At the end of the specified time, the teacher says, “Stop,” has the students trade papers, 
+and reads the answers. Students are to mark all mistakes, write the total number correct at the 
+top of the page, and then return the worksheet to its owner.
+Performance Criteria After the lesson, the teacher inspects the students’ papers and records 
+the number of facts each student answered correctly on the written timed test. In the next lesson, 
+the teacher either repeats the same worksheet or presents the worksheet for the next set of facts. 
+The teacher presents the next worksheet if three-quarters or more of the students answered 28 
+of the 30 facts correctly. The teacher repeats the same worksheet if fewer than three-quarters of 
+the students answered 28 facts correctly. Keep in mind that students generally need anywhere 
+from 3 days to 2 weeks to master a set. During this time, the teacher should keep presenting the 
+relationship exercises for the new fact set and encourage the students.
+Summary The advantage of the homogenous group program is that it allows the teacher to 
+coordinate the presentation of relationship activities and memorization exercises. Also, the pro­
+gram makes monitoring the performance of the students relatively easy. The disadvantage of 
+this program is that it does not allow individual students to progress at optimal rates. However, 
+if only one or two students are performing at a much lower rate than other students in the group, 
+the teacher could provide extra practice for those students.
+Heterogeneous Group Program
+The heterogeneous group program is designed for teachers working with a group of students who 
+demonstrate significant differences in their knowledge of facts. This system also can be adapted 
+for use in tutoring programs (peer tutoring, cross-age tutoring, or tutoring by adult volunteers).
+Materials Before the school year begins, teachers should make booklets for each type of 
+fact—addition, subtraction, division, and multiplication—consisting of the worksheets for each 
+fact set. The same worksheets used in the homogeneous system are used in the heterogeneous
+
+[p.79]
+Chapter 6 Basic Facts 79
+system. Two types of booklets should be prepared, one with answers and one without (the test 
+booklet). The answer book can be used in subsequent years, while the test booklets must be 
+replaced annually.
+Pretesting Students may start with different types of facts (addition, subtraction, multiplica­
+tion, division) and at various sets within a type of fact. Pretesting to determine a starting set can 
+be done in a group setting or individually. In a group setting, the teacher administers a written 
+pretest that includes the basic facts with the easier facts listed at the top.
+As mentioned previously, the teacher allows students 2 minutes to work as many problems 
+as they can. We are not aware of any specific guidelines for placing students into math facts 
+programs. In general, students who answer 30 or more facts in 2 minutes may start at Set G. Stu­
+dents who answer 45 or more might start at Set M. Students who answer 60 or more could start 
+at Set R. Students who answer 85 or more facts in the 2-minute pretest probably do not need to 
+be placed in a program for that type of fact.
+Individual oral or written testing allows for a more accurate starting point for most students. 
+To test individuals, the teacher uses the sequences in Figures 6.1 through 6.4. The teacher begins 
+by testing the facts in Set A, then Set B, and so on, until reaching a set in which the student makes 
+two or more errors. Any fact problem that a student cannot answer within several seconds should 
+be counted as wrong. This set should be the student’s starting point. This type of individual test­
+ing is more appropriate for tutoring individuals or small groups rather than whole-class settings.
+Daily Practice In this program, students work in pairs. As a general rule, teachers should pair 
+students who are working near the same level. Each student has one booklet with answers and 
+one booklet without answers. The student with the answer sheet acts as a tutor, while the other 
+is the student.
+The teacher has each student practice the top half of the worksheet twice. Each practice 
+session is timed. The student practices by saying complete statements (4 + 2 = 6) rather than 
+just answers. Saying the entire fact statement makes it easier for the tutor to follow along and 
+helps the student remember the fact. If the student makes an error, the tutor corrects by saying 
+the correct statement and having the student repeat the statement. The teacher allows students 
+a minute and a half when practicing the top part and a minute when practicing the bottom part. 
+After the allotted time, the teacher has the second student begin practicing. This procedure is 
+repeated twice for the facts on the top half and twice for the facts on the bottom half of the 
+worksheet.
+After allowing each student to practice the top and bottom sections of her individual fact 
+sheet twice, the teacher tells the students to get ready for a test. Students work in their individual 
+test booklets. The teacher stops students at the end of a minute. The students are to stop answer­
+ing immediately. The students trade test and answer booklets to correct each other’s work. They 
+count the number of facts answered correctly and record that number across from the letter for 
+the respective set of facts on the student’s record form (see Figure 6.6 and the discussion under 
+“Student Record Form”).
+The next day, the same procedure is followed. However, if a student answered all but two 
+of the facts correctly on the previous day’s testing, the student moves on to the next worksheet 
+in the sequence. The teacher begins the lesson by having students inspect their record forms to 
+determine the series they are to practice.
+Cooperative student behavior is essential to make this system work. The teacher should 
+encourage cooperative behavior among students. Rules for the activity might include (a) talking 
+softly, (b) following teacher instructions, and (c) honestly recording scores. Students may be 
+tempted to record inaccurate scores on the test. To guard against cheating, the teacher must 
+monitor student performance carefully during practice. If a student performs quite poorly during 
+practice yet turns in an excellent testing record, testing may be inaccurate. The teacher should 
+follow-up individually with these students.
+Student Record Form A record form that can be used during this exercise appears in 
+Figure 6.6. In the first column, the worksheet letters are listed. Across from each letter are seven 
+columns used to record the number of facts answered correctly on a test. The first day the student
+
+[p.80]
+80 Part II Basic Concepts and Skills
+FIGURE 6.6 Student record form
+page TRY 1 TRY 2 TRY 3 TRY 4 TRY 5 TRY 6 TRY 7 / ∖
+Z z
+Y Y
+X X
+w w
+V V
+u ∪
+τ τ
+s s
+R R
+Q Q
+P P
+0 0
+N N
+M M
+L L
+K K
+J J
+1 I
+H H
+G G
+F F
+E E
+D D
+C C
+B B
+A A
+does a particular worksheet, the number of facts answered correctly is written in the first column 
+across from that worksheet letter. The second day, the number is written in the second column 
+across from the worksheet letter, and so on. On the right side of the chart is a progress rocket. 
+Each time the student meets the criterion for a worksheet (28-30 correct), the student shades 
+in the space for that worksheet on the rocket. On the next lesson, the student works on the next 
+worksheet in the sequence. Many elementary-aged students find moving up levels on the rocket 
+very motivating.
+Summary The heterogeneous group program, while targeting individual student needs, 
+requires extensive preparation by the teacher at the beginning of the school year because several 
+booklets of worksheets must be made. Also, instruction is necessary to teach students the proce­
+dures. The advantage of this program, though, is that once worksheets are prepared and students 
+know what to do, the program provides the individualization needed to allow each student to 
+progress at her optimal rate.
+This program also is easily adapted for use in tutoring programs. Whether same-age students 
+work together in pairs (peer tutoring), older students work with younger students (cross-age 
+tutoring), or adults work with individual students (volunteers or parents), the same materials and 
+basic procedures can be used. That is, students practice orally with feedback from their tutors 
+and then take a timed test and record their performance.
+Parental Involvement
+Parents who would like to help their children at home are often not sure what to do, how to do 
+it, or whether they will interfere with what the teacher is doing at school. Math fact practice is a 
+good way to involve parents. Teachers should try to secure a commitment from parents to work
+
+[p.81]
+Chapter 6 Basic Facts 81
+with their children on facts at home for about 10 minutes three or four days a week. This practice 
+is easily coordinated with classroom activities. If possible, parents should be invited to an orien­
+tation during which the teacher explains the fact program she is using and reviews suggestions 
+for working with children at home.
+The teacher could prepare a tutoring guide for the parents, specifying exactly how to imple­
+ment a home practice program. During the orientation, the teacher would demonstrate recom­
+mended procedures and talk about motivation. Teachers must encourage parents to interact with 
+their children in positive ways so that home practice becomes an opportunity for students to 
+experience success. A communication system should be set up to inform parents about which 
+facts they should include in the exercises. A weekly letter including the facts to work on might 
+be sent home along with progress reports.
+Motivational Practice Activities
+If students require additional practice for mastery, the teacher or tutor can make flash cards for 
+particularly difficult facts and use the flash cards prior to the oral worksheet practice. The flash 
+cards can be sent home for additional practice or turned into a fun game that might be played at 
+recess. Flash cards also are an excellent way to provide cumulative review. Tutors might begin 
+each session with a flash card review of the 15 previously introduced facts before introducing a 
+new set.
+One exercise that is motivating for most students is the math fact race. The teacher puts a 
+scorecard on the board with one row for teacher points and one for student points:
+© T__________________________________
+©S
+The teacher then presents a fact or shows a flash card, pauses a second or two, and calls out a 
+student’s name. The teacher then hesitates a second more and says the answer. If the student 
+responds correctly before the teacher says the answer, the students get the point. Note that paus­
+ing before calling on a student (but after stating the fact) increases the probability that all students 
+will attend to the question.
+The race game also can be modified so that one group of students competes with another 
+group. The teacher divides the class in half, placing an equal number of higher and lower 
+performers in each group. The teacher conducts the game by saying a fact, pausing a second 
+or two, and then calling on a student. The student earns a point for his team if he responds 
+correctly.
+Note that the games should be played in a way to avoid embarrassing individual students. 
+Rules encouraging appropriate behavior should be discussed before playing the game and 
+enforced during the game. Rules such as “Encourage others” or “Be respectful” are helpful in 
+playing the game.
+During free times, students can play board games in which the students pick a card from a 
+deck of fact flash cards. If they say the fact correctly, they get to hit the spinner and move their 
+marker on the board the number of spaces indicated by the spinner.
+Motivation is an important factor in all fact mastery programs. If students practice at home 
+or at other times during the school day, their learning rate will likely increase. Teachers can 
+encourage students to study by establishing incentive programs based on their performance. The 
+incentives need not be material rewards but might include time earned on a computer, extra min­
+utes at recess, or other activities that are highly desirable.
+Commercial Programs
+In many programs, addition and subtraction facts are taught using pictures. While pictures aid 
+students in using a counting strategy to solve computation problems, pictures are a deterrent to 
+memorization. If pictures are available, some students invariably resort to counting the pictures 
+instead of trying to remember the answer. For example, in one program we examined, a third of 
+the exercises given to students for basic fact practice contained illustrations. For those problems,
+
+[p.82]
+82 Part II Basic Concepts and Skills
+students needed only to count the pictures and write the answer rather than recall the answers 
+from memory. The amount of actual fact practice provided was minimal. Some programs also 
+use fact families to introduce math facts. Rarely, however, do these programs use relationship 
+activities frequently enough to teach fact acquisition to mastery.
+Teachers need to remember that if the objective of an exercise is to promote acquisition 
+of facts, then no pictures or other prompts, such as the use of fingers, should be available to 
+students during the activity. Many struggling students have learned to rely on their fingers 
+to figure out facts. Teachers should not initially discourage students from using their fingers 
+during computation exercises only, since memorizing basic facts may require months and 
+months of practice. While working on memorization activities, however, the use of fingers 
+should be avoided.
+A critical aspect of any fact program is the provision of adequate practice to develop mas­
+tery. An important part of adequate practice is the cumulative review of previously introduced 
+facts integrated with the presentation of new facts. This type of practice and review is not pres­
+ent in most commercial math programs. For example, in another program we examined, all 
+basic addition facts were introduced in only three lessons (six student practice pages). Those 
+same facts (sums to 18) were not reviewed until six lessons later, when the relationship between 
+addition and subtraction was introduced. The program did not provide another opportunity for 
+students to practice addition facts in that level.
+One type of fact practice noticeably absent from the programs we examined was fluency 
+practice (timed fact drills). Whereas programs traditionally address issues of accuracy (number 
+right, number wrong), they have not included exercises whereby students must meet a specified 
+rate criterion as well. For students to be able to recall facts quickly in more complex compu­
+tation problems, students must know their math facts at an acceptable level of “automaticity.” 
+Therefore, teachers using these programs must be prepared to supplement by providing more 
+practice and establishing rate criteria that students must achieve.
+APPLY WHAT YOU LEARNED
+Click on the V to answer the questions online.
+1. Your principal asks you to describe the procedure you are using to facilitate learning basic facts. 
+Write a description of the math facts program you have in place.
+2. Assume you are constructing worksheets for subtraction facts. More specifically, you are now pre­
+paring a worksheet for Set U. (a) List the facts that would appear on the upper half of the worksheet. 
+Next to each fact, write how often it would appear on the top half, (b) Describe the guidelines you 
+would use in preparing the bottom half of the student worksheet.
+3. You are presenting the relationship format to prepare students for the facts in Set M of the multiplica­
+tion sequence. Write what you do.
+4. Assume the students have learned the basic multiplication facts in sets A through M in the fact 
+sequence of this text. Which computation problems would be appropriate to assign to students, and 
+which would not be appropriate?
+34 82 34
+×5 ×6 ×9
+65 87 48
+×7 ×8 ×2
+5. The parents of the children in your class want to know why you spend so much time on memorization 
+activities. What would your reply be?
+
+[p.83]
+Chapter 6 Basic Facts 83
+Format 6.1
+PLUS-ONE FACTS
+TEACHER STUDENTS
+Part A: Next Number
+1. When I put my hand down, you say the next number.
+2. (Hold up hand.) 1, 2, 3, 4, ffiivve (drop hand). 6
+To correct: My turn: 1, 2, 3, 4, ffiivve (drop hand), 6.
+New problem. Tell me the next number: 3, 4, 5, 6, ssevvenn (Drop hand.
+Repeat step 2 with 3, 4, ffiivve and 7, 8, nniinne.) 8
+3. When I put my hand down, you say the next number. Sssiiixxx 
+(drop hand). 7
+To correct: My turn: sssiiixxx (drop hand), 7.
+4. (Repeat step 3 starting with 8, 4, 9, 2, 5. Give individual turns to 
+several students.)
+Part B: Plus-One Rule with Stretch Prompt
+1. Everyone listen to the rule. When you plus one, you say the next 
+number. My turn: ffoouurr + 1 = 5. Eeighht + 1 = 9.
+2. Get ready to tell me the answers to some plus-one problems. Remember 
+to say the next number: 5 + 1, ffiivve + 1 = (signal). 6
+Yes, 5 + 1=6.
+To correct: Listen: 5. What number comes next? So 5 + 1 = 6.
+3. Listen: 3 + 1. Thrreee + 1 = how many? (Signal.) 4
+Yes, 3 + 1=4.
+(Present step 3 with examples like the following until students answer all 
+plus-one problems in a row correctly: 9 + 1,7 + 1,2+ 1,8+ 1,4+ 1.)
+Part C: Plus-One Rule without Prompt
+1. Remember, when you plus one, you say the next number.
+2. 8 + 1 = (pause, then signal). 9
+Say the whole statement. 8 + 1=9
+3. (Repeat step 2 with the following examples: 4 +1,7+1,5+1,9+1.)
+
+[p.84]
+84 Part II Basic Concepts and Skills
+Format 6.2
+SERIES SAYING
+TEACHER
+(See Video Parts A∕B∕C) 
+STUDENTS
+Part A: Reading Statements
+1. (Write the following problems on the board.)
+5 + 2 = 7
+6 + 2 = 8
+7 + 2 = 9
+8 + 2 = 10
+Everybody, l'il touch them. You read. Get ready. (Point to numerals 
+and symbols in each statement. Repeat step 1 until students can read 
+statements at a rate of a statement each 3 seconds.)
+Part B: Reading Statements with Answers Erased
+1. Now I'm going to erase the answers. (Erase answers.)
+Now read the statement and tell me the answer.
+To correct: Respond with students until they appear able to respond 
+without assistance.
+Part C: Saying Statements
+1. Now I'll make it even harder and erase everything. (Erase everything.) 
+Get ready to say the statements starting with 5 + 2. (Either clap or snap 
+fingers to set pace for students to respond.)
+2. (Repeat Part C until all students respond correctly and then present 
+individual turns.)
+Part D: Random Fact Drill
+1. (Write facts in random order on board.)
+7 5 6 8
++2 +2 +2 +2
+When I signal, say the whole statement with the answer.
+2. (Point to left of 7 + 2, pause 2 seconds, then touch board.)
+3. (Repeat step 2 with remaining facts.)
+4. (Repeat step 3 until students can respond to all facts with the 
+1-second pause.)
+5 + 2 = 7
+6 + 2 = 8
+7 + 2 = 9
+8 + 2 = 10
+5 + 2 = 7
+6 + 2 = 8
+7 + 2 = 9
+8 + 2 = 10
+5 + 2 = 7
+6 + 2 = 8
+7 + 2 = 9
+8 + 2 = 10
+7 + 2 = 9
+
+[p.85]
+Chapter 6 Basic Facts 85
+Format 6.3
+THREE-NUMBER FACT FAMILIES: ADDITION
+AND MULTIPLICATION FACTS
+TEACHER
+(See Video in Part A) 
+STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following boxes and numerals on the board.)
+I want to make addition statements using the numbers 8 and 2.
+I'll write the big number in the box. What is 8 + 2? (Write 10 in the 
+big box.)
+(Write 8 + 2 = 10 on the first set of lines.)
+2. We can make another addition statement. If 8 + 2 = 10, then
+2 + 8 = 10. (Write 2 + 8 = 10 on the second set of lines.)
+Say the statement that begins with 8.
+Say the statement that begins with 2.
+3. (Erase statements.) Let's say both statements we can make with the 
+numbers 8, 2, and 10.
+Say the statement that begins with 8.
+Say the statement that begins with 2.
+4. (Write the following boxes and numbers on the board.)
+10
+8 + 2 = 10
+2 + 8 = 10
+8 + 2 = 10
+2 + 8 = 10
+What's the big number that goes with 5 and 2?
+To correct: What does 5 + 2 equal? Yes, 7 is the big number.
+Say an addition statement using those numbers. Start with 5. (Pause.)
+Say the other addition statement that starts with 2. (Pause.)
+(Repeat step 4 with 6 and 2, 9 and 2.)
+Part B: Discrimination Practice
+Now let's see if you can tell me the answers to some problems.
+What is 2 + 6? (Pause.)
+(Repeat with 2 + 8, 2 + 5, 2 + 7. Repeat Part B until students can 
+respond to any fact with only a 1-second pause.)
+5 + 2 = 7
+2 + 5 = 7
+8
+continued
+
+[p.86]
+86 Part II Basic Concepts and Skills
+Format 6.3 (continued)
+THREE-NUMBER FACT FAMILIES: ADDITION
+AND MULTIPLICATION FACTS
+Format 6.4
+THREE-NUMBER FACT FAMILIES: SUBTRACTION
+AND DIVISION FACTS [See Video in Part A]
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following lines and symbols on the board.)
+What big number goes with 5 and 3? (Pause.)
+To correct: 5 + 3 = what number?
+(Write 8 in box.)
+2. We can use the numbers 5, 3, and 8 to figure out subtraction statements. 
+When you subtract, you always start with the big number. What is the 
+big number?
+So, I'll write 8 at the start of these subtraction problems.
+3. Listen: 8-3. What will I end up with?
+Say the first statement.
+(Write 8-3 = 5.)
+8
+8
+5
+8-3 = 5
+
+[p.87]
+Charier 6 Basic Facts 87
+TEACHER
+4. Listen: 8-5. What will I end up with?
+Say the whole statement.
+(Write 8-5 = 3.)
+5. Say both subtraction statements.
+STUDENTS
+3
+8-5 = 3
+8-3 = 5
+8-5 = 3
+(Repeat steps 1-5 with 3 and 4, 6 and 3.)
+Part B: Structured Worksheet
+1. (Give students worksheets with problems similar to these.)
+Touch box a. You have to use the three numbers to make up statements. 
+First, say the addition statements.
+2. Say an addition statement that starts with 3. (Pause.)
+Say the other addition statement.
+Write the addition statements. (Check students' work.)
+3. Now we'll write the subtraction statements. Which number will go first 
+in both subtraction statements?
+Say the subtraction fact that begins 7-3.
+Say the subtraction fact that begins 7-4.
+Write the subtraction statements (Check students' work.)
+(Repeat steps 1-3 with remaining examples.)
+3+4 = 7
+4 + 3 = 7
+7
+7-3 = 4
+7-4 = 3

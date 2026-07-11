@@ -7,9 +7,11 @@ import {
   Lesson,
   LessonType,
   ProposalChange,
+  VsgCaseClass,
   VsgChannel,
   VsgInteraction,
   VsgSegmentKind,
+  VsgTransferTest,
 } from '../domain/types'
 
 /**
@@ -388,8 +390,11 @@ const VSG_LINE = obj({
   time: STR,
 })
 
+// Rulebook v2 skeleton (§15): opening (absorbs title+intro; title portion
+// ≤10s per TIM 03) → i-do → we-do (either may repeat while the Transfer Test
+// has unmet case classes) → optional discrimination pass → wrap.
 const VSG_SEGMENT = obj({
-  kind: enums(['title', 'intro', 'i-do', 'we-do', 'wrap']),
+  kind: enums(['opening', 'i-do', 'we-do', 'discrimination', 'wrap']),
   start: STR,
   end: STR,
   purpose: STR,
@@ -406,6 +411,14 @@ const VSG_CONFLICT = obj({
   rationale: STR,
 })
 
+// The machine-readable coverage note (SEQ 10): every case class the strategy
+// claims inside the boundary, taught here or deferred downstream by name.
+const VSG_CASE_CLASS = obj({
+  name: STR,
+  status: enums(['taught', 'deferred']),
+  where: STR,
+})
+
 export const VSG_SCRIPT_SCHEMA: Schema = {
   ...obj({
     conflicts: arr(ref('vsgConflict')),
@@ -413,6 +426,13 @@ export const VSG_SCRIPT_SCHEMA: Schema = {
     durationEstimate: STR,
     segments: arr(ref('vsgSegment')),
     formatRefs: arr(STR),
+    coverageNote: arr(ref('vsgCaseClass')),
+    transferTest: obj({
+      stepsDemonstrated: BOOL,
+      caseClassesShown: BOOL,
+      decisionsPerformed: BOOL,
+      note: STR,
+    }),
     qa: obj({ hardFails: arr(STR), flags: arr(STR) }),
   }),
   $defs: {
@@ -420,6 +440,7 @@ export const VSG_SCRIPT_SCHEMA: Schema = {
     vsgInteraction: VSG_INTERACTION,
     vsgSegment: VSG_SEGMENT,
     vsgConflict: VSG_CONFLICT,
+    vsgCaseClass: VSG_CASE_CLASS,
   },
 }
 
@@ -453,6 +474,8 @@ export interface WireVsgScript {
   durationEstimate: string
   segments: WireVsgSegment[]
   formatRefs: string[]
+  coverageNote: VsgCaseClass[]
+  transferTest: VsgTransferTest
   qa: { hardFails: string[]; flags: string[] }
 }
 

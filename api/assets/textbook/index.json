@@ -1,0 +1,160 @@
+{
+ "source": "Stein, Kinder, Silbert & Carnine, Direct Instruction Mathematics (5th ed., 2017)",
+ "note": "Cover-to-cover text extraction; pageMarker '[p.N]' lines are BOOK page numbers.",
+ "sections": [
+  {
+   "slug": "front-matter",
+   "title": "Front Matter (contents, format list, preface)",
+   "bookPageStart": 1,
+   "bookPageEnd": 0,
+   "chars": 25098
+  },
+  {
+   "slug": "chapter-01",
+   "title": "Chapter 1: Direct Instruction",
+   "bookPageStart": 1,
+   "bookPageEnd": 9,
+   "chars": 35424
+  },
+  {
+   "slug": "chapter-02",
+   "title": "Chapter 2: Research Support for Direct Instruction Mathematics",
+   "bookPageStart": 10,
+   "bookPageEnd": 16,
+   "chars": 25241
+  },
+  {
+   "slug": "chapter-03",
+   "title": "Chapter 3: Curriculum Evaluation and Modification",
+   "bookPageStart": 17,
+   "bookPageEnd": 24,
+   "chars": 28500
+  },
+  {
+   "slug": "chapter-04",
+   "title": "Chapter 4: Counting",
+   "bookPageStart": 25,
+   "bookPageEnd": 38,
+   "chars": 42857
+  },
+  {
+   "slug": "chapter-05",
+   "title": "Chapter 5: Symbol Identification and Place Value",
+   "bookPageStart": 39,
+   "bookPageEnd": 67,
+   "chars": 74949
+  },
+  {
+   "slug": "chapter-06",
+   "title": "Chapter 6: Basic Facts",
+   "bookPageStart": 68,
+   "bookPageEnd": 87,
+   "chars": 59369
+  },
+  {
+   "slug": "chapter-07",
+   "title": "Chapter 7: Addition",
+   "bookPageStart": 88,
+   "bookPageEnd": 114,
+   "chars": 68293
+  },
+  {
+   "slug": "chapter-08",
+   "title": "Chapter 8: Subtraction",
+   "bookPageStart": 115,
+   "bookPageEnd": 136,
+   "chars": 52809
+  },
+  {
+   "slug": "chapter-09",
+   "title": "Chapter 9: Multiplication",
+   "bookPageStart": 137,
+   "bookPageEnd": 163,
+   "chars": 63960
+  },
+  {
+   "slug": "chapter-10",
+   "title": "Chapter 10: Division",
+   "bookPageStart": 164,
+   "bookPageEnd": 200,
+   "chars": 82617
+  },
+  {
+   "slug": "chapter-11",
+   "title": "Chapter 11: Problem Solving",
+   "bookPageStart": 201,
+   "bookPageEnd": 244,
+   "chars": 101412
+  },
+  {
+   "slug": "chapter-12",
+   "title": "Chapter 12: Measurement, Time, and Money",
+   "bookPageStart": 245,
+   "bookPageEnd": 283,
+   "chars": 94918
+  },
+  {
+   "slug": "chapter-13",
+   "title": "Chapter 13: Fractions",
+   "bookPageStart": 284,
+   "bookPageEnd": 358,
+   "chars": 147774
+  },
+  {
+   "slug": "chapter-14",
+   "title": "Chapter 14: Decimals",
+   "bookPageStart": 359,
+   "bookPageEnd": 390,
+   "chars": 72125
+  },
+  {
+   "slug": "chapter-15",
+   "title": "Chapter 15: Percent, Ratio, and Probability",
+   "bookPageStart": 391,
+   "bookPageEnd": 417,
+   "chars": 60221
+  },
+  {
+   "slug": "chapter-16",
+   "title": "Chapter 16: Data Analysis",
+   "bookPageStart": 418,
+   "bookPageEnd": 442,
+   "chars": 51752
+  },
+  {
+   "slug": "chapter-17",
+   "title": "Chapter 17: Geometry",
+   "bookPageStart": 443,
+   "bookPageEnd": 477,
+   "chars": 56115
+  },
+  {
+   "slug": "chapter-18",
+   "title": "Chapter 18: Pre-Algebra",
+   "bookPageStart": 478,
+   "bookPageEnd": 512,
+   "chars": 73919
+  },
+  {
+   "slug": "appendix-a",
+   "title": "Appendix A: Direct Instruction Mathematics and Common Core State Standards",
+   "bookPageStart": 513,
+   "bookPageEnd": 530,
+   "chars": 59661
+  },
+  {
+   "slug": "appendix-b",
+   "title": "Appendix B: Frequently Asked Questions",
+   "bookPageStart": 531,
+   "bookPageEnd": 533,
+   "chars": 13102
+  },
+  {
+   "slug": "references",
+   "title": "References",
+   "bookPageStart": 534,
+   "bookPageEnd": 542,
+   "chars": 44407
+  }
+ ]
+}

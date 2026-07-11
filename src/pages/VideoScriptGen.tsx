@@ -14,7 +14,8 @@ import type {
 import { Btn, capsStandardCodes, Modal, Mono, Pill, SectionLabel } from '../ui'
 
 // Video Script Generator — turns generated lesson cards into production-ready
-// scripts for ~3-minute DI math videos with checked student interactions.
+// scripts for 2-5 minute (by grade band; sufficiency governs, rulebook TIM 01)
+// DI math videos with checked student interactions.
 // Pick a published scope, multi-select lessons (grouped by unit),
 // generate; each lesson's script renders channel-colored per the playbook
 // (§3) and conflicts pause per lesson for flag → propose → reconcile.
@@ -87,11 +88,14 @@ const CHANNEL_STYLE: Record<VsgChannel, { tag: string; text: string }> = {
 }
 
 const SEGMENT_LABELS: Record<string, string> = {
-  title: 'Title',
-  intro: 'Intro',
+  opening: 'Opening',
   'i-do': 'I Do',
   'we-do': 'We Do',
+  discrimination: 'Discrimination Pass',
   wrap: 'Wrap',
+  // Legacy kinds on scripts generated before rulebook v2.
+  title: 'Title',
+  intro: 'Intro',
 }
 
 type View = { kind: 'list' } | { kind: 'builder' } | { kind: 'run'; id: string }
@@ -142,7 +146,7 @@ function Overview({ onNew, onOpenRun }: { onNew: () => void; onOpenRun: (id: str
         <div>
           <h1 className="font-display text-[28px] font-semibold tracking-tight text-ink">Video Script Generator</h1>
           <p className="mt-1 max-w-2xl text-[13.5px] text-ink-2">
-            Turn generated lesson cards into production-ready scripts for ~3-minute Direct Instruction videos with
+            Turn generated lesson cards into production-ready scripts for 2–5 minute Direct Instruction videos with
             checked student interactions — explicit model first, then guided participation. Scripts follow Stein's
             teaching formats and the versioned playbook; conflicting inputs pause per lesson for your reconciliation.
           </p>
@@ -995,6 +999,26 @@ function ScriptViewer({ script }: { script: VideoScript }) {
         <div className="mt-2 rounded-lg border border-hairline bg-paper/60 px-3 py-2 text-[11.5px] leading-relaxed text-ink-2">
           <span className="font-semibold text-ink">Reconciled conflicts: </span>
           {script.conflictsResolved.map((c: VsgConflict) => `${c.summary} → ${c.resolution} (${c.resolvedBy})`).join(' · ')}
+        </div>
+      )}
+      {script.transferTest && (
+        <div className="mt-2 flex flex-wrap items-center gap-2 text-[11.5px]">
+          <Pill tone={script.transferTest.stepsDemonstrated && script.transferTest.caseClassesShown && script.transferTest.decisionsPerformed ? 'green' : 'red'}>
+            Transfer Test {script.transferTest.stepsDemonstrated && script.transferTest.caseClassesShown && script.transferTest.decisionsPerformed ? 'passes' : 'FAILS'}
+          </Pill>
+          <span className="text-ink-3">
+            steps {script.transferTest.stepsDemonstrated ? '✓' : '✗'} · case classes {script.transferTest.caseClassesShown ? '✓' : '✗'} · student decisions{' '}
+            {script.transferTest.decisionsPerformed ? '✓' : '✗'}
+            {script.transferTest.note ? ` — ${script.transferTest.note}` : ''}
+          </span>
+        </div>
+      )}
+      {(script.coverageNote ?? []).length > 0 && (
+        <div className="mt-2 rounded-lg border border-hairline bg-paper/60 px-3 py-2 text-[11.5px] leading-relaxed text-ink-2">
+          <span className="font-semibold text-ink">Coverage note: </span>
+          {(script.coverageNote ?? [])
+            .map((c) => `${c.name} — ${c.status === 'taught' ? `taught (${c.where})` : `deferred → ${c.where}`}`)
+            .join(' · ')}
         </div>
       )}
 

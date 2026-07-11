@@ -510,7 +510,7 @@ update an existing course when only some lessons change.
 
 ## Video Script Generator (kind `vsg`, step `run`)
 
-Turns generated lesson cards into production-ready scripts for ~3-minute DI math videos with
+Turns generated lesson cards into production-ready scripts for 2–5 minute (by grade band) DI math videos with
 checked student interactions, per the versioned **"DI Math Video Script Generator Playbook"**
 (embedded as `api/src/data/video-playbook.ts`, `VSG_PLAYBOOK_VERSION`; the access-details section
 of the source PDF is deliberately stripped). Courses come from the **LSG registry** (VSG owns no
@@ -550,28 +550,41 @@ doctrine versions.
   resumes at the still-open lessons. Same deadline machinery as the other pipelines (8.5-minute
   in-process abort, `payload.cuts`+`cutLesson` per-lesson escalation, 4.5-minute launch budget
   with same-message re-enqueue).
-- **Doctrine retrieval is page-targeted, never whole-book** (playbook §6): `services/formats.ts`
-  loads `assets/formats.json` — all **122 verbatim Stein teaching-format scripts** (two-column
-  TEACHER/STUDENTS blocks) extracted from the full 5th-edition text, page-stamped — picks the
-  lesson's chapter via the SAME `matchChapters` scoring card generation uses (`services/doctrine.ts`),
-  scores the chapter's format titles against lesson title + Instructional Approach, and supplies
-  the top 1–3 scripts verbatim (≤ 40k chars) plus a bounded chapter-procedures excerpt (≤ 32k).
-  When no title matches, the family's nearest formats ship flagged `nearestOnly` — wording style
-  and cadence only (§5.4). `assets/formats.json` must ship with the API (copy-assets fails the
-  build without it).
-- **Conflict handling — flag → propose → reconcile (playbook §2.4)**: the generation reply carries
-  `conflicts[]`; non-empty (after dropping any that match an already-recorded resolution) →
-  the lesson pauses `needs-reconciliation` with NO script — generation never silently resolves a
-  contradiction. Each conflict names both sides, a proposed default, and a precedence rationale;
-  the user accepts the default or writes custom handling; resolutions persist per (lesson,
-  conflict), ride the regeneration prompt as settled, and are recorded in the script header
-  (`conflictsResolved`).
-- **Script QA (§12)**: the model self-QCs, then code re-checks hard limits (≤ 3:00 total, title
-  ≤ 10s, 3–7 interactions, interaction-object/line pairing). Hard failures trigger ONE corrective
-  call naming the failures; a script still failing ships with `qa.hardFails` visible (UI banner)
-  rather than blocking the run. Wire shape: segments carry `lines` (channel-tagged) and
-  `interactions` (structured objects) matched BY ORDER to the segment's INTERACTION lines
-  (schemas `VSG_SCRIPT_SCHEMA`, shared `$defs`).
+- **The generator runs under RULEBOOK v2** (`data/video-playbook.ts` — the "[in progress] NO HITL
+  DI Video Script Generator v2" BrainLift embedded verbatim, Access section stripped): authority
+  stack A1 Stein → A2 card → A3 registries → A4 Mayer → A5 MathEd/Psych; numbered registries with
+  STABLE rule IDs (SEQ/TIM/INT/LANG/VIS/GRADE/DEV) cited in NOTE lines, conflicts, and QA
+  findings; the Transfer Test (SEQ 09) replaces the fixed 3:00 cap — length is an output (typical
+  2–5 min by grade band; > 6:00 = TIM 02 granularity flag, never compressed); scripts carry a
+  machine-readable `coverageNote` (case classes taught vs deferred, SEQ 10) and a `transferTest`
+  verdict; segment kinds `opening → i-do → we-do (repeatable) → discrimination? → wrap` (legacy
+  `title`/`intro` survive on old scripts).
+- **The ENTIRE textbook ships with the API** (`assets/textbook/` — all 18 chapters + Appendix A/B,
+  cover to cover, page-stamped; built from the source PDF; copy-assets fails the build without
+  it). **Retrieval stays page-targeted, never whole-book** (rulebook §13.5): `services/formats.ts`
+  supplies the top 1–3 verbatim format scripts (`assets/formats.json`, ≤ 40k chars), the matching
+  chapter's full instructional-procedures front from the corpus (`services/textbook.ts`
+  `chapterProcedures` — skill hierarchy, sequence & assessment chart, preskill lists,
+  example-selection guidance, diagnosis-and-remediation tables; ≤ 48k, stopping where the
+  chapter's script section starts), and the Appendix A rows for the lesson's standard
+  (`appendixAFor`; Appendix A covers K–5 — empty for middle grades, where the §19 chapter table
+  routes). When no title matches, the family's nearest formats ship flagged `nearestOnly` —
+  rhythm and cadence only (SEQ 05).
+- **Conflict handling — flag → propose → reconcile (rulebook §13.4)**: the generation reply
+  carries `conflicts[]`; non-empty (after dropping any that match an already-recorded resolution)
+  → the lesson pauses `needs-reconciliation` with NO script — generation never silently resolves
+  a contradiction. Each conflict names both sides with rule IDs, a proposed default from the
+  authority stack, and a rationale; resolutions persist per (lesson, conflict), ride the
+  regeneration prompt as settled, and are recorded in the script header (`conflictsResolved`).
+  DEV 01 (division read-aloud in symbol order, LANG 10) is settled house style, never flagged.
+- **Script QA (rulebook §17, findings cite rule IDs)**: the model self-QCs, then code re-checks —
+  cadence gap > 60s hard (TIM 04), ≥ 3 interactions (TIM 05), skeleton order (opening first,
+  model before any ask, SEQ 02), Transfer Test passes + coverage note complete (SEQ 08–SEQ 10,
+  hard), feedback ladders complete with no generic "Try again!" (INT 16–INT 18, hard), internal
+  vocabulary (LANG 11, hard), object/line pairing. Length outside the band typical and > 6:00
+  granularity are FLAGS (TIM 01/02 — the corrective pass must never compress below the Transfer
+  Test). Hard failures trigger ONE corrective call naming the failures; a script still failing
+  ships with `qa.hardFails` visible (UI banner) rather than blocking the run.
 - **Settlement**: all lessons terminal → run `needs-reconciliation` if any lesson awaits the user,
   else `complete` if any script was written, else `failed`. `markVsgFailed` (worker terminal
   failure) fails only still-open lessons — finished scripts and reconciliation flags survive.

@@ -1,16 +1,21 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { chapterTextOf, DoctrineQuery, matchChapters, truncateAtParagraph } from './doctrine'
+import { appendixAFor, chapterProcedures } from './textbook'
 
-// Page-targeted doctrine retrieval for the Video Script Generator (playbook
-// §6 "Where to Look in the Book"): the full Stein textbook is 625 pages, so
-// video generation never sees the whole book — it gets (1) the VERBATIM
-// teaching-format script(s) for the lesson's skill family from the shipped
-// format library (assets/formats.json — all 122 two-column TEACHER/STUDENTS
-// scripts, page-stamped), and (2) a bounded excerpt of the matching chapter's
-// instructional procedures (error corrections, example selection, diagnosis
-// and remediation). Roughly 60–80k chars per lesson instead of a 1.3M-char
-// book or 150k-char chapter dumps.
+// Page-targeted doctrine retrieval for the Video Script Generator (rulebook
+// v2 §19 "Where to Look in the Book", §13.5): the ENTIRE Stein text is
+// available (assets/textbook/ — cover to cover), but a generation call never
+// sees the whole book. It gets (1) the VERBATIM teaching-format script(s) for
+// the lesson's skill family from the shipped format library
+// (assets/formats.json — all 122 two-column TEACHER/STUDENTS scripts,
+// page-stamped), (2) the matching chapter's full instructional-procedures
+// front (skill hierarchy, sequence & assessment chart, preskill lists,
+// example-selection guidance, diagnosis-and-remediation tables — from the
+// cover-to-cover corpus, stopping where the chapter's script section starts),
+// and (3) the Appendix A rows for the lesson's standard (the book's own
+// CCSS→format map; K-5 only — empty for middle grades, where the §19 chapter
+// table is the route).
 
 export interface FormatScript {
   /** Stein format number, e.g. "7.6" (letter suffixes for sub-parts: "7.1A"). */
@@ -30,18 +35,21 @@ export interface VideoDoctrine {
   /**
    * True when no format title matched the lesson — the included scripts are
    * the skill family's nearest formats, supplied for wording style and
-   * question cadence only (playbook §5.4).
+   * question cadence only (rulebook SEQ 05).
    */
   nearestOnly: boolean
-  /** Bounded chapter excerpt: procedures, error patterns, example selection. */
+  /** The chapter's instructional-procedures front from the cover-to-cover corpus. */
   chapterExcerpt: string
+  /** Appendix A rows for the lesson's standard ('' when none — Appendix A covers K-5). */
+  appendixA: string
 }
 
 /** Formats per lesson and per-format cap — keeps the doctrine block bounded. */
 const MAX_FORMATS = 3
 const FORMAT_CAP_CHARS = 16_000
 const FORMATS_TOTAL_CHARS = 40_000
-const CHAPTER_EXCERPT_CHARS = 32_000
+const CHAPTER_EXCERPT_CHARS = 48_000
+const APPENDIX_A_CHARS = 14_000
 
 let cached: FormatScript[] | undefined
 let warnedMissing = false
@@ -193,7 +201,17 @@ export function videoDoctrineFor(query: DoctrineQuery, approachText: string): Vi
     formats.push({ ...f, text })
   }
 
-  const chapterExcerpt = truncateAtParagraph(chapterTextOf(primary.slug) ?? '', CHAPTER_EXCERPT_CHARS)
+  // The cover-to-cover corpus is the primary chapter source (rulebook §13.2:
+  // chapter procedures, preskill lists, example selection, diagnosis and
+  // remediation); the curated doctrine excerpt remains the fallback if the
+  // corpus is unreadable.
+  const chapterNum = Number(/^ch(\d+)/.exec(primary.slug)?.[1] ?? NaN)
+  // Focus terms steer the oversized-chapter window (ch13 fractions) onto the
+  // lesson's own procedures: the matched format titles plus the lesson title.
+  const focusTerms = [...chosen.map((f) => f.title), ...query.lessonTitles]
+  const fromCorpus = Number.isFinite(chapterNum) ? chapterProcedures(chapterNum, CHAPTER_EXCERPT_CHARS, focusTerms) : ''
+  const chapterExcerpt = fromCorpus || truncateAtParagraph(chapterTextOf(primary.slug) ?? '', CHAPTER_EXCERPT_CHARS)
+  const appendixA = appendixAFor(query.standardCodes[0] ?? '', APPENDIX_A_CHARS)
   if (formats.length === 0 && chapterExcerpt.length === 0) return undefined
-  return { chapterTitle: primary.title, formats, nearestOnly, chapterExcerpt }
+  return { chapterTitle: primary.title, formats, nearestOnly, chapterExcerpt, appendixA }
 }

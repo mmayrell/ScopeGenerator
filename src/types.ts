@@ -678,7 +678,8 @@ export interface VsgLine {
   interaction?: VsgInteraction
 }
 
-export type VsgSegmentKind = 'title' | 'intro' | 'i-do' | 'we-do' | 'wrap'
+/** Rulebook v2 kinds plus legacy 'title'/'intro' (scripts stored before v2). */
+export type VsgSegmentKind = 'opening' | 'i-do' | 'we-do' | 'discrimination' | 'wrap' | 'title' | 'intro'
 
 export interface VsgSegment {
   kind: VsgSegmentKind
@@ -686,6 +687,19 @@ export interface VsgSegment {
   end: string
   purpose: string
   lines: VsgLine[]
+}
+
+export interface VsgCaseClass {
+  name: string
+  status: 'taught' | 'deferred'
+  where: string
+}
+
+export interface VsgTransferTest {
+  stepsDemonstrated: boolean
+  caseClassesShown: boolean
+  decisionsPerformed: boolean
+  note: string
 }
 
 export interface VsgConflict {
@@ -714,6 +728,10 @@ export interface VideoScript {
   segments: VsgSegment[]
   interactionCount: number
   formatRefs: string[]
+  /** Rulebook v2 coverage note (SEQ 10) — absent on pre-v2 scripts. */
+  coverageNote?: VsgCaseClass[]
+  /** Rulebook v2 Transfer Test verdict (SEQ 09) — absent on pre-v2 scripts. */
+  transferTest?: VsgTransferTest
   qa: { hardFails: string[]; flags: string[] }
   conflictsResolved: VsgConflict[]
   playbookVersion: string

@@ -720,7 +720,7 @@ export interface LsgRunSummary {
 
 // ---------------------------------------------------------------------------
 // Video Script Generator (VSG) — turns generated lesson cards into
-// production-ready scripts for ~3-minute DI math videos with checked student
+// production-ready scripts for 2-5 minute (by grade band) DI math videos with checked student
 // interactions, per the versioned "No-HITL DI Video Script Generator Playbook".
 // Courses come from the LSG registry; scripts are stored per (course, lesson)
 // with a version, stamped with the playbook + doctrine versions they ran
@@ -765,7 +765,14 @@ export interface VsgLine {
   interaction?: VsgInteraction
 }
 
-export type VsgSegmentKind = 'title' | 'intro' | 'i-do' | 'we-do' | 'wrap'
+/**
+ * Rulebook v2 skeleton (§15): the opening absorbs the old title+intro
+ * (title portion ≤ 10s inside it, TIM 03), the discrimination pass is a
+ * first-class optional segment, and extra i-do/we-do segments may repeat
+ * before the wrap when the Transfer Test needs more examples. Legacy kinds
+ * 'title'/'intro' survive on scripts stored before v2.
+ */
+export type VsgSegmentKind = 'opening' | 'i-do' | 'we-do' | 'discrimination' | 'wrap' | 'title' | 'intro'
 
 export interface VsgSegment {
   kind: VsgSegmentKind
@@ -775,6 +782,31 @@ export interface VsgSegment {
   /** What this segment accomplishes (one line). */
   purpose: string
   lines: VsgLine[]
+}
+
+/**
+ * One case class the taught strategy claims inside the card's boundary —
+ * the machine-readable coverage note (rulebook SEQ 09–SEQ 11): taught in
+ * this video, or deferred downstream (named, never silently dropped).
+ */
+export interface VsgCaseClass {
+  /** The case class in concrete terms (e.g. "regroup from the ones column"). */
+  name: string
+  status: 'taught' | 'deferred'
+  /** Where it is taught (segment) or where it is deferred to (quiz mixed set, later lesson, practice). */
+  where: string
+}
+
+/** The Transfer Test verdict (rulebook SEQ 09) — the sufficiency bar the script was built to. */
+export interface VsgTransferTest {
+  /** Every step of the strategy demonstrated on at least one example. */
+  stepsDemonstrated: boolean
+  /** Every claimed case class shown at least once (or deferred in the coverage note). */
+  caseClassesShown: boolean
+  /** The student performed every decision and computation type under guidance. */
+  decisionsPerformed: boolean
+  /** One-line note when any leg is false (what is missing and why). */
+  note: string
 }
 
 /** A flagged input contradiction (playbook §2.4) — resolved by the user, never silently. */
@@ -810,15 +842,19 @@ export interface VideoScript {
   lessonTitle: string
   unitName: string
   standardId: string
-  /** Grade-band profile applied (playbook §7), e.g. "3-5". */
+  /** Grade-band profile applied (rulebook GRADE table), e.g. "4-5". */
   gradeBand: string
-  /** Total run-time estimate "M:SS" (≤ 3:00). */
+  /** Total run-time estimate "M:SS" — length is an OUTPUT (TIM 01): typical 2–5 min by band, >6:00 flags granularity. */
   durationEstimate: string
   segments: VsgSegment[]
   interactionCount: number
   /** Stein formats consulted, page-stamped (e.g. "Format 7.6 — ADDING TWO NUMERALS WITH RENAMING (p. 213)"). */
   formatRefs: string[]
-  /** Programmatic QA results (playbook §12): hard-fail findings + review flags. */
+  /** The coverage note (SEQ 10): every case class taught or deferred. Absent on pre-v2 scripts. */
+  coverageNote?: VsgCaseClass[]
+  /** The Transfer Test verdict (SEQ 09). Absent on pre-v2 scripts. */
+  transferTest?: VsgTransferTest
+  /** Programmatic QA results (rulebook §17, findings cite rule IDs): hard-fail findings + review flags. */
   qa: { hardFails: string[]; flags: string[] }
   /** Reconciled conflicts recorded in the script header (both sides, rule, resolution, who). */
   conflictsResolved: VsgConflict[]

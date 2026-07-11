@@ -1,0 +1,2100 @@
+[p.201]
+Chapter
+11
+Problem Solving
+LEARNING OUTCOMES
+11.1 Discuss the recommended sequence for introducing word problems and the 
+rationale for that sequence.
+11.2 Describe the introductory strategy for teaching students to solve basic addition 
+and subtractions problems.
+11.3 Outline the number-family instructional strategies recommended to teach 
+students to solve addition/subtraction word problems.
+11.4 Discuss the differences in the instructional strategies for teaching addition/ 
+subtraction word problems and multiplication/di vision word problems.
+11.5 Describe the common types of errors students make when solving word 
+problems.
+SKILL HIERARCHY
+∙∙∙∙∙∙..
+This chapter discusses procedures for teaching students to apply the four basic operations (addi­
+tion, subtraction, multiplication, and division) to word problems that present situations requiring 
+a mathematical solution. Procedures for teaching problem-solving strategies that include frac­
+tions, percent, decimals, time, money, and measurement are addressed in later chapters on those 
+topics. In this chapter, addition and subtraction word problems are introduced together to pro­
+vide discrimination practice. Multiplication and division word problems are taught together for 
+the same reason. Multiplication and division word problems are introduced as soon as students 
+have mastered previously introduced types of word problems (problems involving addition and 
+subtraction) and have been taught to solve multiplication and division computation problems. It 
+is important for students to work mixed sets of word problems involving all four operations once 
+multiplication and division problems have been introduced to continue providing practice choos­
+ing the correct operation to solve the problem.
+Addition and subtraction problems are usually introduced in late first grade. Analysis of 
+addition and subtraction problems in commercial mathematics programs reveals three primary 
+types of problem: temporal sequence problems, comparison problems, and classification prob­
+lems. Simple versions of these three types of one-step problems are usually introduced by the 
+end of second grade. Both initial and more sophisticated strategies for solving these problem 
+types are introduced in this chapter.
+
+[p.202]
+202 Part II Basic Concepts and Skills
+Multiplication and division problems are usually introduced during third grade. Initially, the 
+multiplication or division operation is signaled by the presence of the word “each” or “every.” 
+Later, the words “a” and “per” serve as signals for multiplication or division (“The crew works 
+7 hours a day,” “There are 6 crayons per box”). Multiplication and division problems that do not 
+contain key words are obviously more difficult. See the Instructional Sequence and Assessment 
+Chart for a recommended sequence for introducing word problems.
+Within the two basic groupings of word problems are problems with large numbers, multi- 
+step problems, and problems with distractors. Problems with larger numbers are usually more 
+difficult because the computation is more difficult and the operation required is often less obvi­
+ous. Multi-step problems usually appear in third grade and require students to perform two or 
+more steps, usually involving two or more different operations, to solve the problem. The sim­
+plest type of multi-step problem involves adding three numbers. Multi-step problems become 
+more difficult as the number and type of computations required increase. The third type of these 
+more difficult word problems contains irrelevant quantities or information that may distract stu­
+dents from the necessary steps to solve the problem. More information about these three prob­
+lem types is presented later in the chapter.
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type Performance Indicator
+1-2 Addition/subtraction simple action 
+problems with key words
+Deshawn had 7 apples. He got 3 more from the store. How 
+many apples does he have in all?
+Lisa had some apples. She bought 3 more. She ended up with 
+12 apples. How many apples did she start with?
+2 Addition/subtraction temporal sequence 
+problems
+Carlos had 7 apples. He gave 3 to his sister. How many does 
+he have left?
+2 Addition/subtraction comparison 
+problems
+Bill is 7 years old. Alice is 5 years old. How much older is Bill?
+Hole A is 5 feet deep. Hole B is 7 feet deeper than Hole A.
+How deep is Hole B?
+Hole A is 5 feet deep. Hole B is 7 feet deep. How much deeper 
+is Hole B?
+2 Addition/subtraction classification 
+problems
+Eight men are in the store. Three women are in the store. How 
+many people are in the store?
+Ramona has 4 hats; 3 of the hats are blue. How many hats are 
+not blue?
+Maria sold 5 hats in the morning. She sold 2 hats in the 
+afternoon. How many hats did she sell?
+2 Multi-step problems: add three numerals LaToya ran 5 miles on Monday, 3 miles on Tuesday, and 4 miles 
+on Wednesday. How many miles did he run altogether?
+3 Multiplication/division problems with the 
+word "each" or "every"
+Marcus has 4 boxes. In each box there are 6 pencils. How 
+many pencils does Marcus have?
+Tamara jogs 5 miles every day. How far will she jog in 3 days?
+There are 20 students. The teacher wants to divide them into 
+4 equal groups. How many students will be in each group?
+3 Multiplication/division problems with the 
+word "per" or a phrase using "a"
+The ABC Company makes pens. They put 5 pens in a box. 
+How many pens are in 3 boxes?
+Rosa runs 2 miles per day. How many days will it take her to 
+run 8 miles?
+
+[p.203]
+Chapter 11 Problem Solving 203
+3 Addition/subtraction problems with larger
+numerals
+3 Multiplication/division problems with
+larger numerals
+3 Addition/subtraction problems with
+distractors
+4 Division and multiplication problems with
+larger numerals (two-digit divisor or 
+multi-digit factors)
+4 Multi-step problems: three numerals; the
+sum of two numerals is subtracted from 
+the third numeral
+4 Three numerals: two quantities are
+multiplied; the product is added or 
+subtracted from a third numeral
+4 Three numerals: two quantities are added;
+the sum is divided or multiplied
+5 Four numerals: two sets of quantities are
+multiplied; the product of each is added
+5 Five numerals: two sets of quantities are
+multiplied; the product of each is added; 
+the sum is subtracted or added to a given 
+quantity
+Travis ran 214 miles in January and 158 miles in February. How 
+many more miles did he run in January?
+There are 153 students in the school. If there are 61 girls in the 
+school, how many boys are there?
+There are 35 students in every class. There are 5 classes in the 
+school. How many students are in the school?
+Jean worked 2 days. If she makes $16 a day, how much did 
+she make?
+Jill has 215 pencils. She wants to make bundles with 5 pencils 
+in each bundle. How many bundles can she make?
+There are 20 blue pencils, 5 red pencils, and 16 yellow pens in 
+a bag. How many pencils are in the bag?
+Bill weighed 120 pounds. He ran 5 miles. Now he weighs 
+117 pounds. How much did he lose?
+Bill had 12 hats; 5 hats were old. He gave away 3 old hats. 
+How many hats does he have left?
+Sarah wants to save $385. If she puts $35 in the bank each 
+month, how many months will it take her to save the $385?
+A factory produces 325 cars a day. How many cars will it 
+produce in 25 days?
+A pound of apples costs 60^. How much will 20 pounds of 
+apples cost?
+Julie sold 12 pencils in the morning. Ann sold 15 in the 
+afternoon. How many more must they sell before they've sold 
+50 altogether?
+Timmy weighed 84 pounds. He lost 4 pounds in May and 
+7 pounds in June. How much did he weigh at the end of June?
+Jean sold 10 pens in the morning. She began with 18. If she 
+sells 2 more, how many will she have left?
+Tom has 3 pens in each pocket. He has 5 pockets. Ann has 
+16 pens. Who has more pens? How many more?
+Ann has $7. If she works 4 hours and earns $3 each hour, how 
+many dollars will she have at the end of the day?
+There are 10 boys and 20 girls in the class. Each row can sit 
+5 students. How many rows will there be?
+Jill earns $2 every morning and $4 every afternoon. How 
+much will she earn in 6 days?
+Pam ran 5 miles a day for 3 days and 6 miles a day for 2 days. 
+How many miles did she run altogether?
+Tammy bought 3 cakes and 2 drinks. A cake cost 10¢. A drink 
+cost 15c How much did Tammy spend?
+Bill needs $30. He worked 5 hours on Monday for $2 an hour. 
+He worked 2 hours on Tuesday for $3 an hour. How much 
+more money does he need?
+Bill weighed 135 pounds in May. He gained 3 pounds each 
+month for the next 2 months. Then he gained 5 pounds each 
+month for the next 3 months. How much does he weigh now?
+
+[p.204]
+204 Part II Basic Concepts and Skills
+Teachers also should be aware that word problems become more difficult as the problems 
+include unfamiliar vocabulary and use more complex syntax. The two problems that follow 
+illustrate the importance of vocabulary and syntax:
+a. Antonio wrote 6 sentences. The teacher crossed out 2 of them. How many are left?
+b. When the teacher read Ariana’s paper, she deleted 15 sentences and 3 commas. She had 
+initially written 52 sentences. How many sentences did she have at the end?
+Both of these word problems are temporal sequence problems—problems that state the original 
+amount and the amount of decrease. Problem b is more difficult for several reasons. First, prob­
+lem b contains more difficult vocabulary. Students may not be familiar with the words “deleted” 
+and “initially.” If a student does not understand “deleted,” she has no basis for solving the prob­
+lem. Second, the amount that Antonio began with is stated first in problem a, but in problem 
+b the amount Ariana began with is stated after the amount of the decrease. When the smaller 
+numeral appears first, students are more likely to add. The third difficulty is the presence of the 
+phrase “and 3 commas,” a distractor that must be ignored. Finally, the numerals in problem b are 
+larger, and the operation requires renaming. Understanding the features that make word prob­
+lems more challenging helps teachers better prepare students for a variety of word problems.
+CONCEPTUAL UNDERSTANDING
+We support the use of activity-based strategies as an introduction to the concepts in word prob­
+lems rather than the primary strategy for solving them, unlike many current approaches to math­
+ematics instruction. For example, commercial programs often suggest that students solve word 
+problems by using manipulatives or pictures to represent values or by working with their peers 
+to act out the word problem. These activity-based approaches fail to demonstrate clear connec­
+tions between the activities, the language of the word problems, and the procedures required to 
+solve the problems. In addition, these activities are not an efficient use of instructional time. In 
+this chapter, we present generalizable problem-solving strategies that are useful and efficient. 
+Embedded in these strategies is instruction that addresses critical language concepts needed to 
+express word problems numerically. As a result, the strategies included in this text demonstrate 
+clear connections between the language of the problems and the mathematical procedures used 
+to solve them.
+INSTRUCTIONAL PROCEDURES: ADDITION AND
+SUBTRACTION PROBLEMS
+• ∙ ∙ ∙ ∙ ∙ ∙ ∙
+The procedures for teaching addition and subtraction problems are divided into two parts. The 
+first part introduces the concept of word problems to young students through the use of illus­
+trations. The second part teaches a more generalizable problem-solving strategy that enables 
+students to solve temporal sequence, comparison, and classification problems. The generalizable 
+strategy addresses the difficulties caused by variations in word usage. The same verb (gave 
+away) appears in examples a and b below. However, solving problem a requires addition while 
+solving problem b requires subtraction.
+a. Nicole gave away 7 stickers. Maria gave away 3 more stickers than Nicole. How many 
+stickers did Maria give away?
+b. Nicole had 15 stickers. Then she gave away 7 stickers. How many stickers does she have 
+now?
+Introducing the Concept
+In first grade, word problems can be introduced when students can work a page of simple addi­
+tion and subtraction problems, using a line-drawing strategy, with 80% to 90% accuracy. It is not 
+necessary for students to know how to solve missing-addend problems or have any basic facts 
+memorized in order to be introduced to word problems.
+
+[p.205]
+Chapter 11 Problem Solving 205
+About 3 weeks prior to the introduction of word problems, the teacher would present a 
+preskill format designed to teach students how to translate to symbols four key phrases: “get 
+more,” “get rid of,” “end with,” and “how many.” The phrase “get more” translates to a plus 
+sign, “get rid of’ to a minus sign, “end with” to an equal sign, and “how many” to an empty 
+box. The teacher would say each new phrase and tell students its translation. For example, the 
+teacher might say, “Listen: When you get more, you write a plus sign. What do you write for 
+get more?” Each second or third day, the teacher would introduce a new phrase and review the 
+phrases introduced earlier.
+After the students know these four terms, the teacher presents another preskill exercise in 
+which she says a common verb and asks if the verb translates to a plus or a minus sign. Several 
+common verbs should be presented, for example, “buys,” “loses,” “sells,” “eats,” “finds,” “gives 
+away,” “breaks,” and “makes.” The teacher associates each verb with getting more or getting rid 
+of before asking the students to translate the verb to a symbol. For example, the teacher asks, 
+“When you buy something, do you get more or get rid of something? So when you buy some­
+thing, do you plus or minus?”
+Format 11.1: Introducing Problem Solving Concepts is presented when the students 
+have mastered the preskills outlined above. The format includes two parts. In Part A, the teacher 
+begins word problem instruction by demonstrating how a written or verbal word problem can 
+be solved with semi-concrete objects (pictures or lines). For example, pictures could be used to 
+illustrate the following problem: There were six children. Two children went home. How many 
+were left? The teacher would draw 6 lines representing children and cross out 2 of the lines to 
+represent the 2 children who went home. The remaining lines would be counted to determine the 
+answer.
+After demonstrating how a verbal or written word problem can be illustrated, the teacher 
+demonstrates how a verbal or written word problem may be expressed numerically, translating it 
+phrase by phrase into an equation.
+There were six children. 6
+Two children went home. 6 — 2
+How many were left? 6 — 2 = □
+In Part B, the structured worksheet exercise, the teacher gives students a worksheet with a 
+set of problems. If the students do not have adequate decoding skills, the teacher should read the 
+problems to them. The teacher has the students read the entire problem and then reread it phrase 
+by phrase. After reading each phrase, students are directed to draw the appropriate picture. For 
+example, after reading “Ann has seven apples,” students draw pictures of seven apples. Then 
+students read the problem again, phrase by phrase, and write the appropriate equation. After 
+completing the equation, students figure out the answer by counting the pictures or lines.
+Example selection for word problems is very important. The verbs in the problems should 
+be fairly common terms such as “buy,” “give away,” “make,” “break,” “find,” and “lose.” Also, 
+problems should contain words that the students are able to decode, and the problems initially 
+should be relatively short. A random mix of addition and subtraction problems should be used so 
+that students must discriminate between the two types of problems.
+For the first several weeks, the last sentence in word problems should say, “ends with how 
+many?” These words can be translated directly to the symbols = □. After several weeks, the 
+questions can be phrased differently, such as, “How many does she have now?” and “How many 
+does she have in all?” The teacher explains that these sentences mean the same as “ends with 
+how many?” and can be translated into the symbols — □.
+A Number-Family Problem-Solving Strategy
+The introductory strategy of translating word problems phrase by phrase into an equation is used 
+to demonstrate the relationship between words and equations representing everyday situations. 
+Most word problems, however, cannot be translated phrase by phrase into an equation. There­
+fore, we recommend teaching a strategy that encourages students to integrate their knowledge 
+of fact-number-family concepts (see Chapter 6) with basic language skills to solve temporal 
+sequencing, comparison, and classification problems.
+
+[p.206]
+206 Part II Basic Concepts and Skills
+The number-family strategy is based on the concept that three numbers can be used to 
+form four math statements. For example, the numbers 2, 5, and 7 yield 2 + 5 = 7, 5 + 2 = 7, 
+7 — 5 = 2, and 7 — 2 = 5. The numbers may be represented as the following number-family 
+diagram:
+2 5 7
+A standard diagram is used to represent a number family. When using the number-family strat­
+egy to solve basic facts, students are taught that the big number (total) goes at the end of the 
+arrow. If the big number is not known, a box goes at the end of the number-family arrow. In a 
+typical problem, two of the numbers in the family are provided. Students place these numerals 
+where they belong in the family and then determine whether the missing numeral is obtained by 
+adding or subtracting. For example, the family 
+2 5
+does not give the total and yields the problem 2 + 5 = I I.
+2
+'7
+In the above diagram, the family does give the total, so it yields the problem 7 — 2 = I I.
+The key to applying the number-family analysis successfully to a range of problem types is 
+the ability to analyze the language in the problem to determine the name for the total. For exam­
+ple, in a problem involving boys, girls, and children, the name for the total is children. If the 
+problem gives a number for children, subtraction is required. If the total number of children is 
+unknown, addition is required. Students first represent the analysis of the problem in a diagram 
+and then use the diagram to determine the operation. Consider the following problem: There are 
+8 children at the party. Three are boys. How many girls are at the party? The number for chil­
+dren is given.
+children 
+8
+and generates the subtraction problem 8 — 3 = I I.
+Conversely, when the following problem is presented: There are 8 girls and 3 boys at the 
+party. How many children are at the party? The total number of children is not given; therefore, 
+the number-family representation is
+children
+8
+The analysis generates an addition problem.
+8 + 3 = □.
+The number-family analysis highlights the relationships between the concepts in the word 
+problem and the values that are given. Very careful guided practice is required to teach students 
+to use the language in a word problem to determine whether the total number is given. The anal­
+ysis for each problem type is explained in detail later in this chapter.
+Preskill for the Number-Family Strategy An essential preskill for the number-family 
+word problem strategy is figuring out the missing number when two of the three numbers in a 
+fact family are given. Students are taught that if the total number is given,
+4 ∏9
+
+[p.207]
+Chapter 11 Problem Solving 207
+they subtract to find the missing number:
+9-4 = □
+On the other hand, if the total number is not given,
+they add the two given numbers:
+4 + 9 = □
+Note that prior to introducing this strategy, students should be able to compute some facts men­
+tally rather than using lines and subsequent problems should include only the basic facts that 
+students previously have mastered.
+Format 11.2: Preskill: Fact Family—Finding the Missing Family Member intro­
+duces this preskill. This preskill should be taught approximately 2 or 3 weeks before temporal 
+sequence problems are first introduced, typically sometime during second grade. Note that this 
+format is similar to those used in Chapter 6 to teach basic facts. In that chapter, the phrases “big 
+numbers” and “small numbers” were used. Those phrases can be replaced by the phrases “total 
+number” and “parts of the total” when preparing students to solve word problems to prevent 
+students from identifying the larger number as the “big” number.
+When presenting the preskill diagrams, the teacher shows an arrow with two numerals and 
+a box. Below are examples of the diagrams. In problem a, the total number is given, while in 
+problem b, the total number is not given. The line below the diagram is for writing the equation 
+to find the missing number.
+a. 6 *8 b. 6
+Format 11.2 has four parts. Part A introduces the rule about what to do when the total number 
+is given: When the total number is given, we subtract. After telling students the rule, the teacher 
+demonstrates its application, writing on the board a diagram in which the total number is given:
+8-2 = 6
+The teacher points out that because the total number is given, the students must subtract to 
+figure out the missing number (8 — 2 = 6). And when they subtract, they must start with the 
+total number.
+Part B introduces the rule about what to do when the total number is not given: When the 
+total number is not given, we add. After telling students the rule, the teacher demonstrates its 
+application, writing on the board a diagram in which the total number is not given:
+7—>
+3 + 7
+The teacher points out that because the total number is not given, the two given numbers must be 
+added to figure out the total number (3 + 7 = 10).
+Part C is a structured worksheet with diagrams, half of which give the total number and half 
+of which do not. The student’s task is to write the appropriate equation on the line under each 
+arrow and to figure out the missing number.
+b. 4 2
+
+[p.208]
+208 Part II Basic Concepts and Skills
+TABLE 11.1 Temporal Sequence Problems
+• Verb indicates ending up with more.
+Addition
+a. James had 12 apples. He bought 17 more apples. How many apples did he end up 
+with?
+Subtraction
+b. James had 12 apples. He bought more apples. Now he has 17 apples. How many apples 
+did he buy?
+• Verb indicates ending up with less
+Addition
+c. James had lots of apples. He sold 17 of the apples. He ended up with 12 apples. How 
+many apples did he start with?
+Subtraction
+d. James had 17 apples. He sold 12 apples. How many apples did he end up with?
+Part D is a less structured worksheet exercise in which the teacher asks students whether 
+they add or subtract and then has them work the problem. In Parts C and D, the problems should 
+not be written in a predictable order. Addition and subtraction problems should appear randomly.
+Temporal Sequence Problems
+In temporal sequence problems, a person starts out with a specified quantity, and then an 
+action occurs (finds, loses, buys, sells) that results in the person ending up with more or less. 
+The problems in Table 11.1 illustrate why students cannot rely solely on the verb to deter­
+mine the appropriate operation. Even though the presence of verbs such as “buys,” “gets,” and 
+“finds” often indicates addition, some problem containing those words will require subtraction. 
+Conversely, some word problems contain verbs that usually indicate subtraction but are solved 
+with addition.
+The strategy presented in the format for temporal sequence problems teaches the students 
+to begin by looking at the overall structure of the word problem. Students then apply a two-step 
+strategy for solving the problem. First, they determine whether the person in the problem starts 
+or ends with the total. If the verb implies that the person ends with more, the person ends with 
+the total. This is the case with the first two problems in Table 11.1: James buys more apples so 
+he ends with the total. Students label the total accordingly:
+___________ Ends
+Next, the students determine whether the total is given (Do we know how many James ends 
+with?). In problem a, we do not know the total; we are asked how many James ends up with:
+Ends
+The two numbers given are recorded as parts:
+12 17 Ends
+------------->
+Finally, students add to find the total. In problem b, the same diagram is used. Since James is 
+buying apples, he ends with the total:
+Ends
+
+[p.209]
+Chapter 11 Problem Solving 209
+In problem b, however, the total is given. We know James ends up with 17 apples:
+Ends 
+17
+The total is given, so we must subtract to find how many he buys:
+∣—। Ends 
+12 LJ 17
+For problems c and d in Table 11.1, James sells apples. He ends up with fewer apples, so he 
+starts with the total:
+Starts
+Next, we determine if the total is given (Do we know how many he starts with?). Problem c asks 
+how many he starts with. The total is not given, so we add:
+Starts
+17
+For problem d, we know James starts with 17:
+Starts 
+17
+The total is given so we subtract:
+12
+Starts 
+17
+All temporal sequence problems are analyzed successfully using two questions: Do we start or 
+end with the total? Is that total given? The steps to analyzing temporal sequence problems are 
+outlined in Summary Box 11.1. Students must be familiar with the number-family rules pre­
+sented in Format 11.2: Preskill: Fact Family—Finding the Missing Family Member to be 
+successful in applying this strategy to problem solving.
+Format 11.3: Temporal Sequence Word Problems outlines the procedure for teaching 
+students to work this type of problem. Part A is a verbal exercise to establish the relationship 
+between various verbs (“buys,” “gives away,” “loses”) and a person starting or ending with 
+more. Part B is a structured board presentation in which the teacher guides students through the
+SUMMARY BOX 11.1
+Temporal Sequence Word Problems
+1. Students read the problem and determine whether 
+the person starts or ends with more.
+2. Students draw a number-family diagram and label 
+starts or ends as the total.
+3. Students fill in number-family diagram with labels 
+and numbers that are given in the problem.
+4. Students use number-family strategy to 
+determine whether to add or subtract to find 
+the unknown number.
+Sam began with $25 in his savings 
+account. He put another $4 into the 
+account. How much money has he saved?
+ENDS
+ENDS
+δ ENDS
+
+[p.210]
+210 Part II Basic Concepts and Skills
+problems. First, students determine whether the person in the problem starts or ends with more 
+(the total). Next, they figure out whether the total is given. The teacher then places the values 
+given in the problem on the number-family diagram. After the values are in place along the 
+arrow, students apply their knowledge of the number-family rule: If the total, or big number, is 
+missing, you add. If a small number is missing, you subtract.
+Part C, introduced when students have mastered the steps in Part B, is a structured work­
+sheet exercise. The teacher leads students through the same strategy, but the students construct 
+the number-family diagrams that determine the correct operation. Part D is a less structured 
+worksheet exercise in which the teacher asks the students to indicate if the person starts or ends 
+with more (the total) and then has students complete the number-family diagram and figure out 
+the answer.
+When selecting examples for this format, the teacher constructs a minimum of two sets 
+of four problems. Each set should contain two addition and two subtraction problems. In one 
+addition problem, the person would start with more; in one addition problem, the person would 
+end with more. Likewise, in one subtraction problem, the person would start with more, and in 
+one subtraction problem, the person would end with more. The problems should be written in 
+random order. Problems introduced initially should contain common verbs. Sentences should 
+be relatively simple. All of the problems should result in equations that the students are able to 
+work. For example, if students have not learned to regroup, subtraction problems should be lim­
+ited to problems that do not require regrouping.
+Comparison Problems
+A comparison problem addresses two quantities and the difference between them. There are two 
+basic types of comparison problems. In one type, a quantity is stated describing an attribute of 
+an object or person, such as weight, length, height, or age. The difference between the objects or 
+people is also stated. For example, “Brendan is 7 years old. Colleen is 3 years older.” The stu­
+dent is asked to find the quantity of the other person or object: “How old is Colleen?”
+In the second type of problem, the quantities of two objects or people are stated and the student 
+is asked to find the difference between them: “Brendan is 7 years old. Colleen is 10 years old. How 
+much older is Colleen?” Both types of comparison problems are introduced concurrently. All com­
+parison problems can be solved using a number-family analysis. The larger of the quantities being 
+compared represents the total. The smaller quantity and the difference are the parts of the total.
+The two-step strategy for solving comparison problems is similar to that introduced for 
+temporal sequence problems. It involves (a) determining which person or object represents the 
+larger quantity and (b) determining whether the larger quantity is given or not given. For exam­
+ple, “Alicia got 10 problems correct. Asher got 2 fewer problems correct than Alicia. How many 
+problems did Asher get correct?” In this problem, the number of problems Asher answered cor­
+rectly is fewer, so the number of problems answered correctly by Alicia represents the total. 
+Because the number of problems Alicia answered correctly is given, the problem requires sub­
+traction. The steps to solving comparison problems are outlined in Summary Box 11.2.
+SUMMARY j BOX 11.2
+Problem-Solving Strategy for Comparison Problems
+1. Students read the problem and determine the 
+bigger number.
+2. Students fill in the number-family diagram with the 
+label in the place for total
+3. Students complete the diagram by filling in known 
+values.
+4. Students use number-family strategy to determine 
+whether to add or subtract.
+Diane runs 3 miles each day. Mark runs 
+2 miles more each day. How many miles 
+does Mark run each day?
+- Mark
+
+[p.211]
+Chapter 11 Problem Solving 211
+Format 11.4: Comparison Problems shows how to present this type of problem. The for­
+mat includes three parts. Part A is a preskill format designed to teach students how to determine 
+the name for the bigger number. Note that this part assumes that students understand compara­
+tive words such as “deeper,” “shallower,” “thicker,” “thinner,” “bigger,” “smaller,” “heavier,” 
+and “lighter.” Students who have difficulty with Part A may not understand the meaning of the 
+comparatives. Teachers could test students’ understanding of the language with diagrams or 
+illustrations. For example, the teacher could present illustrations of two holes and ask, “Show 
+me the hole that is deeper.”
+Another useful strategy for helping students determine which object is greater is to practice 
+with sentences that compare two things without numerical values. For example,
+a. The lake is closer than the city.
+b. Brad worked longer than Rian did.
+c. The bird stored fewer nuts than the raccoon.
+Students would write partial number families for these sentences, writing the name for the 
+larger quantity at the end of the number-family arrow. For example, in sentence a, the lake is closer 
+than the city, so the city must be the larger value. Students would write the following number family:
+City
+After students master placing the name correctly in the number family, they can be taught to 
+place the numerals in a comparison problem on the number-family arrow. Part B is a structured 
+worksheet exercise with complete word problems. The teacher leads the students in applying the 
+two-step strategy, first writing the name for the total and then writing a box or a quantity given 
+for the total. For the problem “The lake is 23 miles closer than the city. The city is 59 miles 
+away. How far away is the lake?” the students first write “city” for the total and then, since the 
+quantity for city is given, write “59” under city. The students write the other quantity and a box 
+for the small numbers on the number-family arrow.
+Because the total is given in the number family, the number sentence is written:
+The critical step in Part B occurs when the teacher asks if the problem gives a number for the 
+total. If students do not read the problem carefully they may give a wrong answer. For example, 
+if a problem states that Rachel is 12 years older than Sally, who is 7 years old, the total will tell 
+how old Rachel is. When examining the problem, the students may misread the words “Rachel is 
+12 years older” as “Rachel is 12 years old” and write 12 as the total number.
+If this type of error occurs frequently, the teacher would do a practice exercise that focuses 
+only on this step. The teacher would present a series of problems verbally. For each problem, the 
+teacher would tell the students what the total number tells about and would ask if the problem gives 
+a numeral for the total. For example, “The total number tells how old Rachel is. Does a numeral 
+in the problem tell how old Rachel is?” Six to eight problems would be presented in the exercise.
+Part C is a less structured worksheet exercise in which the teacher leads students in applying 
+the strategy. Each example set should include the following types of examples to provide dis­
+crimination practice.
+1. Two addition problems in which one quantity is stated. The difference indicates the other 
+quantity is greater:
+Bill dug a hole 6 feet deep. Trey dug a hole 2 feet deeper than Bill’s hole. How deep is 
+the hole Trey dug?
+Bill dug a hole 6 feet deep. Bill’s hole is 2 feet shallower than the hole Trey dug. How 
+deep is the hole Trey dug?
+
+[p.212]
+212 Part II Basic Concepts and Skills
+2. One subtraction problem in which one quantity is stated. The difference indicates the other 
+quantity is smaller:
+Bob dug a hole 6 feet deep. Jermaine dug a hole 2 feet shallower than Bob’s hole. How 
+deep is the hole Jermaine dug?
+3. One subtraction problem in which both quantities are stated. Students must determine the 
+difference.
+Janet dug a hole 6 feet deep. Michael dug a hole 2 feet deep. How much deeper is Janet’s 
+hole?
+Two addition problems would be included in each set to provide an equal mix of addition and 
+subtraction problems.
+Classification Problems
+The steps for teaching students to work classification problems are outlined in Summary 
+Box 11.3 and Format 11.5: Classification Word Problems. Part A provides practice in the 
+language preskill of identifying class names for groups of objects. The teacher says a superordinate 
+class and two related subclasses and asks the students to tell which is the biggest class. This exer­
+cise assumes that students have already mastered the language related to classification. Teachers 
+working with naive students may find that more extensive teaching in this skill is necessary.
+In Part B, a structured worksheet exercise, the teacher introduces classification word prob­
+lems. Students are given a worksheet with six to eight problems. Part B begins with the teacher 
+reviewing with students that when the total number in a number family is given, they must 
+subtract to find the answer; when the total number is not given, they must add. The teacher then 
+states a problem and identifies the three groups mentioned in the problem: “There are eight 
+children. Three are boys. How many are girls? This problem is about children, boys, and girls.” 
+After telling students the three groups, the teacher asks which word tells about the big class in 
+this problem. Students are directed to write the word “children” at the end of the arrow to indi­
+cate the big class that the word problem is talking about.
+Children
+As with the comparison and temporal sequence word problems, students next determine whether 
+the numeral for the total is given. In this example, the number family is completed as follows:
+Children 
+8
+SUMMARY. BOX 11.3
+Classification Problem-Solving Strategy
+1. Students read the problem and underline the classes. Jose has 3 soccer balls and 4 baseballs. 
+How many balls does Jose have?
+2. Students write the biggest class in the area for total 
+number.
+Balls
+3. Students write the values for the two smaller classes, 
+if known, in the number-family diagram.
+4. Students use the number-family strategy to determine 
+whether to add or subtract.
+3 4 Balls
+----------------- >
+3 4 Balls
+----------------- >7
+
+[p.213]
+Chapter 11 Problem Solving 213
+Students apply the number-family rule, and since a small number is missing, they subtract to 
+find the number of girls:
+8-3 = 5 girls
+Part C is a less structured worksheet exercise. After reading a problem, the students write 
+the name of the big class at the end of the number-family line above the place for the total. They 
+reread the problem to figure out whether the total is given and then complete the number-family 
+diagram. They are then able to apply the rules to solve the problem.
+Several example selection guidelines need to be considered. First, practice examples should 
+include an equal mix of addition and subtraction problems. Second, problems initially should be 
+written in a relatively short form with few extraneous words. Third, relatively common classes 
+should be used. A sample set of four problems appears below:
+a. There were 75 cars in all. 15 were green cars. The rest were red cars. How many red cars 
+were there?
+b. Lauren had red marbles and blue marbles. She had 23 red marbles and 16 blue marbles. 
+How many marbles did she have in all?
+c. Tomas collected toy cars and airplanes. He had 43 toys in his collection. 14 were cars. How 
+many were airplanes?
+d. At Central Avenue School, there are 16 girls and 15 boys in first grade. How many children 
+are in first grade?
+During the first week that classification problems are introduced, the key words in the prob­
+lem can be underlined to prompt the students to attend to the class names. For example, in prob­
+lem a above, the words “cars,” “red,” and “green” would be underlined.
+While students are learning to solve classification problems, they should continue to solve 
+temporal sequence and comparison problems. After they have mastered classification problems, 
+the teacher would give students worksheets that include a mix of classification, comparison, 
+and temporal sequence problems. Worksheets would still include six to nine problems, with 
+one-third representing each type of problem. When students first encounter a mix of problems, 
+teachers would read the problems with the students and guide the students in setting up the num­
+ber-family diagrams. Even though students have been successful at solving temporal sequence, 
+comparison, and classification problems when presented independently, teachers should not 
+assume students will be equally successful when two or three types of problems are combined 
+on the same worksheet.
+©
+Format 11.6A/B:
+Using Tables to Solve 
+Problems
+Watch how Tristan maintains a 
+brisk pace.
+£ Format 11.6C: Using 
+Tables to Solve 
+Problems
+Watch how Tristan uses think 
+time.
+Reading Tables Table problems are an efficient way to present sets of data and reinforce 
+logic skills and number families. Format 11.6: Using Tables to Solve Problems introduces stu­
+dents to the idea that values in rows and columns are added to obtain totals. To find the total for 
+a row or column, students use a running total. In a beginning table exercise, students learn that 
+columns run vertically and rows horizontally. After students have sufficient practice adding both 
+columns and rows of numerals in tables, headings are presented. These headings tell about the 
+numerals in the columns and rows. For example,
+Hours Worked
+Mon. Tues. Weds. Total
+Josh 5 4 10 19
+Jane 4 7 1 12
+John 2 5 3 10
+Total 11 16 14
+
+[p.214]
+214 Part II Basic Concepts and Skills
+Students practice touching both headings and finding a particular cell. For example, stu­
+dents place one finger on “Tuesday” and move downward and another finger on “John” and 
+move across until they meet at 5. After working with several examples, students should be ready 
+to answer questions about a numeral in a particular cell, such as “How many hours did Jane 
+work on Wednesday?” “Who worked the most hours on Tuesday?” “Who worked the most 
+hours in all?”
+After students are familiar with reading tables and adding numerals in rows and columns, 
+the teacher can demonstrate how to apply the number-family strategy to solving problems in 
+tables. Students first are introduced to the concept that tables with rows and columns can work 
+like number families. Instead of just a line between the cells, the tables in the early problems 
+should have arrows. The arrows remind the students that each row works like a number family. 
+The first two numerals in the row represent small numbers. The total is the big number.
+A small number is missing in row a. Students apply the number-family rule: If the 
+small number is missing, you subtract. If the big number is missing, you add. Since a small 
+number is missing in this example, students subtract to find the missing number in the row 
+(52 — 27 = 25). In row b, a big number is missing, so students add to find the missing number 
+in the family and write it in the table: 12 + 13 = 25.
+Teachers may want to separate the introduction of the number family in rows and the num­
+ber family in columns, first working only with rows, then only with columns, and finally solving 
+for unknown cells in both. The tables below show this progression.
+15 35
+20 12*
+14 26
+10 9
+r 22 . r 31
+19 45
+35 50
+10 18
+The final step involves teaching students how to transfer the information from a word prob­
+lem to a table and answer questions. Using tables to work word problems that involve classifi­
+cation of data is a natural extension of what students learned when solving addition/subtr action 
+classification word problems. The column and row headings show the names for the two sub­
+classes (boys and girls) as well as the name for the big class (children). For example, the table 
+might show the number of girls and boys attending soccer practice on two days, Tuesday and 
+Thursday. The table for recording the data would look like this:
+Format 11.6D: Using 
+Tables to Solve
+Problems
+Watch how Tristan monitors 
+his students as they complete a 
+worksheet using a table to solve 
+a classification word problem.
+Tuesday 
+Thursday 
+Total
+Part D illustrates how teachers can teach students to record data, use the number-family 
+strategy to complete the table, and then answer questions using the information from the table. 
+Note that teaching all parts of Format 11.6 will take a considerable amount of time and will 
+occur over many days. Teaching students to use tables, however, is an efficient and logical 
+approach to solving several types of problems.
+
+[p.215]
+Chapter 11 Problem Solving 215
+Distractors
+A distractor is information given in a word problem that is irrelevant to finding the solution to 
+the problem. It is called a distractor because students have been accustomed to using all of the 
+information that a problem provides, and the additional information may distract them from 
+determining the correct equation. For example,
+Natasha had 4 stuffed dogs, 2 stuffed rabbits, 2 stuffed pigs, and 5 stuffed cats in her collec­
+tion. Four of the stuffed animals are very old. How many stuffed animals does Natasha have 
+in her collection?
+Because the problem asks how many stuffed animals Natasha has in her collection, the irrelevant 
+information is about the number of old animals and must be ignored in order to solve the prob­
+lem correctly.
+Students are most often introduced to problems with distractors in intermediate grades. 
+Several practice problems would be given in which students state what they have been asked 
+to solve and cross out the information that they don’t need in order to solve the problem. 
+Problems with distractors would be distributed throughout the math curriculum and practiced 
+frequently until students can easily discern the relevant information when solving a problem.
+Multi-step Word Problems
+Frequently, students work temporal problems that require both addition and subtraction. 
+These multi-step problems can be solved using number families. Here is an example of such 
+a problem:
+Shane spends $12 on stamps. Then he spends $32 on a video game. If he ends up with $6, 
+how much did he start out with?
+Because this problem contains the word “spends,” students may be likely to use only subtraction 
+to solve the problem. Using a number-family analysis guards against this kind of mistake.
+Format 11.7: Introducing Multi-step Word Problems is an adaptation of the addition/ 
+subtraction number-family strategy that can be used to solve this type of problem. In this adapta­
+tion, the values in the number family are labeled “in,” “out,” and “end up.” “In” stands for how 
+much the person started with and how much more of that item came in. “In” is always the big 
+number; “out” and “end up” are the small numbers. “Out” stands for decreases in the items. The 
+diagram below illustrates how the problem above can be represented.
+End up Out In
+6
+12
+32
+44
+In applying the number-family strategy, students must add both “out” numbers to find the total 
+for “out” before adding that to the “end up” number to arrive at the “in,” or big number (the 
+answer to the problem).
+To prepare students to work multi-step problems, the teacher can have students practice 
+the format with one-step subtraction and addition problems to teach the concepts of “in,” “out,” 
+and “end up.” If a sentence tells the amount that somebody has, that is an “in” number. The 
+sentence “Caley had $15” gives a numeral for “in.” If a sentence tells about increasing a value, 
+it tells about a value for “in.” “McKenzie collected 34 stamps” tells the increase in stamps: 34 is 
+the numeral for “in.” Values for “out” tell about reductions. “Howard gave away 3 apples” tells 
+about “out”; “1500 gallons leaked out of the tanker” tells about “out.” The value for “end up” 
+is the amount that is left, or the difference between the amount “in” and the amount “out.” In 
+most problems, the amount for “end up” is the amount the person has after the final reduction or 
+increase that the problem describes.
+
+[p.216]
+216 Part II Basic Concepts and Skills
+Using simple problems that contain only three values provides practice with the conven­
+tions before students are introduced to multi-step problems. Following are examples of simple 
+problems that may be used in this type of practice exercise.
+a. Maria starts a savings account with $567. Later, she takes some money out of her account, 
+which leaves a balance of $329. How much money was taken out?
+b. A florist starts out with no carnations. She buys 59 carnations and later sells 47 of them. 
+How many carnations did she end up with?
+C. Daniel had an empty fruit crate. He put some oranges in the crate. Then he gave away 
+23 of those oranges. The crate still has 19 oranges in it. How many oranges did he put in 
+the crate?
+After students have mastered these conventions, multi-step problems are introduced. These 
+problems have more than one value for “in” or more than one value for “out.” The values are 
+shown stacked under the appropriate heading in the number family. Following is an example of a 
+problem with values stacked under the “in” heading.
+Carlos caught 12 salmon yesterday, 11 this morning, and 8 this afternoon. On his way home, 
+he stopped at the marketplace and sold some of the salmon. He still has 15 salmon. How 
+many did he sell at the marketplace?
+End up Out In
+15 [j6]
+12
+11
+8
+31
+After students have mastered multi-step problems with more than one value for either the 
+“in” or “out” headings, they are introduced to problems with multiple values for both headings. 
+For example,
+At the beginning of the workday, the elevator in the Federal Building is empty. Then 5 people 
+get on the elevator. It stops at the fifth floor, and 2 more people get on. On the next floor, 
+4 people get off. On the seventh floor, 7 people get on, and 8 people get off. How many 
+people are still on the elevator?
+End up Out In
+2
+4 5
+8 2
+7
+12 14
+INSTRUCTIONAL PROCEDURES: MULTIPLICATION
+AND DIVISION PROBLEMS
+Multiplication and division operations are used to solve word problems that address equal-sized 
+groups. These problems are stated in three basic forms. If a problem gives the number of groups 
+and the number in each group, the problem is a multiplication problem; for example, “Malachi 
+has 3 piles of toys. There are 2 toys in each pile. How many toys does Malachi have in all?” The 
+equation representing that problem is 3 × 2 = □. If the problem gives the total and asks either 
+how many groups or how many in each group, the problem is solved with division; for example, 
+(a) “Malachi has 6 toys. He puts 2 toys in each pile. How many piles does he end up with?” 
+The equation is 6 ÷ 2 = 3; (b) “Malachi has 6 toys. He wants to put the toys in 3 piles with
+
+[p.217]
+Chapter 11 Problem Solving 217
+the same number of toys in each pile. How many toys will he put in each pile?” The equation is 
+6 ÷ 3 = 2. Once the students determine that the problem is addressing equal-sized objects or 
+groups, they will know that it is either a multiplication or a division problem. Then the students 
+can apply the same number-family strategy to determine whether the total number is given and, 
+therefore, whether they must multiply or divide to solve the problem.
+Multiplication and division problems almost always contain a word or phrase that indi­
+cates that the problem is referring to equal-sized groups. Most of the problems contain the word 
+“each” or “every.” Other indications of equal-sized groups include the word “per” and phrases 
+like “in a box” or “in a dozen”; for example, (a) “Nick walked 4 miles per day. How many miles 
+did Nick walk in 3 days?” (b) “There were 3 balls in a box. There were 6 boxes. How many balls 
+in all?”
+Multiplication and division word problems should not be introduced until students have 
+mastered addition and subtraction word problems and have a working knowledge of basic mul­
+tiplication and division facts.
+Format 11.8: Introduction to Multiplication and Division Word Problems illustrates 
+how word problems requiring multiplication and division may be introduced first using coins. 
+Given that coins represent equal-sized groups, using coins as a representation for multiplication 
+and division problems helps students understand the concepts involved in solving these types of 
+word problems.
+Initially, students focus on setting up the number families correctly and do not solve the 
+problems. The number-family diagrams for this type of problem would consist of three parts: the 
+value of the coin, the number of coins, and the total number (cents). The teacher would begin 
+by showing students a picture of coins like the one below. Next to the picture would be a num­
+ber-family diagram with a C representing the total number of cents, a D representing the number 
+of dimes, and a box representing the missing value of one dime.
+The students would write the value of a dime in the box.
+10 D
+----------------->C
+The D would be crossed out and the number of dimes written above.
+6
+10 D
+----------------->C
+The students would then multiply the value of the dime by the number of dimes to deter­
+mine the total number of cents.
+The next step in the strategy is to introduce problems in which no coins are shown. For 
+example:
+a. You have some nickels. You have 45 cents in all. How many nickels do you have?
+Nickels 
+----------------- > cents
+To work problem a, students write the value of each nickel as the first small number and 45 
+as the big number for total cents, or cents in all. Since the big number is given, the answer 
+is obtained by dividing: 45 ÷ 5 = 9. There are nine nickels.
+5 N
+----------------- > 45 C
+b. You have quarters. You have 5 quarters. How many cents do you have in all?
+25 5 Q
+----------------->C
+
+[p.218]
+218 Part II Basic Concepts and Skills
+For problem b, the value of a quarter is written as the first small number, and 5 is written 
+for the second small number. The number of cents is the total amount (cents) in the number 
+family and can be obtained by multiplying 25 × 5.
+After students have mastered writing coin problems in number families, they are taught how 
+to analyze the language in other multiplication/division problems and create the corresponding 
+diagrams. As in addition/subtraction problems, the key to the number-family analysis lies in 
+identifying the name for the total. Students are taught that one sentence in each problem tells 
+how to draw the number-family diagram. That sentence is the one that tells about each part of 
+the number family.
+For example, “Each brick weighs 3 pounds.” There are more pounds than bricks, so pounds 
+is the name for the total. Brick is a small number. The weight of each brick is the other small 
+number.
+Initial instruction focuses on generating accurate number-family diagrams. After students master 
+how to write the number family, they are asked to solve the problems.
+In Part A of Format 11.9: Setting Up Multiplication and Division Word Problems, 
+students practice analyzing statements and determining the total, while the teacher demonstrates 
+how to draw the number-family diagram. In Part B, students generate number-family diagrams 
+and solve written problems in a worksheet format.
+Students often have difficulty determining the total number. For the sentence “Each box has 
+10 cookies,” the total number is cookies because there are more cookies than boxes. If students 
+confuse the total number with size, they will reverse the components. If students have difficulty 
+determining the name for the total number, they can be taught that the word in the problem fol­
+lowing “each” refers to a small number. If they use the information about “each” in the sentence 
+above, they can identify one of the objects as the total number. “Each box has 10 cookies.” The 
+word following “each” is box. Box is the small number. The only other name in the sentence is 
+cookies, so cookies must be the big number.
+DIAGNOSIS AND REMEDIATION
+Teachers need to monitor student performance on solving word problems daily. Efforts need to 
+be made to determine the possible cause of errors in order to provide appropriate remediation. 
+There are at least five possible causes of errors in solving word problems: (a) fact errors, (b) cal­
+culation errors, (c) decoding errors, (d) vocabulary errors, and (e) translation errors.
+Fact Errors
+A fact error occurs when the student chooses the correct operation and writes the problem cor­
+rectly but fails to arrive at the correct answer because the student does not know her math facts. 
+An example of a fact error follows:
+There were 9 boys and 8 girls in the class. How many students were there?
+9 + 8 = 16
+The equation is written using the correct numerals and the correct operation, but the student 
+failed to remember the fact. The remediation process would not require not repetition of word 
+problem strategies but instead extra practice on memorization of basic facts.
+Calculation Errors
+A calculation error is one that a student makes when computing an answer. For example, failure 
+to rename correctly would be a calculation error. Errors of this sort do not require reteaching 
+of the word-problem strategies. Rather, remediation on the calculation procedure would be 
+necessary.
+
+[p.219]
+Chapter 11 Problem Solving 219
+Decoding Errors
+Reading a word or words in a problem incorrectly is a decoding error. For example, if a student 
+reads broke instead of bought in the following problem, he will use the wrong operation: “Taryn 
+had 8 glasses. She bought 6. How many does she have now?” The decoding error would cause 
+the student to subtract 6 from 8 rather than add 6 + 8. Having the student read the problem 
+aloud helps determine whether the error is a decoding error.
+Teachers can help students who have difficulty decoding by previewing difficult words 
+before students encounter them in word problems. Teachers of students who are unable to 
+decode written word problems easily should not require students to read the problems but should 
+read the problems to the student.
+Vocabulary Errors
+Vocabulary errors occur when students do not know the meaning of key words in the word prob­
+lems. For example, in the following problem, students must know that “receives” means “to get 
+more.”
+Curt has 18 pairs of socks. He receives 4 more pairs for his birthday. How many pairs of 
+socks does he have now?
+Teachers can easily determine if the error is related to vocabulary knowledge by simply ask­
+ing the student what the word means. To prevent vocabulary errors, teachers would present the 
+meaning of critical vocabulary words prior to presenting the word problems.
+Translation Errors
+If a student fails to translate a problem into the correct equation and uses the wrong operation, 
+the student has made a translation error. For example,
+Naveah now has 7 video games. She started out with 2 video games that she received for her 
+birthday. How many more video games has she gotten since then?
+7 + 2 = 9
+In this problem, the student added instead of subtracting. The teacher begins remediation by 
+examining the student’s work over a period of days to determine if the same type of problem is 
+consistently missed. Remediation can be done through a worksheet exercise using the less struc­
+tured format for that particular problem type. The worksheet should include at least 10 prob­
+lems, half of which represent the type of problem that was missed with the other half including 
+problems to provide discrimination practice.
+APPLY WHAT YOU LEARNED
+Click on the √ to answer the questions online.
+1. Tell what type of word problem each of the following examples represents using the types described 
+in the Instructional Sequence and Assessment Chart.
+a. Terrell has 15 green apples and 17 red apples. He wants to split them equally among his four 
+friends. How many apples should he give to each friend?
+b. Asia has been running for several months. She runs 5 miles each day. How many miles will she 
+run in 10 days?
+c. There are 20 balls in the toy closet. Eight of the balls are baseballs. How many of the balls are not 
+baseballs?
+d. Isabella has 2 pens in each pocket. She has 8 pens. How many pockets does she have?
+e. Emmy has 8 dollars. Then she earned 3 dollars. How many dollars does she have now?
+f. A girl is 15 years old. Her brother is 2 years younger. How old is her brother?
+
+[p.220]
+220 Part II Basic Concepts and Skills
+2. Word problems can be made easier or more difficult by changing one or more aspects. Outline several 
+ways in which problems can be made more difficult. For each problem in the item above, change or 
+add to the problem to increase its level of difficulty in some way.
+3. Explain the possible cause of the following errors. When the cause of the error is unclear, tell what 
+the teacher does to determine the specific cause. Specify the remediation procedure called for if errors 
+of this type occur frequently.
+a. Valeria’s team scored 54 points. The other team scored 19 points fewer. How many did the other 
+team score? 36 points
+b. The ABC Company produced 1,534 pool tables last year. This year, production decreased by 112 
+pool tables. How many pool tables did the ABC Company produce this year? 1,646 pool tables
+c. Matias baked 6 cakes every week. He baked for 18 weeks. How many cakes did he bake? 
+3 cakes
+d. Tara took 20 shots in the basketball game. She made 15 shots. How many shots did she miss? 
+35 shots
+e. There are 10 boys and 20 girls in the class. Each row can seat 5 students. How many rows will 
+there be? 35 rows
+f. There are 28 students. The teacher wants to divide them into 4 equal groups. How many students 
+will be in each group? 6 students
+g. A factory produces 325 cars a day. How many cars will it produce in 25 days? 8,105 cars
+4. Write a structured worksheet format using tables to guide students through solving this problem: 
+Twenty-eight vehicles went past our house. Twelve of the vehicles were cars. How many vehicles 
+were not cars?
+5. Write a structured worksheet format to guide students through solving this problem: Ann runs 5 miles 
+every day. So far she has run 20 miles. How many days has she run?
+Format 11.1
+INTRODUCING PROBLEM-SOLVING CONCEPTS
+TEACHER STUDENTS
+Part A: Preskill: Visual Representation
+Addition Problem
+1. Listen: Ann has 7 apples. She gets 3 more apples. She ends 
+with how many apples?
+2. Let's draw a picture of that problem. Ann has 7 apples. (Draw 
+the illustration below on the board.)
+0000000
+She gets 3 more apples, so I draw 3 more. (Draw 3 more 
+apples.)
+0000000 000
+3. Let's write the equation. Here's the first sentence again. Ann 
+has 7 apples. How many apples does Ann have? 7
+I write 7 under the 7 apples. (Write 7.)
+Here's the next sentence. She gets 3 more apples. How many 
+more apples did she get? 3
+
+[p.221]
+Chapter 11 Problem Solving 221
+TEACHER STUDENTS
+Yes, Ann gets 3 more. What do 1 write for gets 3 more?
+(Write + 3.)
+The problem says she ends up with how many apples? So 1 
+write equals and a box, like this: (Write = □: 7 + 3 = □J
+Plus 3
+4. Read the equation.
+Let's count and see how many we end up with. (Touch pictures
+7 + 3 equals how many?
+of apples as students count.)
+So Ann ends with 10 apples (Write 10 in the box.)
+Subtraction Problem
+1. Listen: Ann has 7 apples. She gives away 3 apples. She ends 
+with how many apples?
+2. Let's draw a picture of that problem. Ann has 7 apples, so 1 
+draw 7 apples. (Draw apples.)
+0000000
+She gives away 3 apples, so I'll cross out 3 apples. (Cross out 3 
+apples.)
+0000000
+3. Let's write the equation. Here's the first sentence again. Ann
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+has 7 apples. How many apples did Ann have?
+I'll write a 7 (Write 7.)
+Here's the next sentence. She gives away 3 apples. How many
+7
+apples did she give away? 3
+What do 1 write for gives away 3 apples?
+Yes, she gives away 3, so we write - 3. (Write -3.)
+The problem says she ends with how many apples? So 1 write 
+equals and a box.
+(Write = □.∙ 7 - 3 = □J
+Minus 3
+4. Read the equation.
+Let's count the apples that are left and see how many she
+7-3 equals how many?
+ends with. (Touch the remaining apples.)
+So, Ann ends with 4 apples. (Write 4 in the box.)
+(Repeat addition or subtraction steps 1-4 with several more 
+problems.)
+Part B: Structured Worksheet
+1. (Give students a worksheet that contains a mix of addition and 
+subtraction problems and includes a box and the word for the 
+unit answer, like the following.)
+a. Jim has 6 marbles. He finds 2 more marbles. He ends with 
+how many marbles?
+□ marbles
+1, 2, 3, 4
+continued
+
+[p.222]
+222 Part II Basic Concepts and Skills
+Format 11.1 (continued)
+INTRODUCING PROBLEM-SOLVING CONCEPTS
+TEACHER
+b. Jim has 6 marbles. He gives away 2 marbles. He ends with 
+how many marbles?
+□ marbles
+Touch problem a. Listen: Jim has 6 marbles. He finds 2 more 
+marbles. He ends with how many marbles?
+2. Let's draw a picture of that problem. Jim has 6 marbles. Draw 
+the marbles. (Wait while the students draw on their papers, 
+then draw the marbles on the board.)
+STUDENTS
+He finds 2 more marbles. Draw those. (Wait, then draw the 
+marbles on the board.)
+oooooo oo
+3. Let's write the equation.
+Read the first sentence again.
+How many marbles did Jim have?
+Write 6 under the 6 marbles. (Wait, then write 6 on board.)
+Read the next sentence.
+How many more marbles did he get?
+Yes, Jim finds 2 more. What do you write for finds 2 more?
+Yes, write + 2. (Wait, then write +2 on board.)
+The problem says he ends with how many marbles? So, what 
+do you write?
+Write equals how many. (Wait, then write = □ on board:
+6 + 2 = 0.)
+4. Read the equation.
+Let's count and see how many we end with. (Touch pictures of 
+marbles as students count.)
+Write 8 in the box after the equal sign.
+Now, write 8 in the answer box next to the word marbles. Jim 
+ends with 8 marbles.
+Subtraction Problem
+1. Touch the next problem. Listen: Jim has 6 marbles. He gives 
+away 2 marbles. He ends with how many marbles?
+2. Let's draw a picture of that problem. Jim has 6 marbles. Draw 
+the marbles. (Wait while students draw on their papers, then 
+draw the marbles on board.)
+OOOOOO
+oooooo oo
+Jim has 6 marbles. 
+6
+He finds 2 more marbles.
+2
+Plus 2
+Equals box
+6 + 2 equals how many?
+1, 2, 3, 4, 5, 6, 7, 8
+OOOOOO
+
+[p.223]
+Chapter 11 Problem Solving 223
+TEACHER STUDENTS
+He gives away 2 marbles. Cross them out (Wait, then cross out 
+two marbles.)
+00O O O O 00OOOO
+3. Let's write the equation. Jim has 6 marbles. How many marbles 
+does Jim have? 6
+Write a 6. (Write 6 on board.)
+How many does he give away? 2
+What do you write for gives away 2 marbles? Minus 2
+Yes, he gives away 2, so write - 2. (Write - 2 on board.)
+The problem says he ends with how many marbles, so what 
+do you write? Equals box
+Write it. (Wait, then write = □ on board: 6 - 2 = □J
+4. Read the equation. 6-2 equals how many?
+Let's count the marbles that are left and see how many he 
+ends with, (Touch the remaining marbles.) 1, 2, 3, 4
+Write 4 in the box after the equal sign. (Wait, then write 4 in 
+the box.)
+Now write 4 in the answer box next to the word marbles. Jim 
+ends with 4 marbles.
+(Repeat addition or subtraction steps 1-4 with several more 
+problems.)
+Format 11.2
+PRESKILL: FACT FAMILY—FINDING THE MISSING FAMILY MEMBER
+TEACHER STUDENTS
+Part A: Subtraction Rule
+1. (Write this diagram on the board.)
+2. Three numbers go together to make a fact family. (Point to 8.)
+The total number is always at the end of the arrow.
+(Point to 2.) This number is part of the total.
+(Point to 6.) Here's the other part of the total.
+(Erase the 8.) Sometimes, we don't know the total and we have to figure it out.
+EE.__ _
+continued
+
+[p.224]
+224 Part ∏ Basic Concepts and Skills
+Format 11.2 (continued)
+PRESKILL: FACT FAMILY—FINDING THE MISSING FAMILY MEMBER
+TEACHER STUDENTS
+(Write the 8 back in; erase the 6.) Sometimes, we don't know part of the total and we 
+have to figure it out.
+3. (Write the following diagram on the board.)
+Is the total number given in this problem?
+Here's the rule: When the total number is given, we subtract. The total number is 10. 
+So I start with 10 and subtract 3. (Write 10 - 3 on the bottom line.) What is 10 - 3?
+So, I write equals 7. (Write = 7 on the line.)
+Now I write 7 in the empty box. (Write 7 in box.)
+The numbers 3 and 7 are the parts of the total. The number 10 is the total number.
+4. (Write the following diagram on the board.) 
+□ ≡
+Is the total number given?
+What do we do when the total number is given?
+Remember, when you subtract, you start with the total number. What problem do I 
+write on the line?
+(Write 12 - 5 on the line.) What is 12 - 5?
+(Write = 7 on the line.) What number goes in the empty box? (Write 7 in the box.)
+(Repeat step 4 with these problems.)
+Yes
+7
+Yes
+Subtract
+12-5
+7
+7
+Part B: Addition Rule
+1. (Write the following diagram on the board.)
+
+[p.225]
+Chapter 11 Problem Solving 225
+TEACHER
+2. In this problem, the total number is not given. When the total number is not given, 
+we add.
+Is the total number given in this problem?
+Watch. The parts are 3 and 5, so I add 3 and 5. (Write 3 + 5 on the line.) What is 3 + 5?
+So, I write equals 8. (Write = 8 on the line.)
+Now, I write 8 in the empty box. The numbers 3 and 5 are the parts of the total.
+The number 8 is the total.
+3. (Write the following diagram on the board.)
+Is the total number given?
+What do we do when the total number is not given?
+What problem do I write on the line? (Write 7 + 2 on the line.)
+What is 7 + 2? (Write = 9 on the line.)
+What number goes in the empty box? (Write 9 in the box.) 
+(Repeat step 3 with the problems below.)
+S [6] ___  ® ® _ ___
+Part C: Structured Worksheet
+STUDENTS
+No
+8
+No 
+Add 
+7 + 2 
+9 
+9
+1. You must figure out the missing number in all these problems. It might be the total 
+number or it might be part of the total.
+If the total number is given, what must you do?
+If the total number is not given, what must you do?
+(Repeat step 1 until students answer correctly.)
+Subtract
+Add
+continued
+
+[p.226]
+226 Part II Basic Concepts and Skills
+Format 11.2 (continued)
+PRESKILL: FACT FAMILY—FINDING THE MISSING FAMILY MEMBER
+TEACHER STUDENTS
+2. Touch the first problem.
+Touch the box for the total.
+Is the total given? No
+So what must you do? Add
+What problem do you write on the line? 3 + 2
+Write it.
+What is 3 + 2? 5
+Write an equals sign and the answer.
+Fill in the empty box.
+(Repeat step 2 with remaining problems.)
+Part D: Less Structured Worksheet
+1. (Give students a worksheet like that in Part C.)
+2. Touch the first problem.
+3. Is the total number given or not given?
+4. Do you add or subtract?
+5. Write the equation on the line and write the answer.
+(Repeat steps 2-5 with all problems.)
+Format 11.3
+TEMPORAL SEQUENCE WORD PROBLEMS
+TEACHER STUDENTS
+Part A: Preskill—Determining if One Starts or Ends with More
+1. We're going to figure out if a person starts or ends with more.
+2. Jimmy buys books. Does he start or end with more?
+Jimmy sells books. Does he start or end with more?
+Mary gives away apples. Does she start or end with more?
+Mary loses money. Does she start or end with more?
+Mary finds money. Does she start or end with more?
+Sally makes some dolls. Does she start or end with more?
+Sally throws away her old shoes. Does she start or end with more?
+Mike collects some stamps. Does he start or end with more?
+Ends with more. 
+Starts with more. 
+Starts with more. 
+Starts with more. 
+Ends with more. 
+Ends with more.
+Starts with more. 
+Ends with more.
+
+[p.227]
+Chapter 11 Problem Solving 227
+continued
+TEACHER STUDENTS
+Part B: Structured Board Presentation
+1. (Give students a worksheet with the following problems.)
+a. Billy buys some ties. Then he buys 8 more ties. He ends up with 23 ties. How 
+many did he buy at first?
+b. Sandra had 8 eggs in the fridge. She ate 2 eggs for breakfast. How many eggs 
+does she have now?
+c. Walter had some apples in a basket. After he gave away 11 apples, he had 
+9 apples left. How many apples did he start with?
+d. Sam began with 14 bricks on his toy truck. He put another 12 bricks on the 
+truck. How many bricks ended up on the truck?
+2. We're going to make number families for these problems. First, we'll figure 
+out if the person starts or ends with more. I'll read the first part of each 
+problem.
+3. Problem a. Billy buys some ties. Then he buys 8 more ties. Listen. Billy buys ties. 
+So does he start or end with more? Ends with more
+Yes, he ends with more, so ends is the name for the total. 
+(Write the following diagram on the board.)
+EndsA _________ ⅛C3. 7
+4. Problem b. Sandra had 8 eggs in the fridge. She ate 2 eggs for breakfast. Listen.
+Sandra ate eggs. So does she start or end with more? Starts with more
+Yes, she starts with more, so starts is the name for the total. 
+(Write the following diagram on the board.)
+, Startsb. --------------->
+5. Problem c. Walter had some apples in a basket. After he gave away 11 apples, he 
+had 9 apples left. Listen. Walter gave away apples. So does he start or end with 
+more? Starts with more
+He starts with more, so starts is the name for the total. 
+(Write the following diagram on the board.)
+Starts r _________ ⅛
+6. Problem d. Sam began with 14 bricks on his toy truck. He put another 12 bricks 
+on the truck. Listen. Sam put more bricks on the truck. So does he start or end 
+with more? Ends with more
+He ends with more, so ends is the name for the total.
+(Write the following diagram on the board.)
+, EndscL --------------->
+
+[p.228]
+228 Part II Basic Concepts and Skills
+Format 11.3 (continued)
+TEMPORAL SEQUENCE WORD PROBLEMS
+TEACHER STUDENTS
+7. Now let's go back and put in the numbers we know. Problem a. We know Billy 
+ends with more. Let's see if we know how many he ends with. Billy buys some 
+ties. Then he buys 8 more ties. He ends up with 23 ties. Do we know how many
+he ends with? Yes
+How many?
+So I write 23 for ends.
+(Write 23 in the diagram.)
+Ends
+a' --------------->23
+We don't know how many he buys at first, so I write a box.
+(Draw "how-many box" in the diagram.)
+[—1 Ends
+a^ —-----------.23
+We know he buys 8 more.
+(Write 8 in the diagram.)
+a. □___ « “
+23
+8. Now we have our number family. The total is given. Do we add or subtract? Subtract
+Say the problem we work.
+When we work that problem, we figure out he bought 15 ties at first.
+9. Problem b. We know Sandra starts with more. Let's see if we know how many 
+she starts with. Sandra had 8 eggs in the fridge. She ate 2 eggs for breakfast. Do
+23-8
+we know how many she starts with? Yes
+How many?
+So write 8 for starts.
+(Write 8 in diagram.)
+Starts
+b.  > 8
+She ate 2 for breakfast, and we don't know how many she has now.
+(Write 2 and "how-many box" in diagram.)
+2 q Starts
+c.  > 8
+8
+The total is given. Do we add or subtract? Subtract
+Say the problem we'll work. 8-2
+What's 8-2?
+So now she has 6 eggs left.
+6
+
+[p.229]
+Chapter 11 Problem Solving 229
+TEACHER STUDENTS
+10. Problem c. We figured out Walter starts with more. Let's see if we know how 
+many he starts with. Walter had some apples in a basket. He gave away 11 
+apples. Do we know how many he starts with?
+So I'll write a box for the total.
+(Write "how-many box" in diagram.)
+No
+Starts
+We know he gives away 11 and has 9 left. 
+(Write 11 and 9 in diagram.)
+11. We need to figure out the total. Do we add or subtract?
+Say the problem.
+11 + 9 = 20, so Walter started out with 20 apples.
+12. Problem d. We know Sam ends with more. Let's see if we know how many he 
+ends with. Sam began with 14 bricks on his toy truck. He put another 12 bricks 
+on the truck. How many bricks ended up on the truck?
+Do we know how many he ends with?
+So I'll write a box.
+(Write "how-many box" in the diagram.)
+Add
+11+9
+No
+13. He begins with 14 and puts on another 12.
+(Write 14 and 12 in the diagram.)
+Ends
+d. -------------- >∣-1
+Do we add or subtract?
+Say the problem.
+When we add, we get 26.
+So 26 bricks ended up on the truck.
+Part C: Structured Worksheet
+1. (Give students a worksheet with the following problems.)
+a. Tracy started out with $10 in her bank account. She put $8 in her account. 
+How much money did she end up with in her account?
+b. Roger dropped and broke 4 glasses. If he started out with 9 glasses, how 
+many glasses does he have now?
+c. After buying some toy cars at the swap meet, Tony had 17 cars in his 
+collection. Before the swap meet, he had 12 cars in his collection. How many 
+cars did he buy?
+d. Joe had too many kittens. He gave away 8 kittens and had 3 left. How many 
+kittens did Joe start out with?
+Add
+14 + 12
+continued
+
+[p.230]
+230 Part ∏ Basic Concepts and Skills
+Format 11.3 (continued)
+TEMPORAL SEQUENCE WORD PROBLEMS
+TEACHER STUDENTS
+2. You're going to make number families for these problems. Read problem a to 
+yourself. Raise your hand when you know if Tracy starts or ends with more. 
+(Monitor students.)
+3. Does Tracy start or end with more?
+Make your number-family arrow. Write ends over the place for total. (Check.)
+Here's what you should have.
+(Write the following diagram on the board.)
+Ends
+a. --------------- »
+4. The problem asks how much she ends up with. Do we know how much she 
+ends with?
+So what do we write for ends?
+Write a box. Then put in the numbers the problem gives. (Check.)
+(Write to show: Draw the box first, then write 10 and 8 in the diagram.)
+Here's the number family for problem a.
+5. Read problem b to yourself. Raise your hand when you know if Roger starts or 
+ends with more. (Monitor students.)
+6. Does Roger start or end with more?
+Make your number-family arrow. Write starts over the place for total. (Check.)
+7. Read the problem again. Raise your hand when you know what we write for 
+starts. (Monitor students.)
+What did you write?
+Yes, he starts with 9 glasses. Write 9 for the total, then complete the number 
+family. (Check.)
+Here's the number family for problem b.
+8. (Write the following diagram on the board.)
+4 π Starts
+b. ---------------» 9
+9. Read problem c to yourself. Raise your hand when you know if Tony starts or 
+ends with more. (Monitor students.)
+10. Does Tony start or end with more?
+Make your number-family arrow with the word ends. (Check.)
+11. Raise your hand when you know what to write for ends. (Monitor students.) 
+What do you write?
+Yes, he ends with 17. Complete the number family with two numbers and a 
+box. (Check.)
+Here's the number family for problem c.
+Ends with more
+No
+A box
+Starts with more
+9
+Ends with more
+17
+
+[p.231]
+Chapter 11 Problem Solving 231
+TEACHER STUDENTS
+12. (Write the following diagram on the board.)
+12 □ ^ds
+C. ------------------- » 17
+13. Read problem d to yourself. Raise your hand when you know if Joe starts or 
+ends with more (Monitor students.)
+14. Does Joe start or end with more?
+Raise your hand when you know what to write for starts. (Monitor students.) 
+What do you write?
+Yes, the problem asks how many kittens he starts out with, so you write a box.
+Complete the number family with two numbers and a box. (Check.)
+Here's the number family for problem d.
+15. (Write the following diagram on the board.)
+Starts
+d. 5------------⅛□
+16. Figure out the answer to each problem. Remember the unit names. 
+(Monitor while students work.)
+17. Tell me the answer for each problem.
+Problem a. How much money did Milly end with?
+Problem b. How many glasses does Roger have now?
+Problem c. How many cars did Tony buy?
+Problem d. How many kittens did Joe start out with?
+Part D: Less Structured Worksheet
+1. (Give students a worksheet with the following problems.)
+a. J.R. found 9 shells on the beach. He already had 15 shells in his collection. 
+How many shells does he have now?
+b. Luca went on a diet and lost 25 pounds. Before his diet, he weighed
+195 pounds. How much does he weigh now?
+c. Mike started out with lots of fish. He threw back 8 fish and still had 9 left.
+How many fish did he start with?
+d. After Emily added 12 stories to her brick tower, the tower is 15 stories high. 
+How high was her tower to start with?
+2. For some of these problems, the person starts with more. For some, the person 
+ends with more.
+3. Problem a. Read the problem. Raise your hand when you know if the person 
+starts or ends with more. (Monitor students.) Which is it?
+4. Make the complete number family. Remember to label the total. (Check.)
+Here's what you should have.
+5. (Write the following diagram on the board.)
+Ends
+a√--------- 15. □
+Starts with more
+A box
+18 dollars
+5 glasses
+5 cars
+11 kittens
+Ends with more
+continued
+
+[p.232]
+232 Part II Basic Concepts and Skills
+Format 11.3 (continued)
+TEMPORAL SEQUENCE WORD PROBLEMS
+TEACHER STUDENTS
+6. Now figure out the answer. Remember the unit name. (Check.)
+7. How many shells does J.R. have now? 24 shells
+(Repeat steps 3-7 with other items; each number family and step 7 is shown 
+below.)
+r-. Starts
+b 25 □ > 195
+How much does Luca weigh now? 170 pounds
+Starts
+c 8______ t□
+How many fish did Mike catch? 17 fish
+π Ends
+d. ------- ⅛15
+How high was Emily's tower to start with? 3 stories
+Format 11.4
+COMPARISON PROBLEMS
+TEACHER STUDENTS
+Part A: Preskill: Determining the Total Number
+1. Comparison problems tell you about two persons or things. Here are some 
+words you'll see in comparison problems: bigger, older, smaller, taller, wider. If 
+the problem tells about two people and has a word that ends in er, you know 
+it's a comparison problem.
+2. Let's practice figuring out which person or thing in a comparison problem tells 
+about the big number.
+3. Listen: A dog weighs 7 pounds. A cat weighs 3 pounds more than the dog. 
+Who does that problem tell about?
+4. Listen to the problem again. (Repeat problem.) Who is heavier?
+5. So the big number tells how many pounds the cat weighs.
+(Repeat steps 3-5 with the problems below.)
+Jill is 10 years old. Brian is 8 years younger. Who is older?
+Hole A is 6 feet deep. Hole B is 4 feet deep. Which hole is deeper?
+Jack ran 8 miles. Ann ran 2 miles more. Who ran farther?
+Jane weighs 60 pounds. Ann is 5 pounds lighter. Who is heavier?
+A yellow pencil is 5 inches long. A blue pencil is 3 inches longer. Which pencil 
+is longer?
+A dog and a cat
+The cat
+
+[p.233]
+Chapter 11 Problem Solving 233
+TEACHER STUDENTS
+Part B: Structured Worksheet
+1. (Give students worksheets with problems written in the form below.)
+The bigger number
+Tom and bill 
+Bill's stick
+No
+7 feet
+Jack and May
+Jack
+Yes
+10
+a. Tom's stick is 2 feet long.
+Bill's stick is 5 feet longer.
+How long is Bill's stick?
+Answer:_____
+b. Jack is 10 years old.
+May is 2 years younger.
+How old is May?
+Answer:_____
+--------------- >
+2. You're going to make number families for comparison problems. The name 
+for the bigger number goes at the end of the arrow. The name for which 
+number goes at the end of the arrow?
+Yes, the bigger number tells about the total.
+3. Read problem a. (Pause.)
+4. Who does the problem tell about?
+Which is longer, Bill's stick or Tom's stick?
+Write Bill on the line above the end of the arrow. (Check.)
+5. Read the problem again. (Pause.)
+Does a number in the problem tell how long Bill's stick is?
+Make a box below Bill. (Check.)
+6. The problem doesn't give a number for the total. The numbers in the problem 
+tell about parts of the total. Write those numbers on the arrow. (Check.)
+7. Write the problem and figure out the answer. (Check.) 
+What's the answer?
+8. So Bill's stick is 7 feet long.
+Write 7 feet on the answer line.
+9. Read problem b. (Pause.)
+10. Who does the problem tell about?
+11. Who is older, Jack or May?
+Write Jack on the line above the end of the arrow.
+12. Read the problem again. (Pause.)
+Does the problem tell how old Jack is?
+How old?
+Write 10 below Jack.
+13. The problem gives a number for the total.
+Complete the number family with a number and a box. (Check.)
+continued
+
+[p.234]
+234 Part II Basic Concepts and Skills
+Format 11.4 (continued)
+COMPARISON PROBLEMS
+TEACHER STUDENTS
+14. Write the problem and figure out the answer. (Check.) 
+What's the answer? 8
+15. So May is 8 years old.
+Write 8 years on the answer line.
+(Repeat steps 3-8 with remaining addition problems. Repeat steps 9-15 with 
+remaining subtraction problems.)
+Part C: Less Structured Worksheet
+1. (Give students a worksheet with a mix of addition and subtraction problems.)
+a. Martha's cat weighs 2 pounds more than Sarah's cat. Martha's cat weighs
+12 pounds. How much does Sarah's cat weigh?
+b. The trip to the library is 6 miles. The trip to the zoo is 3 miles further than 
+the library. How far is it to the zoo?
+c. Greg has 12 cars in his collection. Will has 15 cars in his collection. How many 
+more cars does Will have than Greg?
+d. There are 5 fewer children in Fay's family than in Joe's family. There are
+3 children in Fay's family. How many children are in Joe's family?
+2. Read problem a. (Pause.)
+3. Make a number-family arrow. Write the word that tells about the total above 
+the total place. (Check.)
+4. See if the number for the total is given in the problem. Then write two 
+numbers and a box where they belong. (Check.)
+Martha
+2 □ 12--------------- >
+5. Write the problem and figure out the answer.
+Then write the whole answer. (Check.)
+12
+-2
+10 10 pounds
+6. What's the answer? 10 pounds
+(Repeat steps 2-6 with the remaining problems.)
+Format 11.5
+CLASSIFICATION STORY PROBLEMS
+TEACHER STUDENTS
+Part A: Preskill: Language
+1. I'll say some class names. You tell me the biggest class. Listen: cats, animals, dogs. What 
+is the biggest class?
+(Repeat step 1 with hammer, saw, tool; vehicle, car, truck; men, women, people; girls, 
+boys, children.)
+Animals
+
+[p.235]
+Chapter 11 Problem Solving 235
+continued
+TEACHER STUDENTS
+Part B: Structured Worksheet
+1. (Give students a worksheet with 6-8 problems written like those below.)
+Subtract
+Add
+Children
+Yes
+8
+3
+Yes 
+Subtract
+5
+a. There are 8 children; 3 are boys. How many 
+are girls?
+--------------- >
+b. Jill has 5 hammers and 4 saws. How many tools does 
+she have?
+--------------- >
+2. Let's review some rules you already know. If the total number is given, what do you do? 
+If the total number is not given, what do you do?
+3. In some problems, we don't see words like find, lose, buy, or give away, so we have to 
+use a different way to do these problems.
+4. Touch the first problem. I'll read it. There are 8 children; 3 are boys. How many are girls? 
+The problem talks about children, boys, and girls. Which is the big class, children, boys, 
+or girls?
+If children is the big class, then the number of children is the total number. So write 
+children on the line above the total place.
+5. Listen. (Repeat the problem.) Children is the total number. Does the problem tell how 
+many children?
+Make a box below children.
+So the total number is given. What is the total number?
+Write 8 in the box for the total number.
+(Note: If the first answer is no, tell the students), "The total is not given, so we don't 
+write anything in the box for the total."
+6. Now we write the values for boys and girls on the arrow. How many boys?
+Write 3.
+We don't know how many girls, so we write a box above the arrow.
+7. Is the total number given?
+So what do you do to work out the problem?
+We start with 8 children and subtract 3 boys to find out how many girls.
+Write the equation and figure out the answer.
+If there are 8 children and 3 are boys, how many are girls?
+(Repeat steps 4-7 with remaining problems.)
+
+[p.236]
+236 Part II Basic Concepts and Skills
+Format 11.5 (continued)
+CLASSIFICATION STORY PROBLEMS
+TEACHER STUDENTS
+Part C: Less Structured Worksheet
+1. (Give students a worksheet with problems in this form.)
+Jerry has 7 pets; 4 are dogs.
+How many are cats?
+Jerry has 7 pets; 4 are dogs. 
+How many are cats?
+--------------- >
+2. Touch the first problem.
+3. Read the problem. Then write the name for the big class above the total place.
+4. Write the two numbers and box where they belong.
+5. Write the equation and figure out the answer.
+6. Write the whole answer on the answer line.
+(Repeat steps 2-6 with remaining problems.)
+Format 11.6
+USING TABLES TO SOLVE PROBLEMS
+TEACHER
+(See Videos Parts A∕BCD)
+STUDENTS
+Part A: Introducing Rows and Columns in a Table
+1. (Write the table below on the board.)
+6 6 1
+2 3 2
+1 1 2
+2. This is a table problem. To work this kind of problem, you have to add the numerals 
+in each column and the numerals in each row. Remember that columns go up and 
+down. Rows go side to side. Point to show me which way columns go. (Check to 
+make sure that students point up and down.) Point and show me which way rows 
+go. (Check to make sure that students point side to side. Repeat to correct.)
+3. (Touch the first column.) I'll read the numerals in the first column: 6, 2, 1.
+4. (Touch the second column.) Read the numerals in this column.
+5. (Touch the third column.) Read the numerals in this column.
+6. (Touch the top row.) I'll read the numerals in the top row: 6, 6, 1.
+6, 3, 1
+1, 2, 2
+
+[p.237]
+Chapter 11 Problem Solving 237
+TEACHER STUDENTS
+7. (Touch the middle row.) Your turn. Read the numerals in the middle row.
+8. (Touch the bottom row.) Read the numerals in the bottom row.
+2, 3, 2
+1, 1, 2
+Part B: Finding Totals in Tables
+1. Go back to the first column. The numerals are 6, 2,1. Here's how you work the 
+problem. You add 6 and 2. What's the answer?
+2. Then you add 8 and 1. What's the answer?
+3. 9 is the total for the first column. (Write 9 at the bottom of the first column.)
+4. Your turn. Add the numerals in the next column and raise your hand when you 
+know the answer. (Wait for students to solve the problem.) The numerals in this 
+column are 6, 3, and 1. What is the answer, everyone?
+5. (Repeat procedure with last column.)
+6. The numerals for the top row are 6, 6, and 1. What is 6 + 6?
+What's 12 + 1? (Write 13 at the end of the row.)
+7. Your turn. Add the numerals in the middle row and raise your hand when you have 
+the answer. (Wait for students to solve the problem.) The numerals in this row are 
+2, 3, and 2. What is the answer, everyone?
+8. (Repeat procedure with last row.)
+8
+9
+10
+12
+13
+7
+Part C: Using the Number-Family Strategy to Solve for Missing Data
+1. (Write the following table on the board.)
+2. This is a table with arrows for the rows and columns. The arrows show you 
+something interesting about the table. Each row and column works just like a 
+number family. The first two numerals in the row are the small numbers. The total 
+is the big number.
+3. (Touch row a.) A numeral is missing in that row. Is the missing numeral a big 
+number or a small number?
+(Write the following diagram on the board.)
+_______ ∞ 45
+4. So do you add or subtract to find the missing numeral?
+5. Say the subtraction problem.
+6. (Touch row b. Write the diagram below on the board.)
+15 11--------------- >
+Here is the number family for that row. Is the missing numeral a small number or 
+the big number?
+A small number
+Subtract
+45 - 38
+The big number
+continued
+
+[p.238]
+238 Part II Basic Concepts and Skills
+Format 11.6 (continued)
+USING TABLES TO SOLVE PROBLEMS
+u
+Part D: Using Tables to Solve Word Problems
+TEACHER STUDENTS
+7. So do you add or subtract to find the missing numeral?
+8. Say the addition problem.
+9. (Touch row c.) Is the missing numeral a small number or the big number?
+10. So do you add or subtract?
+11. Say the subtraction problem.
+12. Your turn. Write the problem and the answer for each row. Write the column 
+problem for rows a, b, and c. (Wait for students to finish the problems.)
+13. Everyone, read the problems and the answers. Get ready:
+Add
+15 + 11
+A small number
+Subtract
+31 - 12
+row a, 
+row b, 
+row c.
+45 - 38 = 7
+15 + 11 = 26
+31 - 12 = 19
+14. What is the missing numeral in row a? (Write 7 in row a.)
+What is the missing numeral in row b? (Write 26 in row b.)
+What is the missing numeral in row c? (Write 19 in row c.)
+15. Figure out the totals for each column. (Wait for students to finish the column 
+problems.)
+16. Read the totals for the columns:
+7
+26
+19
+first column, 
+second column.
+34
+68
+1. (Students have worksheets with several problems similar to the one below.)
+Facts: There are 23 red cars on Al's lot and Jim's lot has 12 green cars. The total 
+number of red and green cars on Jim's lot is 43. The total number of green cars on 
+both lots is 30.
+Red cars Green cars Total for both colors
+Jim's lot
+AΓs lot
+Total for both lots
+Questions
+a. Are there fewer green cars or red cars on both lots?
+b. How many green and red cars are on AΓs lot?
+c. There are 31 cars of some color on Jim's lot. What color?
+d. Are there more green cars on Jim's lot or Al's lot?
+
+[p.239]
+Chapter 11 Problem Solving 239
+TEACHER STUDENTS
+2. We're going to use a table to answer the questions listed above. First we need to 
+fill in any missing information from the facts that are given. Read the first fact.
+Write the value from that fact in the correct place in the table.
+(Repeat step 2 with the remaining facts.)
+3. Now you have enough information to complete the table using the number-family 
+strategy. If one of the small numbers is missing, what do you do?
+If one of the totals is missing, what do you do?
+(Monitor while students complete the table.)
+4. Now that the table is complete, read question a and raise your hand when you 
+know the answer. (Call on an individual student to answer question a.) Everyone, 
+write the correct answer next to the question.
+5. (Repeat step 4 for each question.)
+To correct: If students make a mistake locating the correct information, have them 
+put their fingers on the cell that has the information to answer the question. Monitor 
+where students place their fingers to determine if they are able to read the table. 
+If they have problems locating the correct cells, then reteach Part C of this format, 
+adding a question about the information represented in each row and column.
+There are 23 red 
+cars on AΓs lot.
+Subtract
+Add
+Format 11.7
+INTRODUCING MULTI-STEP WORD PROBLEMS
+TEACHER STUDENTS
+Part A: Introducing Ends-in-Out Format
+1. (Write the following problems on the board.)
+a. A wallet is empty. $432 goes into that wallet. Then some money goes out of 
+that wallet. The wallet ends up with $85. How much went out?
+b. A florist starts without any roses. She picks up 87 roses. She sells 54 roses. How 
+many roses does she end up with?
+c. Chandra had an empty basket. She put some eggs in the basket. Then she gave 
+away 37 of those eggs. The basket still had 14 eggs in it. How many eggs did 
+Chandra put in the basket?
+End up Out In 
+------------------------ >
+2. Listen while I read problem a. A wallet is empty. $432 goes into that wallet. Then 
+some money goes out of that wallet. The wallet ends up with $85. How much 
+went out?
+3. In this problem, some money goes into the wallet, and some money goes out of 
+the wallet. How much money does the wallet end up with?
+So I will write $85 under "end up" in the number family.
+(Write $85 on the board.)
+End up Out In
+$85____________ >
+$85
+continued
+
+[p.240]
+240 Part II Basic Concepts and Skills
+Format 11.7 (continued)
+INTRODUCING MULTI-STEP WORD PROBLEMS
+End up
+TEACHER STUDENTS
+4. Do we know how much money went out of the wallet?
+So we do not know the other small number.
+No
+5. Do we know how much money went into the wallet? Yes
+6. How much money went into the wallet?
+So we can write that for the big number. (Write $432 under "in" on the board.)
+End up Out In
+$85____________ >$432
+7. Now that we know two numbers for the number family, we can figure out the
+$432
+third number. What is missing, a big number or a small number? A small number.
+8. How do we find a missing small number? Subtract
+9. Say the subtraction problem.
+10. (Repeat steps 2-9 for problems b and c.)
+Part B: Structured Board Presentation—Multi-step Problems
+1. (Write the following problems on the board.)
+a. Josh had $17 in the bank. Later he put $12 in the bank. The next day he went 
+to the bank and took out $11.50. How much money did Josh end up with in 
+the bank?
+b. A water tank had some water in it. 250 gallons were taken from the tank. 
+Then another 720 gallons were taken from the tank. The tank still had 1150 
+gallons in it. How many gallons were in the tank in the beginning?
+c. A farmer had 534 bales of hay. She fed 247 bales to her cattle. She sold 85 
+bales to a neighbor. She threw 4 bales away because they were moldy. How 
+many bales did she end up with?
+2. Listen while I read problem a: Josh had $17 in the bank. Later he put $12 in the 
+bank. The next day he went to the bank and took out $11.50. How much money 
+did Josh end up with in the bank? The first part of the problem tells about the 
+two values that went in the bank. Here is the number family:
+End up Out In
+$432 - $85
+3. What is the first value that went in the bank?
+(Write $17 in the number family.)
+End up Out In
+$17
+$17
+4. What is the second value that went in the bank? 
+(Write $12 on the board.)
+$12
+Out In
+$17
+-→ 12
+
+[p.241]
+Chapter 11 Problem Solving 241
+TEACHER STUDENTS
+5. Do we know how much Josh took out of the bank? Yes
+How much?
+So we write $11.50 in the number family.
+(Write $11.50 on the board.)
+End up Out In
+$17
+$11.50 12------------------------ >
+$11.50
+6. Now we need to add the amounts that went into the bank. Say the problem. $17 + $12
+What is the total?
+(Write $29 on the board.)
+End up Out In
+$17
+$11.50 12
+------------------------ > $29
+7. Now that we have two numerals in the number family, we can figure out the
+$29
+other number. What is missing, a big number or a small number? A small number
+8. How do we find a missing small number? Subtract
+9. Say the subtraction problem.
+10. Subtract to figure out how much money Josh ended up with in the bank.
+$29.00 - $11.50
+How much?
+11. (Repeat for problems b and c.)
+$17.50
+Format 11.8
+INTRODUCTION TO MULTIPLICATION AND DIVISION 
+WORD PROBLEMS
+TEACHER STUDENTS
+1. (Write the following diagrams on the board.)
+© © © □ D
+© © © -------------- >C
+2. We are going to use a multiplication number family to find out how many cents are 
+in this picture. Remember, in multiplication number families, if the big number is not 
+given, you must multiply. If the big number is given, then you must divide to find the 
+answer.
+What must you do if the big number is not given?
+What must you do if the big number is given?
+What coins are shown in this picture?
+3. The total number of cents is the big number. C is already written on the diagram 
+for cents.
+Multiply 
+Divide 
+Dimes
+continued
+
+[p.242]
+242 Part II Basic Concepts and Skills
+Format 11.8 (continued)
+INTRODUCTION TO MULTIPLICATION AND DIVISION
+WORD PROBLEMS
+TEACHER STUDENTS
+4. How many cents is each dime worth?
+So 10 is the first small number. (Write 10 and D.)
+10 D
+-------------------- »C
+10 cents
+5. How many dimes are there?
+6. So I cross out the D for dimes and write 6. (Cross out D and write 6.)
+6
+10 &
+--------------------->C
+6
+7. Look at the diagram. Is the big number given? No
+8. If the big number is not given, what do you need to do? Multiply
+9. What is 10 times 6?
+(Cross out C and write 60.)
+60
+10. What is the total number of cents?
+11. (Repeat steps 1-10 with similar problems using nickels, dimes, and quarters. Later 
+problems do not need to show pictures of coins but can describe them as in the 
+following problems.)
+a. You have some nickels. You have 35 cents in all. How many nickels do you have?
+b. You have some dimes. You have 9 dimes. How many cents do you have in all?
+c. You have some nickels. You have 8 nickels. How many cents do you have in all?
+d. You have some quarters. You have 5 quarters. How many cents do you have in all?
+e. You have some dimes. You have 40 cents in all. How many dimes do you have?
+60 cents
+Format 11.9
+SETTING UP MULTIPLICATION AND DIVISION WORD PROBLEMS
+TEACHER STUDENTS
+Part A: Preskill: Writing Number Families
+1. (Write the following problems on the board.)
+a. Each box holds 7 cans. You have 35 cans. How many boxes do you have?
+b. Each room had 10 lights. There were 8 rooms. How many lights were there in 
+all the rooms?
+c. Each dog had 9 bugs. There were 7 dogs. How many bugs were there on all 
+the dogs?
+d. Each cat had 9 fleas. There were 36 fleas in all. How many cats were there?
+e. Each boy ate 2 hot dogs. There were 5 boys. How many hot dogs were eaten 
+by all the boys?
+
+[p.243]
+Chapter 11 Problem Solving 243
+TEACHER
+2. These are word problems. To work them, you have to make multiplication 
+number families. One sentence in each problem tells how to make the family. 
+That sentence tells about each thing.
+3. Listen while I read problem a. Each box holds 7 cans. You have 35 cans. How 
+many boxes do you have? The first sentence gives you information for making 
+the number family. Each box holds 7 cans. There are more cans than boxes. So 
+cans is the big number.
+4. What do we write to stand for box?
+(Write the following diagram on the board.)
+B
+What do we write to show cans?
+(Write the following diagram on the board.)
+B
+-------------------- * C
+If can is the big number and box is a small number, what is the other 
+small number?
+(Write the following diagram on the board.)
+1 B
+-------------------- * C
+5. Here is the number family. The next sentence tells you that you have 35 cans, 
+so we cross out C and write 35.
+(Write the following diagram on the board.)
+7 B 35
+-------------------- > G
+6. Our number family shows a big number and a small number. You find the 
+missing small number by finding out how many sevens are in 35.
+7. How many boxes do you have?
+(Write the final diagram on the board.)
+7 $B 35 
+-------------------- > G
+8. (Repeat steps 2-7 using problems b, c, d, and e.)
+Part B: Structured Worksheet
+1. (Give students a worksheet with 6 to 8 problems similar to those below.)
+a. There are 6 chairs at each table. If there are 42 chairs, how many tables are 
+there?
+b. Books are stacked on shelves with the same number of books on each shelf. 
+There are 5 shelves and 40 books. How many books are on each shelf?
+2. These are multiplication and division problems.
+3. Read problem a to yourself. Raise your hand when you've found the sentence 
+that tells how to make the number family. (Pause. Call on a student to read.)
+STUDENTS
+There are 6 chairs at 
+each table.
+B
+C
+7
+5
+continued
+
+[p.244]
+244 Part II Basic Concepts and Skills
+Format 11.9 (continued)
+SETTING UP MULTIPLICATION AND DIVISION WORD PROBLEMS
+TEACHER STUDENTS
+4. There are 6 chairs at each table. Are there more chairs or more tables?
+So which name tells about the big number?
+5. Make the number family with two letters and a number. (Check.)
+Chairs
+Chairs
+Students write
+6 T---------------------* C
+6. The problem gives a value for one of the names. Which name?
+7. Put that value in the number family. (Check.)
+Chairs
+Students write
+6 T 42---------------------> G
+8. Is the big number given?
+So do you multiply or divide?
+9. Work the problem and write the answer with a unit name, (Check.) 
+10. What's the answer?
+(Repeat steps 3-10 with other items.)
+Yes
+Divide
+7 tables

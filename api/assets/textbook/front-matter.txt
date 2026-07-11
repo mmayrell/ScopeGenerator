@@ -1,0 +1,547 @@
+[front.1]
+Direct Instruction
+Fifth EditionMathematics
+Λ. -. .j ∖. ■ ⅛⅛ ■ '. ' ■ . ’. ■ ' . . BX '
+Marcy Stein Diane Kinder Kristen Rolf
+ouglas W. Carnine
+⅝¾∣∣g⅝⅜M
+Jerry Silbert
+
+[front.2]
+FIFTH EDITION
+Direct
+Instruction 
+Mathematics
+Marcy Stein
+University of Washington Tacoma
+Diane Kinder
+University of Washington Tacoma
+Kristen Rolf
+University of Washington Tacoma
+Jerry Silbert
+National Institute for Direct Instruction
+Douglas W. Carnine
+Professor Emeritus, University of Oregon
+330 Hudson Street, NY NY 10013
+Pearson
+
+[front.3]
+Director and Portfolio Manager: Kevin M. Davis
+Content Producer: Janelle Rogers
+Executive Development Editor: Linda Bishop
+Portfolio Management Assistant: Anne McAlpine
+Executive Field Marketing Manager: Krista Clark
+Executive Product Marketing Manager: Christopher Barry
+Procurement Specialist: Carol Melville
+Full Service Project Management: Katrina Ostler, Cenveo® 
+Publisher Services
+Cover Designer: Carie Keller
+Cover Image: Rob Van Esch/Offset.com 
+Composition: Cenveo® Publisher Services 
+Printer/Binder: LSC Communications 
+Cover Printer: LSC Commuicatons
+Text Font: 10/12 Times LT Pro
+Every effort has been made to provide accurate and current Internet information in this book. However, the Internet and information posted on it 
+are constantly changing, so it is inevitable that some of the Internet addresses listed in this textbook will change.
+Copyright © 2018, 2006,1997 by Pearson Education, Inc. All rights reserved. Printed in the United States of America. This publication is protected 
+by Copyright and permission should be obtained from the publisher prior to any prohibited reproduction, storage in a retrieval system, or trans­
+mission in any form or by any means, electronic, mechanical, photocopying, recording, or likewise. To obtain permission(s) to use material from 
+this work, please visit http://www.pearsoned.com/permissions/
+Library of Congress Cataloging-in-Publication Data
+On file with the Library of Congress.
+39 2022
+Student Edition
+ISBN 10: 0-13-471122-x 
+ISBN 13: 978-0-13-471122-5
+Enhanced eText
+ISBN 10: 013457673X 
+ISBN 13: 978-0-13-457673-2
+@ Pearson
+
+[front.4]
+To Wes Becker, a leader in showing how science can serve education.
+To Zig Engelmann, the designer of Direct Instruction, whose impact in the 
+field of education continues to inspire us.
+
+[front.5]
+Preface
+Mathematics instruction continues to be challenging for many teachers in American schools. 
+Although the goals of current approaches to mathematics instruction are reasonable, often 
+the methods for achieving those goals are lacking. The need for improvement in mathematics 
+instruction has been well documented by national, even international, evaluations. Moreover, 
+research also has suggested that many teachers are ill-prepared to meet the needs of a diverse 
+student population. We have received numerous requests from teachers who found their prepa­
+ration to teach mathematics to be inadequate. Teachers were particularly vocal about the lack of 
+specific guidance in how to support students who have difficulty learning mathematics. This text 
+provides teachers with the information needed to design supplemental mathematics instruction 
+and to evaluate and modify the commercially developed programs currently available to them.
+Although we have found the procedures suggested in this book effective, we do not claim 
+they are panaceas. Implementing our suggestions requires hard work on the part of the teacher. It 
+is our hope that the systematic procedures and teaching strategies recommended here will stimu­
+late the development of even better instructional practices.
+NEW TO THIS EDITION
+This is the first edition of Direct Instruction Mathematics designed as an interactive eText. We 
+provide you with point-of-use videos and the opportunity to self-assess your learning as you 
+read each chapter. Look for the clickable icons in the margins to watch the videos. Look for 
+Apply What You Learned to find the checkmark icons and launch self-assessment questions at 
+the end of each chapter.
+Our Pearson eText*  includes the following new features:
+* Please note that eText enhancements such as video clips and Apply What You Learned quizzes are only available in 
+the Pearson eText and not other third-party eTexts such as CourseSmart or Kindle.
+■ Learning Outcomes for each chapter
+■ Sections on Conceptual Understanding for each topic
+■ Apply What You Learned sections in each chapter with feedback links
+■ More than 100 printable teaching formats
+■ The alignment of teaching strategies with Common Core State Standards (CCSS)
+■ Links to videos of teaching demonstrations for many teaching formats
+■ Links to a supplemental math facts program including math facts worksheets and assessments 
+■ Topics appropriate for adult learners working on basic skills
+■ New content in the following areas: probability, data analysis, statistics
+ORGANIZATION OF THIS EDITION• ∙ ∙ ∙ ∙ ∙ ∙ ∙
+Direct Instruction Mathematics provides teachers with evidence-based teaching strategies that can 
+be used to supplement mathematics instruction for students from preschool through grade 8. The 
+teaching strategies also are relevant for older students and adult learners who are struggling with
+
+[front.6]
+Preface v
+basic skills. The text outlines procedures that can be used to evaluate and then modify the commer­
+cially developed math programs used in most schools. Most importantly, the text gives teachers 
+systematic procedures for addressing both conceptual understanding and procedural fluency for 
+critical topics in K-8 mathematics aligned with the Common Core State Standards (CCSS).
+The new edition includes an updated chapter on research, video links to teaching demon­
+strations for many of the teaching formats, and new content related to probability and data anal­
+ysis. Finally, Direct Instruction Mathematics contains Instructional Sequence and Assessment 
+Charts that can serve as the basis for designing diagnostic tests as well as for constructing goals 
+and objectives for the design of Individualized Education Plans (IEPs).
+The book is organized into three parts: Part I, Perspective; Part II, Basic Concepts 
+and Skills; and Part III, Extended Concepts and Skills. Part I is composed of three chapters. 
+Chapter 1 outlines the components of the Direct Instruction approach to mathematics instruc­
+tion—instructional design, instructional delivery, and instructional language. Chapter 2 provides 
+an updated brief review of relevant research on effective mathematics instruction. Chapter 3 pro­
+vides a framework for evaluating commercially developed mathematics instructional materials.
+The Basic Concepts and Skills (Part II) and Extended Concepts and Skills (Part III) are 
+the heart of the book. Each chapter covers a specific topic: counting, symbol identification 
+and place value, basic facts, addition, subtraction, multiplication, division, problem solving, 
+measurement, time, money, fractions, decimals, percent, ratio, probability, data analysis, geometry, 
+and pre-algebra. These chapters include suggestions for introducing critical concepts and proce­
+dures for teaching specific skills.
+SPECIAL FEATURES OF THIS EDITION
+Each chapter in the fifth edition of Direct Instruction Mathematics includes the following 
+special features:
+■ Learning Outcomes
+■ Conceptual understanding sections
+■ Printable teaching formats
+■ Videos of teachers demonstrating teaching formats
+* Diagnosis and remediation sections
+■ Apply What You Learned
+In addition to the features mentioned above, the fifth edition now includes links to worksheets 
+and tests for a math facts program and a glossary of terms used throughout the text.
+ACKNOWLEDGMENTS
+Foremost among the many people to whom we are grateful are the Direct Instruction teachers 
+who prove every day that math failure is not inevitable. We also are grateful to Zig Engelmann, 
+whose melding of logical analysis and empiricism has resulted in the development of numer­
+ous highly effective mathematics programs. Many of the procedures described in this book 
+were derived from DISTAR Arithmetic, Connecting Math Concepts, Corrective Mathematics, 
+Essentials for Algebra, and Core Concepts in Mathematics authored by Engelmann and his col­
+leagues. Special thanks go to Bernadette Kelly whose suggestions and ideas contributed greatly 
+to this text. We also would like to acknowledge and thank the reviewers who inspired us in our 
+revision decisions: Bridget Kelley, Western Washington University; Mary Ann Nelson, Univer­
+sity of Florida; Jennifer Neyman, Gonzaga University; Cynthia T. Shamberger, Fayetteville State 
+University; and Sean Wachsmuth, Minnesota State University, Mankato.
+In addition, we would like to thank everyone involved in producing the videos included 
+in this edition: Lori Agar, Tom Edwards, Paul Lovelady and his crew, Tristan Marcum, Tonya 
+Middling, Joe Query, Michaela Query, and Susan Templin. We also would like to thank the fol­
+lowing people for their contributions to the production of the text: Deena Beard, Donna Braboy, 
+Austin Campbell, Courtney Leininger, and Tatiana Wolfe. Finally, we would like to thank our 
+families and friends for their support.
+
+[front.7]
+
+
+[front.8]
+Brief Contents
+Part I Perspective
+Chapter 1 Direct Instruction 1
+Chapter 2 Research Support for Direct Instruction Mathematics 10
+Chapter 3 Curriculum Evaluation and Modification 17
+Part II Basic Concepts and Skills
+Chapter 4 Counting 25
+Chapter 5 Symbol Identification and Place Value 39
+Chapter 6 Basic Facts 68
+Chapter 7 Addition 88
+Chapter8 Subtraction 115
+Chapter 9 Multiplication 137
+Chapter 10 Division 164
+Chapter 11 Problem Solving 201
+Chapter 12 Measurement, Time, and Money 245
+Part III Extended Concepts and Skills
+Chapter 13 Fractions 284
+Chapter 14 Decimals 359
+Chapter 15 Percent, Ratio, and Probability 391
+Chapter 16 Data Analysis 418
+Chapter 17 Geometry 443
+Chapter 18 Pre-algebra 478
+viι
+
+[front.9]
+viii Brief Contents
+Appendix A: Direct Instruction Mathematics and Common Core State 
+Standards 513
+Appendix B: Frequently Asked Questions about Direct Instruction 
+Mathematics 529
+Glossary 532
+References 534
+Index 536
+
+[front.10]
+Contents
+Formats for Teaching Major Skills ×iv
+Part I Perspective
+Chapter 1 Direct Instruction 1
+Mathematical Proficiency 1
+Instructional Design 2
+Sequence of Skills and Concepts, 2; Explicit Instructional Strategies, 3;
+Preskills, 4; Example Selection, 4; Practice and Review, 4
+Instructional Delivery 5
+Progress Monitoring, 5; Presentation Techniques, 5; Error-Correction
+Procedures, 7; Diagnosis and Remediation, 7
+Instructional Language 8
+Sequencing Guidelines Applied to Language Instruction, 9
+Chapter 2 Research Support for Direct Instruction Mathematics 10
+The Need for Excellent Math Instruction 10
+Current Performance of U.S. Math Students, 11
+Research on Direct Instruction 12
+Research Recommendations for Math Instruction 15
+Chapter 3 Curriculum Evaluation and Modification 17
+The Curriculum Adoption Process 17
+Time Allocation and Committee Responsibilities, 18; Screening Process, 18
+Topics for Curriculum Evaluation 19
+General Program Design, 19; Specific Content Design, 21
+Modifying Mathematics Curriculum 23
+Part II Basic Concepts and Skills
+Chapter 4 Counting 25
+Skill Hierarchy 25
+Conceptual Understanding 27
+Instructional Procedures 27
+Rote Counting by Ones to 30, 27; Rational Counting: One Group, 29;
+Rational Counting: Two Groups, 29; Counting from Numbers Other
+Than One, 30; Ordinal Counting, 31; Counting by Ones from 30 to 100, 31;
+Counting Backward, 31; Counting Between 100 and 999, 32; Skip
+Counting, 32
+
+[front.11]
+x Contents
+Chapter 5 Symbol Identification and Place Value 39
+Skill Hierarchy 39
+Conceptual Understanding 41
+Instructional Procedures: Symbol Identification 42
+Numeral Identification, 42; Numeral Writing, 43; Symbol Identification 
+and Writing, 44; Equation Reading and Writing, 44; Numeral/Object
+Correspondence, 45; Practice and Review, 46
+Instructional Procedures: Place Value 47
+Reading and Writing Teen Numerals, 47; Practice and Review, 48;
+Reading and Writing Tens Numerals, 48; Reading and Writing Hundreds
+Numerals, 49; Reading and Writing Thousands Numerals, 51;
+Reading and Writing Millions Numerals, 52; Expanded Notation, 53;
+Column Alignment, 53
+Chapter 6 Basic Facts 68
+Skill Hierarchy 69
+Conceptual Understanding and Organization 73
+Instructional Procedures: Relationship Activities 73
+Plus-One Facts, 73; Series Saying, 74; Three-Number Fact Families, 75
+Instructional Procedures: Coordinating Mastery and Relationship
+Activities 75
+Memorization Activities, 76; Performance Criteria, 76; Intensive Practice and
+Systematic Review, 76; Record-Keeping Procedures, 76
+Instructional Procedures: Two Fact Mastery Programs 77
+Homogenous Group Program, 77; Heterogeneous Group Program, 78;
+Parental Involvement, 80; Motivational Practice Activities, 81;
+Commercial Programs, 81
+Chapter 7 Addition 88
+Skill Hierarchy 88
+Conceptual Understanding 90
+Instructional Procedures: Beginning Addition 91
+Addition the Slow Way, 91; Missing Addend Strategy, 92; Addition the
+Fast Way, 93; Diagnosis and Remediation, 94
+Instructional Procedures: Multi-Digit Addition 95
+Problems Not Requiring Renaming, 95; Problems Requiring Renaming, 96;
+Three or More Addends, 98; Diagnosis and Remediation, 99
+Chapter 8 Subtraction 115
+Skill Hierarchy 115
+Conceptual Understanding 117
+Instructional Procedures: Beginning Subtraction 117
+Cross-out Strategy, 117; Missing Subtrahend Strategy, 118; Diagnosis and
+Remediation, 119; Fact Memorization, 119
+Instructional Procedures: Multi-Digit Subtraction Problems 120
+Column Subtraction—No Renaming, 120; Subtraction with Renaming, 120;
+Complex Renaming Problems, 122; Diagnosis and Remediation, 125
+
+[front.12]
+Contents xi
+Chapter 9 Multiplication 137
+Skill Hierarchy 137
+Conceptual Understanding 140
+Instructional Procedures: Beginning Multiplication 140
+Single-Digit Multiplication, 140; Missing-Factor Multiplication, 142;
+Diagnosis and Remediation, 142
+Instructional Procedures: Multi-Digit Multiplication 143
+Single-Digit Factor and Multi-Digit Factor, 144; Two Multi-Digit Factors, 147;
+Diagnosis and Remediation, 148
+Chapter 10 Division 164
+Skill Hierarchy 164
+Conceptual Understanding 165
+Instructional Procedures: Beginning Division 166
+Problems Without Remainders, 166; Division Facts, 167; Problems with
+Remainders, 167; Remainder Facts, 168; Diagnosis and Remediation, 169
+Instructional Procedures: Multi-Digit Division 172
+One-Digit Divisors, 172; Two-Digit Divisors, 175; Diagnosis and
+Remediation, 179
+Chapter 11 Problem Solving 201
+Skill Hierarchy 201
+Conceptual Understanding 204
+Instructional Procedures: Addition and Subtraction Problems 204
+Introducing the Concept, 204; A Number-Family Problem-Solving
+Strategy, 205; Temporal Sequence Problems, 208; Comparison Problems, 210;
+Classification Problems, 212; Distractors, 215; Multi-step Word Problems, 215
+Instructional Procedures: Multiplication and Division Problems 216
+Diagnosis and Remediation 218
+Fact Errors, 218; Calculation Errors, 218; Decoding Errors, 219; Vocabulary
+Errors, 219; Translation Errors, 219
+Chapter 12 Measurement, Time, and Money 245
+Skill Hierarchy 245
+Conceptual Understanding 249
+Measurement, 249; Time, 249; Money, 249
+Measurement: Customary and Metric Units 249
+Common Units and Equivalencies, 250; Measuring Tools, 252;
+Conversion Problems, 255; Operations, 258; Word Problems, 259
+Time 260
+Minutes After the Hour, 260; Alternate Ways of Expressing Time, 262
+Money 263
+Determining the Value of a Group of Coins, 263; Consumer-Related Money
+Skills, 265; Decimal Notation in Money, 266
+Diagnosis and Remediation 266
+
+[front.13]
+xii Contents
+Part III Extended Concepts and Skills
+Chapter 13 Fractions 284
+Skill Hierarchy 284
+Conceptual Understanding 292
+Part-Whole Discrimination, 293; Writing Numerical Fractions to Represent 
+Figures, 294; Drawing Figures to Represent Fractions, 295; Reading
+Fractions, 295; Determining Whether a Fraction Equals, Exceeds, or Is Less 
+Than One Whole, 296; Reading and Writing Mixed Numerals, 297
+Instructional Procedures: Rewriting Fractions 298
+Completing Equivalent Fractions, 298; Reducing Fractions, 300;
+Converting Mixed Numerals and Improper Fractions, 304
+Instructional Procedures: Addition and Subtraction of Fractions 306
+Fractions with Like Denominators, 307; Problems with Mixed Numbers, 308;
+Fractions with Unlike Denominators, 308; Reducing and Rewriting Answers 
+as Mixed Numerals, 310; More Complex Problems with Mixed Numbers, 310; 
+Comparing Fractions, 310; Word Problems, 311
+Instructional Procedures: Multiplication and Division of Fractions 311
+Multiplying Fractions, 311; Multiplying Proper Fractions, 312; Multiplying 
+Fractions and Whole Numbers, 312; Multiplying Mixed Numbers, 313;
+Dividing Fractions, 314; Word Problems—Multiplication and Division, 315
+Diagnosis and Remediation of Common Fraction Errors 317
+Errors in Reading and Writing Fractions and Mixed Numerals, 317
+Errors in Adding and Subtracting Fractions, 317
+Chapter 14 Decimals 359
+Skill Hierarchy 359
+Conceptual Understanding 362
+Instructional Procedures: Reading and Writing Decimals 362
+Reading and Writing Decimals and Mixed Decimals, 362
+Instructional Procedures: Decimal Operations 365
+Adding and Subtracting Decimals and Mixed Decimals, 365; Rounding Off 
+Decimals, 366; Multiplying Decimals, 367; Dividing Decimals, 368; Converting 
+Fractions and Decimals, 372
+Diagnosis and Remediation 374
+Chapter 15 Percent, Ratio, and Probability 391
+Skill Hierarchy 391
+Conceptual Understanding 393
+Percentage Problems 393
+Converting Percent to Decimal, 393; Simple Percentage Problems, 394;
+Simple Percentage Word Problems, 394; Complex Percentage Problems, 395
+Ratio Problems 395
+Converting a Fraction to a Percent, 396; Simple Ratio Word Problems, 397;
+Complex Ratio Word Problems, 397
+Probability Problems 398
+Single-Event Probability, 399; Compound Probability, 399; Probability Word
+Problems, 400
+Diagnosis and Remediation 400
+
+[front.14]
+Contents xiii
+Chapter 16 Data Analysis 418
+Skill Hierarchy 418
+Conceptual Understanding 420
+Graphs 421
+Classifying, Representing, and Interpreting Data, 422; Picture Graphs, 423;
+Bar Graphs, 424; Line Plots, Stem and Leaf Plots, 424
+Descriptive Statistics 425
+Measures of Central Tendency, 425; Measures of Variability, 427
+Diagnosis and Remediation 428
+Chapter 17 Geometry 443
+Skill Hierarchy 443
+Conceptual Understanding 450
+Identifying and Defining Geometric Figures and Concepts 450
+Calculating Perimeter, Area, and Volume 453
+Perimeter and Area, 453; Volume, 455
+Measuring and Constructing Figures Using Tools 456
+Using Logic in Working with Angles and Lines 456
+Diagnosis and Remediation 458
+Chapter 18 Pre-algebra 478
+Skill Hierarchy 479
+Conceptual Understanding 482
+Coordinate System and Functions (CSF) 482
+Other Types of Numbers: Primes, Factors, Integers, and Exponents 483
+Primes and Factors, 483; Integers, 484; Exponents, 485
+Expressions and Equations 485
+Solving for a Single Variable, 486; Substitutions, 486; Like Terms, 487;
+Word Problems, 487
+Ratios and Proportions (R∕P) 487
+Using Ratio Tables to Solve Classification Problems, 489; Using Ratio Tables 
+with Fractions, 489; Using Ratio Tables to Solve Comparison Problems, 492;
+Using Ratio Tables with Percent Problems, 493
+Diagnosis and Remediation 494
+Appendix A: Direct Instruction Mathematics and Common Core State Standards 513
+Appendix B: Frequently Asked Questions About Direct Instruction Mathematics 529
+Glossary 532
+References 534
+Index 536
+
+[front.15]
+Formats for Teaching Major Skills
+xiv
+Format Number Format Title Page Number
+4.1 Introducing New Numbers 34
+4.2 Rational Counting 35
+4.3 Counting Two Groups of Lines 36
+4.4 Counting from Numbers Other Than 1 37
+4.5 Count-By 37
+5.1 Introducing New Numerals 54
+5.2 Equation Writing 55
+5.3 Identifying a Symbol and Then Drawing Lines 55
+5.4 Writing a Numeral for a Set of Objects 56
+5.5 Reading Teen Numerals Using Place Value Concepts 57
+5.6 Writing Teen Numerals Using Place Value Concepts 58
+5.7 Reading Tens Numerals Using Place Value Concepts 59
+5.8 Writing Tens Numerals Using Place value Concepts 61
+5.9 Reading Hundreds Numerals Using Place Value 62
+5.10 Writing Hundreds Numerals Using Place Value Concepts 64
+5.11 Reading Thousands Numerals Using Place Value concepts 65
+5.12 Expanded Notation 66
+5.13 Column Alignment 67
+6.1 Plus-One Facts 83
+6.2 Series Saying 84
+6.3 Three-Number Fact Families: Addition and Multiplication Facts 85
+6.4 Three-Number Fact Families: Subtraction and Division Facts 86
+7.1 Equality Introduction 104
+7.2 Teaching Addition the Slow way 105
+7.3 Solving Missing Addends 107
+7.4 Teaching Addition the Fast Way 110
+7.5 Adding Three Single-Digit Numbers 111
+7.6 Adding Two Numerals with Renaming 112
+7.7 Complex Addition Facts with a Total Less Than 20 114
+8.1 Subtraction with Lines 129
+8.2 Teaching Regrouping 131
+8.3 Subtraction with Renaming 131
+8.4 Tens Numbers Minus One 135
+8.5 Renaming Numbers with Zeroes 135
+9.1 Single Digit Multiplication 153
+
+[front.16]
+Formats for Teaching Major Skills xv
+continued
+Format Number Format Title Page Number
+9.2 Missing-Factor Multiplication 156
+9.3 One-Digit Factor Times Two-Digit Factor—Renaming 158
+9.4 Two-Digit Factor Times Two-Digit Factor 160
+10.1 Introducing Division 182
+10.2 Introducing Division with Remainders 184
+10.3 Introducing Remainder Facts 186
+10.4 Remediation for Division with Remainders—Quotient Too Small 187
+10.5 Remediation for Division with Remainders—Quotient Too Large 188
+10.6 Division with Two-Digit Quotients 189
+10.7 Rounding to Nearest Tens Unit 193
+10.8 Correct Estimated Quotients with Two-Digit Divisors 194
+10.9 Incorrect Estimated Quotients 199
+11.1 Introducing Problem-Solving Concepts 220
+11.2 Preskill: Fact Family—Finding the Missing Family Member 223
+11.3 Temporal Sequence Word Problems 226
+11.4 Comparison Problems 232
+11.5 Classification Story Problems 234
+11.6 Using Tables to Solve Problems 236
+11.7 Introducing Multi-Step Word Problems 239
+11.8 Introduction to Multiplication and Division Word Problems 241
+11.9 Setting Up Multiplication and Division Word Problems 242
+12.1 Metric Prefixes 270
+12.2 Metric Conversions 272
+12.3 Converting from Mixed Numbers 274
+12.4 Renaming Customary Units 274
+12.5 Subtraction with Renaming 275
+12.6 Expressing Time as Minutes After the Hour (Units of 5 Minutes) 276
+12.7 Expressing Time as Minutes Before the Hour 279
+12.8 Coin Equivalencies 281
+12.9 Verifying Change 281
+12.10 Counting Coins to Reach an Exact Amount 282
+12.11 Decimal Notation for Money 283
+13.1 Introducing Fractions 321
+13.2 Part-Whole Discrimination 324
+13.3 Writing Numerical Fractions 325
+13.4 Reading Fractions 327
+13.5 Determining Whether a Fraction Equals, Exceeds, or is Less Than One Whole 328
+13.6 Reading and Writing Mixed Numerals 329
+13.7 Preskill: Constructing Fractions Equal to 1 332
+13.8 Computing Equivalent Fractions 333
+13.9 Preskill: Determining Factors 336
+13.10 Determining the Greatest Common Factor (GCF) 339
+13.11 Reducing Fractions 340
+13.12 Converting Improper Fractions to Mixed Numbers 343
+
+[front.17]
+xvi Formats for Teaching Major Skills
+Format Number Format Title Page Number
+13.13 Converting Mixed Numbers to Improper Fractions 346
+13.14 Adding and Subtracting Fractions with Like Denominators 348
+13.15 Preskill: Finding the Least Common Multiple 351
+13.16 Adding and Subtracting Fractions with Unlike Denominators 352
+13.17 Multiplying Two Proper Fractions 355
+13.18 Multiplying a Fraction and a Whole Number 356
+14.1 Reading Decimals 376
+14.2 Writing Decimals 378
+14.3 Reading and Writing Mixed Decimals 379
+14.4 Converting Decimals into Equivalent Decimals 380
+14.5 Addition/Subtraction of Unlike Decimals 382
+14.6 Rounding Off Decimals 383
+14.7 Multiplying Decimals 384
+14.8 Division with Decimals—Rounding Off 386
+14.9 Preskill: Multiplying Decimals by Multiples of 10 388
+14.10 Dividing by Decimals 389
+15.1 Converting Percent to Decimal 402
+15.2 Solving Simple Percentage Problems 403
+15.3 Converting Decimals and Fractions to Percentages 405
+15.4 Simple Ratio Word Problems 408
+15.5 Complex Ratio Problems 409
+15.6 Writing Probability Fractions 410
+15.7 Probability for Different Numbers of Trials 412
+15.8 Introducing Compound Probability 414
+15.9 Probability Word Problems 416
+16.1 Sorting 430
+16.2 Creating Picture Graphs 432
+16.3 Reading Bar Graphs 435
+16.4 Creating Bar Graphs 437
+16.5 Calculating the Mean 441
+17.1 ldentification∕Definition—Triangle 459
+17.2 Finding the Area of Rectangles 460
+17.3 Finding the Area of Triangles 463
+17.4 Calculating the Area of Complex Figures 468
+17.5 Calculating the Area of Parallelograms 470
+17.6 Calculating the Volume of Boxes 473
+17.7 Finding the Value of Unknown Component Angles 475
+17.8 Finding the Values of Unknown Angles in Complex Diagrams 476
+18.1 Using and Plotting a Function 497
+18.2 Combining Integers 499
+18.3 Solving One-Step Problems with Variables—Addition and Subtraction 502
+18.4 Solving One-Step Problems with Variables—Multiplication and Division 504
+18.5 Ratio Tables Using Fractions for Classes 509

@@ -35,26 +35,39 @@ const EFFORT_LADDER = ['medium', 'low'] as const
 /** A 'generating' claim older than this belongs to a host-killed execution — reclaimable. */
 const CLAIM_STALE_MS = 12 * 60 * 1000
 /**
- * Interaction cadence (playbook §8.1: never 30 seconds without one). The
- * hard fail sits at 45s — line times are words-per-minute ESTIMATES, and
- * failing a script over estimate noise would thrash the corrective pass;
- * anything past the stated 30s is still surfaced as a review flag.
+ * Interaction cadence (rulebook TIM 04): target a student action every ~30s;
+ * NEVER exceed 60 seconds — the 60s cap is the hard fail, the 30s target
+ * surfaces as a review flag (line times are words-per-minute estimates).
  */
-const MAX_INTERACTION_GAP_S = 45
+const MAX_INTERACTION_GAP_S = 60
 const TARGET_INTERACTION_GAP_S = 30
 /**
- * §8.1 (Student-facing language) — internal vocabulary must never reach the
- * student. Hard-fail terms
+ * Rulebook GRADE table: typical lengths by band, in seconds. TYPICAL, not
+ * caps (TIM 01 — sufficiency over clock): outside the band is a review flag.
+ * Past MAX_SUFFICIENT_S (6:00) the lesson is a GRANULARITY signal back to the
+ * scope (TIM 02) — flagged loudly, never compressed by the corrective pass.
+ */
+const BAND_TYPICAL_S: Record<string, [number, number]> = {
+  'K-1': [60, 150],
+  '2-3': [120, 210],
+  '4-5': [150, 270],
+  '6-8': [180, 300],
+}
+const MAX_SUFFICIENT_S = 360
+/**
+ * LANG 11 — internal vocabulary must never reach the student. Hard-fail terms
  * are unambiguous pipeline jargon. The stage labels are matched
- * CASE-SENSITIVELY — "What do we do next?" is the playbook's own Template B
- * prompt and ordinary DI narration ("now we do the tens") is the recommended
- * voice; only the title-cased labels are jargon. Ambiguous words that can be
- * legitimate math/word-problem content ("atoms in a molecule",
+ * CASE-SENSITIVELY — "What do we do next?" is the rulebook's own sanctioned
+ * MCQ prompt and ordinary DI narration ("now we do the tens") is the
+ * recommended voice; only the title-cased labels are jargon. Ambiguous words
+ * that can be legitimate math/word-problem content ("atoms in a molecule",
  * "discrimination") surface as review flags instead.
  */
 const BANNED_STUDENT_TERMS_CI = /\b(start cue|decision path)\b/i
 const BANNED_STUDENT_TERMS_CS = /\b(I Do|We Do|You Do)\b/
-const FLAGGED_STUDENT_TERMS = /\b(atoms?|discriminations?|interactions?|assessment boundary|difficulty ceiling)\b/i
+const FLAGGED_STUDENT_TERMS = /\b(atoms?|discriminations?|interactions?|assessment boundary|difficulty ceiling|boundar(?:y|ies)|ceilings?)\b/i
+/** INT 16 hard-fails a bare generic retry with no pointer. */
+const GENERIC_TRY_AGAIN = /^\s*try again[.!]?\s*$/i
 
 const isTruncation = (e: unknown): boolean =>
   /truncated \(max_tokens|max_tokens reached/i.test(e instanceof Error ? e.message : String(e))
@@ -224,7 +237,7 @@ export async function vsgRunStep(msg: JobMessage, ctx: InvocationContext): Promi
       return generateStructured<WireVsgScript>({
         system: prompt.system,
         user: repair
-          ? `${prompt.user}\n\nIMPORTANT — your previous script failed these HARD QA checks (playbook §12): ${repair}. Fix every one and re-emit the complete corrected script.`
+          ? `${prompt.user}\n\nIMPORTANT — your previous script failed these HARD QA checks (rulebook §17, rule IDs cited): ${repair}. Fix every one and re-emit the complete corrected script. Never fix a length or cadence finding by cutting below the Transfer Test (TIM 09) — restructure instead.`
           : prompt.user,
         schema: VSG_SCRIPT_SCHEMA,
         maxTokens,
@@ -247,15 +260,17 @@ export async function vsgRunStep(msg: JobMessage, ctx: InvocationContext): Promi
           throw e
         }
       }
-      // Corrective pass: hard QA failures block a script (§12) — one repair
-      // call with the failures named; a second failure ships visibly in qa.
+      // Corrective pass: hard QA failures block a script (§17: "fails QA
+      // automatically and gets regenerated to apply the feedback") — one
+      // repair call with the failures named, rule IDs included; a second
+      // failure ships visibly in qa.
       if (wire.conflicts.length === 0) {
-        const fails = qaOf(wire).hardFails
+        const fails = qaOf(wire, gradeBand).hardFails
         if (fails.length > 0) {
           ctx.warn(`vsg/run ${runId}: ${lesson.lessonId} hard QA fails (${fails.join(' | ')}) — one corrective pass`)
           try {
             const repaired = await callOnce(effort, SCRIPT_MAX_TOKENS, signal, fails.join('; '))
-            if (repaired.conflicts.length > 0 || qaOf(repaired).hardFails.length < fails.length) wire = repaired
+            if (repaired.conflicts.length > 0 || qaOf(repaired, gradeBand).hardFails.length < fails.length) wire = repaired
           } catch {
             /* keep the first script; its qa carries the failures */
           }
@@ -442,25 +457,90 @@ export async function vsgRunStep(msg: JobMessage, ctx: InvocationContext): Promi
  * code-level backstop). Hard limits are re-derived from the script's own
  * timing data, never trusted from the self-reported estimate alone.
  */
-function qaOf(wire: WireVsgScript): { hardFails: string[]; flags: string[] } {
+function qaOf(wire: WireVsgScript, gradeBand: string): { hardFails: string[]; flags: string[] } {
   const fails: string[] = [...(wire.qa?.hardFails ?? [])]
   const flags: string[] = []
-  // Total length: the segments' own end stamps are authoritative; the
-  // model-computed durationEstimate merely corroborates.
+  const fmt = (secs: number): string => `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`
+  // Total length (TIM 01 — sufficiency over clock; length is an OUTPUT): the
+  // segments' own end stamps are AUTHORITATIVE. durationEstimate only stands
+  // in when no segment carries a parseable end, and a large disagreement is
+  // surfaced — an inflated estimate must never manufacture a phantom tail
+  // gap or a false out-of-band finding.
   const segEnds = wire.segments.map((s) => parseTime(s.end)).filter((n): n is number => n !== undefined)
-  const totalSecs = Math.max(parseTime(wire.durationEstimate) ?? 0, ...(segEnds.length > 0 ? segEnds : [0]))
-  if (totalSecs > 180) fails.push(`total run time ${Math.floor(totalSecs / 60)}:${String(totalSecs % 60).padStart(2, '0')} exceeds 3:00`)
+  const estimateSecs = parseTime(wire.durationEstimate)
+  const totalSecs = segEnds.length > 0 ? Math.max(...segEnds) : (estimateSecs ?? 0)
+  if (segEnds.length > 0 && estimateSecs !== undefined && Math.abs(estimateSecs - totalSecs) > 30) {
+    flags.push(`durationEstimate ${fmt(estimateSecs)} disagrees with the segment stamps (${fmt(totalSecs)}) — the stamps are the production contract`)
+  }
+  const typical = BAND_TYPICAL_S[gradeBand]
+  if (totalSecs > MAX_SUFFICIENT_S) {
+    // Deliberately a FLAG, not a hard fail: TIM 02 forbids compressing
+    // teaching to dodge it — the corrective pass must never trim below the
+    // Transfer Test. This is a granularity signal back to the scope.
+    flags.push(`GRANULARITY SIGNAL (TIM 02): the lesson needs ${fmt(totalSecs)} — more than 6:00 means the atom is too big for one video; flag back to the scope, never compress`)
+  } else if (typical && totalSecs > 0 && (totalSecs < typical[0] || totalSecs > typical[1])) {
+    flags.push(`run time ${fmt(totalSecs)} is outside the ${gradeBand} typical band ${fmt(typical[0])}-${fmt(typical[1])} (GRADE/TIM 01) — fine when the Transfer Test justifies it`)
+  }
   const interactions = wire.segments.reduce((n, s) => n + s.interactions.length, 0)
-  if (interactions < 3 || interactions > 10) fails.push(`${interactions} interactions — the playbook requires 3-10, scaled to length`)
-  const title = wire.segments.find((s) => s.kind === 'title')
-  if (title) {
-    const len = segmentSeconds(title.start, title.end)
-    if (len !== undefined && len > 10) fails.push(`title card runs ${len}s — must be under 10s`)
-    if (title.interactions.length > 0 || title.lines.some((l) => l.channel === 'INTERACTION')) {
-      fails.push('the title card carries an interaction — none are allowed there (§8.1)')
+  if (interactions < 3) fails.push(`${interactions} interaction(s) — TIM 05 requires at least 3 per video`)
+  const perMinuteCap = Math.ceil((Math.max(totalSecs, 60) / 60) * 3) + 1
+  if (interactions > perMinuteCap) {
+    flags.push(`${interactions} interactions in ${fmt(totalSecs)} — past the ~2-3/minute guidance (TIM 05); verify the learner keeps the thread`)
+  }
+  // Skeleton structure (§15): opening first, wrap last, model before any
+  // guided ask (SEQ 02's structural face: no we-do before the first i-do).
+  const kinds = wire.segments.map((s) => s.kind)
+  if (kinds.length > 0 && kinds[0] !== 'opening') fails.push(`the first segment is "${kinds[0]}" — the skeleton (§15) opens with the opening segment`)
+  if (kinds.length > 0 && kinds[kinds.length - 1] !== 'wrap') flags.push(`the last segment is "${kinds[kinds.length - 1]}" — the skeleton (§15) closes with the wrap`)
+  const firstIDo = kinds.indexOf('i-do')
+  const firstWeDo = kinds.indexOf('we-do')
+  if (firstIDo === -1) fails.push('no i-do segment — the model comes first (SEQ 02, §15)')
+  if (firstWeDo !== -1 && firstIDo !== -1 && firstWeDo < firstIDo) {
+    fails.push('a we-do segment precedes the first i-do — model before any ask (SEQ 02)')
+  }
+  const opening = wire.segments.find((s) => s.kind === 'opening')
+  if (opening && opening.interactions.length > 1) {
+    flags.push(`the opening carries ${opening.interactions.length} interactions — INT 02 allows 0-1 (preskill retrieval only)`)
+  }
+  // Transfer Test + coverage note (SEQ 08-SEQ 10) — both hard gates (§17).
+  const tt = wire.transferTest
+  if (!tt || !tt.stepsDemonstrated || !tt.caseClassesShown || !tt.decisionsPerformed) {
+    const missing = [
+      !tt?.stepsDemonstrated ? 'steps demonstrated' : '',
+      !tt?.caseClassesShown ? 'case classes shown' : '',
+      !tt?.decisionsPerformed ? 'decisions performed by the student' : '',
+    ].filter(Boolean)
+    fails.push(`Transfer Test does not pass (SEQ 08/SEQ 09): ${missing.join(', ')}${tt?.note ? ` — ${tt.note}` : ''}`)
+  }
+  if (!Array.isArray(wire.coverageNote) || wire.coverageNote.length === 0) {
+    fails.push('coverage note is empty (SEQ 10): list every case class as taught or deferred — deferrals are named, never silent')
+  } else {
+    for (const c of wire.coverageNote) {
+      if (c.status === 'deferred' && c.where.trim().length === 0) {
+        fails.push(`coverage note: deferred case class "${c.name}" names no downstream home (SEQ 10)`)
+      }
     }
   }
-  // §8.1 — internal vocabulary in student-facing text (narration, on-screen
+  // Feedback ladders (INT 16-INT 18, INT 23) — complete on every interaction.
+  for (const s of wire.segments) {
+    for (const i of s.interactions) {
+      const gaps = [
+        i.correctFeedback.trim() === '' ? 'correct feedback' : '',
+        i.try1Hint.trim() === '' ? 'try-1 hint' : '',
+        i.try2ShowAndMoveOn.trim() === '' ? 'try-2 show-and-resume' : '',
+        i.resumeState.trim() === '' ? 'resume state' : '',
+      ].filter(Boolean)
+      if (gaps.length > 0) fails.push(`an interaction in ${s.kind} is missing ${gaps.join(', ')} (INT 16-INT 18, INT 23)`)
+      if ([i.correctFeedback, i.try1Hint, i.try2ShowAndMoveOn].some((f) => GENERIC_TRY_AGAIN.test(f))) {
+        fails.push(`generic "Try again!" feedback in ${s.kind} — feedback is specific with a pointer (INT 16)`)
+      }
+    }
+  }
+  const mcqs = wire.segments.reduce((n, s) => n + s.interactions.filter((i) => i.type === 'mcq').length, 0)
+  if (interactions > 0 && mcqs * 2 > interactions) {
+    flags.push(`${mcqs} of ${interactions} interactions are MCQ — INT 04 makes direct production the default; verify each MCQ is a genuine choice`)
+  }
+  // LANG 11 — internal vocabulary in student-facing text (narration, on-screen
   // text, prompts, feedback). NOTE lines are production-facing and exempt.
   const studentTexts: string[] = []
   for (const s of wire.segments) {
@@ -478,10 +558,10 @@ function qaOf(wire: WireVsgScript): { hardFails: string[]; flags: string[] } {
     if (flagged) soft.add(flagged[1].toLowerCase())
   }
   if (banned.size > 0) {
-    fails.push(`internal vocabulary reaches the student (§8.1): ${[...banned].join(', ')} — translate to student terms`)
+    fails.push(`internal vocabulary reaches the student (LANG 11): ${[...banned].join(', ')} — translate to student terms`)
   }
   if (soft.size > 0) {
-    flags.push(`possible internal vocabulary in student-facing text: ${[...soft].join(', ')} — verify these read as math, not pipeline jargon`)
+    flags.push(`possible internal vocabulary in student-facing text (LANG 11): ${[...soft].join(', ')} — verify these read as math, not pipeline jargon`)
   }
   for (const s of wire.segments) {
     const lineCount = s.lines.filter((l) => l.channel === 'INTERACTION').length
@@ -489,8 +569,8 @@ function qaOf(wire: WireVsgScript): { hardFails: string[]; flags: string[] } {
       fails.push(`segment ${s.kind}: ${lineCount} INTERACTION line(s) but ${s.interactions.length} interaction object(s)`)
     }
   }
-  // Interaction cadence from the per-line stamps (playbook hard rule 2 / §4:
-  // one interaction every 30–60 seconds of running time).
+  // Interaction cadence from the per-line stamps (TIM 04: target every ~30s,
+  // never more than 60 seconds without a student action).
   const stamps: number[] = []
   let unstamped = 0
   for (const s of wire.segments) {
@@ -502,7 +582,7 @@ function qaOf(wire: WireVsgScript): { hardFails: string[]; flags: string[] } {
     }
   }
   if (unstamped > 0) {
-    flags.push(`${unstamped} INTERACTION line(s) carry no parseable "M:SS" time — the 30-second cadence could not be fully verified`)
+    flags.push(`${unstamped} INTERACTION line(s) carry no parseable "M:SS" time — the TIM 04 cadence could not be fully verified`)
   }
   if (stamps.length > 0 && totalSecs > 0) {
     stamps.sort((a, b) => a - b)
@@ -514,9 +594,16 @@ function qaOf(wire: WireVsgScript): { hardFails: string[]; flags: string[] } {
     }
     worst = Math.max(worst, totalSecs - last)
     if (worst > MAX_INTERACTION_GAP_S) {
-      fails.push(`${worst} seconds without a student interaction — §8.1 caps the gap at 30s (45s hard limit over timing-estimate noise)`)
+      // An unparseable stamp means an interaction may sit INSIDE the apparent
+      // gap — a hard fail on that evidence would burn the corrective pass on
+      // a possibly compliant script. Fail hard only on fully-stamped scripts.
+      if (unstamped === 0) {
+        fails.push(`${worst} seconds without a student action — TIM 04 never allows more than 60s (target every ~30s)`)
+      } else {
+        flags.push(`apparent ${worst}s stretch without a student action (TIM 04) — but ${unstamped} interaction stamp(s) were unparseable, so the gap is unverified`)
+      }
     } else if (worst > TARGET_INTERACTION_GAP_S) {
-      flags.push(`longest stretch without an interaction is ${worst}s — past the 30s rule, inside the estimate-noise allowance`)
+      flags.push(`longest stretch without a student action is ${worst}s — past the ~30s target (TIM 04), inside the 60s cap`)
     }
   }
   return { hardFails: fails, flags: [...flags, ...(wire.qa?.flags ?? [])] }
@@ -525,11 +612,6 @@ function qaOf(wire: WireVsgScript): { hardFails: string[]; flags: string[] } {
 const parseTime = (t: string): number | undefined => {
   const m = /^(\d+):(\d{2})$/.exec(t.trim())
   return m ? Number(m[1]) * 60 + Number(m[2]) : undefined
-}
-const segmentSeconds = (start: string, end: string): number | undefined => {
-  const a = parseTime(start)
-  const b = parseTime(end)
-  return a !== undefined && b !== undefined && b >= a ? b - a : undefined
 }
 
 /** Wire → domain: zip each segment's interaction objects onto its INTERACTION lines by order. */
@@ -573,7 +655,9 @@ function toVideoScript(
     segments,
     interactionCount: segments.reduce((n, s) => n + s.lines.filter((l) => l.interaction).length, 0),
     formatRefs: wire.formatRefs,
-    qa: qaOf(wire),
+    coverageNote: wire.coverageNote ?? [],
+    transferTest: wire.transferTest,
+    qa: qaOf(wire, gradeBand),
     conflictsResolved: resolutions,
     playbookVersion: run.playbookVersion,
     doctrineVersion: run.doctrineVersion,

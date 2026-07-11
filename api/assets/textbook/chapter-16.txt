@@ -1,0 +1,1090 @@
+[p.418]
+Chapter
+16
+Data Analysis
+LEARNING OUTCOMES
+16.1 Outline the recommended sequence for teaching tables and different types 
+of graphs.
+16.2 Discuss activities that may be used to promote conceptual understanding 
+of graphs and statistics.
+16.3 Outline the teaching procedures for reading and interpreting different types 
+of graphs.
+16.4 Explain the general teaching procedures recommended for teaching descriptive 
+statistics.
+16.5 Describe the diagnosis and remediation procedures for addressing common 
+errors in data analysis.
+SKILL HIERARCHY
+• ∙
+An understanding of mathematics is often required to comprehend material from content areas 
+such as science, social studies, or health. Mathematics in content-area material often appears in 
+the form of tables, graphs, and descriptive statistics. For example, a health text might con­
+tain a graph illustrating the relationship between changes in the occurrence of lung cancer and 
+changes in the percentage of people who smoke. Or a table in a science text might provide infor­
+mation about the size of, distance from the sun, and mass for the planets in our solar system. 
+Descriptive statistics are central to the world of sports. For example, football statistics include 
+the average number of yards gained per play. Baseball statistics including batting averages and 
+earned run averages can be found on the websites of professional baseball teams. Students need 
+specific skills to allow them to interpret information from a variety of sources.
+The mathematics skills discussed in this chapter include reading and interpreting tables, 
+graphs, and interpreting and calculating descriptive statistics. The Instructional Sequence and 
+Assessment Chart lists the specific topics discussed in the chapter in their recommended order 
+of introduction.
+
+[p.419]
+Chapter 16 Data Analysis 419
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type Performance Indicator
+K Classify and sort a. Sort objects like blocks, crayons, or candy by color 
+b. Group pictures of vehicles by truck, car, or van
+K Count the objects in a group and order '
+multiple groups by size *
+Count the number of crayons in each group and order the 
+groups from fewest to most
+κ Read and use a table for up to three Candies
+categories of data Color of Candy Number of Candies
+Red
+Blue
+Orange
+1 Represent data for three categories Graph the number of objects in three categories using a 
+bar graph
+1 Interpret data for three categories using 
+a bar graph 
+∣
+a. How many red candies were in the bag?
+b. Are there more orange candies or blue candies?
+c. How many more trucks are there than cars?
+2 Represent data on a line plot—x-axis 
+uses single unit scale
+Measure three different pencils and plot the measurements
+2 Construct picture and bar graphs using 
+single unit scale for up to four categories
+Graph the number of objects in four categories using picture 
+and bar graphs
+2 Solve simple problems using information 
+presented in a bar graph
+a. How many total vehicles are represented on the graph?
+b. How many motorcycles and trucks are there?
+c. How many more cars are there than vans?
+3 Represent a data set with several 
+categories using scaled picture and 
+bar graphs
+Graph the number of students in the school who choose 
+red, yellow, blue, green, black, pink, or orange as their 
+favorite color. Each unit represents 5 students.
+3 Solve one- and two-step problems using 
+information presented in scaled picture 
+and bar graphs
+a. How many students choose blue or orange as their favor­
+ite color? Is this more or less than the number of students 
+who choose green as their favorite color?
+b. Which group is greater: the number of students who 
+chose orange or pink as their favorite color or the number 
+of students who chose black or green?
+3 Represent data on a line plot using a 
+scale of less than 1
+Measure three different pencils and create a line plot show­
+ing the measurements to the nearest ¼ inch.
+Measure four different books and create a line plot showing 
+the measurements to the nearest ½ inch.
+4 Solve problems involving addition 
+and subtraction of fractions using 
+information from line plots
+Given a line plot showing different measurement of pencils 
+using a scale of less than 1, ask students questions like the 
+following:
+a. How much longer is pencil A than pencil B?
+b. What is the total length of pencil B and pencil C?
+5 Solve problems involving fractions using 
+information from line plots
+Given a line plot showing different measurements of candy 
+bars using a scale of less than 1, ask students questions like 
+the following:
+a. How long would each candy bar be if they were laid end 
+to end and then redistributed evenly?
+continued.
+
+[p.420]
+420 Part III Extended Concepts and Skills
+6 Display data in dot plots, histograms,
+and box plots
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART (continued)
+Grade Level Problem Type Performance Indicator
+6 Measures of center and variability Ms. Valerio gave a test to the 9 students in her class. The
+marks are written below:
+a. What is the range?
+b. What is the median?
+c. What is the mode?
+Marcy 23 Diane 41
+Kristen 18 Doug 35
+Jerry 41 Kaitlin 41
+Tim 23 Kathy 42
+Donna 38
+CONCEPTUAL UNDERSTANDING
+Graphs and statistics summarize information visually and numerically. Graphs are easier to 
+understand because they are visual representations of data and so are taught first. To introduce 
+graphs, the teacher might give each student in the class a choice of four colors of square sticky 
+notes and ask the students to choose their favorite color. On a white board, the teacher can draw 
+the x-axis (number of students) and y-axis (favorite color). Students create a graph by placing 
+their favorite color of sticky note on the corresponding column. After all of the students have 
+placed their sticky notes on the graph, the teacher and the students can discuss the information 
+represented on the graph. The initial questions would focus on the number of sticky notes in 
+each column. Then the teacher could ask the students to compare columns.
+Favorite Color of Sticky Note
+Statistical concepts are more difficult but also can be introduced with a visual representa­
+tion. The concept of average may be represented as “fair share” or as a “balance point.” Show­
+ing average using the fair share method can be illustrated with very simple picture graphs. The 
+simple graph on next page shows the distribution of cookies among six students. The illustration 
+shows how the cookies could be shared so that each student has the same number of cookies, a 
+fair share. Fair share also may be demonstrated using concrete objects.
+
+[p.421]
+Chapter 16 Data Analysis 421
+Distribution of Cookies
+Fair Share of Cookies
+Student Cookies
+Maria θ o• A
+Andre o © o +^+
+Luis o V' o A
+Eddie • Λ
+Katie
+Simone © © o ■
+The statistical concept of mean can be shown as the point on a balance bar. In the represen­
+tation that follows, the sum of the distances from the mean of all the data points lower than the 
+mean is equal to the sum of the distances of all the data points higher than the mean. We rec­
+ommend using a balance bar representation as a method for verifying the calculation of the 
+mean. The balance bar representation allows students to clearly see how the distances from the 
+center are equal. In this example, the x’s above the 1 are three units from the mean (3 + 3). 
+The x above the 2 is two units from the mean. The sum of the distances from the mean for all of 
+the x’s below the mean is calculated by adding 3 + 3 + 2. A similar calculation is applied to 
+determine the sum of the distances of the x’s above the mean.
+X 
+XXX 
+XX X XX
+------- 1---------- 1--------- 1---------- 1----------1---------- 1---------—I----------1--------
+0 1 2 3 4 5 6 7
+Distance from the mean: A Distance from the mean:
+3+3+2=8 / ∖ 2+3+3=8
+GRAPHS
+∙∙∙∙∙∙*∙
+A graph is a drawing or visual representation of a relationship between two or more sets of 
+numbers. Figure 16.1 includes examples of the various types of graphs students will encounter 
+in the elementary grades. This chapter provides instructional recommendation for three types 
+of graphs: bar graphs, line plots, and picture graphs. Graphs are typically introduced during 
+first grade.
+The sequence for introducing various types of graphs should be carefully coordinated with 
+numeral reading and fraction skills so that students have mastered all of the related component 
+skills before being asked to read graphs. Simple graphs are introduced first.
+
+[p.422]
+422 Part III Extended Concepts and Skills
+FIGURE 16.1 Types of graphs
+b. horizontal F
+TH
+∣ w 
+Q
+T
+M
+_ ' _ ]
+............ ∣
+2. Line Plot
+1 1 1 1 Γ 1 1 1
+1 2 3 4 5 6 7 8
+Points
+×
+× XX
+X X X X XX
+X××XXX××X XX
+1011 1213141516171819202122 23
+3. Picture Graph Extra Recesses Earned
+Week 1 7^7
+Week 2
+Week 3 ¼Γ ¼Γ ¼Γ ¼r
+Week 4 7⅛ '7Λ
+Teaching students to interpret graphs involves modeling how to find information on the graph 
+to answer a specific question. For example, students may be given a bar graph that shows the num­
+ber of points Sarah scored in basketball games for each month of the school year. The teacher 
+would first introduce the features of the graph and model how to answer a question using the graph.
+A variety of literal questions should be included in initial examples. Literal questions ask for 
+the amount at a particular time (“How many points did Sarah score in September?”) or the partic­
+ular time on which a specified quantity was given (“In which month did Sarah score 80 points?”). 
+Questions calling for comparisons should be introduced gradually and eventually represent 
+a greater proportion of the total questions (“How many more points did Sarah score in January 
+than in September?”). Finally, questions requiring students to make inferences based on data from 
+graphs, the most difficult type of question, should be included after students have mastered answer­
+ing literal and comparison questions (“Why do you think Sarah scored more points in May than in 
+September?”). More detailed information about teaching students how to read graphs can be found 
+in Chapter 21, “Direct Instruction in Content-Area Reading,” in Direct Instruction Reading (2016).
+Classifying, Representing, and Interpreting Data
+A table specifies the relationship among sets of numbers. Tables are introduced in kindergar­
+ten but remain a part of data analysis throughout elementary and middle school. Beginning in
+
+[p.423]
+Chapter 16 Data Analysis 423
+Candies
+FIGURE 16.2 Table for collecting data in early grades
+Color Number of Candies
+Red candy
+Blue candy
+Orange candy
+6
+4
+1
+kindergarten, students are taught to gather and classify data. Format 16.1: Classifying Objects 
+into Categories outlines the teaching procedure for introducing students to classifying objects 
+from one broader category into three subcategories. In Part A, the teacher presents a set of trian­
+gles, circles, and squares to the students and leads them through determining how many of each 
+shape is present. The data obtained by sorting the shapes are written by the teacher as three equa­
+tions (e.g. △ = 2). In Part B, the students are given a structured worksheet with a set of shapes. 
+The teacher leads the students in determining how many of each shape there are and completing 
+the equations. Part C is a less structured worksheet in which the students independently count 
+different shapes and complete the equations.
+After students are able to accurately classify items of one broader category into at least three 
+subcategories, they may be taught to record the data in a table. Initially, the table would include 
+the name of the category of the objects as the title, the names of the subcategories, and a place 
+for the students to record data related to each of the subcategories. The teacher would instruct 
+the students to classify a set of objects into the appropriate subcategories and then record the 
+number of items in each subcategory in the relevant box. Figure 16.2 is an example of a table 
+that may be used for this purpose.
+In addition to teaching students how to record data in a table, teachers need to explicitly 
+teach students how to read data from a table. A preskill for working with tables is knowledge of 
+the terms “row” and “column.” Teachers can explain the terms by showing students that rows in 
+a table go across the page and columns go up and down the page.
+The procedure for teaching students to read tables follows a model-test sequence using a 
+table like the one below. The teacher first points out the title of the table to identify the topic. 
+The teacher then points out the heading in each column and discusses the type of informa­
+tion found under each heading. After leading students through identifying the headings, the 
+teacher points out how the students read across each row. Finally, the teacher models the strat­
+egy for locating information by looking for the intersection of rows and columns.
+Trees in Our Parks
+Lincoln Park Grant Park Washington Park
+Oak 16 8 2
+Maple 3 17 14
+Fir 5 19 11
+After teaching students about the features of a table, the teacher must present carefully 
+designed questions that require the students to use the table. Initially, these questions should be lit­
+eral. A literal question can be answered by simply referring to the chart (“How many oak trees are 
+in Washington Park?”). Comparative questions requiring students to tell the difference between 
+two pieces of information (“How many more fir trees than maple trees are in Grant Park?”) would 
+be presented after students have mastered using a table to answer literal questions.
+Picture Graphs
+A picture graph is a type of graph that uses pictures to represent the relationships between two 
+or more sets of numbers. We recommend introducing picture graphs in first grade, following
+
+[p.424]
+424 Part III Extended Concepts and Skills
+instruction in reading and creating tables. Format 16.2: Creating Picture Graphs describes the 
+teaching procedures for introducing pictures graphs in the early elementary grades. This format 
+clearly illustrates the conceptual relationship between tables and graphs.
+Picture graphs are more difficult when each picture stands for a quantity other than one. For 
+example, a picture graph in which each symbol represents 100 units is more difficult than a pic­
+ture graph in which each symbol represents one unit. In the illustration below, each smiley face 
+represents 100 people. Interpreting picture graphs is even more difficult when fractional parts 
+of a symbol are used. For example, in the illustration below, half of a smiley face represents 
+50 people (one-half of 100).
+Bar Graphs
+This text includes two introductory formats for reading and creating bar graphs. Format 16.3: 
+Reading Bar Graphs outlines the procedures for teaching students to read and interpret bar 
+graphs. Part A is a structured board presentation in which the teacher explains the features of 
+a bar graph and models reading the graph to obtain information. In Parts B and C, the teacher 
+provides practice on reading and interpreting bar graphs on worksheets.
+Format 16.4: Creating Bar Graphs describes the procedures for teaching students to 
+construct bar graphs from data provided in a table. The format follows a model-lead-test pro­
+cedure in which the teacher models using data from a table to create a bar graph and then 
+leads students through the steps of constructing their own bar graphs. The procedures in these 
+formats may be adapted for use with students in the upper grades. Adaptations would address 
+extending these procedures to include more complex data, comparative questions, and hori­
+zontal presentations.
+Two major factors determine the difficulty of interpreting bar graphs: (a) the amount of 
+information on the graph and (b) the need for estimating amounts. Bar graphs become more 
+complex as they show more than one set of relationships. For example, a simple bar graph may 
+show the performance of one group of students on a series of tasks. A more complex bar graph 
+would show the performance of several groups of students all on the same graph with separate 
+bars representing each group. In reading a graph with more than one set of data, the student must 
+be able to use the graph’s key to determine which bar refers to which group. A bar graph with 
+three sets of data is illustrated in Figure 16.3.
+Bar graphs also become more complex when the top of the bar does not correspond exactly 
+with a numeral on the y-axis and students must estimate the value shown by the bar, as shown in 
+Figure 16.3. For example, when examining the relationship between 1 hour of watching TV and 
+the average grade for third-period students, the top of the bar is between 90% and 100%. The 
+students must estimate the average grade as 93%.
+Line Plots, Stem and Leaf Plots
+These two graphing procedures, included in most math curricula, may be new to some teachers. 
+Line plots can be introduced in early elementary grades. A Une plot illustrates the frequency of 
+every data point on a number line. For example, the following are the results of a quiz taken by 
+21 students: 16, 14, 17, 14, 19, 11, 17, 12, 22, 18, 11, 16, 14, 12, 13, 16, 17, 15, 13, 16, and 21. 
+When developing a line plot, these data are placed on a number line. In this example each score 
+is represented by an “x.”
+X
+X XX
+X X X X XX
+XXXXX××XX XX
+10 11 12 13 14 15 16 17 18 19 20 21 22 23
+
+[p.425]
+Chapter 16 Data Analysis 425
+Relationship Between Hours of TV Watching and Grades
+FIGURE 16.3 Bar graph with three sets of data
+Amount of TV Watched
+Stem and leaf plots typically introduced in middle school also illustrate the frequency of 
+every data point in a set. The stem contains the tens digits. The leaf shows the ones digit for 
+each of the data points. The illustration below shows the frequency of the test scores used in the 
+example above:
+Stem Leaf
+1 1122334445666677789
+2 2
+In the example above, the first score, 11, is represented by a stem of 1 and a leaf of 1. The 
+second score of 11 is represented by the same stem of 1 and the second leaf of 1. The third score 
+of 12 is represented by the stem of 1 and the leaf of 2. Likewise, the score of 22 is represented 
+by the stem of 2 and the leaf of 2. Both line plots and stem and leaf plots can be used to illustrate 
+the shape of distributions prior to introducing the concept of the normal curve. The procedures 
+outlined in Format 16.4: Creating Bar Graphs may be adapted to teach students how to read 
+and create line plots and stem and leaf plots.
+DESCRIPTIVE STATISTICS
+Descriptive statistics are numbers used to describe sets of data. The most common descriptive 
+statistics are measures of central tendency (mean, median, and mode) and measures of variabil­
+ity (range, mean absolute deviation, and interquartile range). Although students begin work­
+ing with data and graphs in first grade, descriptive statistics are not commonly introduced until 
+middle school. Because some of these statistical calculations may be unfamiliar, we provide a 
+brief review of each prior to discussing the recommended teaching procedures.
+Measures of Central Tendency
+The mean, the most commonly used descriptive statistic, is calculated by adding a group of 
+numbers and dividing the sum by the number of numbers that were added. For example, the 
+mean of the numbers 24, 26, 20, and 30 is calculated by adding these numbers and then dividing 
+the sum, 100, by 4; the mean (100 ÷ 4) is 25.
+The median is the middle number of a set of numbers that has been arranged in order of 
+magnitude. An example that might be used involves test scores for a class of nine students. First, 
+the scores are listed in order:
+64, 70, 70, 70, ® 92, 94, 94, 98
+
+[p.426]
+426 Part III Extended Concepts and Skills
+The median is the middle score, 78. Four students scored less than 78, and four scored more than 
+78. The median is relatively easy to determine when working with an odd number of scores as 
+in the example in previous page. If there are 17 scores, the median is the ninth number: eight 
+numbers are smaller and eight are larger. The median is more difficult to determine for an even 
+number of scores because there is no middle score. When there is an even number of scores the 
+middle two numbers must be averaged. For example, if eight students score 13, 17, 19, 20, ∣ 24, 
+28, 31, 37, the median falls between 20 and 24 and is computed by calculating the average of 
+these numbers. In the example below, the median equals 22.
+20 + 24 44-----------= — = oo
+The mode denotes the most frequently occurring value in a collection of numbers. For 
+example, when examining the following scores—64, 70, 70, 70, 78, 92, 94, 94, 98—we note that 
+one student scored 84, three scored 70, one scored 78, one scored 92, two scored 94, and one 
+scored 98. The score that occurred most often, 70, is the mode.
+Statistical concepts should be introduced cumulatively, beginning with the mean. When 
+students have mastered computing the mean, the median can be introduced. Similar teaching 
+procedures can be used to teach each statistical concept. The teacher defines the term, models 
+how to calculate the statistic, and then leads the students through application problems.
+Sets of problems should reflect cumulative review. After each new statistical concept is 
+introduced, the teacher should present exercises in which the students apply all the statistical 
+concepts previously introduced. For example, if mean and median had been taught previously 
+and mode had just been introduced, the teacher should present an exercise in which the students 
+must compute all three statistics (mean, median, and mode).
+We have included a format for teaching how to calculate a mean. Format 16.5: 
+Calculating the Mean contains two parts. In Part A, the structured board presentation, the 
+teacher presents two steps: (a) add the numbers (the sum) and (b) divide the sum by how many 
+numbers were added. When initially presenting the format, examples should be prepared so 
+that the mean is a whole number; that is, the sum of the quantities must be a multiple of the 
+divisor. A problem in which the sum is 24 and the divisor is 5 would be inappropriate because 
+24 is not a multiple of 5.
+Part B is a structured worksheet that requires students to calculate means for real-world 
+problems. Note that the teacher asks students to read the problem and identify the first step in 
+calculating the mean. After students add all the values, the teacher asks the students to complete 
+the calculation. Finally, students write the answer with the appropriate label. We recommend 
+constructing sets of four to five problems for each daily worksheet. As previously noted, after 
+students have mastered calculating the mean, a demonstration illustrating the concept of mean 
+with a balance bar may be presented to confirm the calculation.
+The procedures for teaching median are similar to those for teaching mean. The teacher 
+would present a structured board presentation in which he first defines median and then demon­
+strates finding the middle score (median) with both an odd number and an even number of scores 
+in data sets that have been organized by magnitude. A less structured board presentation would 
+lead students through the two steps to find the median: (a) arranging the numerals in order and 
+(b) using the procedure previously presented in the structured board presentation. Having stu­
+dents first arrange numerals in order is an important step needed for determining median in 
+everyday situations where data rarely appear in order of magnitude.
+Note that examples need to include sets of data that have the same numeral more than once 
+so that students practice including each numeral when arranging the numerals by magnitude. For 
+example, when given the data set 100, 98, 75, 100, 69, 98, 85, students would need to order the 
+set as 100, 100, 98, 98, 85, 75, 69, resulting in a median of 98. If each numeral were listed once 
+(100, 98, 85, 75, 69), students would incorrectly identify 85 as the median.
+Students need to learn when to use median rather than mean as a measure of central ten­
+dency. Teachers can introduce the concept of outliers by teaching the rule “We use median as 
+a measure of central tendency when the data include outliers.” The teacher then would have 
+students apply the rule to sets of examples that require the students to discriminate when to use 
+mean and when to use median.
+
+[p.427]
+Chapter 16 Data Analysis 427
+Measures of Variability
+Measures of variability describe the dispersion of a set of data. In this chapter, we include rec­
+ommendations for teaching range, mean absolute deviation (MAD), and interquartile range. 
+Range, the easiest measure of variability to determine, refers to the difference between the 
+smallest and largest number in a set. For example, the distances that girls in Mr. Adams’s 
+class can throw the shotput are 32 ft., 29 ft., 41 ft., 18 ft., 27 ft., and 42 ft. The range is com­
+puted by subtracting 18 ft., the lowest score, from 42 ft., the highest score: 42 — 18 = 24. 
+The range is 24 ft.
+Mean Absolute Deviation (MAD) is the distance of each data point from the mean of 
+the set. Prior to teaching the calculation for MAD, students must be taught the concept of abso­
+lute value. Absolute value, the distance of a number from 0, is always positive. The absolute 
+value of both 7 and —7 is 7. We recommend teaching absolute value by initially using the phrase 
+“distance from 0” instead of the term “absolute value” to avoid teaching a new concept and new 
+vocabulary simultaneously. The term “absolute value” easily can be introduced after students 
+demonstrate understanding of the concept. With knowledge of absolute value, calculating MAD 
+is not difficult but still requires several steps.
+Summary Box 16.1 outlines the steps for calculating MAD. The first step is to calculate the 
+mean for the set of numbers. The second step is to determine the deviation (difference) of each 
+number from the mean. The next step is to find the absolute value for each deviation. The final
+'summary j BOX 16.1
+Calculating Mean Absolute Deviation
+Find the MAD for this data set.
+Data Set: 48, 52, 54, 55, 58, 59, 60, 62
+Step 1. Find the mean. 48 + 52 + 54 + 55 + 58 + 59 + 60 + 62 = 448.
+448 ÷ 8 — 56.
+The mean is 56.
+Step 2. Find the deviation of each Number - Mean Deviation from Mean
+number from the mean. 48 - 56 -8
+52 - 56 -4
+54 - 56 -2
+55 - 56 -1
+58 - 56 2
+59 - 56 3
+60 - 56 4
+64 - 56 8
+Step 3. Find the absolute value of the Deviation from Mean Absolute Deviation
+deviation from the mean. -8 8
+-4 4
+-2 2
+-1 1
+2 2
+3 3
+4 4
+8 8
+Step 4. Find the mean of the absolute 8 + 4 + 2+1 + 2 + 3 + 3 + 8 = 32
+deviations (MAD). 32 ÷ 8 = 4
+MAD = 4
+
+[p.428]
+428 Part III Extended Concepts and Skills
+step is to calculate the mean of the deviations by adding the absolute values of all of the devia­
+tions and dividing that sum by the number of absolute values that were added.
+Interquartile range also requires several steps. Summary Box 16.2 outlines the steps in 
+determining the interquartile range. The first step is to determine the median of the data set. 
+Next, the median of the first half of the set and the median of the second half are identified, 
+resulting in four parts or quartiles. Finally, to find the interquartile range, the median of the first 
+half is subtracted from the median of the second half of data.
+The example in Summary Box 16.2 has 10 numbers in the set, an even number of items. 
+Because finding the median of an odd number of items is different, the procedure for finding the 
+interquartile range varies when there is an odd number of values. For example, the following 
+set includes an odd number of values: 5, 5, 7, 8,(∏), 12, 15, 15, 16. The median, 11, is circled 
+in blue. There are four numbers in the first half of the data and four in the second. In the case of 
+having an odd number of values, the median is not part of either half. Therefore, in the example, 
+11 is not used in finding the medians of the first or second half. As illustrated below, the median 
+of the first half is 6 and the median of the second half is 15. The interquartile range, the median 
+of the second half minus the median of the first half, is 9 (15 - 6).
+First Half Second Half 
+5, 5,17, 8,12, 15,115, 16 
+Median: 6 Median: 15
+We recommend teaching MAD and interquartile range using the steps outlined in 
+Summary Boxes 16.1 and 16.2. Teachers would first present the steps in the calculations, mod­
+eling several examples. Next, teachers would guide students through the calculations. As when 
+teaching other statistics, we recommend following initial instruction with worksheets providing 
+independent practice in using descriptive statistics.
+SUMMARY j
+Calculating Interquartile Range
+Data Set: 8, 10, 10, 11, 11, 11, 12, 13, 13, 14
+Step 1. Find the median.
+8, 10, 10, 11, 11,111, 12, 13, 13, 14 
+The median is 11.
+Step 2. Find the medians of the first and second half 
+of the data set.
+Step 3. Subtract the median of the first half from 
+the median of the second half to find the 
+interquartile range.
+First Half Second Half
+8,10,θ,11,11, 11,12,013,14
+13 - 10 = 3
+DIAGNOSIS AND REMEDIATION
+Data analysis errors can be organized into the same categories that have been used throughout this 
+text: fact errors (missing a math fact), component-skill errors (calculation or confusion errors), 
+and strategy errors. The diagnosis and remediation procedures for the skills and concepts taught 
+in both the Graphs and Descriptive Statistics sections should begin with determining the cause 
+of the error. Both of those sections include discussions of critical discriminations and concepts, 
+such as constructing and reading graphs that represent fractional values or understanding the 
+need to include all of the values in order of magnitude when finding medians. Those discussions 
+are designed to alert teachers to possible confusions that could be the cause of student errors. 
+As always, teachers need to confirm their diagnosis by interviewing the students or by carefully 
+examining written work. Once the diagnosis has been confirmed, the remediation usually involves 
+reviewing critical parts of the relevant formats and providing students with additional practice.
+Examples of common errors for graphs and descriptive statistics are outlined in Figure 16.4 
+along with suggested remediation procedures.
+
+[p.429]
+Chapter 16 Data Analysis 429
+FIGURE 16.4 Data analysis diagnosis and remediation
+Error Pattern Diagnosis
+Not estimating the 
+value from a bar 
+graph
+Remediation Procedures
+The teacher would point 
+out that the bar is halfway 
+between 1 and 2 miles 
+and ask the students, 
+"What fraction is halfway 
+between 1 and 2?"
+Remediation Examples
+Provide additional 
+questions that require 
+students to estimate the 
+value of a bar. Include 
+questions that do not 
+require estimation.
+How many miles did Manuel run 
+on Monday? Answer: 1 mile
+Find the median:
+9, 11, 15, 11, 12
+Student's Work:
+9, 11, 12, 15
+Median is 11.5
+Find the mean:
+12, 6, 4, 7, 9, 6
+Student's Work:
+12 + 6 + 4 + 6 + 7 + 9 = 44
+44 ÷ 5 = 8.8
+Students do not 
+include repeated 
+occurrences of a 
+single number when 
+determining median
+Student did not 
+divide by the total 
+number of values in 
+the data set
+Remind students that 
+every value must 
+be included when 
+determining the median.
+Remind students to divide 
+the sum of all of the 
+values in the data set by 
+the number of values in 
+the data set, even when 
+two values are repeated.
+Provide additional 
+examples of data sets, 
+some with repeated 
+values and some without.
+Provide additional 
+examples of data sets, 
+some including repeated 
+values.
+APPLY WHAT YOU LEARNED
+Click on the V to answer the questions online.
+1. Explain how visual and numerical representations of data sets are related and sequential.
+2. Why does the text recommend that teachers use the balance bar representation after teaching students 
+to calculate the mean of a set of numbers?
+3. For each pair of questions below, tell which is more difficult and how the difficulty is addressed by 
+the instructional recommendations.
+Pair one
+a. How many houses were built in 2014?
+b. How many houses were built in 2016?
+Pair two
+a. How many more houses were built in 2017 than 2014?
+b. How many more houses were built in 2016 than 2015?
+
+[p.430]
+430 Part III Extended Concepts and Skills
+4. How are students taught when to use the median rather than the mean for calculating measures of 
+central tendency?
+5. Below are errors made by several students while solving the following word problem. Tell the cause 
+of each error. Specify the remediation procedure.
+Ashley played in 5 basketball games. She scored 25 points in the first game, 15 points in the second 
+game, 17 points in the third game, 21 points in the fourth game, and 22 points in her last game. What 
+was her average?
+(⅛ηce RosnOSt
+25 25 19.8 25 200
+15 15 5W~ 15 5)Tθδ
+17 17 5 17
+21 21 49 21
+22 ±22 45 ±22
+100 99 40 100
+Format 16.1
+SORTING
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Display the following for the students.)
+ΔO□OΔO□O
+2. (Point to the shapes.) Here's a row of shapes. Tell me each shape when I 
+touch under it. (Touch first shape.)
+(Repeat with each of the following shapes.)
+3. (Point to ∕∖ = .) We're going to complete the equations that show the 
+total of each shape. I'm going to cross out each triangle as you count it. 
+Count as I touch each triangle. (Cross out each triangle as it is counted.) 
+How many triangles are there?
+(Write 2 after ∕∖ = .)
+4. (Point to θ = .) Now we're going to find out how many circles there 
+are. Count as I touch each circle. (Cross out each circle as it is counted.) 
+How many circles are there?
+(Write 4 after θ = .)
+5. (Point to = .) Now we're going to find out how many squares there 
+are. Count as I touch each square. (Cross out each square as it is counted.) 
+How many squares are there?
+(Write 3 after = .)
+6. (Point to ∕∖ = 2.) How many triangles are there?
+7. (Point to ζ3 = 4.) How many circles are there?
+Triangle
+1, 2
+2
+1, 2, 3, 4
+4
+1, 2, 3
+3
+2
+4
+
+[p.431]
+Chapter 16 Data Analysis 431
+TEACHER STUDENTS
+8. (Point to = 3.) How many squares are there? 3
+Part B: Structured Worksheet
+1. (Present a worksheet like the following to the students.)
+2. (Point to the circles.) These are shapes. Tell me the name of each shape 
+when i touch it (Touch a circle.)
+(Repeat with cubes and stars.)
+3. You're going to complete the equations that show the total for each 
+shape. Look at the circles. Count and cross out each circle. (Pause while 
+students count.) How many circles are there?
+Write 4 on the line next to the circle. (Check students' work.)
+4. Look at the cubes. Count and cross out each cube. (Pause while students 
+count.) How many cubes are there?
+Write 4 on the line next to the cube. (Check students' work.)
+5. Look at the stars. Count and cross out each star. (Pause while students 
+count.) How many stars are there?
+Write 1 on the line next to the star. (Check students' work.)
+6. How many circles are there?
+7. How many cubes are there?
+8. How many stars are there?
+(Repeat with additional examples.)
+Part C: Less Structured Worksheet
+1. (Present a worksheet like the following to the students.)
+Circle
+4
+4
+1
+4
+4
+1
+2. These are shapes. You're going to complete the equations that show 
+the total for each shape. Count and cross out the smiley faces first. Then 
+write the total number of smiley faces on the line next to the smiley face. 
+Do the same thing for the stars and the hearts.
+(Repeat with additional examples.)
+
+[p.432]
+432 Part III Extended Concepts and Skills
+Format 16.2
+CREATING PICTURE GRAPHS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. Γm going to show you how to use data from a table to make a picture 
+graph. Here is what I know about some of my friends:
+(Display the following for the students.)
+Favorite Ice Cream Flavor
+Flavor Number of Friends
+Chocolate 5
+Strawberry 2
+Vanilla 1
+(Point to "Chocolate.") Five of my friends like chocolate ice cream best.
+(Point to "Strawberry.") Two of my friends like strawberry ice cream best.
+(Point to "Vanilla.") Only one of my friends likes vanilla best.
+2. (Display the following for the students.)
+This is the chart Γm going to use to create a picture graph. A picture 
+graph uses pictures to show how many. What does a picture graph do?
+Yes, a picture graph uses pictures to show how many. The first thing I 
+need to do is label my picture graph. This picture graph is going to show 
+how many of my friends chose chocolate, strawberry, or vanilla as their 
+favorite ice cream, so I'm going to label this picture graph "Favorite 
+Ice Cream Flavor." (Write "Favorite Ice Cream Flavor" at the top of the 
+picture graph.)
+3. Now, I need to label each of my rows. This picture graph is going to show 
+my friends' favorite ice cream flavors. What's the first flavor on my table? 
+Yes, chocolate. (Write "Chocolate" in the top cell of the first column.)
+4. (Repeat step 3 for labeling the second and third rows as "Strawberry" 
+and "Vanilla.")
+5. Now that my picture graph and all of the rows have labels, I can use 
+pictures to show how many friends chose each flavor. The picture Γm 
+going to use for this picture graph is a smiley face. Look at the table. 
+How many of my friends chose chocolate as their favorite flavor?
+6. Yes, 5. So I'm going to draw five smiley faces in the row for chocolate to 
+show that five of my friends chose chocolate. (Draw 5 smiley faces in the 
+chocolate row.)
+7. Look at the table. How many of my friends chose strawberry as their 
+favorite flavor?
+8. Yes, 2. So I'm going to draw two smiley faces in the strawberry row to 
+show that two of my friends chose strawberry. (Draw 2 smiley faces in 
+the strawberry row.)
+It uses pictures to show how 
+many.
+Chocolate
+5
+2
+
+[p.433]
+Chapter 16 Data Analysis 433
+TEACHER STUDENTS
+9. (Repeat steps 7 and 8 with "Vanilla." The finished picture graph should 
+look like the following.)
+Favorite Ice Cream Flavor
+Chocolate (^) (S)
+Strawberry (o)
+Vanilla
+(Repeat steps 1-9 with additional examples.)
+Part B: Structured Worksheet
+1. (Give the students a worksheet like the following.) 
+Table:
+Favorite Pizza Toppings
+Cheese 2 people
+Pepperoni 4 people
+Olives 2 people
+Peppers 3 people
+Picture Graph:
+2. You're going to use the information in the table to make a picture 
+graph. What does this table tell us about?
+3. Yes, this table tells us about favorite pizza toppings. What's the first 
+topping the table tells us about?
+Yes, cheese. How many people chose cheese as their favorite topping?
+4. What's the next topping the table tells us about?
+Yes, pepperoni. How many people chose pepperoni as their favorite 
+topping?
+5. (Repeatstep 4 for "Olives" and "Peppers.")
+6. The first thing we need to do when making a picture graph is label the 
+picture graph. What will this picture graph tell us about?
+Yes, write "Favorite Pizza Toppings" in the space at the top of the 
+picture graph. (Check students' labels.)
+7. The next thing you need to do is label each of the rows. What's the 
+first topping in the table?
+Yes, write "Cheese" in the box for the first row. (Check students' labels.)
+8. What's the next topping in the table?
+Yes, write "Pepperoni" in the box for the second row. (Check students' 
+labels.)
+Favorite pizza toppings
+Cheese
+2
+Pepperoni
+4
+Favorite pizza toppings
+Cheese
+Pepperoni
+continued
+
+[p.434]
+434 Part III Extended Concepts and Skills
+Format 16.2 (continued)
+CREATING PICTURE GRAPHS
+TEACHER STUDENTS
+9. (Repeat step 8 for "Olives" and "Peppers.")
+10. Now that your picture graph and all of the rows have labels, you can 
+use pictures to show how many people chose each topping. Use a 
+triangle to show 1 person. Look at the table. How many people chose 
+cheese as their favorite topping?
+Yes, 2. Draw two triangles in the row next to "Cheese" to show that two 
+people chose cheese as their favorite topping. (Check students' work.)
+11. Look at the table. How many people chose pepperoni as their favorite 
+topping?
+Yes, 4. Draw four triangles in the row next to "Pepperoni" to show that 
+four people chose pepperoni as their favorite flavor. (Check students' work.)
+12. (Repeat step 11 for "Olives" and “Peppers." The finished picture graph 
+should look like the following:)
+2
+Favorite Pizza Toppings
+Cheese
+PepperoniΔΔΔΔ
+Olives
+Peppers ΔΔΔ
+(Repeat steps 1-12 with similar worksheets.)
+Part C: Less Structured Worksheet
+1. (Present students with a worksheet like the following.)
+Rainy days
+
+[p.435]
+Chapter 16 Data Analysis 435
+TEACHER
+3. That's right, rainy days. You're going to make a picture graph that tells 
+how many rainy days there were in each month. Remember to label 
+your picture graph first, then label each of the rows, and then draw the 
+pictures to show how many rainy days there were in each month. If you 
+don't know how to draw a cloud or a raindrop, you can draw a circle 
+to show each rainy day. (Monitor students as they create their picture 
+graphs.)
+(Repeat steps 1-3 with similar worksheets.)
+STUDENTS
+Format 16.3
+READING BAR GRAPHS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Display the following for the students.)
+2. This is a bar graph. A bar graph uses a bar to show how many. What 
+does a bar graph do?
+3. This bar graph tells about people and their favorite fruits. (Point to the 
+labels along the x-axis.) These words tell the types of fruit. What do 
+these words tell?
+4. (Point to the numerals along the y-axis.) These numerals tell how many people 
+said each type of fruit was their favorite. What do these numerals tell?
+5. (Point to "Apple.") I want to know how many people said apples were 
+their favorite. To find out, I'm going to touch the line for zero just above 
+the word apple. (Touch "Apple.") Then I'm going to slide my finger up 
+the bar until I reach the top of the bar. (Slide finger to the top of the 
+bar and keep finger there.) Now, I can slide my finger over to find the 
+numeral for the line that I'm touching. (Slide finger to the left and touch 
+15.) Γm touching "15." That means that 15 people said apples were their 
+favorite. How many people thought apples were best?
+It uses a bar to show how 
+many.
+The types of fruit
+How many people said each 
+type of fruit was their favorite
+continued
+
+[p.436]
+436 Part III Extended Concepts and Skills
+Format 16.3 (continued)
+READING BAR GRAPHS
+TEACHER STUDENTS
+6. (Repeat step 5 for "Banana" and "Strawberry.")
+7. 1 want to know which fruit the most people said was their favorite. I can 
+look at the bars and find the tallest bar. The bar for apples is the tallest 
+bar. (Point to the bar for apples.) That tells me that the most people said 
+that apples are their favorite fruit.
+8. (Repeat steps 1-7 with additional examples.)
+Part B: Structured Worksheet
+1. (Give the students a worksheet like the following.)
+1. How many pink pencils were in the jar?
+2. How many yellow pencils were in the jar?
+3. How many blue pencils were in the jar?
+4. What color were most of the pencils in the jar?
+2. This bar graph shows how many pink, yellow, and blue pencils 
+were in a jar.
+3. Read number one.
+Look at the bar graph and figure out how many pink pencils were in the 
+jar. (Pause.) How many pink pencils were in the jar?
+Write 6 in the space by number 1 (Monitor students' responses.)
+4. (Repeat step 3 for numbers 2-4.)
+How many pink pencils 
+were in the jar?
+6
+
+[p.437]
+Chapter 16 Data Analysis 437
+TEACHER STUDENTS
+Part C: Less Structured Worksheet
+1. (Present students with a worksheet like the following.)
+1. How many snowy days were in December?
+2. How many snowy days were in January?
+3. How many snowy days were in February?
+4. Which month had the most snowy days?
+2. This bar graph shows how many snowy days there were in December, 
+January, and February. The bar shows how many snowy days there 
+were in each month. Use the information in the bar graph to answer the 
+questions on the worksheet. (Monitor students' responses.)
+(Repeat steps 1 and 2 with additional examples.)
+Format 16.4
+CREATING BAR GRAPHS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. I'm going to show you how to use data from a table to make a bar graph.
+Here is what I know about the pets in my neighborhood:
+(Display the following for the students.)
+Pets in My Neighborhood
+Pet Number of Pets
+Dogs 4
+Cats 3
+Fish 6
+(Point to “Dogs.") There are four dogs in my neighborhood. (Point to 
+"Cats.") There are three cats in my neighborhood. (Point to "Fish.")
+There are six fish in my neighborhood.
+continued
+
+[p.438]
+438 Part HI Extended Concepts and Skills
+Format 16.4 (continued)
+CREATING BAR GRAPHS
+TEACHER STUDENTS
+I'm going to create a bar graph. A bar graph uses a bar to show how 
+many. What does a bar graph do?
+Yes, a bar graph uses a bar to show how many. The first thing I need 
+to do is label my bar graph. This bar graph is going to show how many 
+dogs, cats, or fish are in my neighborhood, so Γm going to label this bar 
+graph "Pets in My Neighborhood." (Write "Pets in My Neighborhood" at 
+the top of the bar graph.)
+3. Now, I need to label the parts of my bar graph. (Point to the x-axis.) 
+This part is going to show each type of pet, so I'll write dog, cat, and 
+fish under this line. (Write dog, cat, and fish under the ×-axis. The graph 
+should now look like the following:)
+It uses a bar to show how 
+many.
+5. Now that my bar graph has labels, I can show how many of each pet 
+are in my neighborhood. Look at the table. How many dogs are in my 
+neighborhood? 4
+6. Yes, 4. So Γm going to color above where it says "Dogs" until I 
+come to the line for four. This will show how many dogs are in my 
+neighborhood. (Color in the column above "Dogs" beginning at zero 
+and coloring up until the line for four is reached. Model counting out 
+loud for the students while coloring.)
+7. Look at the table. How many cats are in my neighborhood? 3
+8. Yes, 3. So I'm going to color above where it says "Cats" until I come to 
+the line for three. This will show how many cats there are. (Color in the 
+column above "Cats" beginning at zero and coloring up until the line 
+for three is reached. Model counting out loud for the students while 
+coloring.)
+
+[p.439]
+Chapter 16 Data Analysis 439
+TEACHER STUDENTS
+9. (Repeat steps 7 and 8 with "Fish." The finished bar graph should look 
+like the following:)
+10. We've created a bar graph! What is our bar graph about? 
+(Repeat steps 1-10 with additional examples.)
+Part B: Structured Worksheet
+Pets in my neighborhood
+1. (Give the students a worksheet like the following.) 
+Table:
+Favorite Sports
+Soccer 7 students
+Football 8 students
+Baseball 5 students
+3. Yes, this table tells us about favorite sports. What's the first sport the 
+table tells us about?
+Yes, soccer. How many students chose soccer as their favorite sport?
+4. What's the next sport the table tells us about?
+Yes, football. How many students chose football as their favorite sport?
+Favorite sports
+Soccer
+7
+Football
+8
+5. (Repeat step 4 for "Baseball.")
+6. The first thing we need to do when making a bar graph is label the 
+parts of the bar graph. What will this bar graph tell us about?
+Yes, write "Favorite Sports" in the space at the top of the bar graph.
+(Check students' labels.)
+Favorite sports
+continued
+
+[p.440]
+440 P∕∖RT III Extended Concepts and Skills
+Format 16.4 (continued)
+CREATING BAR GRAPHS
+TEACHER STUDENTS
+7. The next thing you need to do is label the other parts of the bar graph. 
+What's the first sport in the table?
+Yes, write "Soccer" in the first space at the bottom of the bar graph. 
+(Check students' labels.)
+8. What's the next sport in the table?
+Yes, write "Football" in the second space at the bottom of the bar 
+graph. (Check students' labels.)
+9. (Repeatstep 8 for "Baseball.")
+10. Now that your bar graph has all of its labels, you can make a bar for 
+each sport. Look at the table. How many students chose soccer as their 
+favorite sport?
+Yes, 7. Touch "soccer." Color above the word "soccer." Start coloring at the 
+line for zero and continue coloring up until you get to the line for 7. This 
+bar will show that seven students chose soccer. (Check students' work.)
+11. Look at the table. How many students chose football as their favorite 
+sport?
+Yes, 8. Touch "football." Color above the word "football." Start 
+coloring at the line for zero and continue coloring up until you get to 
+the line for 8. This bar will show that eight students chose football. 
+(Check students' work.)
+12. (Repeat step 11 for "Baseball." The finished bar graph should look like 
+the following:)
+Soccer
+Football
+7
+13. We just made a bar graph about our favorite sports! 
+(Repeat steps 1-13 with similar worksheets.)
+
+[p.441]
+Chapter 16 Data Analysis 441
+TEACHER
+Part C: Less Structured Worksheet
+1. (Present students with a worksheet like the following.) 
+Table:
+STUDENTS
+Bar Graph:
+Number of Cupcakes
+Chocolate 9
+Banana 10
+Vanilla 6
+Cupcakes
+3. That's right, cupcakes. You're going to make a bar graph that tells how 
+many chocolate, banana, and vanilla cupcakes there were. Remember 
+to label your bar graph first, then write the labels that go below the 
+bar graph, and then make the bar for each kind of cupcake. (Monitor 
+students as they create their bar graphs.)
+(Repeat steps 1-3 with similar worksheets.)
+Format 16.5
+CALCULATING THE MEAN
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. Listen: In basketball practice, Ben scored 4 points on Monday, 7 points on 
+Tuesday, 3 points on Wednesday, and 6 points on Thursday. (Write 4, 7, 
+3, 6.) We want to figure the average number of points Ben scored each 
+day. What do we want to figure out?
+2. Here's how we figure out Ben's average. First we add; then we divide 
+the sum by how many numbers we added. First we add; then what do 
+we do?
+3. First we add. (Write the problem on the board.)
+4
+7
+3
++ 6
+The average number of 
+points Ben scored each day 
+of practice
+Divide the sum by how 
+many numbers we added
+What is the sum of 4, 7, 3, and 6? 20
+continued
+
+[p.442]
+442 Part III Extended Concepts and Skills
+Format 16.5 (continued)
+CALCULATING THE MEAN
+TEACHER STUDENTS
+4. The sum is 20. We added. Now we divide by how many numbers we 
+added. (Point to 4, 7, 3, and 6 as you say,) We added 1, 2, 3, 4, numbers.
+5. We added 4 numbers, so we divide 4 into 20. What do we divide? 4 into 20
+How many times does 4 go into 20? 5
+Yes, Ben's average is 5 points each day. What is Ben's average? 5 points each day
+Did Ben score exactly 5 points every day?
+5 points a day is his average.
+(Repeat steps 1-5 with the examples below.)
+Jill scored the following points in each game: 6, 8, 9, 5, 0, 10, 4.
+Tom ran these numbers of miles each day: 3, 1, 1, 7, 0, 0.
+Part B: Structured Worksheet
+1. (Give students worksheets with several problems like the one below.)
+Jack ran 5 miles on Monday, 2 miles on Tuesday, 4 miles on Wednesday, 
+0 miles on Thursday, and 9 miles on Friday. What is the average number 
+of miles he ran each day?
+No
+2. Read the problem. What does the problem ask for? The average number of 
+miles he ran each day
+3. What do we do first to figure the average? Add the miles
+Add all the miles. How many miles did he run altogether? 20
+4. What do we do after we find the sum? Divide by how many 
+numbers we added
+5. How many numbers did we add? 5
+Say the division problem. 5 goes into 20
+How many times does 5 go into 20?
+Write 4 in the box.
+4
+6. Now we have to label our answer. Read the last sentence.
+So the label is miles each day.
+What is the average number 
+of miles he ran each day?
+What is the label for the answer?
+Write the words. (Pause.)
+Miles each day
+Say the whole answer.
+(Repeat steps 2-6 with additional problems.)
+4 miles each day

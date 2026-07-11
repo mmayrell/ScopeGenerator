@@ -1,0 +1,3546 @@
+[p.284]
+Chapter
+13
+Fractions
+LEARNING OUTCOMES
+13.1 Explain how instruction in fractions is organized around three major areas to 
+illustrate the interrelationships among various fraction skills.
+13.2 Discuss the recommended procedures for teaching fraction analysis to promote 
+conceptual understanding of fractions to young students.
+13.3 Explain the importance of teaching students rewriting strategies as a 
+prerequisite for fractions operations and the role equivalent fractions plays in 
+the rewriting strategies.
+13.4 Outline instructional strategies to teach addition and subtraction of fractions 
+with like and unlike denominators.
+13.5 Outline instructional strategies to teach multiplication and division of fractions, 
+including word problems.
+13.6 Describe diagnosis and remediation procedures for common fraction errors.
+SKILL HIERARCHY
+• ∙ ∙ ∙ ∙ ∙ ∙ ∙
+We have included a Skill Hierarchy Chart in this chapter because fractions comprise one of the 
+most complex sets of skills covered in elementary mathematics. This complexity is understand­
+able, since the entire range of operations discussed in other sections of the book is applicable 
+to fractional numbers. Unfortunately, fractions do not represent a simple extension of familiar 
+skills. While early instruction on whole numbers covers counting by groups of 1 or more than 1, 
+that instruction does not help students generalize to groups of less than one. In addition and sub­
+traction of whole numbers, members of a second group relate to the members of the first group 
+based on one-to-one correspondences. For example, in the problem 4 + 3, students increase 
+the first set in units of 1 (5, 6, 7), producing the answer 7. To solve 4 — 3, students decrease the 
+first set in units of 1, producing the answer 1. In contrast, in multiplication and division of whole 
+numbers, a second group is related to the first group based on a one-to-many correspondence. 
+For example, in solving for 8 × 2, students count units of 8 for each member of the second 
+group (8, 16), producing the answer 16. In 16 ÷ 2, students determine the answer by counting 1 
+for each unit of 2 in 16 (1, 2, 3, 4, 5, 6, 7, 8), producing the answer 8.
+
+[p.285]
+Chapter 13 Fractions 285
+In operations containing fractions, the one-to-one and one-to-many correspondences involve 
+fractional numbers. For example, to solve ⅜ × 4 students count units of ⅔ for each member of 
+the second group. While students can quickly learn to count 2, 4, 6, 8 for 2 × 4, counting ⅔, ⅝, 
+⅝, ⅝, for ⅜ × 4 is not easy. The problem ⅜ X 4½ is even less comprehensible because students 
+have no experience counting ⅜ths times. Therefore, learning fractional correspondences with 
+both whole numbers and other fractions requires instruction in new strategies.
+Another major difficulty with fractions is the incompatibility of different units. Addition 
+and subtraction can be carried out only with equivalent units. Whole numbers represent a simple 
+type of equivalent unit, so they can be added and subtracted in any combination. In contrast, 
+fractional numbers do not represent one type of unit: all thirds represent equivalent units and all 
+fourths represent equivalent units, but thirds are not the same as fourths. Consequently, thirds 
+and fourths cannot be added or subtracted as such. Prior to adding or subtracting fractions, the 
+fractional units must be transformed into a common unit:
+1 1 _ 3 8 _ 11
+4 3 12 12 ^ 12
+The necessity to transform or rewrite fractional numerals is a major source of difficulty in 
+teaching fractions. (This is one reason for the appeal of decimals; they have the uniform base of 
+multiples of 10.)
+Instruction in fractions can be organized around the three main fraction topics outlined in 
+the Skill Hierarchy: fraction analysis, rewriting fractions, and operations (addition, subtraction, 
+multiplication, and division).
+Since application of fraction skills depends on an understanding of fractional numbers, ini­
+tial instruction on fraction concepts and conventions is critical. Early instruction must address 
+fraction analysis skills such as constructing diagrams or figures to represent fractions, writing 
+the fraction represented by diagrams or figures, decoding fractions, and determining if a fraction 
+is proper or improper.
+The second area, rewriting fractions, includes the following skills:
+1. Rewriting an improper fraction as a mixed numeral: 1⅜ = 6½
+2. Rewriting a proper fraction using the smallest possible denominator (reducing fractions): 
+⅝ = ¾
+3. Rewriting a fraction as an equivalent fraction: ⅜ = 4∕□
+4. Rewriting a mixed numeral as an improper fraction: 2½ = ⅝
+The third area, fraction operations, often requires students to use the fraction rewrit­
+ing skills described above. For example, to work the problem ¾ + ⅝, the student must 
+rewrite ¾ and ⅝ as equivalent fractions with the same denominator: ¾ = 9∕12 and ⅝ = 10∕12. 
+The equivalent fractions 10∕12 and 9∕12 are then added to produce a sum of 19∕12, which may be 
+converted to the mixed numeral l7∕12. When working the problem ⅝ × 1¾, the student first 
+must convert the mixed numeral 1¾ to the improper fraction ¾. The student then multiplies 
+4∕5 × ¾, ending with a product of 2½0, which may be converted to the mixed numeral l8∕20. 
+The fraction part of this mixed numeral may be reduced so that the final answer reads 1⅜.
+The Skill Hierarchy Chart illustrates the interrelationships among the three areas of frac­
+tion skills. Note that many of the fractions skills on the chart are preskills for other skills. 
+A sequence for teaching fractions must be designed so that all preskills for advanced prob­
+lems have been presented before that type of problem is introduced. Note also how the focus 
+of instruction is cyclical. For example, simple addition and subtraction problems involving 
+fractions with like denominators are introduced at a relatively early stage in the sequence of 
+instruction. Problems involving adding and subtracting fractions with unlike denominators are 
+not introduced until significantly later in the sequence because several rewriting skills must 
+be taught first. The Instructional Sequence and Assessment Chart suggests one possible order 
+for introducing the important types of fraction problems. Teachers working with intermediate 
+students will find it productive to test for and teach, when necessary, the skills appearing at the 
+beginning of the sequence chart, since these skills lay the foundation for a conceptual under­
+standing of fractions.
+
+[p.286]
+286 Part III Extended Concepts and Skills
+ω ⊂ o +≡ 
+S 
+φ α O
+□)
+5 φ
+c o 
+"δ s
+ω ⊂ o
+S
+φ
+Q O
+
+[p.287]
+Chapter 13 Fractions 287
+E
+□ (D J
+'ω ∈ ⊂ ω -j — φ ⊂ ⊂ 
+ατ5 £ 
+s ® ⊂ φ × ⅛
+⅛
+
+[p.288]
+288 Part III Extended Concepts and Skills
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type Performance Indicator
+1 Identifying fractions that 
+correspond to diagrams
+a. Circle the picture that shows ¾.
+b. Circle the picture that shows z¼.
+c. Put X on the line below the picture that shows ⅜.
+d. Put X on the line below the picture that shows ⅜.
+Drawing diagrams to 
+correspond to fractions
+
+[p.289]
+Chapter 13 Fractions 289
+Grade
+2
+2
+3
+3
+3
+4
+4
+4
+continued
+Level Problem Type
+Reading and writing fractions 
+expressed as fractions
+Performance Indicator
+Write these fractions:
+a. two-thirds = —
+b. five-halves = —
+c. four-fifths =
+2 4 5(Test students individually. "What does this say: — — —?")3 5 2
+Determining whether a frac­
+tion is more than, equal to, 
+or less than 1
+Write more than, less than, or equal to in each blank.
+5ιs------------------- ,
+7ιs-------------------'
+l,s------------------,
+Adding and subtracting frac­
+tions with like denominators
+3 _ 2 =
+5 5
+4_ 2 =
+7 7
+3 1----- 1----- —
+5 5
+Reading and writing mixed 
+numerals
+Write two and one-third__________
+Write four and two-fifths__________
+Write six and one-half__________
+(Test students individually. "Read these numerals:
+Writing a fraction as an equiv­
+alent to one whole group '=7 1=7
+Multiplying fractions
+I I I I I I
+c x ι ∣ m m ∣ m ∩ ∩ ∣ l∩ 
+× × ×
+m ∣ l∩ rx∣ ∣ l∩ cxι I cxι
+Adding and subtracting 
+mixed numbers: fractions 
+with like denominators
+4-2-—
+⅛-'l-------------------
+Word problems: adding and 
+subtracting mixed numbers 
+and fractions with the same 
+denominator
+Bill ran 2¾ miles on Monday and 3¼ miles on Tuesday. How many miles 
+did he run altogether?__________ miles
+Jack had 42∕s pounds of nails. Bill had 2⅜ pounds of nails. How much more 
+did Jack have?__________ pounds of nails
+Bob worked 2½ hours on Monday and 3 hours on Tuesday. How many 
+hours did he work altogether?__________ hours
+
+[p.290]
+290 Par i Ill Extended Concepts and Skills
+Grade Level
+4
+4
+4
+4
+4
+4
+4
+4
+4
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART (continued)
+Problem Type Performance Indicator
+Rewriting fractions as mixed 12 _
+numerals 5
+8 _
+3
+21 _
+9
+Rewriting whole numerals as 
+fractions 9 = F 6 = F 8 = H
+Multiplying fractions by a 
+whole number
+∣ × 6 ∣× 12
+∣ × 20
+Multiplying fractions by 
+whole numerals and
+| X 14 y X 8
+converting answers to 2 _
+mixed numerals - × 15 9
+Word problems: multiplying There are 15 children in class. Two-thirds are boys. How many boys
+fractions by whole numerals in the class?
+Jack has to study for 30 hours. He has done half of the studying. 
+How many hours did he study?
+Ann's coach told her to run ¾ of a mile a day. How many miles will 
+she run in 5 days?
+Rewriting fractions as 2 = □
+equivalent fractions with 5 10
+larger denominators 3 =n
+4 12
+2 = □
+3 9
+Finding the least common Find the least common multiple of 6 and 4_____ _____
+multiple of two small numbers Find the least common multiple of 5 and 10__________
+Find the least common multiple of 5 and 2__________
+Adding and subtracting 3 _ 2 = □
+fractions with unlike 4 3 “ □
+denominators 2 3 = □
+5 + 10 “ □
+1 _ 1 _ □
+2 3 “ □□ ∣□ 
+I I
+V - I C M 
++
+CM ∣ LO
+Converting mixed numerals 
+to improper fractions
+21=° 
+4 4
+3l-□32 ^ 2
+13 _□
+5 5
+
+[p.291]
+Chapter 13 Fractions 291
+Grade Level Problem Type Performance Indicator
+4 Subtracting mixed numerals
+from whole numerals
+I I II I I
+rx ι ∣ c n m ∣ l∩ ∣ γm
+v- cm ,× r
+I I I
+o o c n
+5 Comparing value of fractions Which is greater:
+continued
+2 4τ
+3°r5'cm I ∞ ∣ rx ι
+δ δ
+∣ L Π fN ∣
+5 Word problems: adding and 
+subtracting fractions with 
+unlike denominators
+Bill painted ½ of the wall. Jane painted ¼ of the wall. How much of the 
+wall have they painted altogether?
+Tom ate ⅛ of the pie, and Jack ate ½ of the pie. How much of the pie did 
+they eat?
+5 Determining all factors of a 
+given number
+Write all the numerals for the factors of 12. Write all the numerals for the 
+factors of 8.
+5 Determining the greatest 
+common factor
+What is the greatest common factor of 8 and 12? What is the greatest com­
+mon factor of 4 and 8? What is the greatest common factor of 12 and 15?
+5 Reducing a fraction to its 
+simplest terms
+Reduce these fractions to their simplest terms:
+12 = □
+18 ~ □
+16 = □
+20 ~ □
+A= □
+18 □
+5 Adding fractions, reducing 
+and converting to mixed 
+numerals
+Add these fractions; reduce the answers to simplest terms. Write answers as 
+mixed numerals.
+4 2
+6 + 5
+2 2
+4 + 3
+6 4 =
+10 5
+5 Finding the lowest common 
+multiple of three numbers
+Find the lowest common multiple of 3, 6, and 4. Find the lowest common 
+multiple of 2, 4, and 5. Find the lowest common multiple of 2, 5, and 10.
+5 Adding and subtracting 
+three fractions with different 
+denominators
+Add these fractions and write the answers with fractions written in simplest 
+terms:
+3 1 3
+5 + 2 + 6
+2 2 1
+3 + 4 + 6
+3 1 2
+4 + 2 + 5
+5 Multiplying mixed numerals -,3 J
+74×⅛ =------------------
+2∣ × 4 =__________
+5×⅛ =------------------
+
+[p.292]
+292 Part III Extended Concepts and Skills
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART (continued)
+Grade Level Problem Type Performance Indicator
+5 Dividing fractions
+. ∣ L U 
+÷
+I I N J 
+I I
+4 5
+1 -1 =
+6 3
+7 1 _
+5 Dividing fractions by whole 
+numerals
+9 3
+∣÷4 =__________
+3
+j÷2 =__________
+5
+∣÷7 =__________
+4
+5 Dividing mixed numerals by 
+whole numerals
+3∣ ÷ 3 =__________
+2
+2∣÷2 =__________
+5
+7→ 4 = __________2
+5 Word problems: division 
+involving fractions
+Two girls picked 5½ pounds of cherries. They want to split up the cherries 
+equally. How much will each one get?
+Bill has 35 inches of ribbon. He wants to make shorter ribbons. If each rib­
+bon is ½" long, how many ribbons can he make?
+CONCEPTUAL UNDERSTANDING
+Teaching fraction analysis skills is designed to provide students the necessary conceptual under­
+standing of fractions. Concurrently with fraction analysis skills, we recommend teaching common 
+conventions for reading and writing fractions. In this text, fraction analysis skills and common con­
+ventions are introduced in first grade. Most students, by first grade, have had some experience with 
+fractions, like ½ and ¼. Beginning carefully designed fraction instruction early capitalizes on the 
+students’ prior knowledge and allows for a more efficient progression through all of the fraction- 
+related skills. Our recommendation for beginning instruction in first grade takes into consideration 
+the time necessary for students to achieve mastery of each of the preskills required for understand­
+ing more complex fraction operations. A solid understanding of fractions ensures that students are 
+prepared for algebra. The skills included in this area are fisted below in their order of introduction:
+1. Learning part/whole discrimination: Students learn to discriminate between whole units, the 
+number of parts each unit is divided into, and the number of parts used.
+2. Writing a numerical representation for a diagram or figure of whole units divided into 
+equal-sized parts, and vice versa:
+3. Reading fractions: ¾ is read as “three-fourths.”
+4. Determining whether a fraction equals, exceeds, or is less than one whole.
+5. Reading mixed fractional numerals: 3½ is “three and one-half.”
+Unlike the instruction typical of most commercial programs, the instructional strategies in the 
+fraction analysis section are designed to introduce proper and improper fractions concurrently. This
+
+[p.293]
+Chapter 13 Fractions 293
+feature prevents students from learning the misrule that all fractions are proper fractions. Without 
+adequate instruction, struggling students often learn this misrule as a result of only being intro­
+duced to proper fractions in the earlier grades. This misrule can be seen when students who can 
+successfully draw a picture of ¾ cannot draw a picture of ¾. By introducing proper and improper 
+fractions at the same time, teachers show students that the analysis applies to all fractions.
+A second important feature of the analysis section is that students are taught initially to 
+interpret what the denominator and numerator represent (in ¾ the 4 tells “four parts in each 
+whole unit,” and 3 tells “three parts are used”) rather than to read the fraction in the traditional 
+way (¾ as “three-fourths”). This unique way of reading fractions enables students to interpret 
+fractions and facilitates conceptual understanding.
+Part-Whole Discrimination
+Format 13.1: Introducing Fractions shows how to introduce fractions to students. The goal of 
+the format is to teach basic fraction (part-whole) concepts through the use of number lines. The 
+reason for working with number lines from the onset is to ensure that students relate fractions to 
+whole numbers. The specific objective is to teach students to discriminate between the number 
+of parts in each whole unit and the number of whole units.
+In Part A of Format 13.1, the teacher introduces students to number lines and how to iden­
+tify the denominator (“bottom number”) for fractions by counting the number of parts in each 
+unit. Initially, each example set should include number lines with the same number of units 
+divided into different numbers of parts. Each number line in the illustration below contains three 
+units with each unit divided into a different number of parts. The first number line is divided 
+into 4 parts per unit, the second number line is divided into 3 parts per unit, and the third number 
+line is divided into 2 parts per unit.
+Next, in Part B, the students learn to write the numerator and the denominator of fractions 
+for whole numbers on number lines. The bottom numeral is the number of parts in each whole 
+unit. That number is the same for all whole units on a number line. The top numeral is the 
+number of parts from the beginning of the number line. While this procedure illustrates the rela­
+tionship between fractions and whole numbers, note that the concept of fractions equal to one is 
+explicitly taught later in the instructional sequence.
+In Parts C and D, students are introduced to writing several fractions for each number line, 
+including whole-number fractions. To figure out the fractions, students are taught to first count
+
+[p.294]
+294 Part III Extended Concepts and Skills
+the number of parts in each unit and write the bottom numeral for all of the fractions on that 
+number line. They then count the units from the beginning of each number line and write the top 
+numeral for each of the fractions.
+After students have worked with horizontal number lines for several days, teachers can 
+introduce number lines that are vertically oriented. The procedure is the same. The number of 
+parts in each unit is the bottom number of each fraction. The top number is the number of parts 
+from the beginning of the number line.
+After students have mastered identifying fractions using number lines, they work with 
+figures, like circles or squares, that are divided into equal parts. Format 13.2: Part-Whole 
+Discrimination teaches students to discriminate between the number of parts in each whole 
+unit and the number of whole units using figures. In the format, the teacher writes a row of cir­
+cles on the board and divides each into an equal number of parts. The teacher tells the students 
+that each circle is called a whole unit and then leads the students through determining how 
+many parts in each whole unit. Each example set should include a different number of circles. 
+Also, the number of parts in each whole unit should vary from set to set. For example, the first 
+set might include three circles, each divided into two parts. The next set might include five cir­
+cles, each divided into four parts. This format should be presented for several consecutive days.
+Some students may not see the relationship between the figures representing fractions and 
+fractions on a number line. Therefore, using the same language when teaching the skills and cor­
+recting errors is critical. The teacher should stress the word each if students have problems with 
+the figures, reminding them to count the parts in each whole unit.
+Writing Numerical Fractions to Represent Figures
+Exercises in which the students write a numerical fraction to represent a figure (¾) are presented 
+after the students have mastered the part-whole concepts presented in Format 13.2: Part-
+Format 13.3A:
+Writing Numerical
+Fractions
+Whole Discrimination. The format for writing numerical fractions appears in Format 13.3: 
+Writing Numerical Fractions. In Part A, the structured board presentation, students learn that 
+the bottom number of a fraction tells how many parts in each whole unit, while the top number 
+of a fraction represents how many parts are used (shaded). Parts B and C are structured and less 
+structured worksheet exercises in which the students fill in the numerals to represent a diagram. 
+Daily practice is provided for several weeks, followed by intermittent review.
+Two guidelines are important for appropriate example selection for this skill. First, the num­
+ber of parts in each whole unit, the number of whole units, and the number of parts used should 
+vary among examples. Second, the examples should include a mixture of proper and improper 
+fractions as well as some fractions that equal less than a whole unit:
+some examples that equal more than one unit:
+and just a few that equal one unit:
+During initial instruction, all examples should include circles divided into parts. After several 
+weeks, other shapes (squares, rectangles, triangles) can be included in the exercises.
+Special attention should be given to examples containing a series of units that are not divided:
+
+[p.295]
+Chapter 13 Fractions 295
+These figures need additional explanation. The teacher should point out that if a whole is not 
+divided into parts, students should write a 1 on the bottom. The 1 tells that there is only one 
+part in the whole unit. The next step is to have the students count the number of whole units and 
+write that as the numerator. Examples that yield 1 as a denominator should not be introduced 
+when fractions are initially presented but can be introduced about a week after initial instruction. 
+Thereafter, about 1 in every 10 figures should be an example with 1 as a denominator. These 
+examples are important, since they present a conceptual basis for exercises in which students 
+will convert a whole numeral to a fraction (8 = ¾).
+Drawing Figures to Represent Fractions
+Prior to constructing figures, students should practice completing fractions and shading in the 
+correct fractional parts on a number line. Translating numerical fractions into figures is a useful 
+exercise for reinforcing conceptual understanding of the part-whole fraction relationship. Con­
+structing figures can be introduced when students can accurately fill in the numerals to represent 
+a figure. The procedure is relatively simple, so we haven’t included a format. The teacher should 
+begin instruction by modeling how to divide circles into equal-sized parts, emphasizing the need 
+to divide the circles so that each part is the same size. Examples can be limited to fractions with 
+2, 3, or 4 as denominators. These examples allow for adequate discrimination without spending 
+an inordinate amount of time teaching younger students to divide circles into more than four 
+parts. After several days of practice dividing whole units into parts, the teacher would present 
+a worksheet exercise, prompting the students as they draw figures. The teacher has the students 
+say what each number tells, beginning with the bottom number. For ¾, the teacher would say 
+the following: “Touch the bottom number. What does it tell you? . . . Draw four parts in each 
+whole. . . . Touch the top number . . . What does it tell you?. . . Shade in three parts.”
+Figure 13.1 includes a sample worksheet. Note that each example has four circles. The 
+purpose of keeping the number of circles constant is to prevent students from thinking that the 
+number of whole units has something to do with the numerator and/or denominator.
+Reading Fractions
+When fractions are initially introduced, students are taught to decode the fraction by identify­
+ing what each numeral in the fraction represents. The fraction ¾ is read as “four parts in each 
+whole; three parts are used.” This translation is recommended because it accurately describes
+FIGURE 13.1 Sample worksheet for 
+drawing diagrams from numerical fractions
+
+[p.296]
+296 Part III Extended Concepts and Skills
+the fraction. Several weeks after fractions are introduced, reading fractions in the traditional 
+way can be taught; for example, ¾ is read as ‘‘three-fourths.” Format 13.4: Reading Fractions 
+shows how to teach students to read fractions in the traditional way. The teacher writes several 
+fractions on the board and models how to read the fractions, testing after each example. Then 
+the teacher tests students on reading the fractions without first providing the model. To correct 
+student errors, the teacher would model the correct response again, test the students, and then 
+use the alternating pattern to provide practice on the missed example.
+This format for reading fractions should be presented daily until students can accurately 
+read fractions and then reviewed intermittently. Thereafter, students will receive practice in 
+reading fractions at the same time new fraction skills are introduced. For example, in adding 
+fractions, students will practice reading fractions when they are asked to read the problem 
+aloud.
+Two example-selection guidelines should be followed in teaching students to read fractions. 
+First, the introduction of fractions with the numerals 2, 3, or 5 as denominators should be delayed 
+several lessons because these denominators are not pronounced by adding the suffix “-ths” to 
+the number as is the case for sixths, ninths, and fourths. When a 2 appears as the denomina­
+tor, students will say “halves,” not “twoths”; when a 3 appears, students will say “thirds,” not 
+“threeths”; when a 5 appears, students will say “fifths,” not “fiveths.” These denominators need 
+to be introduced one at a time using a model-test procedure. Fractions with 2 as a denominator 
+might be introduced first. When introducing 2 as a denominator, about half of the examples in 
+the teaching set should contain 2 in the denominator, while the other half should represent a 
+variety of previously introduced denominators:
+1 1 3 3 5 5 1 4
+24282762
+When students have mastered denominators of 2, they are introduced in the same way to frac­
+tions with 5, then 3, as denominators.
+A second example-selection guideline addresses the numerators. In about a fourth of the 
+examples, the numeral 1 should be written as the numerator. These examples are included so 
+that the students can see the difference between how a fraction is said when the numerator is 1 
+and when the numerator is more than 1: one-eighth versus four-eighths.
+Determining Whether a Fraction Equals, Exceeds, 
+or Is Less Than One Whole
+Determining whether a fraction equals, exceeds, or is less than one whole is an important skill 
+and also serves as a prerequisite for later exercises in which students are expected to convert 
+an improper fraction like 1⅝ to a mixed numeral: 2½. This skill can be introduced when stu­
+dents can accurately read fractions the traditional way. The teaching procedures appear in 
+Format 13.5: Determining Whether a Fraction Equals, Exceeds, or Is Less Than One 
+Whole. Part A is a pictorial demonstration in which the teacher draws pictures representing 
+fractions of various values (more than 1, less than 1, equal to 1) and asks the students if the 
+picture shows one whole, more than one whole, or less than one whole unit.
+In Part B, the teacher presents rules to be used in determining whether a numerical fraction 
+equals, exceeds, or is less than one whole unit. First, students are taught the rule that when the 
+top and bottom number of a fraction are the same, the fraction equals one whole. After this rule 
+is presented, the teacher tests the students’ application of the rule, using a series of numerical 
+fractions, about half of which equal one whole:
+564995728
+544295378
+Next, the teacher instructs students that when the top number of a fraction is more than the 
+bottom number, the fraction equals more than one whole, and when the top number is less than 
+the bottom number, the fraction equals less than one whole. Finally, the students are shown 
+fractions and asked to tell whether the fraction is equal to, more than, or less than 1. A structured
+
+[p.297]
+Chapter 13 Fractions 297
+worksheet exercise follows in which students must circle either more, equal, or less when given 
+numerical fractions:
+3
+4 more equal less 
+8
+8 more equal less
+Note that in this format, the words “numerator” and “denominator” are not used. The pur­
+pose of excluding the terms is to avoid possible confusion between the terms. Similarly, use of 
+the term improper fraction is not necessary for the students to understand the concept and, there­
+fore, is not included in this format.
+Examples for Parts B and C and independent practice should include a variety of problems. 
+In about a third of the examples, the numerator and denominator of the fraction should be the 
+same:
+4 8 3
+4 8 3
+In another third, the numerator should be more than the denominator:
+7 3 4
+5 2 2
+In another third, the numerator should be less than the denominator:
+2 4 3
+3 7 4
+Reading and Writing Mixed Numerals
+The above illustration may be expressed as the improper fraction ¾ or as the mixed fractional 
+numeral 2¼. Reading and writing mixed numerals can be introduced relatively early in the frac­
+tion sequence, as soon as students can correctly determine when a fraction equals, exceeds, or 
+is less than one whole. However, the teacher must keep in mind that exercises designed to teach 
+students to convert mixed numbers to improper fractions and vice versa should not be introduced 
+until much later in the fraction sequence because these conversions require students to know 
+basic multiplication facts.
+Part A of Format 13.6: Reading and Writing Mixed Numerals includes a pictorial 
+demonstration that requires students to express the illustrations of improper fractions as mixed 
+numeral by counting the number of whole units shaded and writing those numerals. Below is a 
+sample exercise:
+Part B is designed to teach students to read mixed numerals. The teacher uses a model-test 
+procedure, having students first say the whole numeral, then the fraction, and then the mixed 
+numeral. Note that the teacher emphasizes the word “and” when reading mixed numerals. The 
+purpose of emphasizing “and” is to prevent errors in which the student either combines the 
+whole numeral and the numerator, reading 4⅜ as “forty-two thirds,” or leaves out the numerator, 
+reading 5⅓ as “five thirds.”
+Part C is an exercise in which students are taught to write mixed numerals. The exercise 
+begins with the teacher dictating a mixed number and having students first say the whole number 
+and write the corresponding numeral. Then the students say the fraction part of the mixed num­
+ber before writing the fraction. The teacher points out that when students write mixed numerals 
+they are to make the whole numeral big and the numerals in the fraction small.
+
+[p.298]
+298 Part III Extended Concepts and Skills
+INSTRUCTIONAL PROCEDURES: REWRITING FRACTIONS
+The procedures in this section all involve the process of changing a fraction from one form to 
+another without changing its value—that is, maintaining equivalency. Three main types of con­
+version skills are discussed:
+1. Determining the missing number in a pair of equivalent fractions:
+3 = □_
+5 10
+This type of problem is a critical component skill for problems involving adding and sub­
+tracting fractions with unlike denominators.
+2. Reducing fractions to their lowest terms. A fraction is said to be at its lowest term (or sim­
+plest form) when both the numerator and denominator have no common factor except 1:
+20 ι 5— can be reduced to —24 6
+3. Converting mixed numerals to improper fractions:
+and improper fractions to mixed numerals:
+17 2
+5 ~ ⅜
+A general preskill for all rewriting skills is knowledge of basic multiplication and division 
+facts. To perform all three types of conversion problems, students must be able to multiply and 
+divide. Therefore, we recommend introducing rewriting fractions in fourth grade.
+The strategies presented here are designed so that students not only learn the necessary 
+computation required to change fractions into equivalent forms but also understand the under­
+lying concepts of equivalency. Without understanding equivalency, students will be able to 
+apply very few of the skills they learn. For example, if students do not understand that when the 
+numerator and denominator are the same, the fraction is equal to 1, they will not understand why 
+¾ can be multiplied by ⅝ to create the equivalent fraction 1⅝o. Although the equivalency concept 
+is relatively sophisticated, the language of the strategies is simplified to make them accessible 
+to all students.
+Completing Equivalent Fractions
+Instruction in equivalent fractions begins with problems in which the student must determine the 
+missing numerator in an equivalent fraction:
+3 = ∩ £ = □
+4 12 2 10
+The basic strategy is to multiply the first fraction by a fraction that equals one. In working the 
+first problem above, the student determines that to end up with an equivalent fraction that has 12 
+as a denominator, the fraction ¾ must be multiplied by
+3 (3) 9- X — = —
+4 (3) 12
+Equivalency is maintained because, by definition, the identity element for multiplication is 1. 
+When multiplying ¾ by ⅜, we are multiplying ¾ by a fraction that equals 1. Therefore, we are 
+not changing the value of ¾.
+
+[p.299]
+Chapter 13 Fractions 299
+Preskills Several skills should be mastered before equivalency problems are introduced: 
+(a) knowledge of the terms numerator and denominator, (b) the ability to multiply fractions, and 
+(c) the ability to construct a fraction that equals one whole.
+The terms “numerator” and “denominator” are usually introduced in second or third grade. 
+The teaching procedure is simple. The teacher tells students the numerator is the top number in 
+the fraction and the denominator is the bottom number in the fraction. The teacher then provides 
+practice by writing several fractions on the board and having students identify the denominator 
+and numerator of each fraction using examples presented in a random order. Daily practice is 
+necessary so students won’t forget or confuse the terms.
+Multiplication of two fractions is usually taught in fourth grade. Procedures for teaching 
+this skill are presented later in this chapter.
+Constructing fractions equal to one whole is introduced about 2 weeks prior to introduc­
+ing equivalent fraction problems. Format 13.7: Preskill: Constructing Fractions Equal to 1 
+includes procedures for constructing fractions equal to 1. Part A is a structured board exercise 
+in which a rule for constructing fractions equal to 1 is introduced: “When the top number is the 
+same as the bottom number, the fraction equals 1.” In Part B: Structured Worksheet, the teacher 
+presents examples of applying the rule with problems such as:
+in which the student must fill in the missing numerator of a fraction equal to one whole.
+Format 13.8A: Com­
+puting Equivalent
+Fractions
+Watch how Lori asks her students 
+to apply the equivalent fractions 
+rule.
+Format The procedure for computing equivalent fractions is shown in Format 13.8: Com­
+puting Equivalent Fractions. Part A includes a pictorial demonstration introducing the concept 
+of equivalent fractions. The teacher first defines the term “equivalent fractions,” explaining that 
+fractions are equal when they show that equal amounts of the whole units are used. The teacher 
+then draws two circles on two clear plastic sheets, each divided into a different number of parts 
+but each with equal portions shaded:
+The teacher points out that these fractions are equivalent, since the same amount of each whole 
+unit is shaded. The same demonstration is presented with a figure in which unequal proportions 
+of the whole units are shaded:
+The teacher points out that the fractions are not equivalent, since the shaded amounts of the 
+whole units do not take up the same space.
+Part B introduces a critical rule: When you multiply by a fraction that equals 1, the answer 
+equals the number you start with. The teacher introduces this rule and then presents a set of 
+problems demonstrating how this rule is applied. In some of the problems, the original fraction 
+is multiplied by a fraction that equals 1, and in some, the original fraction is multiplied by a frac­
+tion not equal to 1. The students are to tell whether the answer will equal the original fraction.
+Part C is a structured board exercise in which the teacher presents the strategy for working 
+equivalency problems such as:
+3 = _□
+4 20
+The teacher explains that the equal sign tells that the fractions are equal. The student’s task is to 
+find the missing numerator in the second fraction.
+The teacher writes parentheses after the first fraction
+□
+20
+
+[p.300]
+300 Part III Extended Concepts and Skills
+explaining that the students must multiply the first fraction by a fraction that equals 1, which 
+will be written inside the parentheses. The parentheses indicate multiplication. The teacher 
+demonstrates how to figure out the denominator to be written inside the parentheses by using 
+a missing-factor multiplication strategy. In the problem above, the teacher asks, “4 times what 
+number equals 20?”
+The answer, 5, is written as the denominator inside the parentheses:
+3/ A
+4 ∖5∕
+□
+20
+The teacher then points out that since the fraction inside the parentheses must equal one whole, 
+the numerator must be the same as the denominator. The missing number in the equivalent frac­
+tion can be determined by multiplying the numerator in the first fraction and the numerator in 
+the second fraction:
+3√5λ
+4∖5√
+15
+20
+Example Selection There are three example-selection guidelines for this format. First, the 
+denominator of the first fraction must be a number that can be multiplied by a whole number to 
+end with the denominator of the second fraction. Therefore, problems such as:
+2 = □ 4 = □ 2 _ □
+3 “ 5 5 ” 8 3 ^ 7
+are not appropriate to include, while problems such as:
+2 _ □ 4 _ □ 2 _ □
+3 “ 6 5 “ 10 3 “ 9
+are appropriate. Second, the fraction equal to one in the parentheses should vary from problem 
+to problem. For example, in one problem, the numerator and denominator in the second fraction 
+could be four times bigger than the original:
+3 = □_
+5 20
+in the next problem, two times bigger:
+5 = _□
+6 12
+in the next, five times bigger:
+2 = □_ 
+3 15
+and so on. The third guideline is that all problems should require multiplication; that is, the 
+numbers in the fraction to be completed should be greater than the numbers in the first fraction.
+Reducing Fractions
+We recommend that reducing fractions be introduced during fifth grade using a greatest- 
+common-factor (GCF) strategy. In this strategy, students are taught to reduce a fraction to its 
+simplest terms by identifying the greatest common factor of the numerator and denominator. 
+For example, the fraction 9∕ιs is reduced by identifying 3 as the greatest common factor of 9 
+and 15. When the factor 3 is pulled out, ¾5 becomes ⅜. The greatest-common-factor strategy 
+is a viable strategy only for problems in which it is relatively easy to find the greatest common 
+factor (1⅜7,30∕35, ¾6). Nearly all of the problems that require reducing that students encounter in 
+fifth grade can be reduced to simplest terms using the greatest-common-factor strategy. Later, 
+students will be taught to pull successive factors out of larger numbers.
+
+[p.301]
+Chapter 13 Fractions 301
+Preskills Teaching students to find the greatest common factor of two numbers is the critical 
+preskill for reducing fractions. The greatest common factor of two numbers is the largest num­
+ber that can be multiplied by whole numbers to end with the two target numbers. For example, 
+the greatest common factor of 12 and 18 is 6. Six can be multiplied by whole numbers to 
+reach 12 and 18.
+The first step in teaching students to find the greatest common factor of two numbers is to 
+teach them to determine all possible factors for a given number. For example, the numbers 1, 
+2, 3, 4, 6, and 12 are all factors of 12, since they can all be multiplied by another whole number 
+to reach 12. Table 13.1 includes a list of the factors for the numbers 1 through 50. Once the 
+students can easily determine all factors for a number, finding the greatest common factor is 
+relatively easy.
+Format 13.9: Preskill: Determining Factors outlines the procedures for teaching students 
+to determine factors. In Part A, the teacher introduces the term “factor,” defining factors as any 
+numbers that are multiplied together. In Part B, the teacher presents a strategy for figuring out 
+all of the factors for a target number. The teacher writes the numeral for the target number on 
+the board and beside it writes spaces for each factor. For example, if the target is 15, the teacher 
+writes 15 on the board and puts four blanks beside it, since four numbers (1, 3, 5, 15) are fac­
+tors of 15. The teacher then tells the students that they are going to find all of the numbers that 
+are factors of 15 by asking if they can multiply a number by another number and end up with 
+15. The teacher always begins with one: “A number multiplied by 1 always equals itself. Is 1 a 
+factor of 15?” The teacher then points out that they can find another factor by determining what 
+number times that factor equals the target number. For example, after determining that 15 is a 
+factor of 15, the teacher asks, “What number times 1 equals 15?” The answer, 15, is the factor of 
+15 that goes with 1. The teacher writes 1 in the first space and 15 in the last space.
+The teacher then asks about other numbers, beginning with 2 and proceeding forward 
+(3, 4, 5, 6, . . .): “Can we multiply 2 and end with 15? No, so 2 is not a factor of 15,” and so 
+on. The teacher instructs the students to stop her when she says a number that is a factor of 
+the target number. When the students identify another factor of the target number, the teacher
+Number Factors* (other than the number itself and 1)t
+TABLE 13.1 Factors for 1 to 50
+4: 2, 2 28: 14, 2; 7, 4
+6: 3, 2 30: 15, 2; 10, 3; 6, 5
+8: 4, 2 32: 16, 2; 8,4
+9: 3, 3 33: 11, 3
+10: 5, 2 34: 17, 2
+12:6, 2; 3,4 35: 7, 5
+14: 7, 2 36: 18, 2; 9, 4; 6, 6
+15: 5, 3 38: 19, 2
+16: 4, 4; 8, 2 39: 13, 3
+18: 6, 3; 9, 2 40: 20, 2; 10, 4; 8, 5
+20: 10, 2; 5, 4 42: 21, 2; 14, 3; 7, 6
+21:3, 7 44: 22, 2; 11,4
+22: 11, 2 45: 15, 3; 9, 5
+24: 12, 2; 8, 3; 6, 4 46: 23, 2
+25: 5, 5 48: 24, 2; 12, 4; 8, 6
+26: 13, 2 49: 7, 7
+27: 9, 3 50: 25, 2; 10, 5
+*Factors are listed in pairs.
++Numerals not in list have only the number itself and 1 as factors.
+
+[p.302]
+302 Part III Extended Concepts and Skills
+once again leads them in finding the corresponding factor to produce the target number. If 
+15 is the target number, the students say stop after the teacher says 3. The teacher asks what 
+number times 3 equals 15. The students answer 5. The teacher points out that 3 and 5 are both 
+factors of 15. When target numbers over 20 are introduced, the teacher models the answer for 
+the larger numbers. That is, the teacher tells the student any two-digit number that is a factor 
+of the target number. For example, when introducing 28, the teacher says that 14 and 2 can be 
+multiplied to equal 28.
+Part C is a worksheet exercise. Numerals for target numbers are written on the worksheet. 
+Students are to fill in the factors, beginning with the smallest factor. The objective of this format 
+is to develop fluency in naming all possible factors of numbers. A systematic plan for intro­
+ducing new target numbers and reviewing target numbers should be followed. One or two new 
+target numbers can be introduced daily. (Table 13.2 contains a suggested sequence for introduc­
+ing target numbers.) Part A of the format is used only with the first pair of target numbers. New 
+target numbers are introduced using the board presentation in Part B. The worksheet exercise 
+described in Part C could be done independently after the first several lessons. A target number 
+should appear on practice worksheet exercises daily for several weeks after it is introduced to 
+develop fluency.
+Determining the Greatest Common Factor Format 13.10: Determining the Greatest 
+Common Factor (GCF) is introduced when the students are able to determine the factors of any 
+target number below 20. The format is relatively simple. The teacher defines the phrase “greatest 
+common factor” as the largest number that is a factor of both target numbers. The teacher then 
+leads the students through finding the greatest common factor. First, the teacher asks students 
+what the largest factor of the smaller target number is and if that factor is also a factor of the 
+other target number. The teacher continues until the greatest common factor is identified. For 
+example, when 8 and 20 are the target numbers, the teacher asks the following questions:
+“8 is the largest factor of 8. Is 8 a factor of 20?” (No.)
+“What is the next largest factor of 8?” (4.)
+“Is 4 a factor of 20? (Yes.)
+“So, 4 is the greatest common factor of 8 and 20.”
+TABLE 13.2 Sequence for Introducing Target Numbers and Their Factors
+Day
+Factors of These Numbers 
+Are Introduced Day
+Factors of These
+Numbers Are Introduced
+1 12, 7 16 27, 29
+2 10, 3 17 28
+3 16, 5 18 30, 31
+4 8, 13 19 32, 33
+5 4, 6, 9 20 34, 37
+6 2, 17 21 35, 39
+7 12, 19 22 36, 41
+8 14, 23 23 38, 43
+9 15 24 40, 47
+10 18 25 42
+11 20 26 44
+12 21 27 45
+13 22 28 46
+14 24 29 48
+15 25, 26 30 49
+31 50
+
+[p.303]
+Chapter 13 Fractions 303
+After about 5 days of presenting the format, the teacher gives students daily worksheet 
+exercises to work independently. The worksheet includes 8 to 12 problems in which students 
+find the greatest common factor of two target numbers. A typical error in independent exercises 
+involves writing a common factor that is not the greatest common factor of the two target num­
+bers; for example, writing 3 as the greatest common factor of 12 and 18. The correction involves 
+pointing out to students that they can find a larger common factor.
+Example-selection guidelines are quite important. In about half of the problems, the great­
+est common factor should be the smaller of the two target numbers (6, 18; 4, 8; 2, 10; 5, 20). 
+If examples such as these are not included, students might develop the misrule that the smaller 
+number is never the greatest common factor. Examples should be limited to numbers for which 
+students have been taught to find factors. Initially, both target numbers should be under 20. As 
+students learn to determine factors for larger numbers, the larger numbers can be included. Sev­
+eral examples should be included in which 1 is the greatest common factor, as in 4 and 7 or 6 
+and 11. These prepare students for fractions that cannot be reduced (⅜, 6∕n).
+Reducing Fractions Format 13.11: Reducing Fractions is introduced when students are 
+able to determine the greatest common factor of any two target numbers below 20. The format 
+includes three parts. Part A is a board exercise in which the teacher presents the strategy for 
+reducing fractions. The teacher writes a fraction on the board with an equal sign next to it. Next 
+to the equal sign are parentheses and a fraction bar for the reduced fraction:
+The greatest common factor of the two target numbers (the numerator and denominator of 
+the original fraction) determines the fraction equal to one inside the parentheses. For example, 
+the greatest common factor of 12 and 16 is 4. Therefore, the fraction in the parentheses will be 
+¾, which equals 1. The teacher then asks, “12 equals 4 times what number?” The answer is 3, 
+which is the numerator of the reduced fraction. The teacher then asks, “16 equals 4 times what 
+number?” The answer is 4, which is the denominator of the reduced fraction. Since multiplying 
+by 1 does not change the value of the fraction, ¾ can be crossed out. Crossing out the fraction 
+equal to 1 leaves the reduced fraction:
+12 = ( 4 λ 3
+16 “ ∖⅞) 4
+Part B is a structured worksheet exercise in which the teacher first asks for the greatest com­
+mon factor of the numerator and denominator of a fraction. The teacher then instructs the stu­
+dents to write the corresponding fraction equal to 1 in parentheses. Finally, the teacher instructs 
+students how to solve for the missing factors in the reduced fraction. Part C is a less-structured 
+worksheet exercise that provides additional practice.
+The steps for reducing fractions are outlined in Summary Box 13.1.
+There are three example-selection guidelines for exercises on reducing fractions. First, the 
+numerators and denominators should be ones for which students have been taught to find fac­
+tors. At first, both the numerator and denominator should be below 25. As students learn to find 
+factors for larger numbers, fractions with these larger numbers can be included.
+Second, a third of the fractions should have the greatest common factor as the numerator. 
+For example, in the fractions 4∕12, ¾6, and ⅝o, the numerator is the greatest common factor. 
+Finally, about a third of the fractions should already be expressed in their simplest terms (4∕7, 
+⅜, 6∕11) to show students that not all fractions can be reduced. An example set following these 
+guidelines appears below:
+12 b. -8
+4
+8' 12
+c.
+h∙ 9
+d. — 12
+. 9
+1. ----
+11
+e.5
+7
+6
+3
+5
+
+[p.304]
+304 Part III Extended Concepts and Skills
+rSUMMARYj BOX 13.1
+Reducing Fractions
+2. lθ = ∩°
+15 k ∕□
+10 ∕5∖ □
+’ 15 ∖5√□
+4 =15 ∖5√[≡
+≡∙FCIJI
+Students read the fraction.
+Students determine the greatest common factor for the numerator 
+and denominator.
+Students construct a fraction equal to one using the greatest 
+common factor.
+Students find the numerator for the fraction by solving
+5 × □ = 10 and find the denominator by solving 5 × □ = 15. 
+Students cross out the fraction equal to one and identify ∣- as the 
+reduced fraction.
+All items have numerators and denominators that are below 25. Items b, f, and g are fractions in 
+which the smaller number is a factor of the larger number. Items c, e, and i are fractions that are 
+already expressed in their simplest terms.
+Reducing Fractions with Larger Numbers After several weeks of practice reducing frac­
+tions using the greatest common factor strategy, students can be introduced to the concept of pulling 
+out successive common factors. When the greatest common factor is difficult to find, students can 
+reduce the fraction to its simplest terms by repeatedly pulling out factors. Note the examples below:
+45 _ ∕5λ 9 _ /3λ 3 _ 3
+a' 75 ∖5√ 15 ∖3√ 5 ~ 5
+24 ∕2λ 12 ∕6∖2 (2∖ I 1
+72 ∖2∕36 ∖6 J 6 ∖2 J 3 3
+The teacher guides students through sets of problems, pointing out clues students can use 
+to determine if a fraction is reduced to its simplest term. For example, if both the numerator and 
+the denominator are even numbers, the fraction can still be reduced. Or, if the numerator and 
+denominator both end in either 5 or zero, the fraction can still be reduced.
+The teacher then presents an exercise in which students check answers to determine if the 
+answers are reduced to their simplest terms. During that exercise, the teacher gives students a 
+worksheet with problems similar to those below, some of which have not been reduced to their 
+simplest terms. The students are asked to find those fractions that can be further reduced and to 
+reduce those fractions.
+64 ∣ A}. 16 d. 65 ∖ 13a. --- ,"' ' 1 ---- 1 ---  " 11 -------- ----- 1 ---- 1 -------- zzz
+72 W 18 85 v>' 15
+b. 45 i 9 48 1 24--- -- 1 ---- ι ---  — e. -------- —- I ---- 1 ---  --
+75 ∖3)' 15 64
+kz√
+' 32
+21 (Al 7 f. 56 (2∖ 28c. 1 ---- 1 ---  — -------- — 1 ---- 1 -------- ^~~~
+30 ∖z), 10 84 ∖2J 42
+Converting Mixed Numerals and Improper Fractions
+An improper fraction, one whose numerator is greater than its denominator, is a fraction that 
+equals more than one whole. An improper fraction may be converted to a mixed numeral by 
+dividing its numerator by its denominator. For example, to convert the fraction 1⅜ to a mixed 
+numeral, we divide 13 by 5, which equals 2 with a remainder of 3. The remainder is written as 
+the fraction 3/s; the improper fraction 1⅜ is converted to the mixed numeral 2⅜.
+
+[p.305]
+Chapter 13 Fractions 305
+Converting a mixed numeral to an improper fraction requires the reverse operation, multi­
+plication rather than division. Students first change the whole number into a fraction by multi­
+plying the whole number by the number of parts in each whole, indicated by the denominator. 
+For example, in the mixed numeral 6¼, students convert the whole number 6 into a fraction by 
+multiplying 6 by the denominator of ¼∖
+. 24for 6 = -, students write —4 4
+After students convert the whole number to a fraction, they add the numerators of the fractions:
+1 24+1 256— — --------- — —4 4 4
+On the Instructional Sequence and Assessment Chart, we recommend that converting 
+improper fractions to mixed numerals be introduced in early fourth grade. Students apply this 
+skill when they rewrite their answers after adding or multiplying fractions. Converting a mixed 
+numeral to an improper fraction should not be introduced until several months later. We recom­
+mend separating the introduction of these conversion skills to decrease the probability of students 
+confusing the two operations. Converting mixed numerals to and from improper fractions requires 
+that students have a good understanding of the difference between a whole unit and parts of a unit. 
+Therefore, students should have mastered all of the fraction analysis skills presented earlier.
+Format 13.12AB:
+Converting Improper 
+Fractions to Mixed 
+Numbers
+Watch how Lori uses voice 
+emphasis to help students dis­
+criminate between whole and 
+fractional numbers.
+Converting Improper Fractions to Mixed Numerals Part A of Format 13.12: Convert­
+ing Improper Fractions to Mixed Numerals is a pictorial demonstration in which the teacher 
+shows how to construct a figure to determine how many whole units an improper fraction equals.
+Part B is a structured board presentation in which the teacher presents the strategy of divid­
+ing the numerator by the denominator. Note the special emphasis given to explaining how to 
+write the remainder as a fraction. The teacher explains that the denominator of the new fraction 
+in the mixed number must be the same denominator as in the original fraction.
+Part C is a structured worksheet exercise. The division symbol, along with boxes for the 
+whole number and the fraction remainder, are written as prompts on the students’ worksheets:
+11 _
+4 “ J
+The teacher begins the exercise by instructing the students to look at the fraction and deter­
+mine whether it is less than one whole, equal to one whole, or more than one whole. If the frac­
+tion is less than 1 or equal to 1, students are instructed to leave the fraction as it is. If the fraction
+equals more than 1, they are instructed to divide and write the answer as a mixed numeral.
+Part D is a less structured worksheet exercise in which students convert improper fractions 
+to mixed numbers with minimal teacher prompting. Teachers should insist that students write 
+the whole numeral part of the answer and the fraction part of the answer neatly. Teachers should 
+watch for students writing answers in which the numerator of the fraction could easily be mis-
+2 32taken for a whole numeral. In the following example, 3~ is written as —:
+Examples should be selected to provide appropriate discrimination practice. First, there 
+should be a mixture of problems. About half of the fractions should translate to a mixed number; 
+about a fourth should translate simply to a whole number (⅝, 1¾ 10∕5)∙, finally, about a fourth 
+should be proper fractions. Including proper fractions ensures that students do not attempt to
+inappropriately convert all fractions to mixed number ( — = 1¼
+∖4
+
+[p.306]
+306 Part III Extended Concepts and Skills
+After students have had several weeks of practice converting improper fractions to mixed 
+numbers and reducing fractions to their lowest terms, they can be given exercises in which they 
+must first convert the fractions to mixed numbers and then reduce the fractions. No special for­
+mat is required for such exercises. The teacher gives students a worksheet with directions simi­
+lar to these: “Change any fraction that equals one or more whole units to a mixed number. Then 
+reduce the fractions.” A set of examples would include a mix of proper and improper fractions, 
+some of which can be reduced and some of which are written in their simplest form. A sample 
+set might include these fractions:
+16 6 9 14 5
+12 8 7 6 7
+8 20 9 24
+24 8 12 10
+Exercises of this type should be continued for several months to develop fluency.
+Converting Mixed Numbers to Improper Fractions Format 13.13: Converting Mixed 
+Numbers to Improper Fractions includes four parts. Parts A and B teach the component skill 
+of translating any whole number into an improper fraction by multiplying the number of whole 
+units by the number of parts in each whole:
+In 6 = —, students multiply 6 × 4
+Because this component skill is very important, both a board and a worksheet exercise are 
+presented.
+Part C, a structured board presentation, teaches the strategy to convert a mixed number into 
+an improper fraction. First, the students determine the fraction equivalent to the whole number; 
+then they add the fraction portion of the mixed number. For example, with 6¾, students multiply 
+6 × 4 and then add 3 to determine the answer:
+3 24 + 3 276 - —--------- — —4 4 4
+Part D is a structured worksheet exercise that provides additional practice.
+INSTRUCTIONAL PROCEDURES: ADDITION
+AND SUBTRACTION OF FRACTIONS
+• ∙ ∙.......
+Addition and subtraction of fractions include three basic types of problems. The first type has 
+like denominators:
+3 £ 2 _ □ 7 _ 3 _ □
+8 + 8 + 8 ^ □ 9 9 ” □
+Problems of this type can be introduced during the primary grades, since relatively few preskills 
+are required to work the problems. The students learn that to work such problems, they work 
+only across the numerators; the denominators remain constant:
+2 £ _ 3 7 _ 3 = 4
+5 + 5 “ 5 9 9 ~ 9
+The second type includes problems with unlike denominators. Problems in this group 
+are limited initially to those in which the lowest common denominator (LCD) is relatively 
+easy to figure out. Problems of this type are usually introduced during fifth grade. The strat­
+egy for solving these problems involves first figuring out the lowest common denominator,
+
+[p.307]
+Chapter 13 Fractions 307
+rewriting each fraction as an equivalent fraction with that denominator, and then working
+the problem:
+5 5∕2λ 10— becomes — — = —6 6∖2∕ 12
+3 3∕3λ 9— becomes — — 1 = —4 4∖3√ 12
+10 _ 9 _ 1
+12 12 ^^ 12
+The third type includes problems in which the lowest common denominator is difficult to 
+determine because relatively large numbers are involved. We recommend using the equivalent 
+fractions strategy for solving these types of problems. Initially, we recommend finding a com­
+mon denominator of two large numbers by multiplying the denominators. For example, in the 
+problem ¾3 + 3∕∣s, the common denominator is 234. This is determined by multiplying 13 by 18. 
+Given these two factors, students can generate the fractions equal to one that produce fractions 
+with like denominators and solve the problem.
+V A
+13 VI8 J
+5 /18 A 
+13∖18∕
+234
+90
+234
+V A 
+18∖13∕ 
+3 /13 λ 
+18∖13∕
+234
+39
+234
+90 39 _ 129
+234 + 234 “ 234
+Finally, the student would need to reduce the answer to the addition problem using Format 
+13.11: Reducing Fractions. Another strategy typically used with older students for reduc­
+ing fractions with large numbers involves prime factorization to determine the least common 
+denominator. Prime factorization is discussed in more detail in Chapter 18.
+Fractions with Like Denominators
+Adding and subtracting fractions with like denominators is a relatively simple operation that can 
+be introduced after fraction analysis skills have been taught in third grade. Part A of Format 
+13.14: Adding and Subtracting Fractions with Like Denominators includes a pictorial 
+demonstration in which the teacher illustrates adding fractions. In Part B, the teacher presents 
+the rule that students can add and subtract only fractions in which each whole has the same 
+number of parts.
+Parts C and D are structured and less structured worksheet exercises in which the students 
+are presented with a set of addition and subtraction problems. Half of the problems should have 
+like denominators:
+and half different denominators:
+Students are instructed to identify and cross out the problems with unlike denominators and 
+work the problems with like denominators. The problems with unlike denominators are included 
+to encourage students to pay attention to the denominators when working problems.
+During the first week or two of instruction, adding and subtracting fraction problems should 
+be written horizontally. When students can work problems written horizontally, vertically 
+aligned problems should be introduced:
+3 4 5
+4 8 7
+1 3 2-- ---- _|---
+4 8 3
+3 __ £ 5 2
+4 3 7 + 3
+
+[p.308]
+308 Part III Extended Concepts and Skills
+The teacher introduces vertically aligned problems using Parts C and D of Format 13.14. 
+Teachers should not assume that because students can work horizontally aligned problems, they 
+will be able to work vertically aligned problems.
+Problems with Mixed Numbers
+Adding and subtracting mixed numbers in which the fractions have like denominators:
+2 13--1-5 5
+can be introduced when students can read and write mixed numerals and can add and subtract 
+fractions with like denominators. The teaching procedure is relatively simple: The students first 
+work the fraction part of the problem and then the whole number part of the problem. Both hori­
+zontally and vertically aligned problems should be presented.
+Fractions with Unlike Denominators
+Adding and subtracting fractions with unlike denominators is usually introduced during late 
+fourth grade. A strategy for solving problems with unlike denominators is outlined in Summary 
+Box 13.2. Note the integration of several component skills.
+Preskills Two preskills should be mastered before the format for adding and subtracting 
+fractions with unlike denominators is introduced: (a) finding the least common multiple of two 
+numbers and (b) rewriting a fraction as an equivalent fraction with a given denominator (see 
+Format 13.8: Computing Equivalent Fractions).
+The least common multiple (LCM) of two numbers is the smallest number that has both 
+numbers as factors. For example, the least common multiple of the numbers 6 and 8 is 24, since 
+24 is the smallest number that has both 6 and 8 as factors. Likewise, the least common multiple 
+of 6 and 9 is 18, since 18 is the smallest number that has 6 and 9 as factors.
+Format 13.15: Preskill: Finding the Least Common Multiple shows how to teach stu­
+dents to figure out the least common multiple of two numbers. This format assumes that students 
+are able to skip count by twos through nines. About 2 months prior to introducing the least 
+common multiple, the teacher should begin reviewing the skip-counting series. Students who 
+know their basic multiplication facts but have not learned skip counting should have little trou­
+ble learning to skip count. (See Chapter 4 for teaching skip counting.)
+The strategy for finding the least common multiple requires students to say the skip-counting 
+series for two numbers and to select the smallest number appearing in both series. This strategy
+'SUMMARY j BOX 13.2
+Steps for Problems with Unlike Denominators
+3 χ1. 4 + 6
+2. 3 1^— +4 6
+9
+12 12
+9 2
+12 12
+Students read problem and say, "The problem can't be worked as it is 
+because the denominators are not the same."
+Students determine that the least common multiple of 4 and 6 is 12. 
+Thus 12 is the least common denominator. Both fractions must be 
+rewritten with denominator of 12.
+Students determine the fraction equal to one by which each original 
+fraction must be multiplied to equal 12.
+Students rewrite each fraction so that it has a denominator of 12.
+Students work the problem with equivalent fraction.
+
+[p.309]
+Chapter 13 Fractions 309
+is viable for examples in which the numbers are small. A more sophisticated strategy must be 
+taught to figure the least common multiple of larger numbers.
+The format for teaching least common multiple includes two parts. In Part A, the teacher 
+writes count-by series for two numbers on the board so that students can visually find the least 
+common multiple. At that time, the teacher also introduces the term “multiple.” Part B is a 
+worksheet presentation in which the teacher leads students in finding the least common multiple 
+for several pairs of numbers and then monitors as students complete a worksheet on their own. 
+Daily practice on worksheet exercises involving finding the least common multiple of two num­
+bers is continued until students demonstrate mastery.
+There are two example-selection guidelines for the least-common-multiple format. First, in 
+about half of the problems, the larger number should be a multiple of the smaller number. For 
+the numbers 3 and 12, 12 is a multiple of 3. The least common multiple of 12 and 3 is 12. The 
+second guideline pertains to the other half of the problems in which the larger number is not a 
+multiple of the lower number. In these problems, both numbers should be below 10.
+Format 13.16A: 
+Adding and 
+Subtraction Fractions with 
+Unlike Denominators 
+Watch how Lori uses the preskill 
+from Format 13.15 to correct 
+the error a student makes in find­
+ing the least common multiple.
+Format Format 13.16: Adding and Subtracting Fractions with Unlike Denominators has 
+three parts. Part A is a structured board presentation, which begins with the teacher writing a 
+problem on the board and asking the students if the fractions can be added (or subtracted) as they 
+are written. After the students determine the fractions cannot be added (or subtracted) because 
+the denominators are not the same, the teacher tells the students that they can work the problem 
+by rewriting the fractions so that both have the same denominator. The teacher then demonstrates 
+the problem-solving strategy outlined earlier: writing the least common multiple of both denom­
+inators; multiplying each fraction by a fraction equal to 1 (which enables them to be rewritten 
+with their lowest common denominator) and then adding (or subtracting) the rewritten fraction.
+In Parts B and C, the structured and less structured worksheet exercises, the teacher leads 
+students through working problems. Note that Format 13.16 includes problems in which both 
+fractions are rewritten. In many problems, only one fraction will need to be rewritten (in ¾ + ⅛, 
+only ¾ needs to be rewritten as ⅝). When initially presenting this type of problem, the teacher 
+has the students write the fraction — next to the fraction that does not need to be rewritten:
+3
+4
+8
+After several weeks, the teacher can explain that if the denominator of the rewritten fraction does 
+not need to be changed, multiplying by — is not needed.
+There are three example-selection guidelines for this format. The first addresses the manner 
+in which problems are written. During the first 2 weeks, all problems should be written horizon­
+tally. When students can work horizontal problems, they can be introduced to vertically aligned 
+problems.
+The second guideline pertains to the variety of problems. Half of the problems should have 
+denominators in which the larger denominator is a multiple of the smaller denominator. For 
+example, in the problem
+3 2
+5 10
+the larger denominator, 10, is a multiple of the smaller denominator, 5. In the other half of the 
+problems, the denominators should be one-digit numerals that require finding a new common 
+denominator:
+3 2 3 2 5 1— _|_ — — ψ — — _ —
+5 3 4 5 6 4
+Several problems involving adding and subtracting fractions with like denominators also 
+should be included. A sample set of problems appears below. Note that problems c and f have
+
+[p.310]
+310 Part III Extended Concepts and Skills
+like denominators. Problems b, e, and g have a lower denominator that is a factor of the larger 
+denominator. In problems a, d, and h, both fractions must be rewritten.
+3 2a. —1—4 5
+7 2 5 1b.-------- c--------
+9 3 6 6
+d‰4
+6 9
+13 4 3
+β 5 10 t9 + 9
+7 1
+8' 10 2 4 3
+Reducing and Rewriting Answers as Mixed Numerals
+The skills of reducing fractions to their lowest common terms and converting an improper frac­
+tion to a mixed numeral can be integrated into problems after students have had several weeks 
+of practice working problems with unlike denominators. Students should be given problems that 
+require them to convert the answer to a mixed number (when necessary) and/or reduce. Teachers 
+should lead students through determining the correct answers for several days. Daily practice 
+with six to eight problems should continue for several weeks.
+More Complex Problems with Mixed Numbers
+A rather difficult problem type involving mixed numbers is illustrated below:
+8
+2—3—4
+This is a subtraction problem involving renaming. The student must rewrite the 8 as 7 and ¾ to 
+work the problem. Prior to introducing such a problem, the teacher would present an exercise 
+like the one below in which the student must rewrite a whole number as a whole numeral and a 
+fraction equivalent to 1 (6 = 5 + ¾).
+6 = Ξ + v 9 = EJ+^ 
+4 6
+In leading students through this preskill exercise, the teacher points out that they have to 
+take one whole away from the original whole number and rewrite that one whole as a fraction. 
+Once this preskill is taught, students should have little difficulty with problems that involve 
+renaming.
+Comparing Fractions
+Students are often asked to compare the values of fractions. For example, which has the greater 
+value, ⅓ or ⅓7 Which has the lesser value, ⅜ or ⅝7 During second and third grade, students 
+usually are asked to compare fractions with numerators of 1 but with different denominators. 
+The teacher can prepare students for these comparison questions by providing pictorial demon­
+strations illustrating that the more parts a unit is divided into, the smaller the size of each part.
+The rule is: The bigger the denominator, the smaller the value of each part. For example, — is
+smaller than —. The demonstrations can be followed by a rule-application exercise in which the 
+teacher presents pairs of fractions with numerators of 1 and asks which fraction has a greater 
+value.
+In later grades, students are asked to compare fractions that have numerators other than 1 
+(¾ and ⅝). The strategy for comparing the two fractions involves rewriting fractions so that they 
+have common denominators (¾ would be rewritten as 2⅞6 and ⅝ as 2%6).
+
+[p.311]
+Chapter 13 Fractions 311
+Once fractions have been rewritten so they have common denominators, their values are 
+readily apparent. Procedures for teaching students to rewrite fractions with common denomina­
+tors are the same as those discussed in the early steps of the format to add and subtract fractions 
+with different denominators: determining the least common multiple of the denominators and 
+multiplying each fraction by a fraction equal to 1.
+Word Problems
+The basic guideline for introducing fraction word problems is that a new type of fraction prob­
+lem should be integrated into word problem exercises as soon as the students can accurately 
+compute problems of that type. For example, word problems involving adding and subtracting 
+fractions with like denominators should be introduced after students can compute these types of 
+problems independently. Word problems with unlike denominators should be introduced only 
+after students have mastered the strategy for adding and subtracting those types of fractions. All 
+of the various types of addition and subtraction problems described in the problem-solving chap­
+ter (Chapter 11) should be included in the exercises. Figure 13.2 is a sample of problems that 
+could be included on a worksheet given to students shortly after they learn how to add/subtract 
+mixed numbers with fractions that have like denominators. Note the variety of word problem 
+types (classification, action, and comparison).
+FIGURE 13.2 Sample word problem worksheet 
+with mixed numbers and like denominators
+1. Tina ran 3⅜ miles in the morning and 21∕5 miles 
+in the afternoon. How many miles did she run 
+altogether?
+2. We had ¾ of an inch of rain on Monday and ¼ 
+of an inch of rain on Tuesday. How much more 
+rain did we have on Monday?
+3. Ricardo’s cat weighed 14⅜ pounds. If the cat 
+gains 3⅛ pounds how much will it weigh?
+4. Joan bought 6¾ pounds of meat. After she 
+cooked the meat, it weighed 2¼ pounds. How 
+much less does it weigh now?
+INSTRUCTIONAL PROCEDURES: MULTIPLICATION 
+AND DIVISION OF FRACTIONS
+• •••••« ∙
+Multiplying Fractions
+The first type of multiplication problem, which involves multiplying two proper fractions, is 
+usually introduced in fourth grade:
+3 2 4 1- × -
+4 5 9 3
+The second type, which also is usually introduced during fourth grade, involves multiplying 
+a fraction and a whole numeral. This type of problem is important, since it occurs often in word 
+problems:
+3- × 84
+The third type of problem, usually introduced in fifth grade, involves multiplying one or 
+more mixed number:
+25 × 3—4
+31 3 14- × 2— - × 2-52 4 2
+
+[p.312]
+312 Part III Extended Concepts and Skills
+Multiplying Proper Fractions
+Multiplying proper fractions can be introduced several weeks after students have learned to add 
+and subtract fractions with like denominators. The steps for multiplying fractions are presented 
+in Format 13.17: Multiplying Two Proper Fractions. The reason multiplying proper fractions 
+is taught first is that it is a prerequisite for finding equivalent fractions and for the second type of 
+multiplication problem, a fraction multiplied by a whole number.
+The format includes two parts. In Part A, the structured board presentation, the teacher pres­
+ents a rule about multiplying fractions—Work top times the top and bottom times the bottom—and 
+demonstrates how to apply the rule to several problems. Part B is a structured worksheet presen­
+tation. Note that the examples in this part include both multiplication problems and problems that 
+involve addition and subtraction of fractions. This mixture is essential to provide students with 
+practice in discriminating between the multiplication strategy (multiply across the top and bottom) 
+and the addition/subtraction strategy (work only across the top). Part B begins with a verbal exer­
+cise in which the teacher asks students how they work a particular type of problem (“What do you 
+do when you multiply fractions? What do you do when you add or subtract fractions?”).
+Multiplying Fractions and Whole Numbers
+Problems that involve multiplying a fraction and a whole number are important because they 
+have many real-life applications. For example, consider the following problem: “A boat engine 
+2called for — of a quart of oil for every gallon of gasoline. John had 9 gallons of gas. How much
+oil did he need?”
+Multiplying fractions and whole numbers in word problems can be introduced when stu­
+dents have mastered multiplying proper fractions and converting an improper fraction to a 
+mixed number. The steps in the problem-solving strategy are outlined in Summary Box 13.3.
+Using pictorial demonstrations that represent multiplying a whole number by a fraction 
+should precede the introduction of the format to promote conceptual understanding. For exam-
+2pie, for the problem — × 6 the teacher would show six circles divided into thirds. In each of the
+circles, two of the thirds would be shaded.
+SUMMARY BOX 13.3
+Multiplying Fractions and Whole Numbers
+1. Student reads the problem. 4×≡
+2. Student changes the whole numeral into a fraction. 3 8- X -4 1
+3. Student multiplies numerators and denominators. 3 8 24
+4 X 1 4
+4. Student converts product into a whole numeral or mixed numeral. 3 8 24
+4 X 1 “ 4
+
+[p.313]
+Chapter 13 Fractions 313
+2The teacher would point out that the picture shows — six times. Then the teacher would have the
+students count the shaded parts in all of the circles (12 shaded parts). The teacher would then 
+12write the fraction — to represent all of the shaded parts and three parts in each whole. This frac-
+Format 13.18: Multi­
+plying a Fraction and 
+a Whole Number
+Watch how Lori uses pictures to 
+show her students that a whole 
+number can be converted to a 
+fraction.
+2 tion would be reduced to show that — × 6 equals 4 wholes.
+Format 13.18: Multiplying a Fraction and a Whole Number teaches students to multiply 
+a fraction and a whole number. Part A introduces an essential component skill: converting a 
+whole number to a fraction. Any whole number may be converted to a fraction by putting it over 
+a denominator of 1. Part B is a structured board presentation during which the teacher models 
+the strategy: converting a whole number to a fraction, multiplying fractions, and determining 
+how many wholes the product of the fractions equals. Part C is a structured worksheet presenta­
+tion. Note that the worksheet is set up with the prompt taught in Part B. After the fraction bar is 
+a division sign and a box for the answer:
+3
+4 = □
+Examples should be carefully designed. Some problems should have answers that are whole 
+numbers: 
+3- × 8 = 64
+and some should have answers that are mixed numbers:
+2 2- × 7 = 4-3 3
+Initially, the whole number should represent a relatively small number (below 20). As stu­
+dents learn to multiply and divide larger numbers, the examples should include hundreds and 
+then thousands numbers:
+3- X 2000 4
+Multiplying Mixed Numbers
+Multiplying a mixed number and a whole number is an important component skill for advanced 
+map-reading skills. For example, if 1 inch equals 50 miles, how many miles will 3½ inches equal?
+50 X 3— = 1752
+Initially, we recommend teaching a strategy in which the students convert a mixed number 
+into an improper fraction before working the problem. See Summary Box 13.4 in which prob­
+lems a and b illustrate the recommended steps.
+Later, a more sophisticated strategy involving the distributive property may be introduced for 
+problems in which a whole number and mixed number are multiplied. The students first multiply 
+the whole-number factor by the whole number from the mixed-number factor, then multiply the 
+whole-number factor by the fraction, and finally add the products. This process is shown below:
+£
+2
+£ 
+2
+= 15 + 2*
+2
+1
+= 17i
+
+[p.314]
+314 Part III Extended Concepts and Skills
+BOX 13.4
+Multiplying Mixed Numbers
+Steps Problems
+a. × 3⅞ = b. 5 × 2^ =
+2 4 4
+1. Convert mixed number to improper fraction. 11 14 5 11
+2 X 4 - 1 X T -
+2. Multiply. 11 14 = 154 511 _ 55
+2 X 4 - 8 1 X 4 - 4
+19^ = 19" 13∣ = 13"
+8 4 4 4
+3. Convert answer to mixed numeral. 154 τ----- 55 τ—s = 8) 154 — = 4j5Γo z+
+Dividing Fractions
+To introduce students to division of fractions, we recommend highlighting the relationship 
+between fractions and multiplication/division number families. The number family relationships 
+clearly illustrate the relationship between whole numbers and fractions. Students should be pre­
+sented this concept as an introduction to dividing fractions no later than fifth grade. Teachers 
+should introduce the fraction bar as another way of saying “divided by.” The fraction — also can 
+be read as “1 divided by 2.” After students have practiced reading fractions both ways, they learn 
+that multiplication number families can be turned.
+20 becomes j, 
+5 20
+*
+Students practice identifying the big number and the two small numbers. Later, students apply 
+this knowledge to number lines.
+Λ2
+3
+0
+Students then complete the fractions for the number lines. The fraction for 1 on the number 
+3 6line is The fraction for two is —. Next to the numerals on the number line, students complete
+the number families that are turned. The numeral that goes in the box is the whole number on 
+the number line. The numerals for the fractions are the vertically oriented numbers in the fam­
+ily. After students master reading fractions as division problems, teachers can introduce writing 
+fractions as division problems. The teacher would have the students read the fraction, read the 
+fraction as a division problem, write the regular division problem, and solve.
+
+[p.315]
+Chapter 13 Fractions 315
+Dividing fractions is usually introduced in fifth grade. Fraction division problems may be 
+divided into three types. First are those in which a proper fraction is divided by a proper fraction:
+2 3 4^2
+3'4 5'7
+This type of problem, while used infrequently, is introduced first because it prepares students for 
+the second type of problem in which a fraction is divided by a whole number:
+Problems such as the one above are more common. For example, John has — of a pound of 
+candy. He wants to split the candy up equally among his two friends. How much candy should 
+he give to each friend?
+The third type of problem involves dividing a mixed number:
+3- ÷ 4 2 32
+The strategy taught to solve division problems involves inverting the second fraction, 
+3 2 .changing the sign to a multipheation sign, and then multiplying. For example, —÷— is worked 
+2 3 3 9 4 . 3.
+by inverting — so that the problem becomes — × — = —. Because the procedure is simple, we 
+have not included a separate format. The teacher explains that division of fractions can be diffi­
+cult. In order to make division of fractions easier, we “invert and multiply.” We recommend that 
+the teacher demonstrate this procedure using several examples on the board before providing 
+structured worksheets.
+Although the strategy for dividing fractions is relatively simple, the rationale for using this 
+strategy is more complex. Figure 13.3 provides a rationale for teachers who wish to demon­
+strate why this procedure is appropriate.
+Problems in which students divide by a whole number are solved by first converting the 
+whole number to a fraction and then inverting that fraction:
+3 3 2 3 1 3-÷2=-÷-=-×-=-4 4 1 4 2 8
+Problems that include a mixed number are solved by converting the mixed number to an 
+improper fraction, inverting, and multiplying.
+Word Problems—Multiplication and Division
+Multiplication and division word problems can be introduced after students have mastered 
+multiplying and dividing fractions. Multiplication word problems with fractions usually 
+involve figuring out what a fractional part of a specified group equals. Here is a typical 
+problem:
+3There are 20 children in our class; — of the children are girls. How many girls are in the 
+class? 4
+This type of problem is introduced shortly after students can solve problems in which a fraction
+and a whole number are multiplied— × 20 ). As an intermediate step to prepare students for
+the word problems, the teacher can present problems with prompts like these:
+∣=f9 = 5-□-of 12 =4
+
+[p.316]
+316 Part III Extended Concepts and Skills
+FIGURE 13.3 Rationale for fraction division strategy
+To divide a fraction by another fraction, students are taught to invert the second fraction and multiply, which 
+is essentially a shortcut. The strategy is based on two principles: the multiplicative identity element (any number 
+multiplied [or divided] by 1 equals that number) and the inverse principle (any number multiplied by its inverse 
+equals 1).
+2 4 2 5
+3 ’ 5 “ 3 X 4
+To explain the invert and multiply strategy, we first rewrite the division problem with a fraction bar as a fraction 
+2 
+over a fraction. Remember, the fraction bar can be translated as "divide by." We still read the problem as - divided 
+/1 3
+2
+3
+4
+5
+Next we convert the denominator to 1. We want a 1 in the denominator because of the identity principle—a 
+number divided by 1 equals that number. (Dividing by 1 is easier than dividing by any other number.) To convert the
+4
+5denominator to 1, we must multiply it by its inverse . Any number multiplied by its inverse equals 1. In this
+example, × = = 1. In the original problem, this step looks like the following:
+2/
+2
+4 5
+5 ∖4
+20 1
+20
+5 5 5If we multiply the denominator by -, we also must multiply the numerator by - because of the identify principle—- 
+over is the same as multiplying by 1. Multiplying by a fraction of one is the procedure introduced earlier to gener­
+ate equivalent fractions.
+2
+2
+4
+5
+∕5∖ 
+4
+5
+∖4∕
+When we multiply the numerator, we get our answer to the division problem.
+2∕5λ 10
+3 ∖4∕ _ 12 _ 10
+1 1 ~ 12
+Inverting and multiplying is an easy and efficient way to divide fractions. 
+2^4-2 5 _ 10
+3 ’ 5 ~ 3 X 4 - 12
+Students are taught that “of ’ in this problem can be translated to “multiply.” The problem ¾ of 
+12 would be converted to ¾ × 12 and then solved:
+3 12 36- × — = — = 94 1 4
+As students are able to solve operations with larger numbers, the examples in the word 
+2 2problems should include larger numbers. Instead of — of 12, a problem might ask for — of 126.
+
+[p.317]
+Chapter 13 Fractions 317
+The most common type of division word problem involves dividing a fraction by a whole 
+number. Here is an example of this type of problem:
+2Mia has — of an apple left. She wants to share it equally with her 2 friends. How much of the
+apple should she give to each friend?
+This type of problem can be introduced when students can work problems in which a fraction 
+can be divided by a whole number.
+DIAGNOSIS AND REMEDIATION OF COMMON 
+FRACTION ERRORS
+Students may miss fraction problems for one or a combination of the following reasons:
+1. Fact error (dividing 18 by 3 and ending with 5, multiplying 7 × 8 and ending with 54): If 
+a student misses a problem solely because of a fact error, the teacher need not spend time 
+working on the fraction skill but should reteach the facts.
+2. Component-skill error: The student makes an error on a previously taught skill, which causes 
+the student to miss the current type of problem. For example, when working the problem 
+2 1 12 2 1 2— × 12 the student converts 12 to the fraction — instead of — writing — × — = —.3 12 1 3 12 36
+The remediation procedure involves reteaching the earlier-taught component skill. In the 
+example given, the teacher first would reteach the student how to convert a whole number 
+to a fraction. When the student’s performance indicates mastery of the component skill, the 
+teacher would lead the student through solving the original type of problem using the struc­
+tured worksheet part of the appropriate format.
+3. Strategy error: A strategy error occurs when the student does not correctly follow the steps 
+12to solve a problem. For example, when attempting to convert — to a whole number, the stu­
+dent subtracts 4 from 12, ending with 8. The remediation procedure involves reteaching the 
+entire strategy beginning with the structured board part of the format.
+The following sections give examples of common errors made on the various types of frac­
+tion problems along with suggestions for remediation.
+Errors in Reading and Writing Fractions and Mixed Numerals
+Students should read the problem as the first step in any format. If the teacher notices the student 
+reading a fraction or mixed numeral incorrectly, the teacher would reintroduce the appropriate 
+3format. For example, if a student misread — as “two-thirds,” then the teacher would present 
+2 1 5
+Format 13.4: Reading Fractions. Or if a student read 5 — as —, the teacher would present
+Format 13.6: Reading and Writing Mixed Numerals.
+Errors in Adding and Subtracting Fractions
+When adding fractions with like denominators, students usually will make strategy errors or fact 
+errors. Note the problems below:
+7 2 5 4 2 6a.-------- = — b. —I----- =9 9 0 8 8 16
+7 2 6 4 6 11C.----------— _ J 1------ =  
+9 9 9 8 8 8
+Problems a and b illustrate strategy errors. The student does not know that the denominators are 
+not added or subtracted. The remediation procedure involves reintroducing Format 13.14: Adding 
+and Subtracting Fractions with Like Denominators beginning with Part A. Problems c and d,
+
+[p.318]
+318 Part III Extended Concepts and Skills
+FIGURE 13.4 Errors in addition with unlike denominators
+Error Patterns
+4 2 4/ A 2 / λ 61 . — + — — — ∣ -----  I + — I -----  ) = ----5 3 5 ∖ × 3/ 3 ∖ × 3/ 15
+15 15
+16 16
+4 2 4√×4λ 2 ∕× 8λ 322 . — -∣- — — —I -----j -j- — ∣ ------ ∣ — —
+8 4 8∖X4∕ 4A-×-8-√ 32
+32 32
+Diagnosis
+Component-skill error: 
+student failed to multiply 
+by a fraction equal to 
+one in order to generate 
+equivalent fractions with 
+like denominators.
+Component-skill error: 
+student did not find 
+least common multiple. 
+Note that the answer is 
+correct.
+Strategy error: student 
+adds denominators.
+Remediation
+Procedures
+Present Format 13.16 
+beginning with Part A, 
+emphasizing step 5.
+Remediation
+Examples
+Addition problems 
+with unlike denom­
+inators
+10 5
+λ 5 2 ÷÷÷÷ 154 + —— +  ------ = —
+∕62 ⅛ 12
+7<z 7o4 ∖ ∕o2 y ∖12 J
+Fact error: student multi­
+plied 2 × 3 incorrectly.
+Teacher points this 
+out but emphasizes 
+it's important to find 
+the least common 
+multiple. Present 
+Format 13.15.
+Present entire format 
+for fractions with 
+unlike denominators 
+(13.16) over, begin­
+ning with Part A.
+Teacher works on 
+2 × 3 fact.
+Find the LCM of 6 
+and 9, 8 and 6, 4 
+and 12, etc. Include 
+examples when 
+one of the denomi­
+nators is the LCM.
+Addition problems 
+with unlike denom­
+inators
+on the other hand, indicate fact errors. The remediation procedure depends on the number of prob­
+lems missed. If a student misses less than 10% of the problems because of fact errors, the teacher 
+works on the facts missed. If the student misses more than 10% of the problems because of fact 
+errors, the teacher must work on improving fact accuracy through implementing a stronger moti­
+vational system and/or providing more practice on basic facts. (See Chapter 6.)
+Problems involving adding or subtracting fractions with unlike denominators may be missed 
+because of fact, component-skill, or strategy errors. Note the problems in Figure 13.4. The cause 
+of each error and the suggested remediation procedures are provided for common mistakes.
+APPLY WHAT YOU LEARNED i
+Click on the V to answer the questions online.
+1. Below are various fraction-related problems. Describe the type each problem represents. List the 
+types in their order of introduction.
+3 _ □
+g' 5 10
+h. 5∣ × 3
+2
+1∙ ⅛ = τ
+
+[p.319]
+Chapter 13 Fractions 319
+2. Write a structured worksheet presentation for teaching students how to solve the following type of 
+problem:
+Draw a picture for this fraction: —
+3. A teacher is presenting the first lesson in which she is teaching students to decode fractions in the 
+traditional manner (e.g., ⅜ is read as two-thirds). Below are four sets of examples. Which set is 
+appropriate? Tell why the other three sets are not appropriate.
+2 1 4
+a' 3 2 5
+1 1 1b. — — —8 4 9
+1 3 7c. — — —8 4 6
+3 7 8d. — — —4 9 4
+7 1_ 2 3
+3 4 9 2
+111
+6 5 7
+112 1
+6 8 4 4
+2 4 8 5
+9 6 6 7
+j.
+5
+4. A student writes the mixed number five and one-third as ⅝. Specify the wording the teacher uses in 
+making the correction.
+5. Specify the wording the teacher uses in making the correction for the following error:
+3^0
+4 ^ 8
+6. Identify the examples below that would not be included in an early equivalent-fraction exercise.
+2 □ 5 □ 3 □a. — -- — b. - zzz --- c. — = —
+3 9 7 28 4 6
+4 □ 3 □ r 4 □d. -  -- — e. — ~~ --- f. - = —
+5 20 5 20 6 10
+7. Below are four sets of examples constructed by the teacher for an early reducing-fraction exercise. 
+One set is appropriate. Three are not appropriate. Identify the inappropriate sets. Tell why they’re 
+inappropriate.
+8 7 6 4 5 2
+a.
+12 9 18 6 20 3
+b. 8_ 6 4 5 3 6
+12 18 6 20 12 8
+c. 8 7 10 12 3 6
+12 9 15 20 5 8
+d. 4 5 22 8 18 5
+7 20 36 16 34 9
+8. Write the structured worksheet presentation used in leading students through reducing the fraction 
+1¾8 to its lowest terms.
+9. Below are sets of examples prepared by various teachers for an exercise in which students convert 
+improper fractions to mixed numbers. Tell which sets are inappropriate.
+9 11 9 12 14 12a — — .—..... ———
+' 5 3 3 7 5 4
+9 3 8 7 8 5 9 7b — — —— —— - - —— — ——-
+' 4 7 2 5 3 9 3 3
+9 3 5 4 7 9c — — — ——- —
+' 5 7 2 9 3 2
+
+[p.320]
+320 Part III Extended Concepts and Skills
+10. Below are sets of examples prepared by several teachers for an independent worksheet exercise 
+focusing on adding and subtracting fractions with unlike denominators. Tell which sets are inappro­
+priate. Explain why.
+a. 6
+14 ^
+3
+' 8
+5— +8
+£ 
+5
+4 _
+9
+5
+12
+3
+8 + 2
+8
+3 I 5 1 3 2 3 2 2 14 2b. — + — -  — — — + — — + - -  — - -  -  —-
+8 5 7 4 8 8 5 3 3 2 7 5
+3 2 4 2 2 2 5 13 13 2c. -  —— ——- -  — — —ι- — — — — — _|_ — — _|_ —
+4 3 9 9 9 3 7 2 8 4 7 7
+11. Below are examples of errors typically made by students. Specify the diagnosis and remediation for
+each student.
+Xavier
+Z _ 1 - 1
+8 6 ^ <2
+25 18
+Anna
+Samuel
+8 5
+4 1 4 (2∖ 1( δ∖ 4 (2∖ 1 f δ∖ 13 3
+5 2 5∖2j 2∖5 J 5∖2∕ 2∖5 J 10 10
+Destiny
+15 6
+3 2 3 (5∖ 2(3∖ 3 f 5∖ 2(3∖ 21+ __(_) 4. _ j — = __ 4-— — ) = —
+5 3 5∖3 J 3∖5 J 5∖3 J 3∖5 J 15
+12. Write a structured worksheet exercise to lead students through solving this problem:
+8-⅛
+13. Specify the diagnosis and remediation procedures for each student.
+Marquis
+6 yof28
+162
+7
+1
+= 23-
+7
+Sara
+6yθf28 =
+6
+196
+3
+98
+Diego
+6 168
+-of28 = ----
+7 7
+
+[p.321]
+Chapter 13 Fractions 321
+Format 13.1
+INTRODUCING FRACTIONS
+TEACHER
+Part A: Number of Parts in Each Whole
+STUDENTS
+(Draw the following diagram on the board.)
+1. (Point to A.) I've drawn whole units on a number line. The tall lines show 
+the end of each whole unit.
+(Point to first tall line in A.) Here's a whole unit.
+(Point to second tall line in A.) Here's a whole unit.
+(Point to third tall line in A.) Here's a whole unit.
+(Draw a line under the first whole unit.)
+2. Look at the first whole unit. (Point.) The small lines show the parts in each 
+whole unit. Count the parts inside the first whole unit.
+How many parts in the first whole unit? (Write 4 for the denominator 
+in the first box.)
+(Underline the next whole unit.)
+3. Look at the second whole unit. (Point.) Count the parts inside the second 
+whole unit.
+How many parts in the second whole unit? (Write 4 for the denominator in 
+the second box.)
+(Underline the third whole unit.)
+Look at the third whole unit. (Point.) Count the parts inside the third whole 
+unit. (Write 4 for the denominator in the third box.)
+How many parts in the third whole unit?
+There are 4 parts in each whole unit. So the bottom number of the fraction 
+is 4. (Write 4 in the denominator of the fraction after line A.)
+To correct:
+Note: This is an important preskill. If students do not understand the number 
+of parts in each whole unit, they will not write the correct denominator for 
+fractions.
+(First, point out to students the first whole unit on the number line.) This is 
+where the first whole unit starts and where it stops. As I touch them, start 
+at the beginning and count the parts in that whole unit. How many parts 
+are in that unit? Now, let's count the parts in the next whole unit. How 
+many parts are in that whole unit? There were 4 parts in the first whole unit 
+and 4 parts in this whole unit. So how many parts are in each whole unit?
+1, 2, 3, 4
+4
+1, 2, 3, 4
+4
+1, 2, 3, 4
+4
+continued
+
+[p.322]
+322 Part III Extended Concepts and Skills
+Format 13.1 (continued)
+INTRODUCING FRACTIONS
+TEACHER STUDENTS
+(Repeat the procedure until students who had problems have mastered this 
+part. Note that some students may have serious problems because they don't 
+understand that the second unit starts where the first unit ends.)
+4. (Repeat steps 1-3 for examples B and C.)
+Part B: Writing the Top Part
+(Draw a diagram like the one below on the board.)
+1. (Point to number line A.) Count the number of parts in each whole unit. 
+(Pause.) How many parts in each whole unit?
+Do I write that on the bottom or the top of the fraction? (Write 4 as the 
+denominator of all fractions on number line A.)
+2. Now we are going to write the top numeral of the fraction right here. 
+(On number line A point to the top of box 1.)
+To figure out the top numeral of the fraction we count from the beginning 
+and stop here. Count the parts.
+Yes, when we counted from the beginning and stopped here. We have 4, so 
+I write 4 on the top of the fraction.
+3. Now we are going to write the numeral for the top of the fraction right 
+here. (On number line A point to the top of box 2.)
+Remember, to figure out the top numeral of the fraction we count from the 
+beginning and stop here. Count the parts.
+Yes, when we counted from the beginning and stopped here. We have 8, 
+so I write 8 on the top.
+4. Now we are going to write the top numeral of this fraction right here. 
+(On number line A point to the top of box 3.)
+Remember, to figure out the top numeral of the fraction we count from the 
+beginning and stop here. Count the parts.
+Yes, when we counted from the beginning and stopped here we have 12, so 
+I write 12 on the top.
+4
+Bottom
+1, 2, 3, 4
+1, 2, 3, 4, 5, 6, 7, 8
+1, 2, 3, 4, 5, 6, 7,
+8, 9, 10, 11, 12
+(Repeat steps 1-4 for examples B and C.)
+
+[p.323]
+Chapter 13 Fractions 323
+TEACHER STUDENTS
+Part C: Writing Complete Fractions
+(Draw the following on the board.)
+1. Now we are going to write three fractions for each number line. Look at A. 
+Count the number of parts in each whole unit. (Pause.) How many parts in 
+each whole unit?
+So do I write that on the top or the bottom of the fraction?
+Yes, I write 8 on the bottom of each fraction.
+2. (Touch the first fraction box.) We are going to write a fraction right here. 
+We figure out the top numeral of the fraction by counting from the 
+beginning and stopping here. Count the parts.
+Yes, there are 8 parts. So I write 8 on the top of this fraction.
+3. (Touch the second fraction box.) We are going to write a fraction right 
+here. We figure out the top numeral of the fraction by counting from the 
+beginning and stopping here. Count the parts.
+Yes, there are 16 parts. So I write 16 on the top of this fraction.
+4. (Touch the fraction box for the shaded part.) Now, we are going to write a 
+fraction for the shaded part. We figure out the top numeral of the fraction 
+by counting from the beginning of the shaded part. Count the parts.
+Yes, there are 21 shaded parts. So I write 21 on the top of the fraction.
+(Repeat steps 1-4 for B and C.)
+Part D: Structured Worksheet
+(Create a worksheet for students containing examples like the following.)
+8
+Bottom
+1, 2, 3, 4, 5, 6, 7, 8
+1, 2, 3, 4, 5, 6, 7, 8,
+9, 10, 11, 12, 13, 
+14, 15, 16
+1, 2, 3, 4, 5, 6, 7, 8, 9, 
+10,11, 12, 13, 14, 15, 16, 
+17, 18, 19, 20, 21
+continued
+
+[p.324]
+324 Part III Extended Concepts and Skills
+Format 13.1 (continued)
+INTRODUCING FRACTIONS
+TEACHER STUDENTS
+1. You are going to write the fractions for the whole units and for the shaded 
+parts. Touch A. Count the number of parts in each whole. How many parts 
+in each whole unit?
+Where do you write the 4?
+Write 4 as the bottom numeral for each of the fractions.
+4
+On the bottom
+2. Now you are going to write the top numeral for this whole unit. 
+(Point to 1 on A.) How do we figure out the top numeral of the fraction?
+Raise your hand when you are done counting. What is the top number?
+Write 4 as the top numeral in the first fraction.
+3. Now you are going to write the top numeral for the shaded part. How do 
+we figure out the top numeral of the fraction?
+Count from the 
+beginning and stop here 
+4
+Start counting at the 
+beginning of the 
+shaded part
+Raise your hand when you are done counting. What is the top number?
+Write 6 as the top numeral for the shaded part.
+4. (Point to 2 on A.) Now you are going to write the top numeral for this 
+whole unit. How do we figure out the top numeral of this fraction?
+Raise your hand when you are done counting. What is the top number?
+Write 8 as the top numeral for that fraction.
+5. (Point to 3 on A.) Now you are going to write the top numeral for this 
+whole unit. How do we figure out the top number?
+Raise your hand when you are done counting. What is the top number?
+Write 12 as the top numeral for that fraction.
+(Repeat steps 1-5 for B-D.)
+6
+Count from the 
+beginning
+8
+Count from the 
+beginning 
+12
+Format 13.2
+PART-WHOLE DISCRIMINATION
+TEACHER STUDENTS
+1. (Draw the following circles on the board.)
+2. (Point to the first circle.) This is a whole unit. What is this? A whole unit
+(Point to the second circle.) This is a whole unit. What is this? A whole unit
+How many units? 2
+3. Each whole unit has parts. The parts are all the same size. Let's see how 
+many parts are in each whole unit.
+4. (Point to first unit.) Count the parts as I touch them. (Touch each part in the 
+first circle.) 1, 2, 3
+How many parts in this whole unit? 3
+
+[p.325]
+Chapter 13 Fractions 325
+TEACHER STUDENTS
+5. (Point to the second circle.) Now let's count the parts in this whole unit. 
+(Touch each part as students count.)
+6. How many parts in each whole unit?
+7. Yes, three parts in each whole unit. Say that.
+8. Now think: How many whole units?
+Yes, there are 2 whole units with 3 parts in each unit.
+(Repeat steps 1-8 with other examples.)
+1, 2, 3
+3 parts
+3 parts in each whole 
+unit
+2
+Format 13.3
+WRITING NUMERICAL FRACTIONS (See Video in Part A)
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Draw the following circles on the board.)
+2. We're going to learn to write fractions. Fractions tell us how many parts in 
+each whole unit and how many parts are used.
+3. The bottom number of a fraction tells how many parts in each whole. What 
+does the bottom number tell?
+Look at this picture and think: how many parts in each whole?
+To correct: Let's see how many parts are in each whole. (Point to first circle.) 
+Count the parts as I touch them. (Touch each part in the first circle. Repeat 
+same procedures with next two circles.) There are 4 parts in this whole and 
+4 parts in this whole. There are 4 parts in each whole.
+So what is the bottom number of the fraction?
+I'll write 4 as the bottom number. That tells us 4 parts in each whole. What 
+does the 4 tell us?
+4. The top number tells us how many parts are used. What does the top number 
+tell us?
+We find how many parts are used by counting the shaded parts. (Point to 
+each shaded part.) Count as 1 touch the parts. How many parts are shaded?
+So I write 5 as the top number of the fraction. (Write 5 on top.) That tells us 
+5 parts are used. What does the 5 tell us?
+5. I'll say what the fraction tells us. (Point to 4.) 4 parts in each whole. (Point 
+to 5.) 5 parts are used.
+How many parts in 
+each whole
+4
+4
+4 parts in each whole
+How many parts are 
+used
+1, 2, 3, 4, 5
+5
+5 parts are used
+continued
+
+[p.326]
+326 Part IΠ Extended Concepts and Skills
+Format 13.3 (continued)
+WRITING NUMERICAL FRACTIONS
+TEACHER
+6. You say what the fraction tells us. (Point to 4.)
+(Point to 5.)
+(Repeat steps 5-6 until students respond without hesitation. Give individual 
+turns to several students.)
+7. (Repeat steps 1-4 with the problems below.)
+STUDENTS
+4 parts in each whole
+5 parts are used
+Part B: Structured Worksheet
+1. (Give students a worksheet with problems like those that follow.)
+2. Touch picture a. You're going to write the fraction for the picture.
+3. First we write how many parts in each whole. Where do you write the 
+number of parts in each whole?
+Look and see how many parts in each whole. (Pause.) How many parts in 
+each whole?
+Where do you write 3?
+Write the number.
+4. Now we write the number of parts used. Where do you write the number of 
+parts used?
+Count the shaded parts. (Pause.) How many parts were used?
+In the bottom box
+3
+In the bottom box
+On the top
+4
+
+[p.327]
+Chapter 13 Fractions 327
+TEACHER STUDENTS
+5. Touch the bottom number. (Pause.) What does that tell us? 3 parts in each whole
+Touch the top number. What does that tell us?
+(Repeat steps 4-5 until students answer without hesitation. Give individual 
+turns to several students on steps 4-5. Repeat steps 1-5 with remaining 
+figures.)
+Part C: Less Structured Worksheet
+1. (Give students a worksheet similar to the one in Part B.)
+Touch problem a.
+4 parts are used
+2. Where do you write how many parts in each whole unit? On the bottom
+3. What do you write on the top?
+Write the numerals.
+How many parts are 
+used
+4. Touch the bottom number. What does it tell us? _______ parts in each 
+whole
+5. Touch the top number. What does the top number tell us?
+(Repeat steps 1-5 with remaining examples.)
+_______ parts are 
+used
+Format 13.4
+READING FRACTIONS
+TEACHER STUDENTS
+1. (Write the following fractions on the board.)
+4 1 1 I θ 1 1 1
+99447744
+So far we've learned what fractions tell us to do. Today we're going to learn 
+to read fractions a new way. My turn to read this fraction. (Point to 4.) Four 
+(point to 9) ninths.
+2. Your turn. (Point to 4, then 9.)
+3. (Repeat steps 1 and 2 with half the examples on the board.)
+4. (Repeat only step 2 with the remaining examples.)
+To correct: Model and test correct answer; review series.
+Four-ninths
+
+[p.328]
+328 Part III Extended Concepts and Skills
+Format 13.5
+DETERMINING WHETHER A FRACTION EQUALS, 
+EXCEEDS, OR IS LESS THAN ONE WHOLE
+TEACHER STUDENTS
+Part A: Pictorial Demonstrations
+1. I'll draw a picture on the board. You tell me if we use up more than one 
+whole, less than one whole, or just one whole (Draw the diagram below.)
+2. Did I shade more than one whole, less than one whole, or just one whole? Less than one whole 
+unit
+Yes, less than one whole unit. Each circle has 4 parts, but I only shaded 3 parts. 
+(Repeat step 2 with the examples below.)
+Part B: Structured Board Presentation
+1. We're going to learn some rules so we can tell if a fraction equals one whole 
+or equals more or less than one whole without drawing a picture.
+2. First rule: A fraction equals one whole when the top number and bottom 
+number are the same. When does a fraction equal one whole?
+3. (Write the following fraction on the board.)
+4
+4
+(Point to the fraction.) Does this fraction equal one whole?
+How do you know?
+(Repeat step 3 with the problems below.)
+7 2 5 1 8
+4 3 5 4 8
+4. Listen to these new rules: If the top number is more than the bottom number, 
+the fraction equals more than one whole. When does a fraction equal more 
+than one whole?
+If the top number is less than the bottom number, the fraction equals less 
+than one whole. When does a fraction equal less than one whole?
+When the top number 
+and bottom number 
+are the same
+Yes
+The top number and 
+bottom number are 
+the same.
+When the top number 
+is more than the 
+bottom number
+When the top number 
+is less than the bottom 
+number
+
+[p.329]
+Chapter 13 Fractions 329
+TEACHER STUDENTS
+5. (Write the following fraction on board.)
+3
+5
+Is the top number the same as the bottom number?
+So does the fraction equal one whole?
+Is the top number more or less than the bottom number?
+So does the fraction equal more or less than one whole?
+How do you know?
+Yes, 5 parts in each whole and only 3 parts are used.
+(Repeat step 5 with the problems below.)
+3 3 3 4 4 4
+4 3 2 5 4 2
+Part C: Structured Worksheet
+(Give students worksheets with problems like these.)
+5 more 7 more 3 more
+a.— equal b. — equal c. — equal
+less less less
+1. In these problems you have to tell if a fraction is more than one whole, 
+equals one whole, or is less than one whole.
+No
+No
+Less
+Less than one whole
+The top number is 
+less than the bottom 
+number.
+2. Read the fraction in problem a. 5
+4
+3. Does the fraction equal one whole? No
+4. Is the top number more or less than the bottom number? 
+So does the fraction equal more or less than one whole? 
+Put a circle around the word "more." 
+(Repeat steps 1-4 with remaining problems.)
+More
+More than one whole
+Format 13.6
+READING AND WRITING MIXED NUMERALS
+continued
+TEACHER STUDENTS
+Part A: Pictorial Demonstrations
+(Draw the following diagrams on the board.)
+1. You're going to learn how to write the fraction in this picture a new way. 
+First, let's write the fraction the old way. How many parts in each whole? 4
+
+[p.330]
+330 Part III Extended Concepts and Skills
+Format 13.6 (continued)
+READING AND WRITING MIXED NUMERALS
+TEACHER STUDENTS
+2. Where do I write it?
+Write it.
+3. How many parts are used?
+4. Where do I write it?
+Write it.
+5. Now we're going to write the fraction as a mixed number. A mixed number 
+has a whole number and a fraction. What does a mixed number have?
+6. First we count the number of wholes used up. Count as I point. How many 
+wholes are used?
+So I write 3 in the box. (Write 3 in the box.)
+7. Now we write the fraction to tell about the whole not used. (Point to the last 
+circle.) What do I write as the bottom number in the fraction?
+(Write 4.)
+To correct: There are 4 parts in each whole.
+What do I write as the top number in the fraction?
+(Write 2.)
+To correct: There are 2 parts shaded. The fraction that tells about the whole 
+not used says ¾.
+8. The mixed number says three and two-fourths, hat does the mixed number 
+say?
+There are 3 whole units used and ¾ of another whole unit used.
+On the bottom
+14
+On the top
+A whole number and 
+a fraction
+3
+4
+2
+4
+(Repeat steps 1-8 with these examples.)
+Part B: Structured Board Presentation
+1. (Write the following on the board.)
+2. A mixed number is a whole number and a fraction. What is a mixed number?
+3. (Point to: 2⅛.)
+What's the whole number?
+What's the fraction?
+A whole number and 
+a fraction
+2
+2
+3
+
+[p.331]
+Chapter 13 Fractions 331
+TEACHER STUDENTS
+4. My turn. We read this mixed number as two and one-third. How do we read J
+this mixed number? ⅛
+5. (Write the following on the board.)
+3j8
+What's the whole number? 3
+What's the fraction? 2
+Q
+Read the mixed number.
+o
+2
+38
+(Repeat step 5with these mixed numbers.) 
+5∣ 4 4 47 2 5 2
+Part C: Structured Worksheet
+1. Listen: 2¾. Say that. 4
+What is the whole number?
+I write 2 so that it takes up the whole space.
+(Model writing on the board or document camera.)
+2
+2
+2. Listen 2¾. What is the fraction? 3
+4
+I write the fraction line in the middle of the space next to the 2. Then
+I write the fraction numbers small. (Model writing on the board or document 
+camera.)
+32~4
+3. What is the mixed number? 3
+⅛
+(Repeat steps 1-3 with the problems below.)
+7— 4—2 5
+(Give students lined paper.)
+4. Now it's your turn. You're going to write the mixed number 5⅜. What 52
+mixed number are you going to write? 53
+5. Listen: 5⅜. What is the whole number? 5
+Write it. Make it big so that it touches both lines. (Monitor responses.)
+6. Listen: 5⅜. What is the fraction? 2
+3
+Put the fraction line right in the middle of the space next to the 5. Then 
+write ⅜. Write the numbers small.
+J
+continued
+
+[p.332]
+332 Part III Extended Concepts and Skills
+Format 13.6 (continued)
+READING AND WRITING MIXED NUMERALS
+TEACHER STUDENTS
+(Repeat steps 4-6 with these numbers.)
+4 ⅛ 4 4
+7. Listen: 3⅝. Say it. 3^
+Write it. (Monitor responses. Repeat step 7 with the following mixed numbers.) 
+4 4 4 4
+6
+Format 13.7
+PRESKILL: CONSTRUCTING FRACTIONS EQUAL TO 1
+TEACHER
+Part A: Structured Board Presentation
+1. Here's a rule: When the top number is the same as the bottom, the fraction 
+equals one whole. When does a fraction equal one whole?
+2. (Write the following on the board.)
+□
+5
+What number is on the bottom of this fraction?
+What fraction with a 5 as the bottom number equals one whole?
+7^o correct: A fraction equals 1 when the top number is the same as the 
+bottom number. What's the bottom number? What must the top number be?
+(Repeat step 2.)
+Yes, ⅝ equals one whole.
+(Repeat step 2 with these problems.)
+□ □ □ □
+8 3 6 9
+Part B: Structured Worksheet
+(Give students worksheets with examples like these.)
+STUDENTS
+When the top number 
+is the same as the 
+bottom number
+5
+5
+5
+1. When does a fraction equal one whole?
+2. Touch problem a. It says 1 equals how many fourths? Read the problem.
+When the top number 
+is the same as the 
+bottom number
+1 equals how many 
+fourths?
+
+[p.333]
+Chapter 13 Fractions 333
+TEACHER STUDENTS
+3. Tell me the fraction with 4 as a denominator that equals one whole. Yes, ¾ 
+equals one whole.
+4. Fill in the missing number.
+(Repeat steps 1-4 with remaining problems.)
+4
+4
+Students write 4 in box.
+Format 13.8
+COMPUTING EQUIVALENT FRACTIONS
+TEACHER
+(See Video in Part A)
+STUDENTS
+Part A: Pictorial Demonstrations
+1. Fractions are equivalent when they show the same amounts. (Draw these 
+figures on clear plastic sheets. The circles should be the same size. Use a 
+different color for each figure as in the video.)
+2. This is a picture of 5∕10. (Point to first figure.) This is picture of ½. (Point to 
+second figure.)
+3. Would a person who had 5∕10 of a pie have the same amount as a person 
+who had ½ a pie?
+To correct: (Place one figure on top of the other. Outline the shaded part.) 
+See, the shaded portion is the same size in both pies.
+4. So are 5∕10 and ½ equivalent fractions?
+5. Yes, 5∕10 and ½ both use the same amount of a whole.
+(Repeat steps 1-5 with these pairs.)
+Yes
+Yes
+Part B: Multiplying by 1
+1. When you multiply by 1, the answer equals the number you start with.
+2. (Write the following problem on the board.)
+I×,
+What number do we start with?
+Will our answer equal 1?
+How do you know?
+(Repeat step 2 with the following problems.)
+3
+8
+Yes
+We are multiplying by 1
+continued
+
+[p.334]
+334 Part III Extended Concepts and Skills
+Format 13.8 (continued)
+COMPUTING EQUIVALENT FRACTIONS
+TEACHER STUDENTS
+3. Here's a rule about fractions: When you multiply by a fraction that equals 1, 
+your answer equals the number you start with. Listen, again. (Repeat rule.)
+4. (Write the following problem on the board.)
+4 2
+8 X 2
+What fraction do we start with?
+What are we multiplying ⅝ by?
+5. Does ⅜ equal 1?
+So will our answer equal 4/e?
+How do you know?
+(Repeat steps 4 and 5 with the problems below.)
+4 4 5 3— × — — × —8 4 6 6
+5 2 3 8- × — - × -6 3 9 8
+7 9 2 4- × - - × -2 9 4 4
+4
+8
+2
+2
+Yes
+Yes
+We are multiplying by 
+a fraction that equals 1.
+Part C: Structured Board Problems
+1. (Write the following problem on the board.)
+-∩ = —
+3 U 12
+2. We don't change the value of a fraction when we multiply it by a fraction 
+that equals 1.
+3. These parentheses indicate multiplication. We're going to multiply ⅛ by a 
+fraction that equals 1. We have to figure out the fraction that equals 1.
+4. We are going to end with a fraction that has the same value as ⅜. 
+(Point to 12.)
+What's the denominator of the fraction we end with?
+Three times what number equals 12?
+So we multiply by a fraction that has a denominator of 4.
+5. (Write 4 inside parentheses.)
+2f∖ = —
+3∖4∕ 12
+12
+4
+
+[p.335]
+Chapter 13 Fractions 335
+(Write a four in the numerator inside parentheses.)
+2∕4∖ _ □
+3 ∖4√ “ 12
+TEACHER STUDENTS
+6. The fraction inside the parentheses must equal 1. If the bottom number is 4, 
+what must the numerator be? 4
+3∖4∕ 12
+Yes, we multiply ⅜ by %. What do we multiply 2∕3 by? 4
+4
+7. We figured out the fraction equal to 1 that we're multiplying by. Let's 
+multiply and figure out how many twelfths ⅜ equals. 2×4 = how many?
+(Write the problem on the board.)
+2∕4∖ 8
+8
+8. We multiplied ⅜ by a fraction that equals 1 and ended with 8/i2; 
+⅜ equals 8∕12.
+(Repeat steps 1-8 with these problems.)
+3 = _□ 2 = □ 2 = □
+5 10 3 15 7 ~ 21
+Part D: Structured Worksheet
+(Give students a worksheet with problems similar to these.)
+3/ ∖ □ . 5/ A □ 1 / ∖ □
+4∖√ 8 9∖ 7 27 4∖ J 20
+. 2/ ∖ □ 3/ ∖ □ , 2/ ∖ □
+5 ∖ 7 20 5∖ 7 35 3 V ) 12
+1. Touch problem a. It says ¾ Equals how many eighths? What does the 
+problem say?
+3 , ,— equals how many 
+eighths?
+2. We have to multiply ¾ by a fraction that equals 1. What is the denominator 
+of the fraction we start with?
+What is the denominator of the fraction we end with?
+Four times what number equals 8?
+Write 2 as the denominator in the parentheses.
+3. We're multiplying ¾ by a fraction that equals 1. What fraction with a 
+denominator of 2 equals one whole?
+Write 2 as a numerator in the parentheses.
+4. We figured out the fraction equal to 1. Now what do we multiply to figure 
+out the missing numerator?
+What is 3 × 2?
+Write 6 in the box.
+4
+8
+2
+2
+2
+3 X 2
+6
+5. What fraction equals ¾7 6
+8
+6. How do you know that ¾ equals 6/s? We multiplied by a 
+fraction that equals 1.
+(Repeat steps 1-6 with remaining problems.)
+continued
+
+[p.336]
+336 Part III Extended Concepts and Skills
+Format 13.8 (continued)
+COMPUTING EQUIVALENT FRACTIONS
+TEACHER
+Part E: Less Structured Worksheet
+1. (Give students a worksheet with problems like the one below. Note that 
+parentheses aren't written in.)
+~ = ∏ b - = — ι = ∏a' 6 12 b' 4 20 c' 3 12
+j 1 □ 2 □ 3 □d. — = — e. — = — f. —= —5 20 5 15 7 14
+2. Touch problem a. Read the problem.
+3. We must multiply ⅛ by a fraction that equals 1. To keep the fractions 
+equal, put parentheses next to ⅝.
+4. Look at the numbers and get ready to tell me what we must multiply ⅝ by. 
+To correct: What is the denominator of the fraction we start with? What is 
+the bottom number of the fraction we end with? Six times what number 
+equals 12? That's the denominator. The fraction we're multiplying equals 1. 
+What fraction goes in the parentheses?
+Write ⅜ in the parentheses.
+5. Multiply and write in the missing numerator.
+6. What fraction does ⅝ Equal?
+(Repeat steps 2-6 with remaining problems.)
+STUDENTS
+— equals how many 6
+twelfths?
+10
+12
+2
+2
+Format 13.9
+PRESKILL: DETERMINING FACTORS
+TEACHER STUDENTS
+Part A: Introducing the Concept
+1. (Write the following problems on board.)
+5 X 3 = 15
+9 × 2 = 18
+7 X 6 = 42
+Factors are numbers that are multiplied together.
+2. Read the first problem.
+What numbers are being multiplied?
+So 5 and 3 are factors of 15. What are two factors of 15?
+5 X 3 = 15
+5 and 3
+5 and 3
+3. Look at the board and tell me two factors of 18. 9 and 2
+4. Look at the board and tell me two factors of 42. 7 and 6
+
+[p.337]
+Chapter 13 Fractions 337
+TEACHER STUDENTS
+Part B: Structured Board Presentation
+1. (Write 12 on board.)
+We want to list all of the factors for 12, beginning with the smallest factor.
+Listen: A number multiplied by 1 always equals itself. So is 1 a factor of 12? Yes
+Yes, 1 is a factor of 12. What number times 1 equals 12?
+12 and 1 are factors of 12; 12 is the largest factor of 12; 1 is the smallest factor 
+of 12.
+We're going to make a list of the factors of 12.
+Let's start with 1 × 12.
+(Write 1 × 12.)
+2.1 is the smallest factor of 12.
+Let's find the next larger number we can multiply and end with 12. I'll say 
+some numbers. You say stop when I come to a number that is a factor of 12.
+12
+Listen, 2
+To correct: (If students don't say stop at 2, say,) We can multiply 2 and end 
+with 12, so 2 is a factor of 12.
+Stop
+Yes, 2 is the next largest factor of 12. 2 times what number equals 12?
+So 6 is the other factor of 12 that goes with 2.
+Let's add 2 × 6 to our list of factors of 12. (Write 2 × 6.)
+1 × 12.
+2 × 6
+3. Let's find the next largest factor of 12. I'll say some numbers. You say stop
+6
+when I come to a factor of 12. We already have 1 and 2. Listen, 3.
+To correct: (If students don't say stop at 3, say,) We can multiply 3 and end 
+with 12, so 2 is a factor of 12.
+Yes, 3 is a factor of 12.
+Stop
+3 times what other number equals 12?
+So 4 is the other factor of 12 that goes with 3.
+Let's add 3 × 4 to our list of factors of 12. (Write 3 × 4.)
+1 × 12
+2 × 6
+3 × 4
+4. Listen, my turn. 1 know there are no more factors of 12. How do I know? 
+Because the next number after 3 is 4, and we already have that number. We 
+have all the factors of 12.
+4
+Your turn. Do we have all the factors of 12? Yes
+How do you know? Because the next 
+number after 3 is 4, 
+and we already have 
+that number.
+continued
+
+[p.338]
+338 Part III Extended Concepts and Skills
+Format 13.9 (continued)
+PRESKILL: DETERMINING FACTORS
+TEACHER STUDENTS
+5. When we say the factors of a number, we read the numbers in order, and 
+we don't have to say times.
+My turn to say all the factors of 12: 1, 2, 3, 4, 6, 12. (Point to the numerals as 
+you say them )
+Your turn. Say all the factors of 12.
+6. (Write 10 on board.)
+We want to list all of the factors for 10, beginning with the smallest factor.
+1, 2, 3, 4, 6, 12
+Listen: A number multiplied by 1 always equals itself. So is 1 a factor of 10?
+Yes, 1 is a factor of 10. What number times 1 equals 10?
+10 and 1 are factors of 10; 10 is the largest factor of 10; 1 is the smallest
+Yes
+factor of 10.
+Let's begin our list of factors of 10 with 1 × 10 (Write 1 × 10.)
+1 × 10
+7. Let's find the next largest number we can multiply and end with 10. I'll say 
+some numbers. You say stop when I come to a number that is a factor of 10.
+10
+1 is the smallest factor of 10. What number comes next?
+Is 2 a factor of 10?
+2
+To correct: (If students say no, say,) We can multiply 2 and end with 10, 
+so 2 is a factor of 10.
+Yes, so 2 is the next largest factor of 10.
+2 times what number equals 10?
+Yes
+So 5 is the other factor of 10 that goes with 2.
+Let's add 2 × 5 to our list of factors of 10. (Write 2 × 5.)
+1 X 10
+2 × 5
+8. Let's find the next largest factor of 10. I'll say some numbers. You say stop 
+when I come to a factor of 10. We already have 1 and 2. Listen: 3 (pause),
+5
+4 (pause), 5 (pause).
+To correct: (If students say stop at 3 or 4) We can't multiply that number 
+and end with 10.
+Stop
+Yes, 5 is a factor of 10. Do we already have 5? Yes
+9. So, do we have all the factors of 10? Yes
+How do you know?
+10. When we say the factors of a number, we read the numbers in order, and 
+we don't have to say times.
+Because the next 
+number was 5, and 
+we already have that 
+number.
+Your turn. Say all the factors of 10.
+(Repeat Part B with additional examples.)
+1, 2, 5, 10
+
+[p.339]
+Chapter 13 Fractions 339
+TEACHER STUDENTS
+Part C: Structured Worksheet
+(Give students worksheets with problems like those below and instructions to list 
+all the factors for each number.)
+a. 16
+b. 12
+c. 7
+1. (Touch a.) What is the smallest factor of 16? 1
+What is the other factor that goes with 1 to equal 16? Write 1 times 16 on the 
+first line. (Write 1 × 16.) 16
+2. 1 is the smallest factor of 16.
+What is the next largest factor of 16? 2
+What is the other factor that goes with 2 to equal 16? 8
+Write 2 × 8 below 1 × 16. (Write 2 × 8.)
+1 × 16
+2 × 8
+What is the next largest factor of 16? 4
+What is the other factor that goes with 4 to equal 16? 4
+Write 4 × 4 below 2 × 8. (Write 4 × 4.)
+1 × 16
+2 × 8
+4 × 4
+3. Are there any more factors of 16? No
+How do you know? Because the next
+4. Say all the factors of 16.
+number was 8, and 
+we already have that 
+number.
+1, 2, 4, 8, 16
+(Repeat steps 1-4 with new target numbers. Have students do remaining 
+problems on their own.)
+Format 13.10
+DETERMINING THE GREATEST COMMON FACTOR (GCF)
+TEACHER STUDENTS
+1. (Present students with a worksheet with the following 
+problems.)
+a. What is the greatest common factor of 12 and 16?
+b. What is the greatest common factor of 10 and 5?
+c. What is the greatest common factor of 4 and 7?
+d. What is the greatest common factor of 10 and 15?
+e. What is the greatest common factor of 18 and 9?
+f. What is the greatest common factor of 12 and 9?
+continued
+
+[p.340]
+340 Part III Extended Concepts and Skills
+Format 13.10 (continued)
+DETERMINING THE GREATEST COMMON FACTOR (GCF)
+TEACHER STUDENTS
+2. Find problem a on your worksheet. Read the directions. What is the greatest common factor 
+of 12 and 16?
+Let's find the greatest common factor of 12 and 16. The 
+greatest common factor is the largest number that is a 
+factor of 12 and 16. What is the largest number that is a 
+factor of 12? 12
+Is 12 a factor of 16? No
+12 cannot be the greatest common factor of 12 and 16. 
+Why? Because 12 is not a factor of 16
+3. What is the next largest factor of 12? 6
+Is 6 a factor of 16? No
+6 is not a factor of 12 and 16. Why? Because 6 is not a factor of 16
+4. What is the next largest factor of 12? 4
+Is 4 also a factor of 16? Yes
+So what number is the greatest common factor of 12 
+and 16?
+4
+5. Write 4. (Check students' responses.)
+(Repeat steps 2-5 with remaining problems.)
+Format 13.11
+REDUCING FRACTIONS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following problem on the board.)
+— - O
+12 ∖ J
+2. We're going to reduce this fraction. First, we determine the 
+greatest common factor of the numerator and denominator. 
+What do we do first when we reduce a fraction?
+3. We want to reduce 8∕12. What is the greatest common factor
+of 8 and 12? (Pause.)
+To correct: Tell the correct answer. Explain why student's 
+answer is incorrect.
+Determine the greatest common 
+factor of the numerator and 
+denominator
+4
+
+[p.341]
+Chapter 13 Fractions 341
+TEACHER
+4. So we write a fraction equal to 1 inside the parentheses using 
+the greatest common factor. What's the fraction equal to 1 
+using the greatest common factor?
+(Write the new fraction on the board.)
+8 _ ∕4λ
+12 ” ∖4∕---------
+5. Let's figure out the numerator of the reduced fraction. 
+(Point to symbols as you read.)
+8 = 4 × what number? (Pause.)
+(Write the 2.)
+8 = ∕4λ 2
+12 ~ ∖4√
+6. Let's figure out the denominator of the reduced fraction. 
+(Point to symbols as you read.)
+12 = 4 × what number? (Pause.)
+(Write the 3.)
+8 = ∕4∖ 2
+12 “ W3
+7. The fraction in parentheses equals 1. We don't change the 
+value of a fraction when we multiply by 1, so we can cross 
+out ⅜. (Cross out.)
+The reduced fraction is ⅜. What is the reduced fraction?
+2
+3
+8. Read the statement.
+STUDENTS
+4
+4
+2
+3
+8 = 2
+12 ~ 3
+(Repeat steps 1-8 with these problems.)
+15√∖ 9 = O lθ = ( A20 ~ ∖ √--------- 36 ∖ √--------- 24 ∖ )---------
+Part B: Structured Worksheet
+1. (Give students a worksheet with problems like those below.)
+2. We're going to reduce these fractions. How do you reduce 
+fractions?
+3. Touch problem a. Read the fraction.
+4. What is the greatest common factor of 10 and 15?
+5. So what fraction do you write in the parentheses?
+Write it. (Pause.)
+Pull out the greatest common factor of 
+the numerator and the denominator
+10
+15
+5
+5
+5
+continued
+
+[p.342]
+342 Part HI Extended Concepts and Skills
+Format 13.11 (continued)
+REDUCING FRACTIONS
+TEACHER STUDENTS
+6. The numbers across the top of the fraction say 10 = 5 × 
+what number? What do the numbers across the top say?
+7. What do the numbers across the bottom say?
+8. Fill in the numerator and denominator in the reduced 
+fraction. (Monitor students as they write 2 and 3.)
+Cross out the fraction of 1 in the parentheses. (Pause.)
+9. What is the reduced fraction?
+10. Read the statement.
+(Repeat steps 2-10 with remaining problems.)
+Part C: Less Structured Worksheet
+1. (Present a worksheet like the following. Note that 
+parentheses are not written.)
+Reduce these fractions:
+a' 20 b. — 12 C 18
+d4 8 e. — f.-7 16 8
+2. How do you reduce a fraction?
+3. Read fraction a.
+10 = 5 × what number?
+15 = 5 × what number?
+2
+3
+10 _ 2
+15 3
+Pull out the greatest common factor of 
+the numerator and the denominator
+15
+20
+4. Make an equal sign. Then write parentheses on the other side 
+of the equal.
+5. What fraction are you going to write in the parentheses? 
+(Pause.)
+5
+5
+To correct: What is the greatest common factor of
+and? (Repeat 
+steps 4 and 5.)
+6. Write ⅝ in the parentheses. Then figure out the reduced 
+fraction. (Pause.)
+7. Cross out the fraction of 1. (Check.)
+8. What is the reduced fraction?
+9. Read the statement.
+(Repeat steps 2-9 with remaining problems.)
+15Students write — =
+3
+4
+15 = 3
+20 “ 4
+
+[p.343]
+Chapter 13 Fractions 343
+Format 13.12
+CONVERTING IMPROPER FRACTIONS
+TO MIXED NUMBERS (See Video in Part A)
+TEACHER STUDENTS
+o
+Part A: Pictorial Demonstration
+1. (Write the following diagram on the board.) 
+woo
+2. (Point to 7⅜) Read this fraction. 13
+3. Does 1⅜ equal more than one whole unit?
+□
+Yes
+4. Let's make a picture and see how many whole units 1⅜ makes.
+5. (Draw the following circles on the board.)
+How many parts in each whole? 5
+6. (Shade in 13 parts.) How many parts do we use up? 13
+7. Let's see how many whole units are used. (Point to first circle.) Is this 
+whole unit used? Yes
+(Point to second circle.) Is this whole unit used? Yes
+(Point to third circle.) Is this whole unit used? No
+How many whole units are used? 2
+Two whole units are used. Let's look at the last unit and count. How 
+many parts are used? 3
+And how many parts in each whole? 5
+So, we can say ⅜ of a unit. We have 2 whole units and ⅜ of another 
+unit. (Write 23∕s.)
+Part B: Structured Board Presentation
+1. We’re going to learn a fast way to figure out how many whole units in 
+a fraction. We divide by the number of parts in each whole unit. What Divide by the number of
+do we do to figure out how many whole units? parts in each whole unit
+(Write the following on the board.) 
+13
+5
+Read this fraction. 13 
+ς
+Is this fraction equal to, more than, or less than one unit?
+□
+More than one unit
+continued
+
+[p.344]
+344 Part III Extended Concepts and Skills
+Format 13.12 (continued)
+CONVERTING IMPROPER FRACTIONS 
+TO MIXED NUMBERS
+TEACHER STUDENTS
+2.1 want to figure out how many whole units are in this fraction. How 
+many parts in each whole?
+So I divide by 5. (Write the problem.)
+5∏3
+3. Let's divide. (Point to box.) How many fives in 13?
+(Write 2.) ∖Ne have 2 whole units. (Point under 13.) What number do I 
+write here?
+(Write -10 under 13.)
+2
+10
+5jT3
+-10
+4. We used10 parts in 2 wholes. Now let's subtract and see how many 
+parts we have left. What is 13 - 10?
+5. Since we started with a fraction, we write the remainder as a fraction. 
+Remember, there are 5 parts in each whole. (Point to 5 in 5JT3J
+So we write 5 as the denominator of the fraction. (Write 5.) How many 
+parts are remaining?
+So I write 3 as the numerator of the fraction. (Write the 3.)
+3
+3
+5jT3
+10
+3
+6. Tell me the mixed number for the fraction 1⅜.
+Yes, 2⅜ is the same as 1⅜.
+7. (Write 23∕s next to 13∕5.) Read the statement.
+(Repeat steps 1-7 with 12∕7 and ¾.)
+Part C: Structured Worksheet
+2i
+'3 =? 
+5 5
+1. (Give students a worksheet with problems like the following.)
+
+[p.345]
+Chapter 13 Fractions 345
+TEACHER STUDENTS
+2. Touch problem a. Read the fraction. 11
+Is 1¼ less than 1, equal to 1, or more than 1?
+4
+More than 1
+So you have to change 1¼ to a mixed number. How many parts 
+in each whole? 4
+So you divide 4 into 11.
+3. Write the division problem. Students write 4jTΓ
+How many 4s in 11? 2
+We can make two whole units. Write the 2 in the big box. Multiply and 
+subtract to find how many parts are left. (Pause.) How many parts are 
+left? 3
+4. Now let's figure out the fraction remainder. The denominator of the 
+fraction tells how many parts in each whole. How many parts in each 
+whole? 4
+So write 4 as the denominator of the fraction. Students write 4 in the
+What do you write for the numerator?
+bottom box of the fraction.
+3
+Write it.
+5. What mixed number does 1¼ equal?
+2Σ
+Say the whole statement. 11 _ 3
+(Repeat steps 2-5 with remaining problems.)
+Part D: Less Structured Worksheet
+1. (Present a worksheet like the following.)
+Rewrite the fractions that equal more than 1 as mixed numbers.
+12 , 3a. — b. —5 4
+15 λ 5
+cτ d5
+2. Some of these fractions equal more than one whole unit. If a fraction 
+equals more than one whole unit, change it to a mixed number. What
+4 ~ 2 4
+Change it to a mixed
+are you going to do if a fraction equals more than one unit? number
+If the fraction does not equal more than one whole unit, don't do 
+anything.
+3. Touch problem a. (Pause.) Read the fraction. 12
+Does the fraction equal more or less than one unit?
+5
+More than one unit
+The fraction equals more than one unit, so what must you do? Change it to a mixed
+What do you divide by?
+number
+5
+Say the division problem. 5 goes into 12
+continued
+
+[p.346]
+346 Part III Extended Concepts and Skills
+Format 13.12 (continued)
+CONVERTING IMPROPER FRACTIONS
+TO MIXED NUMBERS
+TEACHER STUDENTS
+Write the problem and work it. (Pause.)
+Remember to write the whole number as a big number and the 
+numerator and denominator small.
+4.1⅜ equals what mixed number? ∑1
+(Repeat steps 2-4 with remaining problems.)
+5
+Format 13.13
+CONVERTING MIXED NUMBERS TO IMPROPER FRACTIONS
+TEACHER STUDENTS
+Part A: Structured Board Presentation - Converting Whole Numbers
+1. (Write the following problem on the board.)
+6'7
+2. This problem says 6 wholes equal how many fourths. What does the 6 wholes equal how
+problem say? many fourths
+3. We want to figure out how many parts are used when we have 
+6 wholes. How many parts in each whole? 4
+4. We're talking about the same number again and again, so we multiply 
+6 × 4. What numbers do we multiply? 6 × 4
+5. What is 6 × 4? 24
+6. Yes, 6 whole units equal 24 fourths. If we use 6 whole units and there 
+are 4 parts in each unit, we use 24 parts.
+(Repeat steps 1-6 with the problems below.)
+5-T 2-6 4 5 6 = τ
+Part B: Structured Worksheet - Converting Whole Numbers
+1. (Give students worksheets with problems such as the ones below.)
+a.5 = y b. 2 =—
+C. 7 = y d. 5 = y2 9
+2. Touch problem a. (Pause.) Read the problem. 5 equals how many thirds
+3. How many parts in each whole unit? 3
+How many whole units? 5
+4. What do we do to figure out how many parts are used? Multiply
+Yes, we multiply 5 × 3. Multiply and write your answer in the box.
+
+[p.347]
+Chapter 13 Fractions 347
+TEACHER
+5. Five equals how many thirds?
+Say the whole statement.
+STUDENTS
+J5
+3
+-4
+(Repeat steps 1-5 with several problems, and then have the students 
+complete the rest independently.)
+Part C: Structured Board Presentation - Converting Mixed Numbers
+1. (Write the following problem on the board.)
+4^
+2. This problem says 6¼ equals how many fourths. What does this 
+problem say?
+3. First we figure out how many fourths in 6 whole units. Then we add on 
+¼. (Write + between 6 and ¼) What do we do first?
+4. There are 6 wholes with 4 parts in each whole. What do I do to figure 
+how many parts are used?
+5. What is 6 × 4 (Pause.)
+(Write the 24.)
+„ 1 24 + 16 + - =---------4 4
+6. How many parts are used in the last whole?
+7 .1 add one part. (Write + 1 in the numerator.)
+_ 1 24 + 16 + - =---------- =4 4
+8. What is 24 + 1?
+(Write the following on the board.)
+25
+4
+1 259. So 6- = —. Say that.4 4
+(Repeat steps 1-9 with these fractions.)
+4 4 4 4
+16— equals how many fourths
+Figure out how many 
+fourths in six whole units
+Multiply 6 × 4
+24
+25
+β1 -25
+1
+Part D: Structured Worksheet - Converting Mixed Numbers
+1. (Present a worksheet like the one below.)
+Convert these mixed numbers to improper fractions.
+-4=— = —
+b,7∣- ---------------- = ----------------
+continued
+
+[p.348]
+348 Part III Extended Concepts and Skills
+Format 13.13 (continued)
+CONVERTING MIXED NUMBERS TO IMPROPER FRACTIONS
+TEACHER STUDENTS
+-h— = —
+d4=--------------------------------------
+2. Read the mixed number in problem a.
+3. How many parts in each whole unit?
+Write 2 as the denominator in the new fraction.
+4. First we see how many halves in 3 whole units. Then we add ½. How 
+do we figure out how many halves in 3 wholes?
+How many halves in 3 wholes?
+Write 6.
+5. How many parts in the last whole?
+Write + 1.
+6. What is ⅛ + ½7
+Write equals ⅛.
+7. What fraction does 3⅛ equal?
+(Repeat steps 2-7 with remaining problems.)
+4
+2
+Students write 2.
+Multiply 3 × 2
+6
+1
+_ . ■ 6+1Students write „ . 2
+7
+2
+7
+2
+Format 13.14
+ADDING AND SUBTRACTING FRACTIONS WITH LIKE
+DENOMINATORS
+TEACHER STUDENTS
+Part A: Pictorial Demonstration
+1. (Draw the following circles and lines on the board.)
+____  + ____ = ____
+2. Let's write a problem that will tell us how many parts are used 
+in these wholes.
+3. How many parts in each whole?
+(Write the denominators.)
+4 + 4 ~ 4
+We're talking about wholes with 4 parts in each whole.
+4
+
+[p.349]
+Chapter 13 Fractions 349
+TEACHER
+4. (Point to first circle.) How many parts are used in this whole?
+(Write the following on the board.)
+3
+4
+(Point to second circle.) How many parts are used in this whole?
+(Write the following on the board.)
+3 2
+4 + 4 ~
+5. How many parts are used altogether?
+(Write the following on the board.)
+5
+4
+6. What does — + .equal?4 4
+(Repeat steps 1-6 with the problem below.)
+STUDENTS 
+7"
+2
+5
+5
+4
+Part B: Structured Board Presentation
+1. We can only add and subtract fractions with the same number of parts 
+in each whole. Listen again. We can only add and subtract fractions 
+with the same number of parts in each whole. (Write the problem on 
+the board.)
+2. Read this problem.
+3. (Point to ¾,) How many parts in each whole?
+(Point to 2∕s.) How many parts in each whole?
+4
+5
+4. Can we add these fractions?
+5. Right. We can only add fractions that have the same bottom number.
+(Repeat steps 2-5 with the problems below.)
+No
+3 2 5 3 3 3— _|_ — — —— - — —
+5 5 7 9 9 5
+4 2_  I _ 5 5 4 _ 3
+7 7 7 9 9 9
+(Give individual turns.)
+continued
+
+[p.350]
+350 Part III Extended Concepts and Skills
+Format 13.14 (continued)
+ADDING AND SUBTRACTING FRACTIONS WITH LIKE
+DENOMINATORS
+TEACHER STUDENTS
+Part C: Structured Worksheet
+1. (Give the students a worksheet with the following problems.)
+2. Remember, you can only add and subtract fractions that tell about the 
+same number of parts in each whole.
+3. Touch problem a. Read the problem.
+4. Can we add these fractions the way they are now?
+(If the answer to step 3 is no, say to students,) You can't work the 
+problem, so cross it out. If the answer to step 3 is yes, do steps 4-6.)
+5. We're talking about fractions with 5 parts in each whole, so the answer 
+will have 5 parts in each group. Write 5 as the bottom number in the 
+answer. (Check students' work.)
+6. Look at the top numbers. They tell the number of parts used. What is
+3 + 1?
+3 1
+5 + 5
+Yes
+4
+So what do you write for the top number in the answer?
+Write it. (Check students' work.)
+7. Read the whole problem.
+(Repeat steps 2-7 for the remaining problems.)
+Part D: Less Structured Worksheet
+4
+3 1- + - =5 5
+4
+5
+1. (Give students a worksheet with a mix of four addition and four 
+subtraction problems. About half of the problems should have like 
+denominators.)
+2. Read the first problem. If you can work it, write the answer. If you can't 
+work the problem, cross it out. (Monitor student performance as they 
+complete the worksheet.)
+
+[p.351]
+Chapter 13 Fractions 351
+Format 13.15
+PRESKILL: FINDING THE LEAST COMMON MULTIPLE
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following numbers on the board.)
+3 6 9 12 15 18
+5 10 15 20 25
+2. (Point to 3.) These numbers are multiples of 3. Say them.
+(Point to 5.) These numbers are multiples of 5. Say them.
+3. What is the smallest number that is a multiple of 3 and 5?
+Yes, 15 is the least common multiple of 3 and 5.
+(Repeat steps 1-3 with these examples: 2 and 8, 6 and 8, 3 and 9.)
+Part B: Worksheet Presentation
+1. (Give the students a worksheet with the following problems.)
+Write the number which is the least common multiple for each pair of 
+numbers.
+a. The LCM of 6 and 9 is.
+b. The LCM of 8 and 6 is.
+c. The LCM of 5 and 2 is.
+d. The LCM of 5 and 4 is.
+e. The LCM of 6 and 12 is.
+f. The LCM of 4 and 3 is.
+g. The LCM of 6 and 2 is.
+h. The LCM of 4 and 12 is.
+i. The LCM of 5 and 3 is.
+j. The LCM of 3 and 9 is.
+2. The instructions tell us to find the least common multiple of the 
+numbers. LCM means "least common multiple." In problem a you 
+must find the least common multiple of 6 and 9. The least common 
+multiple is the lowest number that is in both count-by series.
+3. Touch problem a. Say the numbers that are multiples of 6. 
+(Stop students at 30.)
+4. Say the numbers that are multiples of 9. (Stop students at 45.)
+5. What is the least common multiple of 9 and 6?
+Write it in the space.
+(Repeat steps 3-5 with about half of the problems, then have the 
+students complete the rest independently.)
+3, 6, 9, 12, 15, 18
+5, 10, 15, 20, 25
+15
+6, 12, 18, 24, 30
+9, 18, 27, 36, 45
+18
+
+[p.352]
+352 Part III Extended Concepts and Skills
+Format 13.16
+ADDING AND SUBTRACTING FRACTIONS
+WITH UNLIKE DENOMINATORS
+TEACHER
+(See Video in Part A)
+STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following problem on the board.)
+2. Read this problem.
+Can we add these fractions the way they are written?
+3. To work this problem, we must rewrite the fractions so they both 
+have the same denominator. First, we figure out the least common 
+multiple of the denominators. What is the denominator of the first 
+fraction?
+2 1
+3 + 4
+No
+What is the denominator of the second fraction?
+4. What is the least common multiple of 4 and 3?
+To correct: Say the numbers that are multiples of 3. Say the numbers 
+that are multiples of 4. What is the least common multiple?
+5. We must rewrite each fraction as equivalent fractions with 
+denominators of 12. (Write 12 under each denominator.)
+3
+4
+12
+2
+3
+12
+2 
+4 
+12
+I want to rewrite ⅜ as a fraction that has 12 as a denominator.
+Remember, I don't want to change the value of ⅜. What fraction do 
+I multiply ⅛ by to end with a fraction that has a denominator of 12?
+To correct: What is the denominator of ⅜7 What must I multiply 3 
+by to end with 12? So I must multiply ⅜ times ¾. What do I multiply 
+⅜ by?
+(Write ¾ in parentheses.)
+2∕4Λ
+3∖4∕
+12
+1^ 
+4 
+12
+What is 2 × 4?
+(Write 8.) What is 3 × 4?
+(Cross out⅞ Write the 12.)
+8
+-(-} + -3∖βJ + 4
+12 12
+We rewrote ⅛ as 8/i2? What did we rewrite ⅜ as?
+8
+12
+8
+12
+4
+4
+
+[p.353]
+Chapter 13 Fractions 353
+TEACHER STUDENTS
+6. Now let's rewrite ¼ as a fraction that has 12 as a denominator. 
+Remember, I don't want to change the value of ¼. What fraction 
+must I multiply ¼ by?
+To correct: What is the denominator of ¼7 What do I multiply 4 by 
+to end with 12? So I must multiply ¼ by ⅜. What do I multiply ¼ by?
+3
+3
+(Write 3∕3.)
+8
+3∖a)
+12
++
+L U ∣ L U
+What is 1 × 3?
+(Cross out ¼. Write 3 next to the 1.) What is 4 × 3?
+(Write 3∕i2.)
+8 3
+2√4λ X(3∖
+3W + A∖z)
+12 ιa
+3
+12
+We rewrote ¼ as 3∕12. What did we rewrite ¼ as?
+7. Now the denominators are the same and we can add. The problem 
+now says 8∕12 + 3∕12. What does the problem say?
+8. Whatis8∕12 + V12?
+3
+12
+8
+12
+3
+12
+11
+12
+(Repeat steps 1-8 with the problems below.)
+4 _ 3 _ 2 2 2
+5 10 6 4 9 + 3
+Part B: Structured Worksheet
+1. (Give students worksheets with problems like the ones below.)
+2. Read problem a.
+∩ c r ω
+L U I N J kθ ∣ N J C D I L Π 
+I +  I
+L Π I L U L U ∣ N J 4 ≥ * I N J 
+I I I I I I
+-h fD Q.
+5 _ 2 =
+10 5”
+7 _ 2
+9 3 ^^
+2 _ 1 =
+5 3 -
+Can we work the problem the way it is?
+(If the answer is yes, tell the students to work the problem. If the 
+answer is no, continue the format.)
+Why not?
+3. What are the denominators?
+What is the least common multiple of 6 and 4?
+Write 12 under each fraction.
+5 _ 2
+6 4
+No
+The denominators aren't 
+the same
+6 and 4
+12
+continued
+
+[p.354]
+354 Part III Extended Concepts and Skills
+Format 13.16 (continued)
+ADDING AND SUBTRACTING FRACTIONS
+WITH UNLIKE DENOMINATORS
+TEACHER STUDENTS
+4. The first fraction says ⅝. Write parentheses next to it. (Pause.) What 
+fraction do you multiply ⅝ by so that you'll end with a denominator 
+of 12?
+Write ⅜ in the parentheses. (Check.)
+To correct: The denominator is 6; 6 times what number equals 12? So 
+we must multiply a fraction that has 2 as a denominator. We don't 
+want to change the value of ⅝, so we multiply it by ⅜.
+Let's multiply ⅝ by ⅜ and write the new fraction. What is 5 × 2?
+Write 10 over the fraction. Five-sixths equals how many twelfths?
+2
+2
+10
+10
+12
+(Cross out 5/6.)
+5. The second fraction says ¾. Write parentheses next to it. What 
+fraction do you multiply ¾ by so that you'll end with a denominator 
+of 12?
+To correct: Use the same correction described in step 4.
+Multiply ¾ by ⅜ and write the new fraction. (Pause.) Two-fourths 
+equals how many twelfths?
+3
+3
+6
+12
+(Check students' papers.) Cross out ¾.
+6. Read the problem saying the rewritten fractions. 10 _ 6
+12 12
+Can you work the problem now?
+How do you know?
+7. Work the problem and write the answer. (Pause.)
+8. What is the answer?
+Yes
+The denominators are the same
+4
+12
+Part C: Less Structured Worksheet
+1. (Give students a worksheet like the one for the structured worksheet 
+exercise. Use the following prompts to guide the students through 
+the worksheet.)
+2. Read problem a. Can we work the problem the way it is? (If the 
+answer is yes, tell students to work the problem. If the answer is no, 
+continue the format.)
+Why not?
+3. What is the least common multiple of the denominators?
+Write it under the fraction. (Pause.)
+4. What fraction will you multiply the first fraction by so that it will 
+have a denominator of ?
+5. What fraction will you multiply the second fraction by so that it has 
+a denominator of ?
+
+[p.355]
+Chapter 13 Fractions 355
+TEACHER STUDENTS
+6. Rewrite the fractions and work the problem. (Monitor students' 
+responses.)
+7. What is your answer?
+(Repeat Steps 2-7 with about half of the problems, then have the 
+students complete the rest independently.)
+Format 13.17
+MULTIPLYING TWO PROPER FRACTIONS
+TEACHER
+Part A: Structured Board Presentation
+1. (Write the following problem on the board.)
+2. Read this problem.
+3. We work multiplication problems with fractions by multiplying 
+top times the top and bottom times the bottom. How do we work 
+multiplication problems with fractions?
+4. First we multiply top times the top. What is 3 × 2?
+(Write the 6.)
+3 2
+4 5
+5. Now we multiply bottom times the bottom. What is 4 × 5? 
+(Write the 20.)
+3 2 6- × - = —
+4 5 20
+6. What does ¾ × ⅜ equal?
+(Repeat steps 1-6 with several more problems.)
+Part B: Structured Worksheet
+1. (Give Students a worksheet with a mix of multiplication, addition, 
+and subtraction problems like the following.)
+3 2 □ u 3 4 □
+a' 4 + 4 □ ‘ 2 X 2 □
+6 1 □ . 6 1 □
+° 3 3 □ ’ 3 X 3 □
+2. When you multiply fractions, you work top times top and bottom 
+times bottom. When you multiply fractions, what do you do?
+3. But when you add or subtract fractions, you work only across the 
+top. When you add or subtract fractions, what do you do?
+STUDENTS
+Top times the top and bottom 
+times the bottom
+6
+20
+6
+20
+Top times top and bottom 
+times bottom
+Work only across the top
+continued
+
+[p.356]
+356 Part III Extended Concepts and Skills
+Format 13.17 (continued)
+MULTIPLYING TWO PROPER FRACTIONS
+TEACHER STUDENTS
+4. What do you do when you add or subtract fractions? Work across the top
+What do you do when you multiply fractions?
+(Repeat steps 2-4 until firm.)
+Top times top and bottom 
+times bottom
+5. Touch problem a. Read the problem. 3 2— + —4 4
+What type of problem is this? Addition
+What do you do when you add fractions? Work across the top
+Work the problem (Pause.) What's the answer?
+(Repeat step 5 with remaining problems.)
+5
+4
+Format 13.18
+MULTIPLYING A FRACTION AND
+A WHOLE NUMBER (See Video in Part A)
+TEACHER STUDENTS
+Part A: Converting a Whole Number to a Fraction
+1. Listen to this rule: We can change a whole number into a fraction 
+by giving it a denominator of 1. How do we change a whole 
+number into a fraction? Give it a denominator of 1
+2. (Write 3 on board.) What number is this? 3
+How do I change it into a fraction? Give it a denominator of 1
+Watch me change 3 into a fraction. (Write 1 under 3.)
+3
+1
+3 over 1 is the same as 3. I'll draw a picture to show you that 3∕1 
+equals 3.
+(Draw the following circles.)
+I=OOO
+We have three wholes used up.
+3. (Write 5 on board.) How do I change 5 into a fraction? Give it a denominator of 1
+Yes, 5 over 1 equals 5 wholes. (Write the fraction.) 
+5
+1
+(Repeat step 3 with 2, 9, 4, 8.)
+
+[p.357]
+Chapter 13 Fractions 357
+TEACHER STUDENTS
+Part B: Structured Board Presentation
+1. (Write the following problem on the board.)
+7X8 =---------= J = □4
+2. Listen to this rule about multiplying fractions: A fraction can only be 
+multiplied by another fraction. Listen again. A fraction can only be 
+multiplied by another fraction.
+3. Read this problem. T8
+(Point to ¾.) Is this fraction multiplied by another fraction? No
+So before we can work the problem we have to change 8 into a 
+fraction. How do I change 8 into a fraction? Give it a denominator of 1
+(Write the problem.)
+3 8
+4 X 1 ~
+4. Now we're ready to multiply across the top and bottom. What is 
+3X8? 24
+(Write 24.)
+What is 4 × 1? 4
+(Write 24∕4.)
+5. Does 2¾ equal more or less than one whole? More
+How do we figure out how many whole groups 2¾ equals? Divide 4 into 24
+Four goes into 24 how many times? 6
+(Write 6 in box.)
+6. What does ¾ × 8 equal? 6
+(Repeat steps 1-6 with the problems below.)
+2 3 1- × 9 -×10 -×83 5 4
+Part C: Structured Worksheet
+1. (Give students worksheets with problems similar to the following 
+problem:)
+∣ × 7 =------= J = □
+2. Touch problem a. Read it. 1-
+(Point to 2∕3.) Is 2∕3 multiplied by another fraction? No
+So what do you have to do? Change 7 into a fraction
+Do it. (Monitor responses.)
+3. Now multiply the fractions. (Monitor responses.) What fraction did 14
+you end up with? 3
+continued
+
+[p.358]
+358 Part III Extended Concepts and Skills
+Format 13.18 (continued)
+MULTIPLYING A FRACTION AND 
+A WHOLE NUMBER
+TEACHER STUDENTS
+4. Is 1⅝ more or less than one whole group?
+How do you figure out how many whole groups?
+Divide—remember to write the remainder as a fraction. 
+(Monitor Responses.)
+5. What does ⅜ × 7 equal?
+More
+Divide 3 into 14
+4∣
+(Repeat steps 2-5 with remaining problems.)

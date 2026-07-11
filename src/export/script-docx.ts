@@ -70,11 +70,14 @@ const channelLine = (channel: VsgChannel, content: string, time?: string, indent
   })
 
 const SEGMENT_LABELS: Record<string, string> = {
-  title: 'TITLE',
-  intro: 'INTRO',
+  opening: 'OPENING',
   'i-do': 'I DO',
   'we-do': 'WE DO',
+  discrimination: 'DISCRIMINATION PASS',
   wrap: 'WRAP',
+  // Legacy kinds on scripts generated before rulebook v2.
+  title: 'TITLE',
+  intro: 'INTRO',
 }
 
 function interactionParas(interaction: VsgInteraction): Paragraph[] {
@@ -127,6 +130,26 @@ function scriptChildren(script: VideoScript, pageBreak = false): Paragraph[] {
       para(
         `Reconciled conflict (${c.kind}): ${c.summary} — A: ${c.sideA} — B: ${c.sideB} — resolution (${c.resolvedBy ?? 'default'}): ${c.resolution ?? ''}`,
         { color: INK2, size: 18, italics: true },
+      ),
+    )
+  }
+  if (script.transferTest) {
+    const tt = script.transferTest
+    const passes = tt.stepsDemonstrated && tt.caseClassesShown && tt.decisionsPerformed
+    children.push(
+      para(
+        `Transfer Test (SEQ 09): ${passes ? 'PASSES' : 'FAILS'} — steps demonstrated ${tt.stepsDemonstrated ? 'yes' : 'NO'} · case classes shown ${tt.caseClassesShown ? 'yes' : 'NO'} · student decisions performed ${tt.decisionsPerformed ? 'yes' : 'NO'}${tt.note ? ` — ${tt.note}` : ''}`,
+        { color: passes ? INK2 : 'B00020', size: 18, bold: !passes },
+      ),
+    )
+  }
+  if ((script.coverageNote ?? []).length > 0) {
+    children.push(
+      para(
+        `Coverage note (SEQ 10): ${(script.coverageNote ?? [])
+          .map((c) => `${c.name} — ${c.status === 'taught' ? `taught (${c.where})` : `deferred → ${c.where}`}`)
+          .join(' · ')}`,
+        { color: INK2, size: 18 },
       ),
     )
   }

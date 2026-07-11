@@ -1,0 +1,1664 @@
+[p.359]
+Chapter
+14
+Decimals
+LEARNING OUTCOMES
+14.1 Discuss the seven main areas of decimal instruction and the sequence of the 
+component skills for each area.
+14.2 Discuss the relationship between fractions and decimals.
+14.3 Explain the importance of introducing reading and writing decimals prior to 
+teaching decimal operations.
+14.4 Outline the general teaching procedures for teaching students to add, subtract, 
+multiply and divide decimals.
+14.5 Describe types of errors students may make when working problems with 
+decimals.
+SKILL HIERARCHY
+• •••a*..
+Prior to beginning instruction in decimals, students need to have a strong background in place 
+value concepts, rounding skills, and fraction analysis. Having a strong understanding of place 
+value with whole numbers allows students to extend place value concepts to numbers less than 
+one. The strategy recommended in this text for division with two-digit divisors includes round­
+ing to the nearest ten. This strategy prepares students for rounding with decimals. Previous 
+instruction with fraction skills provides students with the background needed to work with num­
+bers that are less than one.
+Initial instruction on decimals begins with teaching students to read and write decimals. 
+After students demonstrate mastery of these skills, instruction in addition, subtraction, multipli­
+cation, and division of decimals can be introduced. The Instructional Sequence and Assessment 
+Chart illustrates the seven main areas covered in decimal instruction:
+1. Reading and writing decimals and mixed decimal numerals
+2. Converting decimals to equivalent decimals
+3. Adding and subtracting decimals
+4. Rounding off decimals
+5. Multiplying decimals
+6. Dividing decimals
+7. Converting values between the decimal notation system and fraction notation system
+
+[p.360]
+360 Part III Extended Concepts and Skills
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type Performance Indicator
+4 Reading tenths and hundredths Circle the correct decimal:
+Five tenths 5 .05 .5
+Four hundredths 4 .04 .4
+Seven hundredths 70 .70 .07
+4 Writing tenths and hundredths Write these fractions as decimal numerals:
+5 =
+100 “
+5 =
+10
+19 =
+100 -
+4 Reading mixed decimals: tenths 
+and hundredths
+Circle the correct mixed decimal: 
+five and three-tenths
+.53 5.03 5.3
+ten and four hundredths
+1.04 10.04 10.4
+eighteen and six hundredths
+18.6 1.86 18.06
+4 Writing mixed decimals: 
+tenths and hundredths
+Write the mixed decimal for each mixed numeral:
+^ 1410—100
+16⅛------------------
+_ 1840__________100
+4 Column alignment: adding tenths, 
+hundredths, and whole numerals
+Write these problems in columns and work them: 
+8.23 + 12.1 + 6 = 
+7 + .3 + 45 = 
+.08 + 4 + .6 =
+4 Subtracting tenths and 
+hundredths from whole 
+numbers
+5 - 3.2 =
+8 - .34 =
+7 - .3 =
+4 Ordering mixed decimals Rewrite these numerals in order beginning with the 
+smallest:
+18.8 10.10 10.3 10.03
+5 Reading thousandths Circle the correct decimal: 
+five-thousands .05 .5 .005 .500
+ninety-thousandths. .90 .900 .090 .009
+5 Writing thousandths Write these fractions as decimals:
+342 =
+1000 ^
+60 _
+1000 "
+5
+1000 ^
+
+[p.361]
+Chapter 14 Decimals 361
+Grade Level Problem Type Performance Indicator
+5 Multiplying decimals: one-digit 
+or two-digit factor times three-digit 
+factor
+7.14 214
+× .5 × .7
+5 Multiplying decimals: zero to 
+be placed after decimal point
+.1 .02
+× .7 × .8
+5 Rounding off decimals Round off these numbers to the nearest whole number:
+8.342__________
+7.812__________
+Round off these numbers to the nearest tenth:
+8.34__________
+9.782 __________
+Round off these numbers to the nearest hundredth:
+8.346__________
+9.782__________
+5 Dividing: whole number 
+divisor, no remainder
+5)32.45 7)215.6 2^856
+5 Dividing by whole number: 
+quotient begins with zero
+9ξ036 9j36 9).0036
+5 Rounding off where there is a 
+9 or 99 after the decimal
+Round off these numbers to the nearest tenth:
+9.961__________
+19.942__________
+29.981 __________
+Round off these numbers to the nearest hundredth:
+14.993__________
+14.996__________
+29.9982__________
+5 Dividing: whole number 
+divisor, zeros must be added 
+to dividend after decimal point
+Divide and write answer as mixed decimal: 
+2j3 5j3J 4j2T
+5 Dividing: whole number 
+divisor, rounding off
+Divide: write answer to mixed decimal; round off 
+to the nearest hundredth:
+7j3J 9j7 3j2
+5 Converting proper fraction 
+to decimal; no rounding off 
+required
+Rewrite these fractions as decimals:
+2 _ 3 _
+5 “ 4 “
+3 _
+10 “
+5 Converting proper fraction 
+to decimal: rounding off 
+required
+Rewrite these fractions as decimals; round off to 
+nearest hundredth:
+3 =
+7
+4 _ 
+∕~
+5 Multiplying mixed decimal 
+by 10 or 100: no zeros 
+added
+O
+2 =
+9 “
+10 × 34.2 =
+100 × 34.52 =
+10 × 34.52 =
+continued
+
+[p.362]
+362 Part III Extended Concepts and Skills
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART (continued)
+Grade Level Problem Type Performance Indicator
+5 Multiplying mixed decimal 
+by 10 or 100: zeros 
+added
+100 × 34.2 =
+100 × 3.42 =
+100 × 342 =
+10 × 342 =
+5 Dividing: divisor is decimal, 
+no adding zeros in dividend 
+necessary
+.2)23.74 .2)14.26 .05)345
+5 Same as above: adding zero 
+in dividend required
+.5)13 .50)∑75 .02)34 .05)2
+5 Converting decimal to 
+fractions
+Circle the correct answer: 
+7c . 1 5 2 3.75 equals - - - -
+o . 4 8 12,8equa|s - - ~ -
+c-7 . 1 2 6 1.67equais -- - -
+5 Converting mixed numbers 
+to mixed decimals
+Rewrite these mixed fractions as mixed decimals:
+CONCEPTUAL UNDERSTANDING
+• ∙ ∙ ∙ ∙ ∙ . ∙
+Understanding the concepts underlying decimal skills relies on understanding the relationship 
+between decimals and fractions. Fraction analysis is a preskill for decimals. Students must 
+understand what the numerator and denominator in a fraction represent: the denominator signi­
+fying the parts in each whole; the numerator, the parts that are used. They also must understand 
+the concept of whole units versus parts of a whole. Understanding fractions is critical because 
+decimals are explained as an alternative representation of fractions that have 10 or a multiple of 
+10 (100, 1,000, etc.) as a denominator.
+Conceptual understanding of decimals skills is promoted when reading and writing 
+decimals are addressed prior to teaching the other decimal operations. Too frequently, an 
+insufficient amount of instructional time is allotted to teaching students to accurately read 
+and write decimals. Without adequate practice on these basic decimal reading and writing 
+skills, students will encounter unnecessary difficulty when more advanced decimal skills are 
+introduced.
+INSTRUCTIONAL PROCEDURES: READING AND
+WRITING DECIMALS
+#•••••*»
+Reading and Writing Decimals and Mixed Decimals
+This section includes procedures for teaching students to read and write decimals and mixed 
+decimals expressed as tenths, hundredths, and thousandths. Initial Direct Instruction proce­
+dures for teaching students how to read and write decimals focus student attention on the 
+number of digits after the decimal point (one digit after the decimal point indicates tenths; two
+
+[p.363]
+Chapter 14 Decimals 363
+digits after the decimal point indicate hundredths; three digits after the decimal point indicate 
+thousandths).
+Decimals and mixed decimals representing tenths and hundredths are usually introduced 
+in fourth grade, while decimals and mixed decimals representing thousandths are introduced in 
+fifth grade. The sequence for introducing these skills follows:
+1. Reading decimals representing tenths or hundredths
+2. Writing decimals representing tenths or hundredths
+3. Reading and writing mixed decimals; decimals represent tenths or hundredths
+4. Reading decimals representing thousandths
+5. Writing decimals representing thousandths
+6. Reading and writing mixed decimals; decimals represent thousandths
+7. Writing equivalent decimals
+Note that students are taught to write decimal numerals immediately after they can read them.
+Reading Decimals Representing Tenths and Hundredths Format 14.1: Reading 
+Decimals introduces students to decimals as an alternative system for writing fractions of tenths 
+and hundredths. The teacher begins by writing two fractions on the board, one with 10 as a 
+denominator and one with 100 as a denominator (⅛, ⅛) and has students read the fractions. 
+Next, the teacher explains that there is another way to express fractions that have 10 or 100 as a 
+denominator. The teacher explains that if one digit is written after the decimal point, the decimal 
+tells how many tenths, but if two digits are written after the decimal point, the decimal tells how 
+many hundredths. (If students are unfamiliar with the term “digit,” they should be told that a 
+digit is any written numeral from 0 to 9.)
+After telling students the rule regarding the number of digits after the decimal, the teacher 
+has the students read a list of numerals composed of an equal mixture of tenths and hundredths 
+decimals. Several minimally different sets (.07, .70, .7 or .4, .04, .40) are included among the 
+examples. The minimally different sets include three decimal numerals: a decimal representing 
+tenths (.8) and two decimals representing hundredths. In one of these hundredth decimals, a zero 
+would precede the numeral (.08), while in the other hundredth decimal, the zero would follow 
+the numeral (.80). The purpose of these minimally different sets is to focus student attention on 
+the number of digits following the decimal.
+The correction for errors in reading decimals is to have students identify the number of 
+places after the decimal point first, identify the place value, and then read the numeral. For 
+example, if a student misreads .04 as “four-tenths,” the teacher says, “How many digits after the 
+decimal? So what does the 4 tell about? What is this numeral?”
+A critical teacher behavior for this format is monitoring student responses. To prevent student 
+problems with confusing whole numbers and decimal numbers, teachers should be sure that stu­
+dents are adding the “-ths” endings to tens, hundreds, and thousands. For example, teachers should 
+be sure .40 is pronounced as “forty-hundredths,” not “forty hundreds.” Individual turns should be 
+given frequently during the first several lessons. Practice on reading decimal numerals would be 
+presented daily for 2 or 3 weeks. After the first several lessons, the teacher need not present all of 
+the steps in Part A but would just write decimals on the board and have students read them (step 6).
+Part B includes a worksheet exercise designed both to provide practice in reading decimals 
+and to reinforce the relationship between decimal fractions and decimals. Students are given 
+worksheets with two types of items. In the first type, a decimal numeral is written to the left of 
+three fractions:
+8 8 1
+10 100 8
+The students read the decimal and then circle the fraction equivalent of the decimal numeral. In 
+the second type, a fraction is written, and students must find the corresponding decimal among 
+several similar-looking decimals:
+4 -----= A .40 .04 100
+
+[p.364]
+364 Part III Extended Concepts and Skills
+Writing Decimals Representing Tenths and Hundredths Writing decimals repre­
+senting tenths and hundredths is introduced after students can read those decimals accurately. 
+Format 14.2: Writing Decimals includes two parts. Part A is a structured board format in 
+which the teacher demonstrates how to write a decimal fraction as a decimal. The teacher 
+writes a fraction on the board and has the students read it. The teacher then asks how many 
+digits there must be after the decimal point and models writing the fraction as a decimal 
+numeral. Special attention must be given to fractions with a hundred as the denominator 
+and with a numerator of less than 10 (βθ, ⅛, j⅛θ). When presenting these examples, the 
+teacher demonstrates that in order to make two digits after the decimal, a zero must be writ­
+ten immediately after the decimal point. For example, in writing βθ, the teacher would write 
+.07 and point out the zero immediately following the decimal point.
+Practice on writing decimal numerals should be provided daily for several weeks. This 
+practice can be provided on worksheets containing fractions with 10 or 100 as the denominator 
+for which the students would be required to write the decimal equivalents.
+The critical example-selection guideline for this format is basically the same as that 
+(q o ω∩ ∖
+10’ Too’ Too J would be 
+included to provide students with the practice to determine when a zero is needed immedi­
+ately after the decimal point. Several extra examples of hundredths fractions with a numer­
+ator below 10 also would be included to provide extra practice on this difficult type of 
+decimal.
+Reading and Writing Mixed Decimals: Tenths and Hundredths When the students are 
+able to read and write tenths and hundredths decimals without prompting from the teacher, mixed 
+decimals, numerals formed by a whole numeral and a decimal (9.3, 16.4, 27.02), can be introduced. 
+Students are taught first to read mixed decimals and then to write them in Format 14.3: Reading 
+and Writing Mixed Decimals. In Part A, the structured board presentation, the teacher intro­
+duces reading mixed decimals by explaining that the numerals before the decimal point repre­
+sent whole numbers while the numerals after the decimal point tell about the decimal number. 
+The teacher then models and tests students on reading several numerals, having the students 
+read the whole numeral, the decimal, and then the mixed decimal. Note that in reading mixed 
+decimals, the teacher should heavily emphasize the word “and” (15.03 should be read “fifteen 
+and three hundredths”). This voice emphasis is designed to help students discriminate between 
+the whole numeral and the decimal parts of the mixed decimal in preparation for writing mixed 
+decimals. Reading mixed decimals is practiced daily for several weeks. No prompting is recom­
+mended after the first several days.
+Part B, a structured worksheet exercise, includes two types of items. In the first type, the 
+words representing a mixed decimal are written and the student must write the mixed decimal; 
+for example, twenty-eight and four-hundredths is written as 28.04. This type of item is appropri­
+ate, of course, only for students able to decode well.
+In the second type, a mixed fraction is written, and the student rewrites it as a mixed 
+decimal:
+312-----is written as 12.03 100
+Reading and Writing Decimals Representing Thousandths Decimals represent­
+ing thousandths are introduced after students have mastered reading and writing decimals and 
+mixed decimals representing tenths and hundredths. Thousandths decimals can be taught with 
+Formats 14.1 and 14.2 with the added explanation that if there are three digits after the decimal 
+point, the decimal tells about thousandths.
+During the first several lessons, examples should concentrate entirely on thousandths 
+numerals. We recommend presenting minimally different groupings such as:
+.800 .080 .008
+.004 .040 .400
+.070 .007 .700
+
+[p.365]
+Chapter 14 Decimals 365
+In these sets, two of the three digits in each decimal are zeros and one digit is a numeral other 
+than zero. In each decimal, the nonzero digit is placed in another position:
+.003 .030 .300
+After several lessons comprised of thousandths decimals, the teacher presents examples includ­
+ing tenths, hundredths, and thousandths. In these example sets, minimally different groupings 
+should be included to focus student attention on the number of digits after the decimal point:
+.4 .04 .004
+.70 .070 .700
+Writing decimals representing thousandths is particularly difficult because students must 
+discriminate when to write two zeros after the decimal point (.001, .009) from when to write one 
+zero after the decimal point (.010, .090). Therefore, the teacher should be prepared to provide 
+extensive practice on minimally different thousandths examples.
+Equivalent Decimals Equivalent decimals are decimals that have the same value. The mixed 
+decimals 8.30 and 8.3 are equivalent since they both represent the same quantity. Converting 
+a decimal, mixed decimal, or whole number to an equivalent mixed decimal is an important 
+preskill for addition, subtraction, and division with decimal numbers. For example, when sub­
+tracting .39 from 5, students will need to be able to convert 5 into 5.00. Students should be 
+introduced to equivalent decimal conversions shortly after they can read and write decimals and 
+mixed decimal numerals.
+Format 14.4: Converting Decimals into Equivalent Decimals shows how to teach stu­
+dents to convert decimals into equivalent decimals. Although the rewriting skill is simple, 
+because the students simply add or take away zeros, students should understand why those 
+changes are permissible. Part A illustrates the rationale for adding zeros through the use of 
+equivalent fractions. The teacher demonstrates that changing ⅛ to for example, involves 
+multiplying by a fraction equal to 1 () and, therefore, does not change the value of the origi­
+nal fraction. Because ⅛ = then .3 = .30.
+Part B is a structured board presentation demonstrating how to rewrite decimals. Part C 
+is a worksheet exercise in which the students are given a chart containing columns for whole 
+numerals, tenths, hundredths, and thousandths. The student’s task is to write equivalent mixed 
+decimals in spaces across the row. For example, 9.1 is written in the tenths column. The student 
+would add a zero, writing 9.10 in the hundredths column; and add two zeros, writing 9.100 in 
+the thousandths column. For whole numerals, the teacher explains that a whole numeral is con­
+verted into a mixed decimal by writing a decimal point after the numeral and writing zero(s) 
+after the decimal point.
+INSTRUCTIONAL PROCEDURES: DECIMAL OPERATIONS
+Adding and Subtracting Decimals and Mixed Decimals
+Addition and subtraction problems with decimals and/or mixed decimals can be divided into 
+two groups for instructional purposes. The first group contains those problems in which each 
+numeral in the problem has the same number of decimal places; for example, in the problems 
+below, all numerals have decimals representing hundredths:
+435.42 24.35
++ 17.82 -1.48
+The second group is composed of those problems in which the addends (in an addition 
+problem) or the minuend and subtrahend (in a subtraction problem) have different numbers of 
+digits after the decimal point:
+9.1 4 4.23
+-3.87 +3.64 -3.645
+
+[p.366]
+366 Part III Extended Concepts and Skills
+Decimals Having the Same Number of Places Problems in which each numeral has the 
+same number of digits after the decimal point can be introduced when students can read and 
+write decimals and mixed decimals. Problems of this type are relatively easy. The only new step 
+involves placing the decimal point in the answer. Because the teaching procedure is simple, no 
+format has been included.
+The first problems should be vertically aligned so students can be taught to bring the dec­
+imal point straight down without first having to determine if the columns are properly aligned. 
+For these problems, the teacher just instructs students to write the decimal in the answer below 
+the other decimal points.
+Problems written horizontally (7.24 + 19.36) can be introduced shortly after the introduc­
+tion of vertically aligned problems. For horizontal problems, we recommend teaching students 
+to rewrite the problem so that the decimal points are in a column. When horizontal problems 
+are introduced, teachers should monitor student worksheets daily to see that students align the 
+numerals correctly. Teachers often provide grid paper for students to use to assist them in rewrit­
+ing the problems accurately.
+Decimals Having Different Numbers of Places Problems in which each mixed decimal 
+has a different number of digits after the decimal point are typically introduced 2 weeks after 
+students can rewrite decimal numerals as equivalent decimal numerals by adding zeros after the 
+decimal. The strategy for solving these more complex problems involves rewriting one or more 
+of the mixed decimal numerals so that each mixed decimal in the problem has the same number 
+of digits after the decimal point. Once the problem has been rewritten, students are instructed to 
+bring the decimal point straight down and then solve the problem. For example,
+8.1 becomes 8.10
+-3.42 -3.42
+Horizontally written problems should be introduced after students can solve the vertically 
+aligned problems. The key to accurately solving horizontal problems is correctly realigning the 
+numerals vertically. Without explicit instruction, students are likely to misalign the numerals, as 
+illustrated below:
+3.72 + 18.4 becomes 3.72
+÷18.4
+The strategy for rewriting the decimal numerals so that each has the same number of digits 
+after the decimal point can be found in Format 14.5: Addition/Subtraction of Unlike Decimals.
+Problems in which a decimal or mixed decimal is added to or subtracted from a whole 
+number should receive special emphasis (7 — 3.8). Problems of this type are introduced several 
+days after problems with mixed decimals expressing various decimal fractions are introduced. 
+The teacher reminds students that a whole number is converted to a mixed decimal by placing a 
+decimal point after it and adding zeros. The teacher models how to align and solve several prob­
+lems of this type and then provides worksheets to students on which about half of the problems 
+include problems with a whole number.
+Rounding Off Decimals
+Rounding off not only is a useful skill in and of itself but is also a necessary component skill for 
+decimal division and percent. An example of rounding off in percentage problems occurs when 
+converting 7 to a percent: The 3 is divided by 7, which yields a decimal:
+.428
+7)3.000
+The decimal then is rounded off to hundredths to determine the approximate percent, 43%. 
+Although rounding off decimals involves steps similar to those used in rounding off whole num­
+bers, these two skills should not be introduced at the same time because of potential confusion. 
+Rounding off whole numbers would have been presented many months before rounding off dec­
+imals is introduced (see Format 10.7: Rounding to the Nearest Tens Unit).
+
+[p.367]
+Chapter 14 Decimals 367
+£ Format 14.6A Round- 
+ing Off Decimals
+Watch how Joe introduces the 
+line strategy for rounding off.
+Format 14.6: Rounding Off Decimals shows how to present rounding off decimal num­
+bers to the nearest whole number, tenth, hundredth, or thousandth. The rounding-off strategy 
+taught in this format is composed of three steps:
+1. The students determine how many digits will appear after the decimal point when the num­
+ber is rounded off; for example, when rounding off to the nearest tenth, one digit will be left 
+after the decimal.
+2. The students count that number of digits and then draw a line. If 3.4825 is to be rounded to 
+the nearest tenth, the students place a Une after the digit in the tenth place, which is the 4 in 
+this example: 3.41825. The line serves as a prompt.
+3. The students look at the numeral after the line. If it is a 5 or more, they add another unit to 
+the digit before the line. For example, .53 17 rounded to the nearest hundredth is .54 because 
+7 appears after the line. If a numeral less than 5 appears after the line, no extra unit is added. 
+For example, .5412 is rounded to .54 because a numeral less than 5 follows the line.
+There are three important example-selection guidelines for this format:
+1. Half of the decimals should require the addition of another unit; that is, the numeral after the 
+place to be rounded off should be 5 through 9. In the other half of the decimals, the numeral 
+after the place to be rounded off should be less than 5.
+2. The numerals should have two or three places after the place to be rounded off to provide 
+practice in identifying which digit determines if another unit needs to be added.
+3. Examples should include a mix of problems that require students to round off to the nearest 
+tenth or to the nearest hundredth. The sample worksheet in Part B of the format shows an 
+application of these guidelines.
+A particularly difficult type of rounding-off problem arises when a unit is added to a 9, 
+because the sum is 10. For example, rounding off .498 to the nearest hundredth requires students 
+to add a whole unit to the nine-hundredths, which changes .498 to .50. Likewise, when rounding 
+off 39.98 to the nearest tenth, the answer is 40.0. Problems of this type should be introduced 
+after students have mastered easier rounding-off problems. When introducing the more difficult 
+type, the teacher should model working several problems before having students work them 
+independently.
+Most errors in rounding off occur because students do not attend to the appropriate digit. A 
+student is likely to round off .328 to .4 if she focuses on the 8 rather than the 2. The basic correc­
+tion is to emphasize the steps in the strategy by asking the student:
+1. How many digits will there be after the decimal when we round off to the nearest whole (or 
+tenth or hundredth)?
+2. Where do you draw the line?
+3. What numeral comes just after the line?
+4. So do you add another whole (or tenth or hundredth)?
+Multiplying Decimals
+Although the concept of multiplying decimals is difficult to illustrate, teaching students to solve 
+a multiplication problem with decimals is relatively simple. One way of illustrating the rationale 
+for the strategy of multiplying decimals is to use decimal fractions like these:
+32 4-----× — 100 10
+The answer (would be written as the decimal .128. The teacher then would write the orig­
+inal problem in a decimal form: .32 × .4, point out the three decimal places in the two factors 
+and make three decimal places in the answer. “The total number of decimal places in the factors 
+is the same as the number of decimal places in the answer: .32 has two places; .4 has one place. 
+That’s three decimal places. The answer has three decimal places as well.”
+Format 14.7: Multiplying Decimals outlines a strategy for multiplying decimals or mixed 
+decimal numbers. In the structured board presentation, the teacher introduces the strategy for
+
+[p.368]
+368 Part III Extended Concepts and Skills
+figuring out where the decimal point goes in the answer. In the structured worksheet presenta­
+tion, the teacher gives the student a worksheet with 10 to 15 multiplication problems that have 
+answers included and leads students in determining where to place the decimal point. Note that 
+in the problems on the worksheet, the decimal point in the factors appears in several different 
+positions.
+The less structured worksheet exercise includes a mix of multiplication and addition 
+problems. The purpose of combining multiplication with addition is to ensure that students do 
+not overgeneralize (to addition) the procedure of counting the places to determine where to 
+put the decimal. Before the students work the problems, the teacher would remind them about 
+placing the decimal point in different types of problems. “In addition problems, remember to 
+bring the decimal point straight down. In multiplication problems, remember to count the dig­
+its after the decimal points in the numerals you multiply.” The teacher would then carefully 
+monitor the students as they work the first several problems. A worksheet might include these 
+examples:
+9.4
+× .5
+9.4
++ .5
+3.2
+X .57
+.32 40 18
++ .57 X 3 × .32
+.18 31.4 3.14
++ 32 X .05 + .05
+A potentially confusing type of multiplication problem is one in which the students must 
+place a zero in front of the digits in the answer. For example, when multiplying .4 × .2, the stu­
+dent must add a zero before the 8: .4 × .2 = .08. Likewise, in .5 X .01, the student must place 
+two zeros after the decimal: .5 X .01 = .005. This type of problem is introduced after the easier 
+types of problems have been mastered. The teacher models solving several problems of this type 
+and then includes about three such problems in daily worksheet assignments.
+A common error found on independent work occurs when students simply forget to put 
+the decimal point in the answer. The correction is to inform the students that they forgot to put 
+in the decimal point. However, if the error occurs frequently, the teacher should prepare work­
+sheets with about 10 to 15 problems, two-thirds of which contain decimals. In presenting the 
+worksheet, the teacher tells students that the worksheet was designed as a challenge—some of 
+the problems require decimal points in the answer, and some don’t. The teacher then monitors 
+closely as students complete the worksheet so that immediate corrections can be made if stu­
+dents make errors.
+Dividing Decimals
+Dividing decimal numbers is the most difficult decimal operation. Division with decimal num­
+bers can be introduced when students can read and write decimals and perform long division. 
+When long division with whole numbers was taught, the teacher stressed placing the digits in 
+the quotient over the proper places in the dividend. For example, when working the problem 
+186 ÷ 2, the quotient would be written as in example a, not example b:
+93 b 93 
+a∙ 2jl^86 2∏86
+If students have not learned to write numerals in the quotient in the proper position, errors of 
+misplacing the decimal in the quotient are likely to occur. In the example below, the first quo­
+tient is properly aligned.
+.93 
+2)1.86 rather than 9.3
+2jL86
+Procedures for teaching proper placement of the digits in the quotients of long division problems 
+are discussed in Chapter 10.
+
+[p.369]
+Chapter 14 Decimals 369
+Division problems with decimals can be categorized into four types of difficulty. The first 
+three types have whole numbers as divisors.
+1. Problems in which the quotient does not have a remainder and that require no conversion of 
+the dividend:
+.69 .03
+5)3.45 °r 7)21
+2. Problems in which the dividend must be converted to an equivalent decimal so that no 
+remainder will be present:
+.7
+5)32 , .74
+35 bec°mes 5)320
+2 3 5
+20
+20
+3. Problems with a remainder that requires rounding off:
+.341 2 = .34 
+7)2.4010
+2 1
+30
+28
+20
+14
+6
+4. Problems in which the divisor is a decimal or mixed decimal number and must be converted 
+to a whole number
+.4)61.32 becomes 4)6132
+Decimal or Mixed Decimal Divided by a Whole Number Division problems in which 
+the dividend is a mixed decimal or decimal number and the divisor a whole number are usually 
+introduced in late fourth or early to mid-fifth grade. An elaborate format is not required to intro­
+duce the problem type in which the dividend can be divided by the divisor without a remainder. 
+Both of the following problems are examples of this type of problem.
+5)2.35 7)84.7
+The teacher presents the rule that the decimal point must be written on the line directly above 
+where it appears in the numeral being divided. For example, when dividing 69.26 by 6, the stu­
+dent writes the problem:
+6)6926
+and then places the decimal point on the quotient line directly above the decimal in the dividend:
+6)6926
+The teacher then leads students through working several sets of problems, emphasizing the need 
+to place the digits in the quotient in their proper places.
+There are two example-selection guidelines for problems without remainders. First, the 
+decimal point should appear in different positions in various problems:
+a. 5)3.725 b. 2)184.6 c. 9)1.836
+d. 7).364 e. 5)23.5 f. 5).215
+
+[p.370]
+370 Part III Extended Concepts and Skills
+Second, one or two problems in which a zero must be placed immediately after the deci­
+mal point should be included. In problems d and f above, the quotients are .052 and .043. The 
+teacher may have to provide extra prompting on problems of that type by explaining that a digit 
+must be written in every place after the decimal point. Therefore, in problem d, the teacher 
+might say, “7 doesn’t go into 3, so write a zero above the 3.” Daily practice would include about 
+6 to 10 problems of this type.
+The second type of decimal division problem requires the student to eliminate a remainder 
+by rewriting the dividend as an equivalent decimal. For example, zeros need to be added to the 
+dividend in each of the following problems:
+.62 .75
+a. 5)TT = 5)∏0 c. 4)3 = 4jT∞
+1.725 .4
+b. 2)3.45 = 2)3.450 d. 5)2 = 5)∑0
+This type of problem is introduced after decimal division problems without remainders have 
+been mastered.
+The preskill of converting a decimal to an equivalent decimal should be taught prior to the intro­
+duction of this problem type. These problems are not very difficult and, like the previous type, do not 
+require a lengthy teaching procedure. The teacher would explain that students should continue work­
+ing until there are no remainders. He then would model working problems that require the addition of 
+zeros. For example, after bringing down the final digit, 9, of the dividend in this problem:
+5.6 
+6j3T9
+30
+39
+36
+3
+the teacher explains that he must keep dividing because he doesn’t want a remainder: “I’ll add a 
+zero after the last digit in the decimal and divide again. Remember: Adding zeros after a decimal 
+does not change the value of the numeral.”
+5.65 
+6)33.90
+30
+39
+36
+30
+30
+Examples in these exercises should be designed so that the addition of one or two zeros to 
+the dividend eliminates a remainder. Several examples such as
+4)3 or 5)8
+in which a whole number is the dividend should be included. These problems would require the 
+teacher to remind students to write the decimal point first and then add zeros after the whole 
+number:
+4∫3 becomes 4)3.0
+The third type of decimal division problem requires rounding off. Students are usually 
+instructed to work these problems to the nearest tenth, hundredth, or thousandth. The preskill 
+required prior to teaching this type of problem is rounding off decimal numbers. The format 
+for this skill appears in Format 14.8: Dividing with Decimals—Rounding Off. In Part A, the 
+teacher demonstrates how to work the problem. Students first read the directions specifying to 
+what decimal place (tenths, hundredths, thousandths) the answer is to be rounded. The teacher 
+asks how many digits must be written after the decimal point in the answer, then instructs students
+
+[p.371]
+Chapter 14 Decimals 371
+to work the problem until they have written that many digits. Students are instructed to draw a 
+line after that last digit in the answer and divide once more so they can decide how to round off 
+the answer. The answer is then rounded off. If the numeral after the line is 5 or greater, another 
+unit is added; if the numeral after the line is less than 5, no additional unit is added.
+Special consideration should be given to those problems in which a whole number is 
+divided by a larger whole number. These problems are very important because they prepare 
+students to compute percentages; for example, “Daniella made 4 out of 7 basketball shots. What 
+is her percentage for making shots?” We recommend that students round off answers in this type 
+of problem to the nearest hundredth because percent is based on hundredths.
+Dividing by a Decimal or Mixed Decimal The fourth type of division problem has a dec­
+imal or mixed decimal divisor. Problems of this type are relatively difficult because students 
+must multiply the divisor and dividend by 10 or a multiple of 10 to convert the divisor into a 
+whole number. Both the dividend and divisor must be multiplied by the same number so that the 
+numerical value represented by the problem is not altered. For example, to work the problem 
+8.7 ÷ .35, students must multiply the dividend and divisor by 100, converting .35 to 35 and 8.7 
+to 870.
+The preskill of moving the decimal to the right when multiplying by a multiple of 10 should 
+be taught and practiced for several weeks before introducing division problems with decimal 
+divisors. Format 14.9: Preskill: Multiplying Decimals by Multiples of 10 teaches this pre­
+skill. Students are taught that when a decimal number is multiplied by 10, the decimal point 
+moves one place to the right; and when it is multiplied by 100, the decimal moves two places to 
+the right.
+Particularly difficult problems are those in which a zero must be added. For example, to 
+multiply 8.7 × 100, the students must add a zero to the 8.7 so they can move the decimal point 
+two places to the right: 8.7 × 100 = 870. The teacher would model several of these problems, 
+explaining the need to add zeros. “You are multiplying by 100 so you will have to move the dec­
+imal point two places to the right, but you’ve only got one decimal place to the right. Add a zero 
+so you can move the decimal point two places.”
+The examples in this preskill exercise should include a mix of problem types. The deci­
+mal point should not be placed in the same position from problem to problem. In half of the 
+problems, 10 should be a factor, and in the other half, 100 should be a factor. Several problems 
+should require that students add zeros to a mixed decimal (100 X 34.2; 100 × 14.2).
+Also, several problems should include a whole number that must be multiplied by a multi­
+ple of 10 (10 × 34, 25 × 100). As the decimal point is moved over, zeros are added. For exam­
+ple, with 15 × 100, the student writes 15 and then adds two zeros (1500). The teacher would 
+model working several of these problems.
+Teachers should demonstrate that moving the decimal and adding a zero when multiplying 
+by a multiple of 10 is acceptable by beginning with a problem like this:
+3.4 
+× 10 
+00 
+340 
+34.0
+The teacher points out that when she multiplies by 10, the answer is 34, with the decimal point 
+moved one place to the right and a zero added. Next, the teacher writes this problem:
+3.4
+×100
+00
+000
+3400
+340.0
+and points out that when she multiplies by 100, the answer is also 340, with the decimal point 
+moved two places to the right.
+
+[p.372]
+372 Part III Extended Concepts and Skills
+Division problems with decimal or mixed decimal divisors are introduced when students 
+have mastered multiplying by multiples of 10 and can work all types of problems in which 
+the divisor is a whole number and the dividend a decimal or mixed decimal. Format 14.10: 
+Dividing by Decimals shows how to teach students to work problems with a decimal or mixed 
+decimal divisor.
+In Part A, the teacher presents a rule, “We cannot divide by a decimal,” and demonstrates 
+how the divisor and dividend must be revalued. Both the divisor and dividend are multiplied 
+by whatever multiple of 10 is needed to change the divisor into a whole number. The teacher 
+revalues the divisor first by moving the decimal point to the right. The dividend is revalued by 
+moving the decimal point the same number of spaces to the right. Note that, in the format, the 
+demonstration of how to revalue a problem is kept relatively simple to avoid confusing students 
+with lengthy explanations.
+Two example-selection guidelines are important to remember when teaching division with a 
+decimal or mixed decimal divisor. First, the number of places in the divisor and dividend should 
+vary from problem to problem. Interchanging the decimal divisor forces students to attend care­
+fully to moving the decimal. For example, a worksheet might include the following problems 
+with different types of decimal divisors:
+a. .5jT75 b. .05)373 c. 2.5)75
+d. .2).1368 e. .03)24 f. .5)21.85
+A second guideline involves including some examples in which zeros must be added to the 
+dividend (problems b, c, and e above). After a week or two, some problems in which a decimal 
+or mixed decimal is divided by a whole number should be included so that students eventually 
+receive adequate practice applying the strategies to the various types of problems.
+If the teacher wishes to demonstrate the validity of moving the decimal point, she begins 
+with a division problem:
+Let’s work this division problem as a fraction. We don’t divide by a decimal, so I have to 
+change .5 into a whole number. I do that by multiplying by 10. If I multiply the denominator 
+by 10, what do I have to do to the numerator? . . . Right, ten-tenths equal 1, and when we 
+multiply by 1, we don’t change the value of the fraction.
+The teacher writes the following and says, “Now we can divide by a whole number.”
+2.4 10 24 — × — = — .5 10 5
+Converting Fractions and Decimals
+Decimals and fractions are both numerical systems for representing part(s) of a whole. Con­
+verting a fraction to a decimal is an important skill in and of itself as well as a component skill 
+for percent problems. Converting a decimal to a fraction is less important because it has fewer 
+practical applications.
+Converting a Fraction to a Decimal The strategy for converting a fraction to a decimal 
+involves dividing the numerator by the denominator. For example, ∣ is converted to a decimal by 
+dividing 8 into 3:
+375 
+8)3.000
+This procedure initially was introduced in Chapter 12 in the section titled “Operations: Multi­
+plying and Dividing Fractions.”
+The preskills for converting fractions to decimals were discussed earlier in this chapter. 
+They are (a) decimal division problems in which a whole number is divided by a larger whole 
+number (3 ÷ 7, 3 ÷ 5) and (b) rounding off decimals. Because students who have mastered
+
+[p.373]
+Chapter 14 Decimals 373
+these preskills should have no difficulty converting a fraction to a decimal, an elaborate teaching 
+procedure is not required. The teacher presents the rule: To change a fraction into a decimal, 
+divide the numerator by the denominator. The teacher then models application of the rule with 
+several problems and monitors students as they independently solve problems on a worksheet. 
+Proper and improper fractions should be included in the exercise.
+Initial examples of this strategy should be limited to fractions that can be divided evenly to 
+the nearest tenth, hundredth, or thousandth:
+4 = .5
+8 8jTθ
+40
+Fractions that result in repeating decimals should not be introduced until several days later 
+because they require rounding off. When these problems are presented, instructions should specify 
+the place to which the decimal should be rounded off.
+2 .6666
+- = 3)2.00003
+Mixed numbers can be converted to a mixed decimal by first converting the mixed fraction to an 
+improper fraction then dividing:
+4-
+17 3'4
+y = 5jlTδ
+5- - —4 ^^ 4
+5.75
+= 4J2T∞
+Conversion of a mixed number is introduced about a week after the introduction of repeating 
+decimal problems.
+In a final type of problem, the denominator is a two-digit numeral ( ⅛, ⅛f). Students should 
+be taught to first reduce the fraction to its lowest common terms before converting the fraction 
+to a decimal:
+6 2- = - = 3j∑oδδ9 3
+15
+18
+5 »833
+- = 6j5W0
+Reducing is helpful because dividing by a one-digit divisor is easier than dividing by a two-digit 
+divisor. If the fraction cannot be reduced, students must be able to work problems with a two- 
+digit divisor. Daily practice should be provided over a period of several weeks on these types of 
+problems.
+Converting a Decimal to a Fraction Converting a decimal to a fraction can be presented 
+when students have learned to read and write fractions and can reduce fractions to their lowest 
+terms. The strategy for converting a decimal to a fraction involves first rewriting the decimal as 
+a decimal fraction and then reducing this decimal fraction to its lowest terms. For example, the 
+decimal .75 would first be converted to the fraction j⅛, which in turn would be reduced to ∣.
+Initially, students would be given a worksheet like the one below, and the teacher would 
+lead students through completing several items.
+.80
+.35
+Decimal Decimal Fraction Reduced Fraction
+.8 8 4
+10 5
+
+[p.374]
+374 Part III Extended Concepts and Skills
+After several lessons, the teacher would introduce a worksheet exercise like the following. 
+Circle the fraction that is equivalent to the decimal numeral.
+3 3 6
+6 5 6
+3 5 7
+4 7 5
+£43
+8 5 5
+The teacher would guide students in converting the decimal to a decimal fraction and then 
+in reducing this fraction to its lowest terms.
+DIAGNOSIS AND REMEDIATION
+Students may miss decimal problems for one or more of the following reasons:
+1. Fact error: For example, when working the problem 9.63 ÷ 9, the student writes 1.08 as the 
+answer. The student’s only mistake was dividing 9 into 63 incorrectly.
+If a student misses a problem because of a fact error, the teacher need not spend time 
+working on the decimal skill but should reteach the specific fact.
+2. Component-skill error: The student makes an error on a previously taught skill, which 
+causes the student to miss the current type of problem. For example, when converting ∣ 
+to a decimal, the student divides 3 by 7 correctly to .428 but then rounds off the answer to 
+.42. The remediation involves reteaching the earlier-taught component skill. In the example 
+given, the teacher would first reteach students how to round off. When the students demon­
+strate mastery of the component skill, the teacher would lead the students through solving 
+the original type of problem using the structured worksheet part of the appropriate format.
+3. Strategy error: A strategy error occurs when the student does not correctly follow the steps 
+to solve a problem. For example, when attempting to convert ∣ to a decimal, the student 
+divides 4 by 3. The remediation procedure involves reteaching the strategy, beginning with 
+the structured board part of the format.
+Figure 14.1, which describes diagnosis and remediation procedures for common errors made on 
+the various types of decimal problems, appears below.
+exercise.
+FIGURE 14.1 Diagnosis and remediation of decimal errors
+Error Patterns Diagnosis Remediation Procedures Remediation Examples
+Adding or Component­ Teach students to (1) Rewrite the fol­
+subtracting skill error: rewrite the numeral lowing as mixed
+3.5 + 2 = 3.7 failure to as mixed decimal, decimals to the
+5 - .3 = 2 convert whole 
+number to 
+mixed decimal
+Strategy 
+error: placing 
+decimal point 
+in wrong posi­
+tion in answer
+see Format 14.4. Present 
+structured worksheet 
+on addition and 
+subtraction problems. 
+See Format 14.5.
+Present Parts B and C of
+Format 14.7. Be sure 
+to include mix of addi­
+tion and multiplication 
+problems in the less 
+structured worksheet
+hundredths place:
+2, 5, 9, 7
+(2) 14.7 - 2 =
+11 - 4.3 =
+32.1
+1 ) × .9
+2889
+2 -321
+1 ×__ l 9
+
+[p.375]
+Chapter 14 Decimals 375
+Error Patterns
+Dividing
+7)32.27
+Diagnosis
+Component­
+skill error: 
+misalignment 
+of digits in 
+quotient
+Remediation Procedures
+Review the procedure 
+recommended in the 
+section on "Decimal or 
+Mixed Decimal Divided 
+By a Whole Number." 
+Be sure to emphasize 
+the rule that the 
+decimal point must 
+be written on the line 
+directly above the 
+numeral being divided.
+Remediation Examples
+2∫28~46
+10.356
+4
+1.02
+4
+.63
+.O5)TT5
+Strategy 
+error: failure 
+to rewrite 
+divisor and 
+dividend
+Present Format 14.10.
+Rounding off
+3.729 to 3.8
+8.473 to 8.4
+Strategy 
+error: failure 
+to use round­
+ing off rules
+Present Format 14.6.
+0.2j248
+.368
+.4
+1.55
+2.5
+Round .462 to the 
+nearest tenth.
+Round .3814 to the 
+nearest hundredth.
+Round 1.5659 to the 
+nearest tenth.
+APPLY WHAT YOU LEARNED
+Click on the V to answer the questions online.
+1. Describe the problem type that each example below represents. List the problems in the order 
+they are introduced.
+a. 14.3 + 8.5 f. .9)28
+b. 7 × 34.8 g. Read this number 8.04
+c. 9 - 3.28 h. 9)∑7
+d. Covert 7 to a decimal i. 9)2.8
+e. Covert ∣ to a decimal j. Round off 3.4785 to the nearest hundredth.
+2. Construct a structured board presentation to teach students to read decimals expressed as thousandths.
+3. Below are examples various teachers used in presenting reading decimals (tenths and hundredths). 
+Tell which teacher used an appropriate set of examples. Tell why the other sets are inappropriate.
+Teacher A: .04, .09, .08, .05, .01, .07
+Teacher B: .7, .37, .48, .5, .28
+Teacher C: .7, .40, .07, .04, .70, .4
+4. Specify the wording the teacher uses to present the following problem: 
+8 - .34 =
+5. Below is a set of examples constructed by a teacher for a rounding-off exercise. It is inappropriate.
+Tell why.
+Round off 3.482 to the nearest tenth
+Round off 7.469 to the nearest hundredth
+Round off 4.892 to the nearest tenth
+Round off 6.942 to the nearest whole
+6. When asked to round off 3.738 to the nearest hundredth, a student writes 3.73. Specify the wording 
+the teacher uses in making the correction.
+
+[p.376]
+376 Part III Extended Concepts and Skills
+7. Which problems below would not be included in the initial exercises for teaching students to divide a 
+whole number into a decimal or mixed decimal number? Tell why.
+a. .7j3T8 b. 4j2∑5 c. 9j8T86
+d. 7j343 e. 9∫187 f. 2jL46
+8. Tell the probable cause of each student’s error below. Specify the remediation procedure for the error.
+Write this fraction as a decimal rounded off to the nearest hundredth: 7
+Darnell
+5 :614
+- = 7)5.00 = 7)5.00 = .61
+Deja
+_ 1.4
+7 ^^ 5)7.0
+Nguyen
+5- = r⅛ = .72
+7 7)5.00∖ 0
+49
+10
+7
+3 0
+28
+2
+Format 14.1
+READING DECIMALS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following fractions on the board.)
+3 a 3io and iod
+2. Read these fractions.
+3. We're going to learn another way to write tenths and hundredths.
+(Write a decimal point on the board.) This is a decimal point. What is this?
+One digit after the decimal point tells about tenths. What does one digit after the 
+decimal tell about?
+Two digits after the decimal point tell about hundredths. What do two digits after 
+the decimal point tell about?
+Remember: If there is one digit after the decimal point, the numeral tells about 
+tenths. If there are two digits after the decimal point, the numeral tells about 
+hundredths.
+4. (Write .9 on board.)
+Listen: There's one digit after the decimal point. The 9 tells about tenths. This says 
+"nine-tenths."
+3 tenths,
+3 hundredths
+A decimal point
+Tenths
+Hundredths
+
+[p.377]
+Chapter 14 Decimals 377
+TEACHER STUDENTS
+(Write .09 on board.) Listen: There are two digits after the decimal point. The 9 
+tells about hundredths. This says "nine-hundredths." Your turn.
+5. (Write .3 on the board.)
+How many digits after the decimal point? 1
+What does the 3 tell about? Tenths
+Say the decimal numeral.
+To correct: How many digits after the decimal point? There is/are______ digit(s)
+after the decimal so the______ tells about_______ The decimal says------------
+(Repeat step 5 with .03, .30, .6, .60, .06, .58.)
+6. (Write .7 on board.)
+Say this decimal numeral.
+(Repeat step 6 with .70, .07, .9, .09, .90, .05, .4, .32.)
+Part B: Structured Worksheet
+1. (Present a worksheet like the following.)
+4 4 40 38a. .4 =----- — ------ q. -----= .3 .38 38.100 10 1000 y 100
+40 40 4 , 4 λλ nA λb. ∙4θ = τττ tt: h. --- = .40 .04 .4100 10 10 100
+λλ 40 40 4 40 λλ λ λλc. .04 =---------— -  ι. ------ = .40 .4 .04100 10 100 100
+61 61 61 8d. .61 =------ — ---  i. ------ = .80 .08 .080100 10 1000 j 100
+_ 60 6 6 . 8θ
+e' ’ ~ 100 100 10 100 - '
+f- 6 ~ 100 1000 10 l 10- ∙70 ∙07 ∙7
+3 tenths
+2. Read the decimal numeral next to a.
+We have to find the fraction that says .4.
+4 tenths
+3. Read the first fraction. 4 hundredths
+Read the next fraction. 4 tenths
+Read the next fraction.
+4. The decimal says four-tenths. Draw a circle around the fraction that says four- 
+tenths. (Monitor student responses.)
+5. Work problems b-f on your own. Remember to circle the fraction that says the 
+same thing as the decimal.
+40 thousandths
+6. Read the fraction next to letter g.
+We have to find the decimal that says 38 hundredths.
+38 hundredths
+7. Read the first decimal. 3 tenths
+Read the next decimal.
+8. It says the same thing as the fraction, so draw a circle around it. 
+(Monitor student responses.)
+9. Work the rest of the problems on your own.
+38 hundredths
+
+[p.378]
+378 Part III Extended Concepts and Skills
+Format 14.2
+WRITING DECIMALS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write ⅛ on board.)
+2. Read this fraction. 73 hundredths
+3. I want to write 73 hundredths as a decimal.
+4. How many digits are there after the decimal point when a decimal tells about 
+hundredths?
+5. So I write a decimal point, then 73. What do I write after the decimal point to 
+write 73 hundredths?
+6. (Write .73.) Read the decimal.
+(Repeat steps 1-6 with: 7∕10, 7∕100, 7θ∕ιoo, 4∕ιoo, 48∕ιoo, 6∕ιo, 6∕ιoo, 6∕ιo, 6°∕ιoo, 3∕ιooJ
+(Note: When presenting fractions like 7∕ιoo, the teacher says in step 4,
+"So I write a decimal point, then zero seven.")
+Part B: Less Structured Worksheet
+2
+73
+73 hundredths
+1. (Write these fractions as decimals.)
+4 32a. -----=________ ___  q. -----=___________100 y 100
+1 4 28b. — =________ __  h. ----  =___________10 100
+40 . 9c. -----=________ ___ ι. --- =__________100 10
+, 7 92d —- —_______ ___  ι. -----=___________100 j 100
+7 , 9c. — =________ __  k.-----=___________10 100
+jc 70 5f. -----=________ ___ . —- —___________100 10
+2. Read the directions.
+3. Read the fraction next to a.
+4. How many digits must there be after the decimal point for hundredths?
+5. What do you write after the decimal point to say four-hundredths?
+6. Now write the decimal point and the numeral(s) to say seven-hundredths. 
+(Repeat steps 2-6 with remaining examples.)
+Write these fractions 
+as decimals.
+4 hundredths
+2
+04
+
+[p.379]
+Chapter 14 Decimals 379
+Format 14.3
+READING AND WRITING MIXED DECIMALS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write a decimal point on the board.) The numerals on this side of the decimal point 
+(motion to the left) tell about whole numbers. What do the numerals on this side of 
+the decimal point (motion to the left) tell about?
+The numerals after the decimal point (motion to the right) tell about the decimal number.
+2. (Write 2.4 on the board.) This is a mixed decimal. It has a whole numeral and a 
+decimal numeral. It says two and four-tenths. What is this mixed decimal?
+What's the whole numeral in the mixed decimal?
+What's the decimal?
+Say the mixed decimal.
+(Repeat step 2 with 9.03, 14.2, 16.23, 7.4, and 9.03.)
+3. (Write 8.4 on board.) Say the mixed decimal.
+(Repeat step 3 with 8.04, 7.41, 19.2, 8.50, and 19.02.)
+Whole numbers
+2 and 4 tenths
+2
+4 tenths
+2 and 4 tenths
+8 and 4 tenths
+Part B: Structured Worksheet
+1. (Write the mixed decimal.)
+a. eight and four tenths =
+b. sixteen and two-hundredths =
+c. five and sixteen-hundredths =
+d. eleven and four-tenths =
+e. eleven and four-hundredths =
+f. eleven and forty-hundredths =
+g. 17 9
+10
+h.
+j∙
+k.
+8≡ -
+16≡
+16ioδ ^
+1016-----=100
+2. Read the words in a.
+3. What's the whole numeral?
+Write it.
+4. What's the decimal numeral?
+Write it. Remember the decimal point. (Monitor responses.)
+5. What mixed decimal did you write?
+(Repeat steps 2-5 with problems b-f.)
+6. Read problem g.
+(Repeat steps 2-5 with the remaining items.)
+8 and 4 tenths
+8
+4 tenths
+8 and 4 tenths
+17 and 9 tenths
+
+[p.380]
+380 Part III Extended Concepts and Skills
+Format 14.4
+CONVERTING DECIMALS INTO EQUIVALENT DECIMALS
+TEACHER STUDENTS
+Part A: Demonstration
+1. Listen to this rule: When we write zeros after a decimal numeral, we don't 
+change the value of the numeral. Say that.
+2. (Write on board: .3.)
+Read this decimal.
+I'll write a zero after the decimal. (Add a zero: .30.) Now read the decimal.
+I changed 3 tenths to 30 hundredths by adding a zero after a decimal numeral.
+3. I'm going to use fractions to show that 3 tenths equals 30 hundredths.
+(Write on board: ~^.)
+Read this.
+We start with 3 tenths and we end with 30 hundredths.
+30(Write on board: )
+What do I multiply 10 by to make it 100?
+What do I multiply 3 by to make it 30?
+λ., ■ ,. , 3 (1O∖ 30(Write on board: — — = —~J10 ∖1θJ 100
+I multiplied 3 tenths by 10 tenths: 10 tenths equal 1. Remember, when 
+we multiply by 1, we don't change the value of a number. So 3 tenths equals 30 
+hundredths. (Write .3 — .30.)
+4. (Repeat steps 2 and 3, changing .5 to .500.)
+5. Here's another rule about zeros: If we cross out zeros at the end of a decimal 
+numeral, we don't change the value of the decimal. (Write .50.) Read this decimal 
+numeral.
+I'll cross out the zero at the end of the decimal. (Cross out zero: .50.)
+Now what does this decimal say?
+6. Let's use fractions to show that 50 hundredths equal 5 tenths.
+(Write the problem on the board.)
+50_ _ 5
+100 “ 10
+50 = 5 times what number?
+100 = 10 times what number?
+When we write 
+zeros after a 
+decimal numeral, 
+we don't change 
+the value of the 
+numeral.
+3 tenths
+30 hundredths
+3 tenths
+10
+10
+50 hundredths
+5 tenths
+10
+10
+(Write the rest of the problem.)
+50 _ 5 / W ∖ 
+100 ~ 10 ∖10√
+
+[p.381]
+Chapter 14 Decimals 381
+TEACHER STUDENTS
+To make 5 tenths into 50 hundredths, we multiplied it by 10 tenths.
+10 tenths equals 1. When we multiply by 1, we don't change the value 
+of a number, so 50 hundredths equals 5 tenths.
+(Repeat steps 5 and 6 with 3θθ∕woo = 3∕ιoJ
+Part B: Structured Board Presentation
+1. (Write 8.4 on the board.)
+Read this numeral.
+I want to rewrite this mixed decimal so that the decimal tells about thousandths.
+2. When we write a decimal that tells about thousandths, how many digits must 
+there be after the decimal point?
+3. I already have one digit after the decimal point, so how many zeros must I add? 
+(Write 8.400.)
+4. Read the decimal numeral now.
+Did we change the value of 8.4?
+No, 8.400 is the same as 8.4. When we add zeros at the end of the decimal, we 
+don't change its value.
+(Repeat steps 1-4, changing 5.1 to 5.10; 9.300 to 9.3, 7 to 7.00, 9 to 9.0.)
+Part C: Less Structured Worksheet
+1. (Give students a worksheet like this one.)
+Mixed Decimals
+Ones Tenths Hundredths Thousandths
+a.   3.7 ______ _______________
+b.   ______ 4.20 ______
+c. ______ 9.2 ______  ______
+d ______ ______ ______ 7.300
+e. 6 ______  ______ ______
+2. (Point across row a.) You have to fill in the missing mixed decimal numerals. Every 
+mixed decimal in a row must have the same value. Read the numeral closest to a.
+3. Touch the space in the next column. The heading says hundredths. We must 
+rewrite 3.7 so that the decimal expresses hundredths. How many digits must be 
+after the decimal point for hundredths?
+The mixed decimal 3.7 has one digit after the decimal. What must you do?
+Write the mixed decimal in the hundredths column. What mixed numeral did you 
+write in the hundredths column?
+4. (Repeat step 2 with the thousandths column.)
+(Repeat steps 2 and 3 with remaining examples.)
+(Note: When converting whole numbers to mixed decimals, the teacher explains 
+that a decimal point is written after the whole numeral. After the decimal point, 
+zeros are added: one zero if the decimal expresses tenths, two zeros if it expresses 
+hundredths, and three zeros if it expresses thousandths.)
+8 and 4 tenths
+3
+2
+8 and 4 hundred 
+thousandths
+No
+3 and 7 tenths
+2
+Add one zero
+3.70
+
+[p.382]
+382 Part IΠ Extended Concepts and Skills
+Format 14.5
+ADDITION/SUBTRACTION OF UNLIKE DECIMALS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. When we add or subtract numerals containing decimals, we first rewrite 
+them so they all have the same number of places after the decimal point.
+(Write 13.7 - 2.14 on board.)
+2. Read this problem. 13 and 7 tenths minus 2 
+and 14 hundredths
+3. Which numeral has more places after the decimal point? 2.14
+So we have to rewrite the problem so that each numeral is talking about 
+hundredths.
+4. (Point to 13.7.) What can I do to 7 tenths to make it into a numeral with 
+two places behind the decimal? Add 0 after the 7
+Yes, I write a zero after the 7. (Write 0 after 7: 13.70.) Now we have 70 
+hundredths. Read the problem now. 13 and 70 hundredths 
+minus 2 and 14 hundredths
+5. To work the problem, I'll write the problem in a column, making sure the 
+decimal points are lined up. (Write and solve the problem.)
+13.70
+-2.14
+11.56
+6. I'll write the decimal point in the answer. Remember, when we subtract 
+numerals with decimals, we bring the decimal point straight down.
+(Write the decimal point.)
+13.70
+-2.14
+11.56
+Read the answer.
+(Repeat steps 1-6 with this problem: 18.9 - 3.425.)
+11.56
+Part B: Structured Worksheet
+1. (Give students a worksheet like this one.)
+a. 7.1 - 3.45 e. 19.1 - 8.34
+b. 16.345 + 8.3 f. 96.4 + 86.4
+c. 51.43 + 6.85 g. 4.5 + 6.35
+d. 13.6 - .346 h. 271.-71.42
+2. Read item a on your worksheet. 7.1 - 3.45
+3. Do the numerals have the same number of places after the decimal point? No
+4. Right. One numeral has tenths, and the other has hundredths. Which 
+numeral has more places after the decimal? 3.45
+So which numeral do you have to change? 7.1
+What do you do to 7.1? Add 0 after the 1
+
+[p.383]
+Chapter 14 Decimals 383
+TEACHER STUDENTS
+Add the zero. (Monitor responses.) Now rewrite the problem in a column 
+and work it.
+What is the answer?
+(Repeat steps 1-4 with several more problems.)
+1.65
+Format 14.6
+ROUNDING OFF DECIMALS
+TEACHER
+Part A: Structured Board Presentation
+1. (Write .376 on board.)
+2. I want to round off this decimal to the nearest hundredth. When we talk 
+about hundredths, how many digits will we have after the decimal?
+I will count off two digits after the decimal point and then draw a line 
+after that digit. (Write. 37∖6.)
+3. When we round off a decimal, we must look at the numeral that comes 
+after the line. If the numeral is 5 or more, we must add another unit. 
+What numeral comes after the line?
+So must we add another hundredth?
+If we have 37 hundredths and we add another hundredth, how many 
+hundredths do we have?
+So .376 rounded to the nearest hundredth is ...
+(Write .38.)
+4. (Repeat steps 1-3 with the following problems.)
+.372 rounded to the nearest tenth
+.1482 rounded to the nearest hundredth
+.382 rounded to the nearest whole
+.924 rounded to the nearest hundredth
+Part B: Structured Worksheet
+1. (Give students a worksheet like this one.)
+a. Round .462 to the nearest tenth
+b. Round .428 to the nearest tenth-----------------
+c. Round .8562 to the nearest hundredth
+d. Round .8548 to the nearest hundredth
+e. Round .3467 to the nearest hundredth-----------------
+f. Round .3437 to the nearest hundredth
+g. Round .417 to the nearest tenth
+h. Round .482 to the nearest tenth
+i. Round .3819 to the nearest hundredth-----------------
+j. Round .3814 to the nearest hundredth
+(See Video Part A)
+STUDENTS
+6
+Yes
+38 
+.38
+2
+continued
+
+[p.384]
+384 Part III Extended Concepts and Skills
+Format 14.6 (continued)
+ROUNDING OFF DECIMALS
+TEACHER STUDENTS
+2. Touch item a. What do we round off that decimal to?
+3. How many digits will be after the decimal point when you round off to 
+the nearest tenth?
+Count one digit after the decimal point and draw a line.
+4. Let's see if you add another tenth. What numeral comes just after 
+the line?
+So do you add another tenth?
+You had four tenths. If you add a tenth, how many tenths do you have?
+If you round off .462 to the nearest tenth, what do you have?
+Write the answer on the line.
+(Repeat steps 2-4 with remaining problems.)
+To the nearest tenth
+1
+6
+Yes
+5
+5 tenths
+Students write .5.
+Part C: Less Structured Worksheet
+(Give students a worksheet like the one in Part B.)
+1. Read item a.
+2. Draw a line to show where you round off.
+3. Round off and write your answer on the line.
+4. Read your answer.
+(Repeat steps 1-4 with remaining problems.)
+Format 14.7
+MULTIPLYING DECIMALS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following problem on the board.)
+34.2
+× .59
+3078
+17100
+20178
+2. We're multiplying mixed decimals, so we have to put a decimal point in 
+our answer. Here's a fast way to figure out where to write the decimal 
+point in the answer. We count the places after the decimal points in both 
+numerals we're multiplying.
+3. I'll touch the numerals after the decimal points and count them: 
+(touch 2) one, (touch 9) two, (touch 5) three. How many decimal places 
+in both numerals?
+4. So I write the decimal point in the answer so that there are three places 
+after it. (Point between 7 and 8.) One place. (Point between 1 and 7.) 
+Two places. (Point between 0 and 1.) Three places. I put the decimal point 
+here. (Point between 0 and 1.)
+3
+
+[p.385]
+Chapter 14 Decimals 385
+TEACHER
+5. How many places after the decimal point?
+Read the answer.
+(Repeat steps 1-5 with the problems below.)
+34.2 34.2 351
+X 5 X .7 X .05
+Part B: Structured Worksheet
+1. (Give students a worksheet like the following one.)
+a. 32.1 b. .321 c. 3.21 d. 321 e. 3.421
+X .9 X .9 X .9 X .9 ×__ 7
+2889 2889 2889 2889 23947
+f. 492 g. 4.92 h. .492 i. 49.2
+X .53 × .53 X 5.3 X 53
+1476 1476 1476 1476
+24600 24600 24600 24600
+26076 26076 26076 26076
+j. 429 k. .32 I. 3.2 m. 3.2
+X 53 X .05 X 5 ×.05
+1476 160 160 160
+24600 000 000
+26076 160 160
+2. These problems are worked already. All you have to do is put in the 
+decimal points.
+3. Touch problem a.
+4. How many places are after the decimal points in both numerals being 
+multiplied?
+5. Where does the decimal point go in the answer?
+6. Write it.
+7. Read the answer.
+(Repeat steps 2-7 with remaining problems.)
+Part C: Less Structured Worksheet
+1. (Give students a worksheet with a mix of multiplication and addition 
+problems containing decimals and mixed decimals.) Remember: When you 
+multiply, you count the places after the decimal point. When you add, 
+you bring the decimal point straight down.
+2. Work problem a.
+3. Where does the decimal point go?
+(Repeat steps 1-3 with remaining problems.)
+STUDENTS
+3 
+20.178
+2
+Between the first 8 and 
+the second 8
+28.89
+
+[p.386]
+386 Part III Extended Concepts and Skills
+Format 14.8
+DIVISION WITH DECIMALS—ROUNDING OFF
+TEACHER
+Part A: Structured Board Presentation
+1. (Write the following instructions on the board.)
+Work the problem, and express your answer to the nearest hundredth: 
+7)324
+2. Read the problem.
+STUDENTS
+7 goes into 3 and
+24 hundredths
+The instructions tell us to work the problem to the nearest hundredth. 
+How many digits after the decimal point when we have hundredths?
+So we work the problem until we have two digits after the decimal point.
+(Solve the problem.)
+.46
+7j3.24
+2 8
+44
+42
+2
+2
+3. We have hundredths in the answer, but we're not done because we have 
+a remainder. We have to work the problem to thousandths and then 
+round to hundredths. So I draw a line after the 6. (Draw a line after 
+the 6.)
+4. ∖Ne have to divide one more time so we know how to round off. Here's 
+what we do. We add a zero after the 4 in the numeral we're dividing. 
+Remember, when you add a zero after the last digit in a decimal 
+numeral, you don't change the value of the numeral.
+(Add a zero.)
+.461
+7)324)6
+2_8
+^ 44
+42
+2
+Now we can divide again. We bring down the zero (Write 0 next to 2.) 
+How many sevens in 20?
+(Write 2 and 14.)
+2
+.4612 
+7)324)6 
+2 8 
+~ 44
+42
+20
+14
+6
+
+[p.387]
+Chapter 14 Decimals 387
+TEACHER STUDENTS
+5. Do 1 round off to 46 hundredths or 47 hundredths?
+To correct: What numeral is after the rounding off line?
+That is less than 5, so we don't add another unit.
+(Repeat steps 1-5 with the problems below.)
+9)4 Round off to nearest tenth.
+7)26.3 Round off to nearest hundredth.
+3)2 Round off to nearest hundredth.
+Part B: Structured Worksheet
+1. (Give students a worksheet like the following one.)
+a. Work these problems and round off to the nearest hundredth.
+1. 3)774 = 2 . 6)5 =
+b. Work these problems and round off to the nearest tenth.
+3. 4)2.31 = 4. 7)3 =
+46 hundredths
+Read the instructions for a. Work these problems and 
+round off to the nearest 
+hundredth.
+Read problem one.
+2. You have to round the problem to the nearest hundredth. How many
+3 into 7.4.
+digits will there be after the decimal point in your answer? 2
+Work the problem. Stop when there are two digits after the decimal 2.46
+point. (Monitor students' work.)
+3. You're not finished because you still have a remainder. Draw a line after 
+the last digit in your answer. (Pause.) Now add a zero to 7.40 and divide 
+again.
+3)7.40
+6
+1 4
+1 2
+20
+18
+2
+4. What numeral did you write after the line in the answer? 6
+So do you add another hundredth? Yes
+Write your rounded-off answer (Pause.) What's your answer?
+Part C: Less Structured Worksheet
+1. (Give students a worksheet like the one given in Part B.)
+2. Read the instructions for a.
+3. Read problem one.
+4. Where are you going to draw the line for rounding off: after the first.
+2.47
+second, or third digit behind the decimal point?
+5. Work the problems and write your rounded-off answer.
+Second digit
+
+[p.388]
+388 Part III Extended Concepts and Skills
+Format 14.9
+PRESKILL: MULTIPLYING DECIMALS BY MULTIPLES OF 10
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. Here are some rules about multiplying decimals by 10 or 100: When you 
+multiply by 10, you move the decimal one place to the right. What do you Move it one place to the
+do to the decimal point when you multiply by 10?
+When you multiply by 100, you move the decimal point two places to the
+right
+right. What do you do with the decimal point when you multiply by 100?
+2. (Write on the board: 37.48 × 10.)
+Move it two places to the 
+right
+Read the problem.
+We're multiplying by 10. What do you do to the decimal point when you
+37.48 × 10
+multiply by 10?
+3. (Write on the board: 37.48 × 10 — 3748.)
+The decimal point was between the 7 and the 4. If I move it one place to
+Move it one place to the 
+right
+the right, where will the decimal be? 
+(Write on board: 37.48 × 10 = 374.8.)
+Between the 4 and 8
+Read the answer.
+4. (Repeat steps 2 and 3 with the problems below.)
+37 × 100
+8.532 × 10
+7.2 × 100
+25 × 100
+Part B: Structured Worksheet
+1. (Give the students a worksheet like the following one.)
+a. 3.74 x 10 = e. 16 × 100 =
+b. .894 × 100 = f. 15 X 10 =
+c. 42.8 X 100 = g. .0382 X 10 =
+d. 3.517 × 10 = h. 49.2 X 100 =
+374.8
+2. When you multiply by 10, what must you do? Move the decimal one place 
+to the right
+When you multiply by 100, what must you do? Move the decimal two 
+places to the right
+3. Read problem a. 3.74 × 10
+4. You're multiplying by 10, so what must you do to the decimal point? Move the decimal one place 
+to the right
+5. Where will the decimal point be in the answer?
+6. Write the answer.
+Between the 7 and the 4
+7. Read your answer.
+(Repeat steps 2-7 with remaining problems.)
+37.4
+
+[p.389]
+Chapter 14 Decimals 389
+Format 14.10
+DIVIDING BY DECIMALS
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+1. (Write the following on the board.)
+.5)51.75
+2. Here's a rule about decimal division: We don't divide by a decimal 
+numeral. (Point to .5.) ∖Ne must change the divisor to a whole numeral.
+3. (Point to .5)51.75) What is the divisor in this problem? .5
+Can we work the problem the way it is? No
+What must we do? Change the divisor to a
+4. We make five-tenths a whole numeral by moving the decimal point. A 
+numeral is a whole numeral when there are no digits after the decimal 
+point. How many places must I move the decimal point over to the right 
+to make .5 into a whole numeral?
+whole numeral
+One
+(Draw arrow: 5.)51.75)
+I moved the decimal one place to the right. We have to move the decimal 
+point the same number of places in the dividend. How many places to the 
+right must we move the decimal point in the dividend? One
+(Write on board: 5.)517.5)
+Now we can work the problem. 1 write the decimal point on the answer 
+line, and then divide.
+(Write on board: *5.)51*7.5)
+5. I'll divide.
+10.35
+.5.)51.7.5
+5
+017
+15
+25
+25
+6. What's the answer? 103.5
+(Repeat steps 1-6 with the problems below.) 
+.05)5.125 .7)28
+.0)21.9 .07)28
+Part B: Structured Worksheet
+1. (Give students a worksheet like the following one.) 
+.05)3.25 .5)32 .04)92
+.3)95 .03)95
+2. Read the first problem. .05 into 3.25
+3. What is the divisor? .05
+continued
+
+[p.390]
+390 Part III Extended Concepts and Skills
+Format 14.10 (continued) 
+DIVIDING BY DECIMALS
+TEACHER STUDENTS
+4. Cross out the decimal point and move it to the right to make a whole 
+numeral. Students write
+5. How many places did you move the decimal point to the right?
+.05.)3.25.
+2
+That's what you must do in the dividend. Cross out the decimal point and 
+write it where it belongs. (Monitor students' work.) Students write
+6. Now write the decimal point where it will be in the answer.
+.05.)3.25.X z X
+Students write
+7. Work the problem.
+8. What's the answer?
+.05.)3.25.X 7 X
+65
+(Repeat steps 2-8 with remaining problems.)

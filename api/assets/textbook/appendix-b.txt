@@ -1,0 +1,242 @@
+[p.531]
+Appendix B Frequently Asked Questions About Direct Instruction Mathematics 53
+E. Should Students be Allowed to Use Calculators in Math Class?
+Issues regarding the use of calculators are similar to issues of manipulatives in that it is nc 
+whether students use calculators but how and when they use them. Teachers must make inten 
+tional decisions about the extent to which they will allow students to rely on calculators for com 
+putation. If teachers do allow calculators, they must teach students to use them properly.
+F. What Direct Instruction Mathematics Programs Are Commercially 
+Aavailable?
+Most of the commercially available Direct Instruction mathematics programs are discussed oi 
+the website of the National Institute for Direct Instruction. These programs include:
+■ DISTAR Arithmetic
+■ Connecting Math Concepts
+■ Corrective Math
+■ Essentials for Algebra
+■ Funnix Math
+ISSUES OF INSTRUCTIONAL ORGANIZATION AND 
+MANAGEMENT
+A. Is Direct Instruction for Only Struggling Students?
+Because Direct Instruction has been effective with struggling students and students receivin 
+special education services, educators assume the strategies are appropriate only for students wh 
+are struggling with mathematics. On the contrary, we believe the strategies are effective fo 
+all students because they are well designed, generalizable, and clearly presented. The mistak 
+many teachers make when using Direct Instruction with higher-performing students is pacin 
+the instruction too slowly. These teachers may be providing more repetition and practice thaι 
+is necessary for their students, or they may be teaching skills students already have acquired 
+Careful monitoring of student progress allows teachers to differentiate instruction within thei 
+classrooms to meet the needs of all of their students.
+B. How Does a Direct Instruction Approach in Mathematics Work 
+with Students with Special Needs?
+The underlying philosophy of Direct Instruction is that all students can learn if give] 
+well-designed instruction and opportunities for practice. Students with special needs ofte] 
+require (a) well-designed, unambiguous, teacher-directed instruction and (b) more practic 
+opportunities in order to master the skills presented.
+As mentioned earlier, the Direct Instruction strategies in this text have been demonstrated t< 
+be effective with a range of students. But the instruction is just one part of a multi-tiered systen 
+of supports. Other essential components include assessment and service delivery. Assessmen 
+must include provisions for appropriate initial screening and diagnostic testing, in addition t< 
+continued progress monitoring that informs instructional decision-making. Service delivery iι 
+this context refers to the systematic coordination of effort by general and special educators tha 
+includes shared responsibility and collaborative problem solving.
+Using the guiding principles of well-designed instruction and more practice opportuni 
+ties, all teachers of students with special needs must discuss the who, what, where, and how o 
+designing an effective program. Who will be responsible for teacher-directed instruction? Wha 
+will be taught? Where will the student receive the instruction? How will the teachers orchestral 
+additional practice opportunities? All of the above questions are relevant to the education o 
+students with special needs.
+
+[p.532]
+Addend: The numbers of the smaller sets in an addition statement 
+(e.g., in 4 + 3 = 7, the addends are 4 and 3).
+Addition: Addition is (a) the process of combining smaller sets to 
+form a larger set and then determining the total number of the larger 
+set or (b) the union of two disjoint sets. Disjoint sets have no mem­
+bers in common.
+Alternating pattern: A method for providing practice after the 
+introduction of a new fact that involves systematically review­
+ing previously introduced facts interspersed with the new fact. 
+For example, after a new numeral is introduced, a previously 
+reviewed numeral is identified, then the new numeral is identi­
+fied again, followed by two previously reviewed numerals, and 
+so on.
+Area: The number of square units it takes to cover a figure.
+Base number: The number multiplied by itself when an exponent 
+is present.
+Circumference: The circumference is the distance around the out­
+side of a circle.
+Column alignment: Positioning two or more multi-digit numerals 
+so that like place values are vertically aligned.
+Commutative property: Adding or multiplying the same num­
+bers in any order will produce the same result (5 × 3 = 15 
+and 3 × 5 = 15; 10 + 4 + 31 = 45, 4 + 10 + 31 = 45, and 
+31 + 4 + 10 = 45).
+Complex addition facts: Addition facts that require a student to 
+mentally add a single-digit number to a two-digit number.
+Compound probability: The likelihood of two or more events 
+happening together.
+Decimal fractions: Fractions with a denominator of 10 or any 
+power of 10: l1∕ιo, 1∕ιoo, 1∕ιooo, etc.
+Decimals: Decimals are similar to fractions in that they both deal 
+with something that has been divided into equal parts. Decimals 
+are restricted, however, to situations with 10 parts or any power of 
+10 (10, 100, 1000, etc.). In a decimal, the number of equal parts 
+is not indicated by a denominator but rather through place value. 
+The position of a numeral in relation to a decimal point expresses 
+the number of equal parts. For example, one digit after the dec­
+imal point indicates 10 equal parts; two digits after the decimal 
+point indicate 100 equal parts. The value of the digit represents 
+the number of parts present, used, or acted upon. For example, .5 
+equals 5∕ιo and .5 represents a division into 10 equal parts with 5 
+parts present.
+Denominator: The bottom number in a fraction.
+Descriptive statistics: Statistics that summarize a data set with 
+measures of central tendency and variability.
+Diameter: The diameter is a line running from one side of the 
+circle to the opposite side through the midpoint.
+Difference: The quantity remaining after the subtrahend is taken 
+away from the minuend.
+Distractor: Information given in a word problem that is not 
+necessary to finding the solution to the problem
+Distributive property: The distributive property of multiplication 
+over addition says that if a, b, and c are whole numbers, then
+a × (b + c) = (a × b) + (a × c)
+This property is essential to understanding multiplication of 
+multi-digit numbers such as 4 × 27. Expanded notation allows 
+27 to be rewritten as 20 + 7. The problem 4 × 27 then becomes 
+4 × (20 + 7), which equals (4 × 20) + (4 × 7). It is also import­
+ant for later work with fractions, equations, and algebra.
+Dividend: The number being divided. It corresponds to the product 
+in a multiplication problem:
+6 in 2)6
+Division: The inverse of multiplication. When a student divides, 
+she is finding a missing factor; 16 ÷ 8 can be expressed as 
+8 × □ = 16.
+Divisor: The factor that is given in a division problem. It is written 
+in front of the division sign:
+2 in 2)6
+Effect size: Quantity that allows for comparison between two 
+groups, usually an experimental group and a control group.
+Equations: A statement of equality between two expressions.
+Expanded notation: Writing a number to show the value of each 
+digit. For example, 384 = 300 + 80 + 4.
+Experimental probability: The number of times a specific event 
+occurs compared to the total number of trials.
+Exponent: A numeral written above and to the right of another 
+numeral (the base) to indicate how many times the base has been 
+multiplied by itself (53 = 5 × 5 × 5).
+Expressions: Mathematical phrases that may include numbers, 
+variables, and symbols for operations.
+Factors: The multiplicand and the multiplier in a multiplication 
+problem.
+Fractions: A fraction is a numeral of the form y/x where x ≠ 0. 
+Fractions involve division into equal-sized segments and a state­
+ment regarding the number of segments present, used, or acted 
+upon. For example, “John ate ¼ of a pie” implies that a pie was 
+divided into four equal parts and that John ate one of those parts.
+Functions: The relationship between a set of numbers.
+Graph: Visual representation of a relationship between two or 
+more sets of data.
+Greatest common factor: Largest factor of both the numerator and 
+the denominator; e.g., the greatest common factor for ⅝ is 4.
+532
+
+[p.533]
+Identity element: Any number multiplied or divided by 1 is equal 
+to that number.
+Improper fraction: A fraction whose numerator is equal to or 
+greater than the denominator.
+Interquartile range: A measure of variability consisting of the 
+difference between the first quartile and third quartile of a set of 
+data.
+Lowest common denominator: The least common multiple of the 
+denominators; e.g., the lowest common denominator for ½ + ½ + ¼ 
+is 12.
+Mean Absolute Deviation (MAD): The average distance between 
+each data point and the mean of a set of data.
+Mean: Calculated by adding a group of numbers and dividing the 
+sum by the number of numbers that were added; often referred to as 
+the “average.”
+Median: Middle number of a set of numbers that has been arranged 
+in order of magnitude.
+Minuend: Original quantity from which an amount is subtracted.
+Missing addends: A problem type in which students solve for an 
+addend (e.g., 6 + □ = 9).
+Mixed decimal: An expression consisting of a whole numeral and 
+a decimal: e.g., 3.24, 18.05.
+Mixed numeral: An improper fraction expressed as a whole num­
+ber and a fraction.
+Mode: The most frequently occurring value in a collection of 
+numbers.
+Multiplicand: The number of units in each equal set.
+Multiplication: The process of combining a specific number of 
+sets, each including an equal number of elements, into a single 
+larger set.
+Multiplier: The number of sets in the multiplication process.
+Negative integers: Whole numbers less than zero.
+Numeral: The symbol associated with a particular number.
+Numerator: The top number in a fraction.
+Ordinal counting: Counting associated with position (first, second, 
+third, etc.).
+Percent: The symbol % is read “percent.” It represents the ratio of 
+two quantities with the denominator being hundredths. The frac­
+tion ⅜ may be converted to an equivalent fraction, 4θ∕ιoo, which in 
+turn may be expressed as 40%. When presenting the various forms 
+of rational numbers, teachers must consider their interrelatedness. 
+Problem-solving strategies designed for teaching fractions should 
+be presented in a manner that will prepare students for decimals. 
+Likewise, the strategies presented for decimals should prepare 
+students for percent.
+Percentage: The number obtained by finding the percent of another 
+number.
+Perimeter: The perimeter of a polygon is the sum of the length of 
+each of its sides.
+Glossary 533
+Pi: The ratio of a circle’s circumference to its diameter, commonly 
+approximated as 3.14.
+Place value: Each digit has 10 times the value of the digit immedi­
+ately to its right in our decimal system.
+Positive integers: Whole numbers greater than zero.
+Prime factors: Factors of a number that are also prime numbers.
+Prime numbers: Whole numbers greater than 1 that are evenly 
+divisible only by 1 and themselves.
+Product: The answer in a multiplication problem. The number des­
+ignating elements in the combined set of a multiplication problem; 
+i.e., the sum of all the equal sets.
+Proper fraction: A fraction whose numerator is less than its 
+denominator.
+Quotient: The factor solved for in a division problem. It is written 
+above the division sign:
+3
+3 in 2j6
+Radius: The radius of a circle is the distance between the midpoint 
+of the circle and the edge of the circle.
+Range: The difference between the smallest and largest number in 
+a set.
+Ratio: The numerical expression of the relationship between two 
+comparable quantities. Usually the ratio is the result of dividing the 
+first quantity by the second.
+Rational counting: Coordinating counting with touching objects to 
+determine the quantity of a group.
+Ray: A portion of a line that starts at a certain point and continues 
+in a particular direction with no end.
+Regrouping: Rearranging a quantity of objects (not numerals) as a 
+greater and lesser unit; for example, 11111111111111111111111 can be 
+regrouped as lllllll I I 11 I 111 I I 1111.
+Renaming: Rewriting a numeral as a greater unit and a lesser unit; 
+e.g., in 75 — 19, 75 is renamed as 60 + 15.
+Rote counting: Identifying number names in sequence.
+Skip counting: Counting in which students say multiples of a base 
+number in order.
+Subtrahend: The number that is subtracted from another.
+Sum: The number of the new set formed by combining the smaller 
+sets (e.g., in 4 + 3 = 7, the sum is 7).
+Surface area: The total area of the surface of a three-dimensional 
+figure.
+Table: A table specifies the relationship among sets of numbers.
+Term: A number or variable, or numbers and variables, multiplied 
+by each other or separated by symbols (e.g. +, ÷, =).
+Theoretical probability: Predicting the likelihood of an event 
+using mathematics.
+Volume: The number of cubic units of space inside a three- 
+dimensional shape.

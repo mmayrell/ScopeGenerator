@@ -1,0 +1,1898 @@
+[p.164]
+Chapter
+10
+Division
+LEARNING OUTCOMES
+10.1 Discuss the two stages of teaching division to young students and the sequence 
+of problem types appropriate for each stage.
+10.2 Describe the ways in which division can be introduced using concrete 
+demonstrations.
+10.3 Outline instructional strategies to teach single-digit division including 
+problems without remainders, division facts, and problems with remainders.
+10.4 Discuss the differences in the instructional strategies for teaching multi-digit 
+division problems with one-digit divisors and two-digit divisors.
+SKILL HIERARCHY
+♦ •••••••
+As with all major operations, division is introduced in two stages: the beginning stage and the 
+multi-digit division stage. During the beginning stage, exercises providing concrete demon­
+strations of the division concept are presented. With concrete objects or pictures, the teacher 
+illustrates how groups of objects can be divided into equal-sized small groups, first illustrating 
+problems that have no remainder and, later, problems that have a remainder.
+During the multi-digit stage, students are taught algorithms to solve division problems that 
+have multi-digit quotients. A significant period of time is needed between the introduction of 
+the beginning stage and presentation of division algorithms. During that time, the teacher should 
+present exercises to facilitate memorization of basic division facts. Once students know their 
+division facts, division problems with one-digit divisors (and multi-digit quotients) can be intro­
+duced. Division problems with two-digit divisors are substantially more difficult and therefore 
+are introduced later. A list of the specific problem types and when they are typically introduced 
+appears in the Instructional Sequence and Assessment Chart.
+
+[p.165]
+Chapter 10 Division 165
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type Performance Indicator
+3 One-digit divisor and one-digit quotient; no remainder. 3jT5
+_R
+2)12 
+R
+5)20
+R
+3
+3
+One-digit divisor and quotient with remainder.
+Division equation with ÷ sign; no remainder; single-digit 
+divisor and quotient.
+5j38
+8÷2 = □
+20 ÷ 5 = □
+36 ÷ 9 = □
+2)9 5)22
+4 One-digit divisor; two- or three-digit dividend; two-digit 
+quotient; no remainder.
+5j85 2)172 2)54
+4 One-digit divisor; two- or three-digit dividend; two-digit 
+quotient; remainder.
+5)87 2∏73 2)55
+4 One-digit divisor; two- or three-digit dividend; quotient 
+has two digits, one of which is zero; remainder.
+5)53 9)274 9)366
+4 One-digit divisor; two- or three-digit dividend; two-digit 
+quotient; express remainder as fraction.
+Write the remainders as fractions.
+5)127 2j9T 9)364
+4 One-digit divisor; three- or four-digit dividend; three-digit 
+quotient.
+5)635 2)1343 2)738
+4 Same as 4 above; zero in quotient. 5)2042 2)1214 5)520
+4
+4
+Four-digit quotient; one-digit divisor, four- or five-digit 
+dividend.
+Rounding to the nearest 10.
+5)8753
+76 rounds off to _
+405 rounds off to
+297 rounds off to
+2)11325
+___ tens
+____ tens
+____ tens
+9)36286
+5 Two-digit divisor; one- or two-digit quotient; all estima­
+tion yields correct quotient.
+23)94 56)857 47)1325
+5 Same as above except estimation procedures yield quo­
+tient that is too large or small.
+24)82 67)273 35)7)4
+CONCEPTUAL UNDERSTANDING
+There are at least four basic ways to provide concrete demonstrations of division:
+1. Removing equivalent disjoint subsets: A picture of 6 fish is shown. The teacher says, “Let’s 
+put these fish in little bowls. WeTl put 2 in each bowl. Let’s see how many bowls we’ll need. 
+We put 2 in the first bowl. That leaves 4, and then we put 2 in the second bowl. Then we put 
+2 in the third bowl. We need three bowls if we put 2 fish in each bowl.”
+2. Arrays: A group of objects aligned in equal columns is an array.
+The teacher says, “Let’s see how many sets of 6 there are in 30.” The teacher counts each 
+set of 6 as he circles them and then summarizes, “There are 5 sets of 6 in thirty.”
+
+[p.166]
+166 Part II Basic Concepts and Skills
+3. Linear models: A linear model is usually characterized by use of a number line. In multipli­
+cation, students start at zero and jump to the right; 3 × 4 may be demonstrated as making 3 
+jumps of 4 units. Division problems are illustrated by saying, “If we start at 12, how many 
+jumps of 4 do we make to get back to zero?”
+0 1 2 3 4 5 6 7 8 9 10 11 12
+4. Repeated subtraction: This way of introducing division is similar to the removal of equiv­
+alent disjoint subsets. The teacher says, “We want to find out how many groups of 4 are in 
+12. Here’s one way to find out. We keep subtracting 4 until we run out. We subtract 4 from 
+12. That equals 8. Then we subtract 4 from 8. That equals 4, and 4 from 4 equals zero.” The 
+teacher then has students count the number of times they subtracted to derive the answer.
+Direct instruction procedures introduce the division concept through disjoint sets. Remov­
+ing equivalent disjoint sets easily illustrates the relationship between multiplication and divi­
+sion as well as the concept of a remainder. Initial direct instruction exercises teach students to 
+remove equivalent sets by circling groups of lines.
+Students must have mastered two preskills prior to the introduction of division. The first 
+preskill is knowledge of basic multiplication facts. Students need not have memorized all multi­
+plication facts before division is introduced, but they should at least have memorized multiplica­
+tion facts with 2 and 5 as factors. A second preskill is column subtraction with renaming, which 
+often is required when students subtract to find a remainder.
+Division is usually presented during mid-third grade. Exercises to teach division facts are 
+introduced about a week or two after the concept of division is introduced. We recommend 
+teachers present facts in related series as outlined in Chapter 6. Ample practice to enable stu­
+dents to develop fluency with a set of facts must be provided before a new set is introduced. 
+Cumulative review of all previously introduced facts also must be provided. Practice exercises 
+to teach basic division facts usually are provided daily for many months.
+The concept of remainder is introduced after students have learned about 20 division facts. 
+More specifically, we recommend that students know the division facts with divisors of 2 and 
+5 before the remainder concept is introduced. Similar to the introduction of division with­
+out remainders, the first exercises in which students are introduced to remainders require the 
+students to circle groups of lines. After several days, exercises to teach students to compute 
+quotients mentally in problems with remainders are presented. Practice on division facts with 
+remainders continues for several months.
+INSTRUCTIONAL PROCEDURES: BEGINNING DIVISION
+φ∙∙∙∙*∙*
+Problems Without Remainders
+Format 10.1: Introducing Division outlines the procedure for introducing division. The format 
+contains four parts. Part A begins with the teacher modeling and testing the translation of a divi­
+sion problem. For example, the problem 5)20 is read as “5 goes into 20 how many times?” rather 
+than “20 divided by 5.” The purpose of this translation is to draw attention to the divisor, since 
+it specifies the size of the equivalent groups, the critical feature in using lines to solve division 
+problems. Also, the translation facilitates the use of multiplication facts. Note that the students 
+are taught to translate problems so that they are read as a form of missing-factor multiplication.
+Part B is a structured board exercise in which the teacher demonstrates with lines the pro­
+cess of taking a big group and making smaller, equal-sized groups. When working the problem, 
+the teacher points out the function of the numbers in a problem. In 20 divided by 5, the 20 tells 
+how many lines in all, the 5 tells how many in each group, and the 4 tells how many groups. One 
+minor but important aspect of Part B addresses where the quotient is written. If the dividend is a 
+two-digit numeral, the quotient is written over the last digit of the dividend. For example, in the 
+problem 20 divided by 5, the quotient 4 is written over the zero. The purpose of having students
+
+[p.167]
+Chapter 10 Division 167
+write the quotient in the correct place is to prepare them for using the traditional algorithm to 
+solve problems with multi-digit quotients. Improper placement of digits in the quotient can lead 
+to errors:
+13 
+5)607
+5
+17
+15
+2
+Parts C and D are structured and less structured worksheet exercises. In both exercises, stu­
+dents are given problems for which lines are already drawn. Note that a variety of divisors can 
+be included in these exercises, since knowledge of facts is not required. Students make groups 
+the size of which are defined by the divisor. Note also that students are assigned only two or 
+three problems a day for practice. This exercise is designed to provide a conceptual basis for 
+understanding division. Therefore, teachers need only develop accuracy in such exercises; flu­
+ency is not as important at this point.
+Division Facts
+A week or so after students have been introduced to division through the line-circling exercises 
+described in Format 10.1, exercises to facilitate mastery of basic facts can begin. Exercises that 
+demonstrate the relationship between multiplication and division facts using fact number fami­
+lies are presented prior to exercises that promote memorization. (See Format 6.4 in Chapter 6.)
+3 × 4 = 12 4 × 3 = 12
+4 3
+3jl2 4∏2
+After relationship exercises are presented for several days for a set of facts, those facts 
+are incorporated into memorization exercises. We recommend that students continue saying the 
+facts in the statement form “5 goes into 20 four times” rather than “20 divided by 5 equals 4” 
+because the former uses the language presented when division problems with multi-digit quo­
+tients are introduced. Procedures to teach basic facts are discussed in more depth in Chapter 6.
+Problems with Remainders
+Format 10.2A:
+Introducing Division 
+with Remainders
+Watch how Kristen introduces 
+the concept of remainder.
+The concept of remainders is an important skill in and of itself and is also a preskill for the 
+short-form division algorithm involving multi-digit quotients. Problems with remainders can be 
+introduced when the students have learned division facts with divisors of 2 and 5.
+Format 10.2: Introducing Division with Remainders illustrates how to introduce the 
+remainder concept. In Part A, the teacher writes a problem on the board and has the students 
+read it. After students read the problem, the teacher draws lines. For 13 divided by 5, the teacher 
+draws 13 lines, then asks the students for the number in each smaller group and begins drawing 
+circles around groups of 5 lines. After drawing two groups, the teacher points out that he cannot 
+draw a circle around the last lines because there are not 5 lines. The teacher tells the students 
+that only two groups of 5 can be made and that the other lines are called the remainder. The 
+teacher then states the answer to the problem: 5 goes into 13 two times with a remainder of 3.
+In Parts B and C, the students are given a worksheet with several division problems with 
+remainders. In Part B, next to each problem is a diagram illustrating the problem. For example, 
+next to the problem 
+17 lines would be drawn with circles around groups of 5 lines:
+sp (mu)
+
+[p.168]
+168 Part II Basic Concepts and Skills
+The diagram is drawn so that the teacher may concentrate on the mechanics of where to write 
+the number of groups, how to figure out how many parts are used (multiply 5 × 3), where to 
+write the number of parts used (under the 17), and how to compute the remainder (subtract 15 
+from 17). Note that practice on this exercise is typically continued for a week or two, since the 
+exercise is designed primarily to teach conceptual understanding.
+Remainder Facts
+As mentioned earlier, students should have been taught at least 20 division facts before the 
+remainder concept is introduced. About a week after the remainder concept is introduced, exer­
+cises to teach students to mentally compute division facts with remainders can be introduced 
+using problems like those below:
+5)27 6)34
+This skill is a critical preskill for division problems with multi-digit quotients because most of 
+these problems will have remainders. For example, in
+3)147
+students must first determine that 3 goes into 14 four times with a remainder. After multiplying 
+3 × 4, they subtract to compute the exact remainder. Format 10.3: Introducing Remainder 
+Facts shows how to teach students to mentally compute division facts with remainders.
+Part A uses a diagram like the one below to introduce remainder facts. The teacher writes 
+numerals rows, circling numerals that are all multiples of a particular divisor. In the example 
+below, numerals with a divisor of 5 are circled.
+1 2 3 4 @) 6 7 8 9 (lθ)
+11 12 13 14 @ 16 17 18 19 @
+21 22 23 24 @
+If the teacher is introducing the second part of a series, the teacher writes the higher numer­
+als in the series. For example, if the second half of the 5 series is being introduced, the teacher 
+writes in a single row:
+@26 27 28 29 @ 31 32 33 34
+@ 36 37 38 39 @ 41 42 43 44
+@ 46 47 48 49 @
+After writing the series on the board, the teacher points out that the circled numerals are the 
+numbers that 5 goes into without a remainder. The teacher then models answering the question 
+of how many times 5 goes into various numbers; for example, “5 goes into 23 four times with 
+a remainder; 5 goes into 10 two times with no remainder; 5 goes into 9 one time with a remain­
+der.” Note that at this point, the quantity of the remainder is not stated. The teacher then tests the 
+students on a set of similar examples.
+In Part B, the teacher tests the students on various division facts with and without remainders, 
+letting the students refer to the diagram. Part C is a structured worksheet exercise designed to 
+provide practice that facilitates memorization of the facts. The students write the quotient and 
+then multiply and subtract to figure out the remainder. The teacher leads the students through 
+several problems and then has them complete the work independently.
+Parts A and B need to be presented only when the first several sets of facts are introduced. 
+Once students have learned to compute division facts mentally with twos and fives and nines, 
+problems with other divisors can be introduced without using the diagram as a prompt.
+The sequence in which new division facts with remainders are introduced parallels the 
+sequence in which basic division facts without remainders are introduced. (See Chapter 6 on 
+basic facts for the suggested sequence for introducing division facts.) About 2 weeks after a set 
+of division facts with a particular divisor has been taught, division facts with remainders for the
+
+[p.169]
+Chapter 10 Division 169
+same divisors and quotients are presented. For example, after students master the division facts 
+for fives:
+e.g., 5j30 5)35 5)40 5)45
+problems with the same divisor and quotient but with remainders are introduced:
+e.g., 5)32 5)41 5)43 5)48 5)36 5)38
+The daily worksheet exercise should include several problems. About half of the problems 
+should represent the most recently introduced set of division facts, while the other half of the 
+problems should consist of those previously introduced. Although most problems should have 
+remainders, some of the problems should not so that students don’t develop the misrule that all 
+division problems must have remainders. Finally, several problems in which the quotient is zero 
+should be included:
+5)3 9)6 2)T
+Teaching students to mentally compute the answer to such problems prepares them for long divi­
+sion problems in which zero is in the quotient.
+Figure 10.1 is a sample worksheet exercise based on the assumption that students have pre­
+viously mastered problems with divisors of 2, 5, and 9 and are being introduced to the first half 
+of the sevens series. Worksheet exercises like Figure 10.1 should be presented daily for several 
+months. Students who develop fluency in computing division facts with remainders are less 
+likely to have difficulty when more complex division problems are introduced.
+Diagnosis and Remediation
+Determining the cause of errors while introducing the division concept is fairly easy. The more 
+common causes, in addition to not knowing basic facts, are component-skill errors:
+1. Writing quotients that are either too small or too large
+2. Subtracting incorrectly
+3« Confusing the placement of the quotient and remainder
+Fact Errors Basic fact errors are illustrated below:
+5 4 4
+a. 7)33 b. 9)42 c. 7)32
+30 38 26
+As usual, the remediation procedure for basic fact errors depends on the number of fact 
+errors the student makes. If a student makes just occasional fact errors, the teacher simply 
+records the facts the student misses and incorporates those facts into practice exercises for 
+the next several lessons. If a student makes fact errors on more than 10% of the problems, he 
+should be tested individually to determine what action to take next. If the teacher finds that 
+the student responds correctly on the individual test to all the missed facts, the teacher should 
+tentatively conclude that the errors resulted from hurrying through the problems. The remedi­
+ation procedure is to increase the student’s motivation to perform accurately. If the student’s 
+test performance indicates he does not know many previously introduced basic facts, he should
+FIGURE 1O.1 Sample worksheet exercise
+7J1^8 9)46 7)26 7)31^ 2)7 5)32 7)35 9)27
+7)4 7)l7 9)58 9)65 7)27 5)3 7)4T 9)53
+5)3δ 7)π 7)25 7)32 9)3? 5)l8 7)3 7)25
+9)49 9)26 5)48 2)17 7)36 7)28 7Ji9 7)36
+
+[p.170]
+170 Part II Basic Concepts and Skills
+be tested on all previously taught multiplication and division facts and provided systematic, 
+intensive instruction on those facts. Also, for several weeks, the teacher should carefully control 
+the assignments given to the student so that only facts the student knows appear on worksheet 
+problems, if possible.
+Component-Skill Errors One component-skill error involves writing a quotient that is either 
+too large or small. Examples of this error are illustrated below. Problems a and b are examples of 
+computing too small a quotient; problems c and d are examples of computing too large a quotient.
+4 4 6 5
+a. 5j28 b. 7j35 c. 6∫32 d. 4∏9
+20 28 36 20
+If either type of error occurs in more than 10% of the problems students work independently, the 
+teacher should present an exercise that teaches students to compare the remainder and divisor to 
+determine the accuracy of their answer.
+The content of the exercise depends on the type of error made. If the student writes quo­
+tients that are too small:
+6
+30
+7
+Format 10.4A: Reme- 
+diation for Division 
+with Remainders 
+Quotients Too Small 
+Watch how Kristen efficiently 
+presents multiple practice 
+examples.
+Format 10.4B: Reme­
+diation for Division 
+with Remainders— 
+Quotients Too Small 
+Watch how Kristen has students 
+apply a rule for remainders.
+the teacher presents an exercise like the one in Format 10.4: Remediation for Division with 
+Remainders—Quotient Too Small.
+This format contains an exercise in which students are given a worksheet composed of divi­
+sion problems with the quotients written. In half of the problems the quotient is correct, and in 
+the other half the quotient is too small:
+3 
+9j38 
+27 
+11
+In Part A, the teacher tells students that they must compare the remainder and the divisor to 
+see if they worked the problem correctly. Note that the term “divisor” is not used by the teacher. 
+If students divide by 9, they are taught that the remainder must be smaller than 9; if they divide 
+by 5, the remainder must be smaller than 5; if they divide by 3, the remainder must be smaller 
+than 3; and so on. In Part B, the teacher leads students through determining if the quotient is 
+correct by completing the problem and comparing the remainder to the divisor. In problems in 
+which the remainder is bigger than the divisor, the teacher points out that another group can be 
+made and instructs the student to cross out the answer and, in its place, write the next higher 
+numeral. For example, in the problem
+<2 
+5jl6 
+10
+6 
+i Format 10.5B: Reme- 
+diation for Division 
+with Remainders—Quo­
+tients Too Large
+Watch how Kristen guides her
+students through correcting a 
+quotient that is too large.
+the teacher has the students cross out 2 and write 3 as the answer. The student then erases 10, 
+multiplies 3 × 5, and subtracts 15 from 16. The teacher guides students through several prob­
+lems and then has them work additional problems on their own. This format is presented daily 
+until students can successfully solve the problems for several consecutive days.
+For errors such as
+7
+5)32
+in which the answer is too large, the teacher should use the process illustrated in Format 10.5: 
+Remediation for Division with Remainders-Quotient Too Large. In Part A, the teacher guides
+
+[p.171]
+Chapter 10 Division 171
+the students through a set of problems on the board, pointing out that if they can’t subtract, the 
+answer is too big, and the numeral in the answer must be made smaller. In Part B, the teacher has 
+students work a set of examples in which half of the problems have a quotient that is too large 
+and half have a quotient that is correct. As with the previous format, this should be presented for 
+several lessons.
+Column subtraction errors are easy to spot and usually result from a failure to rename. 
+Problems a and b below illustrate subtraction errors.
+5 7
+7)41 , 9)71
+a∙ 35 b -63
+12
+The remediation procedure includes giving students a worksheet with several problems that 
+require renaming. The teacher guides students through the first few problems and then has stu­
+dents work the remaining problems on their own. For example, in the problem
+5
+7)41
+35
+the teacher would have the students identify the problem in the ones column, ask if they can sub­
+tract 5 from 1, and then prompt students to rename.
+The final type of error involves confusing placement of the quotient and remainder. The 
+remediation procedure is to present Part C of Format 10.3: Introducing Remainder Facts 
+with several problems and then supervise the students as they work additional problems 
+independently.
+A summary of the diagnosis and remediation procedures for beginning division appears in 
+Figure 10.2.
+FIGURE 10.2 Diagnosis and remediation of beginning division errors
+Error Pattern Diagnosis Remediation Procedures Remediation Examples
+Fact Errors
+4
+a. 7)35
+32
+Fact error: 35 ÷ 7 Provide systematic fact instruction 
+for frequent fact errors.
+÷ 7 facts
+Component-Skill Errors
+3
+b. 6)24
+18
+Student computes a 
+quotient that is too 
+small.
+Present Format 10.4: Remediation 
+for Division with Remainders— 
+Quotient Too Small.
+Partially worked problems with 
+the quotients provided. Half of the 
+quotients should be too small, and 
+half of them should be accurate.
+3 6
+9)42 9j56
+4
+c. 7)26
+28
+Student computes a 
+quotient that is too 
+large.
+Present Format 10.5: Remediation 
+for Division with Remainders— 
+Quotient Too Large.
+Partially worked problems with 
+the quotients provided. Half of the 
+quotients should be too large, and 
+half of them should be accurate.
+d°’ 56
+14
+Student subtracts 
+incorrectly.
+Present Parts C, D, and E of 
+Format 8.3: Subtraction with 
+Renaming.
+Partially worked problems with 
+accurate quotients in which the 
+students must subtract
+IM 
+e 7)29 
+28
+1
+Student misplaces 
+remainder and 
+quotient.
+Present Part C of Format 10.3:
+Introducing Remainder Facts.
+Division with remainder problems
+Note: After addressing any component-skill error, assess students using problems similar to the ones on which errors were originally 
+made in order to determine if the remediation was successful.
+
+[p.172]
+172 Part II Basic Concepts and Skills
+INSTRUCTIONAL PROCEDURES: MULTI DIGIT DIVISION
+• •••••a*
+The second stage of instruction in division focuses on multi-digit problems, which become quite 
+complex. Multi-digit quotients are grouped in this text according to the number of digits in the 
+divisor. Problems with one-digit divisors are discussed first followed by a discussion of prob­
+lems with two-digit divisors.
+Two division algorithms are taught in most commercial programs. One is commonly called the 
+long form; the other, the short form. The long-form and short-form algorithms are illustrated below:
+LONG FORM SHORT FORM
+7)382
+350 50 54
+33 7)382
+38 4 35
+4 33
+38
+54 4
+The advantage of the long-form algorithm is that it presents a clear interpretation of what is 
+involved in division. The disadvantage is that most upper-elementary teachers expect students 
+to use the short-form algorithm. The advantage of the short-form algorithm is the relatively easy 
+set of preskills that must be mastered prior to introducing division problems. The disadvantage 
+of the short-form algorithm is that students may not understand why it works.
+In this section, we discuss in detail the procedures for teaching the short-form algorithm. 
+We recommend this algorithm because it is the algorithm most teachers eventually encourage 
+students to use. Lower-performing students typically will be less likely to be confused if 
+only one algorithm is presented. The basic steps of the short-form algorithm are presented in 
+Summary Box 10.1.
+One-Digit Divisors
+Problems with one-digit divisors and multi-digit quotients are usually introduced in early fourth 
+grade. Students should know at least 30 to 40 basic division facts and the corresponding remain­
+der facts prior to the introduction of this type of problem.
+Two factors affect the difficulty level of single-digit divisor problems: the number of digits 
+in the quotient and the presence of a zero in the quotient. The more digits in the quotient, the 
+more difficult a problem is. For example, the first problem below is more difficult than the sec­
+ond problem
+5j835 5jl25
+because the former will have a three-digit quotient while the latter will have a two-digit quotient. 
+Each additional numeral in the quotient requires an extra set of computations. Similarly, a prob­
+lem such as the first one below is more difficult than the second
+rSUMMARY BOX 10.1_______________________________
+Division: The Short-Form Algorithm
+1. Students read the problem.
+2. Students underline the part of the problem that they work first.
+3. Students compute the underlined part and write the answer above the last underlined digit.
+4. Students multiply, subtract, and bring down the next numeral.
+5. Students read the "new" problem and compute a quotient.
+6. Students write the answer above the digit they just brought down.
+7. Students multiply and subtract to determine the remainder.
+8. Students say the problem and answer.
+
+[p.173]
+Chapter 10 Division 173
+because in the former problem, the quotient contains a zero. Without careful instruction, stu­
+dents are likely to leave out the zero.
+/ 
+5)52 
+5
+This section discusses procedures for teaching students to work all of these problem types.
+Problems with Two-Digit Quotient Format 10.6: Division with Two-Digit Quotients 
+illustrates the procedures for introducing division problems with two-digit quotients. The format 
+includes five parts. In Part A, the students are taught how to determine the part of the problem to 
+work first. This important preskill is necessary because division problems are worked a part at a 
+time. For example, when working the problem
+the student first works the problem
+5)37
+and then, after multiplying and subtracting:
+7 
+5)375
+35
+25
+the student divides 5 into 25. The strategy to determine which part to work first involves com­
+paring the divisor with the first digit of the dividend. If the first digit of the dividend is at least as 
+big as the divisor, only the first digit of the dividend is underlined. For example, in this problem, 
+the 9 is underfined:
+7)945
+because the part of the problem to work first is 7 goes into 9. If the first digit of the dividend is 
+not at least as big as the divisor, students are taught to underline the first two digits of the divi­
+dend. For example, in this problem, 23 is underlined:
+7)236
+because the part of the problem to be worked first is 7 goes into 23. Note that in presenting this 
+important preskill, the teacher does not use the words divisor or dividend, but rather refers to 
+“the number dividing by” and “dividing into.”
+Examples must be carefully selected for Part A. In half of the problems, the first digit of 
+the dividend should be smaller than the divisor. In the other half, the first digit of the dividend 
+should be the same or larger than the divisor. A variety of divisors can be included, since stu­
+dents are not actually working the problems at this point. Below is a sample set of problems 
+appropriate to use when teaching this preskill.
+a. 7)243 b. 5)85 c. 4)235
+d. 7)461 e. 9)362 f. 8)89
+Part B of this format is a worksheet exercise in which the students practice underlining the 
+part of the problem they work first. The teacher guides the students through several problems 
+and then has the students work the remaining problems on their own. The teacher repeats this 
+part daily until students can perform accurately without teacher assistance. Part C is a structured 
+board exercise in which the teacher demonstrates the entire short-form algorithm. Parts D and 
+E in Format 10.6 are structured and less structured worksheet exercises. Note that the teacher
+
+[p.174]
+174 Part II Basic Concepts and Skills
+specifies where digits in the quotient are to be written. The first digit in the quotient is to be writ­
+ten over the last underlined digit:
+3 1
+7)238 8)82
+Each succeeding numeral is to be written over the succeeding digit in the dividend:
+613
+7)429T
+As mentioned earlier, placing the digits of the quotient in the proper position helps students in 
+solving problems with zeros in the quotient as well as with problems containing decimals.
+The example-selection guidelines for all worksheet exercises remain the same as for 
+Parts A and B. However, because the students work the problems, the divisors should be limited 
+to familiar facts. Half of the problems should have two-digit dividends, and half should have 
+three-digit dividends. All problems should have two-digit quotients. Below is a sample set of 
+problems that might appear on a worksheet for this format. This worksheet assumes students 
+have learned division facts with 2, 9, 5, and 7 as divisors.
+a. 5)87 b. 9)324 c. 5)135
+d. 7)86 e. 2)134 f. 7)94
+g. 2)156 h. 7)79 i. 2)29
+Zero in the Quotient Problems with zero as the last digit of a two-digit quotient require 
+special attention. These problems should be introduced several weeks after division problems 
+with two-digit quotients have been presented.
+The critical part of the format occurs after students subtract and bring down the last digit. 
+For example, in
+3 
+1y2iA
+4
+the teacher asks, “7 goes into 4 how many times?” Since the answer is zero, the teacher writes 
+a zero above the 4. The teacher may have to model writing the answer for the first several prob­
+lems. The teacher-led parts of the format are presented for several days. Thereafter, three or four 
+problems with a quotient ending in zero should be included in daily worksheet exercises.
+Quotients of Three or More Digits Problems with quotients of three or more digits are 
+introduced only when students have mastered problems with two-digit quotients. No preskills 
+or board exercises need be presented. The teacher merely presents the less structured part of 
+Format 10.6 for several days, emphasizing the need to continue bringing down digits until an 
+answer has been written above the last digit of the dividend.
+Problems with a zero as one of the three digits in the quotient are introduced only after 
+students can solve problems without zeros in the quotient. Problems with a zero as the last digit 
+can be introduced a week or so after problems with three-digit quotients have been introduced. 
+These problems should cause students relatively little difficulty, since two-digit quotients with a 
+zero would have been taught earlier. On the other hand, problems with a zero as the second digit 
+of a three-digit quotient, such as
+103 407
+5)515 2)814
+will be difficult for many students. A structured worksheet exercise (Part D of Format 10.6) 
+should be presented to teach this type of problem. After bringing down the first numeral, 
+the teacher would model by saying, “The next part says 5 goes into 1; 5 goes into 1 zero times,
+
+[p.175]
+Chapter 10 Division 175
+so I write 0 in the answer. What is zero times 5? So I write zero under the 1. Now we subtract 
+and bring down the next numeral.”
+10
+5)517
+5
+01
+The teacher presents the structured worksheet exercise for several days with three or four 
+problems. Next, a less structured worksheet exercise containing about 10 problems, three or 
+four of which have zero as the middle digit, is presented. Supervised practice is continued until 
+students develop accuracy.
+Problems with quotients of four or more digits are usually presented in fourth grade. For 
+students who have mastered all types of problems with three-digit quotients, these longer prob­
+lems should cause little difficulty.
+Self-Checking After students become proficient in working division problems with remain­
+ders, they should be taught to check their answers. A self-checking procedure for division involves 
+having students multiply the divisor and quotient and add the remainder, if there is one. The 
+teacher can introduce self-checking on a worksheet exercise in which the problems are already 
+worked with about half of them having incorrect answers. The teacher instructs the students to 
+check the answers using the self-checking strategy and to correct any mistakes they identify.
+Two-Digit Divisors
+Solving problems with two-digit divisors requires the integration of numerous component skills 
+into a fairly lengthy strategy. The steps in the short-form algorithm for two-digit divisors are 
+outlined in Summary Box 10.2.
+The complexity of problems with two-digit divisors is affected mainly by whether the esti­
+mating, or rounding off, procedure produces a correct quotient. In some cases, the estimate may 
+yield a quotient that is too large. For example, in the problem
+53)203
+students round off 53 to 5 tens and 203 to 20 tens and then determine how many fives in 20. The 
+estimated quotient, 4, when multiplied by 53, equals 212, which is too large to be subtracted 
+from 203. Since the estimate yielded too large a quotient, the actual quotient must be 3, not 4.
+In contrast, other estimates may yield a quotient that is too small. For example, in the 
+problem
+56j284
+when 56 is rounded off to 6 tens and 284 is rounded off to 28 tens, the estimate is a quotient of 4. 
+However, 56 × 4 is 224, which when subtracted from 284 leaves a difference of 60, from which 
+another group of 56 could be made. Because the estimated quotient yields too small a quotient, 
+the actual quotient must be one larger than 4. Problems in which the estimated quotient is too 
+large or too small are more difficult and should not be introduced until students can work prob­
+lems in which the estimated quotients prove to be correct.
+SUMMARY, BOX 10.2
+Division: Short-Form Algorithm—Two-Digit Divisors
+1. Students read the problem.
+2. Students underline the part to be worked first.
+3. Students write the rounded-off problem.
+4. Students compute the division problem using the estimate from the rounded-off problem.
+5. Students multiply and determines if she can subtract.
+6. Students adjust the quotient if the estimate is not correct (using the rules, if you can't subtract, 
+make the answer smaller; if the remainder is too big, make the answer bigger).
+7. Students compute the division problem and read the problem with the answer.
+
+[p.176]
+176 Part II Basic Concepts and Skills
+Preskills Students should have mastered all of the preskills needed to solve division prob­
+lems with one-digit divisors before problems with two-digit divisors are introduced. Additional 
+preskills that need to be taught include rounding off numbers to the nearest tens unit, which is 
+discussed next, and multiplying multi-digit numbers, which was discussed in Chapter 9.
+Rounding off numbers to the nearest tens unit is a critical skill for problems with two-digit 
+divisors. The first part of the strategy teaches students to estimate how many groups the size of 
+the divisor can be made from the dividend. For the problem
+54jT86
+the teacher asks, “How many times does 54 go into 186?” The estimate is derived by rounding 
+off and expressing both the divisor and dividend as tens units: 54 is rounded to 5 tens and 186 is 
+rounded to 19 tens. The students then figure out how many fives are in 19.
+Format 10.7: Rounding to Nearest Tens Unit shows how to teach students to round off 
+numbers to the nearest tens unit. In Part A, the teacher models and tests converting a tens num­
+ber that ends in zero to a unit of tens: 340 equals 34 tens, 720 equals 72 tens, 40 equals 4 tens. 
+The teacher repeats a set of six to eight examples until the students can respond correctly to 
+all of the examples. In Part B, the teacher models and tests rounding numbers that end in any 
+digit to the nearest tens unit. The teacher writes a numeral on the board and asks the students if 
+the number is closer to the tens number preceding it or following it. For example, after writing 
+238 on the board, the teacher asks the students if 238 is closer to 230 or 240. After the students 
+respond “240,” the teacher asks, “So how many tens is 238 closest to, 23 tens or 24 tens?”
+Part C is a worksheet exercise in which the student must write the tens unit closest to the 
+number (342 = □ tens). Students may require several weeks of practice to master this skill. 
+However, division problems with two-digit divisors should not be introduced until students mas­
+ter this preskill.
+Several example-selection guidelines apply to this format: (a) half of the numbers to be 
+rounded off should have a numeral less than 5 in the ones column, while the other half should 
+have 5 or a numeral greater than 5; (b) about two-thirds of the examples should be three-digit 
+numbers and one-third, two-digit numbers, so that practice is provided on the two types of num­
+bers students will have to round off; and (c) numbers that may cause particular difficulty for 
+students should not be included in initial exercises.
+Two types of numbers may cause difficulty: (a) numbers in which the last two digits are 
+95 or greater (397, 295, 498), which require rounding off to the next hundreds grouping (397 
+rounds off to 40 tens, and 295 rounds off to 30 tens), and (b) numbers that have a zero in the tens 
+column (408, 207, 305). Special emphasis should be given to these two types of examples about 
+a week after the format is initially presented.
+Problems with Correct Estimated Quotients Initially, division problems with two-digit 
+divisors should be limited to problems in which the estimated quotients are correct. Also, the 
+initial problems should involve a one-digit quotient. Problems containing a two-digit quotient 
+can usually be introduced several days after problems with a one-digit quotient are presented.
+£ Format 10.8B:
+Correct Estimated 
+Quotients with Two-Digit 
+Divisors
+Watch how Kristen introduces 
+the box for rounding off.
+The process for teaching correct estimated quotients with two-digit divisors appears in 
+Format 10.8: Correct Estimated Quotients with Two-Digit Divisors. It includes four parts. 
+Parts A and B teach preskills unique to the short-form algorithm: horizontal multiplication and 
+estimating a quotient by rounding off the divisor and dividend.
+Part A teaches students to multiply the estimated quotient and divisor, which are written 
+horizontally, and to place the product below the dividend. In the problem
+57)391
+the estimated quotient 6 and the divisor 57 are multiplied. The student first multiplies 6 × 7, 
+which is 42. The 2 is placed under the 1 in the dividend, and the 4 is placed over the 5 in the 
+divisor:
+4 6
+57j391
+
+[p.177]
+Chapter 10 Division 177
+The student then multiplies 6X5 and adds the 4. The total 34 is written under the 39 in the 
+dividend:
+4 6
+57)391
+342
+Part B presents the rounding-off strategy to determine the estimated quotient. The teacher 
+writes a problem on the board and next to the problem writes a box with a division sign:
+37jl582
+The rounded-off problem is written in the box. First, the teacher has students read the prob­
+lem (37 goes into 1582) and underline the part to work first (37 goes into 158). The students 
+then round off 37 to 4 tens and 158 to 16 tens and write the rounded-off problem in the box:
+4jl6
+After rounding off, the students figure out the answer to the rounded-off problem and write the 
+answer above the last underlined digit in the original problem:
+4
+37)1582 4)16
+Parts A and B can be introduced at the same time. Note that both parts contain two sections. 
+In the first section of each part, the teacher presents several problems on the board. In the second 
+section, the teacher leads the students through several worksheet problems and then has them 
+work several problems on their own. When students can independently work most of the prob­
+lems correctly, the teacher can introduce the entire strategy. Students must be able to perform 
+the multiplication and estimation skills accurately before the entire strategy is presented in Part C.
+Part C is a structured worksheet exercise in which students are guided through all of the 
+steps in the strategy. For about the first two weeks, the boxes for rounding off should be included 
+on students’ worksheets. A sample problem on a worksheet would looks like this:
+37)1582
+The upper box is for writing the rounded-off problem for the first part of the problem; the lower 
+box is for writing the rounded-off problem for the second part of the problem .
+Two example-selection guidelines are important to this format. First, all of the problems 
+must yield estimated quotients that are correct. Second, in half of the problems, the first two 
+digits in the dividend must be less than the divisor:
+37)2431 52)4681
+while in the other problems, the first two digits must be greater than the divisor:
+37)444 52)838
+Several problems with a one-digit quotient should be included in supervised and independent 
+worksheets. The variety of problems requires students to use the steps of determining which part 
+to work first.
+Problems with Incorrect Estimated Quotients In a minor, but still significant, proportion 
+of problems with two-digit divisors, one or more estimated quotients will prove to be incorrect. 
+For example, in the problem
+39)155
+
+[p.178]
+178 Part II Basic Concepts and Skills
+the estimated quotient would prove too large, since 4 × 39 equals 156. Problems in which the 
+estimated quotient is incorrect should be introduced about a week after students have devel­
+oped accuracy in working problems in which the estimates are correct. The initial problems 
+presented should yield a one-digit quotient. The steps for presenting these problems appear in 
+Format 10.9: Incorrect Estimated Quotients.
+The format includes two parts. Part A focuses only on the skill of determining if the esti­
+mated quotient is correct and what to do if it is not correct. Separate sequences of steps are 
+indicated for problems in which the estimated quotient is too large and for problems in which 
+the estimated quotient is too small. The rules in the format are designed to minimize student 
+confusion (“If you can’t subtract, make the answer smaller. If the remainder is too big, make the 
+answer bigger.”).
+In Part A, the students are given a worksheet on which the estimated quotient is written in 
+each problem. The worksheet includes a variety of problems. One-third of the problems have a 
+quotient that is too large:
+5 
+34jl46
+One-third of the problems have a quotient that is too small:
+I 
+36jl93
+The final third of the problems contain estimated quotients that are correct:
+5 
+28jl53
+Students first multiply the quotient and divisor. If the product of these two numbers is 
+greater than the dividend, the teacher points out that the answer must be less. In the problem
+5
+34jl46
+ITO
+the teacher says, “We can’t subtract. We must make the answer smaller. Cross out the 5 and 
+write 4.” In problems in which the estimated quotient is too small, the teacher has the students 
+compare their remainder to the divisor. If the remainder is as big as or bigger than the divisor, the 
+quotient is to be made larger. For example, in the problem
+4 
+36∫193
+144
+49
+the teacher points out that another group of 36 can be made from 49, so the answer is made big­
+ger. The students erase the 4 in the answer and replace it with a 5.
+A special type of problem yields an estimated quotient of 10 or above. For these problems, 
+the teacher tells students that no matter how high the answer to the rounded-off problem, the 
+highest number used in an answer is 9. For example, even though rounding off yields 11 as an 
+estimated quotient, the student still uses 9 as the quotient. Several problems of this type should 
+be included in the exercises.
+24)228 as 2j23
+Practice on problems yielding an incorrect quotient is continued daily for several weeks. 
+During this time, problems are limited to those that have one-digit quotients. Problems with 
+multi-digit quotients are not introduced until students are successful at working problems with 
+single-digit quotients. The teacher should prepare worksheets containing a variety of problems. 
+Figure 10.3 includes sets of problems that can be used in these exercises.
+
+[p.179]
+Chapter 10 Division 179
+Estimate Yields Quotient That Is Correct
+FIGURE 10.3 Examples of two-digit divisor problems with single-digit quotients
+34)l02 82)59T 37)1723 72)3924 73)2308 53)230 27)94 52)2731
+53)1752 29)2150 48)268 51)78 68)1528 27)941 51)2398 39)94
+90)673 80)7485 19)813 86)5000 40)289 48)269 12)384 41 )987
+25)896 67)242 82)370 89)6703 58)1256 16)415 32)197 11)48
+45)968 93)5780 42)534 75)183 28)154 36)2000 84)991 60)2486
+Estimate Yields Quotient Too Large
+73)289 84)246 91)632 64)3321 53)1524 16)60 23)i7θ 13)68
+93)2724 24)900 44)216 72)354 82)2401 52)1020 31)1500 31)18O
+54)l02 71)3520 41 )2450 72)2815
+Estimate Yields Quotient Too Small
+267185 35)175 38)193 35)1651 25)1852 46)283 86)260 75)300
+37)2483 47)1898 57)342 29jTl4 48)3425 46)1823 85)6913 45)238
+58)232 36)1892 16)86i 17)698
+Problems in Which Estimated Quotient Is Greater Than 9
+23)214 21)200 34)312 73)725 74)725 43)412 24)238 14)l2δ
+13jl04 32)304
+Note that problems in which the estimated quotient is too small are particularly difficult for 
+students. In order to prepare students for this format, the teacher should present an exercise for 
+several days prior to introducing Format 10.9, focusing on when a remainder is too big. In this 
+exercise, the teacher writes about six problems with two-digit divisors on the board and models 
+how to determine if the remainder is too big.
+Diagnosis and Remediation
+Division problems may be worked incorrectly for numerous reasons. Fact errors may be com­
+mon in the multi-digit stage of division however, the procedures for diagnosing and remediating 
+fact errors remain the same as described earlier in this chapter.
+Component-Skill Errors Common component-skill errors are summarized in the diagnosis 
+and remediation chart in Figure 10.4. The remediation procedures usually involve presenting 
+a structured worksheet exercise focusing on the particular component-skill error made by the 
+students. Types of errors may include incomplete quotients and quotients that are too small or 
+too large.
+Students may compute an incomplete quotient for a variety of reasons: (a) failure to bring 
+down a digit, (b) failure to write a quotient above the last digit of the dividend, (c) confusion 
+caused by zeros in the quotient, and (d) misalignment. To determine the cause of an incom­
+plete quotient, the teacher may analyze student work and/or interview the student. When a type 
+of error occurs frequently, remediation is necessary. Figure 10.4 outlines specific remediation 
+procedures for each type of incomplete quotient error. As previously stated, the remediation 
+includes a structured or less structured worksheet presentation by the teacher followed by addi­
+tional practice. The original worksheets can be presented to the students after remediation to 
+assess the students for mastery. Students should complete at least 90% of the original problems 
+correctly.
+
+[p.180]
+180 Part II Basic Concepts and Skills
+FIGURE 10.4 Diagnosis and remediation of multi-digit division errors
+Error Pattern Diagnosis
+Component-Skill Errors
+a. 65 
+37)24319 
+222 
+~2^11
+185 
+26
+Student computes an 
+incomplete quotient: 
+does not write a quo­
+tient for the last digit.
+b. 17 
+25)4319 
+25 
+189 
+175
+Student computes an 
+incomplete quotient: 
+does not bring down a 
+digit.
+14
+c. 90 
+52)46815 
+468
+15
+Student computes an 
+incomplete quotient in 
+problems with zero in 
+the quotient.
+d. τ__ 7_ 
+27)2248
+189
+Student computes an 
+incomplete quotient 
+because of misalignment 
+of products.
+e. _ __£ 
+39)T55
+156 
+1
+Student computes a 
+quotient that is too 
+large or too small.
+Remediation Procedures
+Present the students with partially worked 
+problems on the graph or notebook paper 
+turned sideways. First, ask the students if last 
+digit in the dividend has an answer over it 
+(grid paper will make this clearer). Ask the 
+students to finish the partially completed 
+problems.
+Present the structured worksheet of
+Format 10.8: Correct Estimated Quotients 
+with Two-Digit Divisors. Be sure that students 
+underline the part that they work first and 
+emphasize step 6—"Is there a digit after the 
+underlined part to bring down?"
+Present problems that are worked up to the 
+point that students need to put a zero the 
+quotient. Ask the students if the divisor can 
+go into the number. In the example to the 
+right, the teacher would ask, "Can 29 go into 
+15?" Model putting the 0 in the quotient, 
+multiplying by zero, subtracting, and bringing 
+down the next digit. After modeling several 
+examples, provide the students with a less 
+structured worksheet including problems that 
+will have zero in the quotient and those that 
+will not.
+Present the structured worksheet of 
+Format 10.8: Correct Estimated Quotients 
+with Two-Digit Divisors. Present the problems 
+on graph or grid paper. Emphasize where the 
+students place the digits when multiplying.
+Present Format 10.9: Incorrect Estimated 
+Quotients.
+Remediation
+Examples
+2 2
+41)9 3 8
+82
+118
+8 2
+3 6
+6
+79)24861
+1 
+29)3056 
+q22 
+15
+27)2248
+84)246
+o2
+25)78
+50
+28
+Note: After addressing any component-skill error, assess students using problems similar to the ones on which errors were 
+originally made in order to determine if the remediation was successful.
+The second type of error students commonly make is computing a quotient that is too large 
+or too small. Although this type of error is usually obvious, the teacher may interview the stu­
+dent to confirm the diagnosis. Remediation for this type of error involves presenting Format 
+10.9: Incorrect Estimated Quotients. The teacher would begin with the structured worksheet, 
+Part A, followed by the less structured worksheet in Part B. As with most types of errors, the 
+original worksheet can be given to the students as an assessment. At least 90% of the original 
+problems should be solved correctly to demonstrate mastery.
+
+[p.181]
+Chapter 10 Division 181
+APPLY WHAT YOU LEARNED
+Click on the √ to answer the questions online.
+1. Describe the problem type that each example below represents. List the problems in the order they 
+are introduced.
+5)128 5)23 2)136 5)20 5)153
+27∏22 5)736 27)136 5)526
+2. What is the recommended procedure for introducing the concept of division in this text? Why is this 
+procedure recommended?
+3. Below is an excerpt from the independent worksheet to be given to students who have just demon­
+strated accuracy in solving problems with a one-digit divisor and a three-digit quotient. The teacher 
+has made some errors in constructing the worksheet. Identify the errors the teacher has made.
+7)932 5)1432 3)1214 5)3752
+2)714 9)1436 5)823 6)1443
+4. Below are eight problems that appeared on a worksheet to be done independently by the students in 
+Ms. Adams’s math group. Below each student’s name are the problems missed by the student. For 
+each student, specify the probable cause or causes of the student’s errors. Describe the remediation 
+procedure.
+6)8324 4)12385 7)493 8)7200 5)5214 7)9222 5)8253 9)72990
+Mia
+833SA2 
+9)72990 
+70
+29
+27
+29
+27
+20
+78
+2
+925 
+8)7200
+70
+20
+76
+7/0
+Damitri
+396Pj 
+4)12385 
+72.
+38
+36
+25
+27/
+7
+Julio
+737(⅛ 
+7)9222
+7
+22
+27
+72
+7
+5
+77^RT∕ 
+5)524
+5
+27
+20
+77/
+70
+7/
+
+[p.182]
+182 Part II Basic Concepts and Skills
+5. Below is an error made by Charles on a worksheet assignment. Describe what the teacher says in 
+making the correction.
+4^40
+36jl84
+40
+6. Write the structured worksheet part of a format to present this problem:
+7)213
+7. Specify the wording the teacher uses to correct the following errors:
+a. 27)482 5)T⅞
+b. 27)482
+8. Below is an excerpt from the independent worksheet to be given to students who have just demon­
+strated accuracy in solving problems with two-digit divisors and one- or two-digit quotients, in which 
+estimating produces proper quotient. Indicate the inappropriate examples.
+23)989 34jl48 76)793
+58)2938 31)283 49)1638
+Format 10.1
+INTRODUCING DIVISION
+TEACHER STUDENTS
+Part A: Translating Division Problems
+1. (Write these problems on the board.)
+3 9 5 4
+5)l^5 2)18 6)30 3jl2
+5 4 7
+4)20 7)28 3)2T
+This is a division problem. What kind of problem?
+It says (Point to 5.) 5 goes into (Point to 15.) 15 (Point to 3.) three times.
+What does the problem say? (Point to 5, then 15, then 3 as students answer.
+Repeat step 1 with the problems below.)
+9 5
+2∏8 6)30
+42. (Point to 3yy2.) What does this problem say?
+(Point to 3, then 12, then 4 as students answer. Repeat step 2 with the 
+problems below.)
+5 4 7
+4)20 7)28 3)2T
+(Give individual turns to several students.)
+A division problem
+5 goes into 15 three times.
+3 goes into 12 four times.
+
+[p.183]
+Chapter 10 Division 183
+TEACHER
+Part B: Structured Board Presentation
+1. (Write on board: 5jl5j
+What kind of problem is this?
+This problem says 5 goes into 15. What does this problem say? (Point to 5, 
+then 15.)
+We have to find out how many times 5 goes into 15. When we divide, 
+we start with a big group and make equal-sized smaller groups. (Write 
+15 lines on board.)
+2. This is a group of 15 lines. I want to divide this group of 15 lines into 
+smaller groups. Each smaller group will have 5 lines in it. How many 
+lines will be in each smaller group?
+3. I'll touch the lines. You count. (Touch five lines.) This is a group of 5, so 
+I'll put a circle around it. (Circle five lines.)
+(Repeat step 3 with the remaining groups of five lines.)
+4. We divided 15 into groups of 5. Let's count the groups. (Touch each 
+group.)
+5. How many times does 5 go into 15? I write the 3 above the last digit
+15
+(Write 5j⅛
+Say what the problem tells us.
+(Repeat steps 1-5 with 2)8 J
+Part C: Structured Worksheet
+1. (Give students a worksheet like the following:)
+a. 5)20 b. 2)8 c. 2)12
+llllllllllllllllllll llllllll llllllllllll
+2. Touch problem a. That problem says 5 goes into 20. What does the 
+problem say?
+3. We have to find out how many groups of 5 we can make from 20. 
+There are 20 lines under the problem. Make groups of 5 lines each. 
+(Check students' papers.)
+4. How many groups did you make?
+Write 4 above the last digit in 20. (Monitor as students write 4.)
+5. Now the problem says 5 goes into 20 four times. What does the problem 
+say now?
+(Repeat steps 2-5 with remaining problems.)
+Part D: Less Structured Worksheet
+1. (Give students a worksheet with problems similar to the following:) 
+a. 2)T0.
+STUDENTS
+A division problem
+5 goes into 15.
+5
+1, 2, 3, 4, 5
+1, 2, 3
+3
+5 goes into 15 three times.
+5 goes into 20.
+5 goes into 20 four times.
+continued
+
+[p.184]
+184 Part II Basic Concepts and Skills
+Format 10.1 (continued)
+INTRODUCING DIVISION
+TEACHER STUDENTS
+1. Touch problem a. (Monitor as students touch 2)1OJ
+2. What does the problem say?
+3. How many in each group?
+4. Make the groups and write how many groups over the last digit in 10. 
+(Monitor as students make circles around every two lines and write 5.)
+5. Read the problem and the answer.
+2 goes into 10.
+2
+2 goes into 10 five times.
+Format 10.2
+INTRODUCING DIVISION WITH REMAINDERS
+TEACHER
+Part A: Introducing Remainders
+1. (Write the following problem on the board.)
+5)13
+(Point to 5∏3 J What does the problem say?
+2. First let's solve the problem by making lines. The problem asks how 
+many groups of 5 in 13, so I'll draw 13 lines. (Make 13 lines on the board.) 
+The problem asks how many groups of 5 in 13, so I'll put a circle around 
+each group of 5. (Count out each group of 5 aloud; after circling each 
+group, say,) Here's a group of 5. (After counting the last 3 lines, say,) We 
+only have 3 left so we can't make a group of 5.
+(mu)θ ιιι
+3. Now let's see how many groups of 5 there are; count the groups as I 
+touch them. (Touch groups as students count.)
+4. How many groups of 5 in 13?
+Yes, there are two groups. (Write gjy∣ J
+5. Are there lines left over?
+We call those lines the remainder. How many lines are left over?
+6. We say that 5 goes into 13 two times with a remainder of 3. 
+How many times does 5 go into 13?
+(See Video Part A)
+STUDENTS
+5 goes into 13.
+1, 2
+2
+Yes
+3
+Two times with a 
+remainder of 3.
+(Repeat steps 1-6 with the problems below.)
+2)9 9)21
+
+[p.185]
+Chapter 10 Division 185
+TEACHER STUDENTS
+Part B: Structured Worksheet
+1. (Give students a worksheet like the following:)
+a. 5123 (Tmj) Qm?) θ i i i
+b∙2j7 @0® 1
+c. 9)25 iiiiiii
+d. 5)l4 Q∣m) ∣∣∣∣
+2. Read problem a.
+3. The problem asks how many groups of 5 we can make from 23. Next to 
+the problem are 23 lines. A circle has been drawn around each group of
+5 goes into 23.
+5 lines. How many groups of 5 are there?
+Write 4 on the line above the 3. (Check students' work.)
+4. We want to figure out how many lines we used up, so we multiply
+4
+4 times 5. How do we figure how many lines we used up? Multiply 4 × 5.
+5. What is 4 × 5?
+6. Write 20 under the 23. We started with 23 and used up 20, so write 
+a minus sign in front of the 20. Read the subtraction problem we just
+20
+wrote. 23 - 20
+Subtract and write the remainder. What is 23 minus 20?
+7. We're all finished; 5 goes into 23 four times with a remainder of 3.
+3
+How many times does 5 go into 23?
+(Repeat steps 1-6 with problems b, c, and d.)
+Part C: Less Structured Worksheet
+1. (Give students a worksheet with several problems similar to Part B. Use 
+the following prompts as students work through the problems.)
+Four times with 
+a remainder of 3.
+2. Read problem__________ _________ goes into
+How many times does_________ go into__________?
+Write__ ______ above the_________ in__________
+_________ ti mes
+How do we figure how many lines we used?
+2. What is_________ times__________?
+Multiply_________ by
+continued
+
+[p.186]
+186 Part II Basic Concepts and Skills
+Format 10.2 (continued)
+INTRODUCING DIVISION WITH REMAINDERS
+TEACHER STUDENTS
+3. Write--------------- under the___________Put in the minus sign.
+4. Subtract. (Remind students to rename when applicable.)
+What is the remainder?
+5. How many times does_________ go into__________ ? _________ times with a 
+remainder of_________
+Format 10.3
+INTRODUCING REMAINDER FACTS
+TEACHER
+Part A: Structured Board Presentation
+1. (Write these numerals on the board.)
+1 234@6789@
+11 12 13 14 @ 16 17 18 19 @
+21 22 23 24 @
+Listen: 5 goes into the circled numerals without a remainder. Say the 
+numbers that 5 goes into without a remainder.
+2. Five goes into the other numbers with a remainder. (Point to 1, 2, 3, 4.) 
+These are numbers 5 goes into zero times with a remainder.
+3. My turn: How many times does 5 go into 2? Five goes into 2 zero times 
+with a remainder.
+How many times does 5 go into 2?
+How many times does 5 go into 4?
+4. (Point to 5.) Five goes into 5 one time. (Point to 6, 7, 8, 9.) These are 
+numbers 5 goes into one time with a remainder.
+How many times does 5 go into 8?
+How many times does 5 go into 6?
+5. (Repeat step 4 using 5 goes into 15 and then 5 goes into 19 and 5 goes 
+into 17.)
+6. (Repeat step 4 using 5 goes into 20, 5 goes into 24, 5 goes into 21. Tell 
+the students that 5 goes into these numbers two times.)
+Part B: Less Structured Board Presentation
+1. (Write these numerals on the board.)
+1 2 3 4@6789@
+11 12 13 14 @ 16 17 18 19 @
+21 22 23 24 @
+Say the numbers that 5 goes into without a remainder.
+STUDENTS
+0, 5, 10, 15, 20, 25
+Zero times with a remainder.
+Zero times with a remainder.
+One time with a remainder.
+One time with a remainder.
+5, 10, 15, 20, 25
+
+[p.187]
+Chapter 10 Division 187
+TEACHER STUDENTS
+2. (Point to 13.) Think. 5 goes into 13 how many times?
+To correct: (Point to 10.) Five goes into 10 two times. (Point to 11, 12, 13, 
+14.) These are the numbers 5 goes into two times with a remainder.
+Five goes into 13, two times with a remainder. (Repeat step 2.)
+3. (Repeat step 2 with 20, 24, 0, 3, 9, 16.)
+Part C: Structured Worksheet
+1. (Give students a worksheet with several problems similar to those below. 
+Use the following prompts as students work through the problems.) 
+a. 5)22 b. 5)16 c. 5)l0 d. 5)7
+2. Read problem__________
+Two times with a 
+remainder.
+_________ goes into
+3. How many times does_________ go into__________?
+To correct if a student says a number that is too low, as in ςγ=^, saY:) 
+We can make another group of five: 5 × 4 = 20.
+To correct if a student says a number too high, as in say:
+5 × 5 = 25. That's too big.
+4. Write_________ above the__________in__________
+What do you multiply? _________ times
+Multiply and subtract (Pause.) What is the remainder?
+How many times does_________ go into__________?
+(Repeat steps 2-4 with several more problems and then have students 
+work the rest on their own.)
+_________ times with a 
+remainder of_________
+Format 10.4
+REMEDIATION FOR DIVISION WITH REMAINDERS—
+QUOTIENT TOO SMALL (See Videos Parts A∕B)
+TEACHER STUDENTS
+G
+Part A: Recognizing Quotients That Are Too Small
+1. (Write this problem on the board.)
+5)28
+This problem says 5 goes into 28. We're figuring 5 into a number, so the 
+remainder must be smaller than 5.
+2. What does the problem say?
+3. So what do you know about the remainder?
+4. (Repeat steps 1-3 with 7)23 2)13 6)14 5)27 3)24J
+5 goes into 28.
+It must be smaller than 5.
+continued
+
+[p.188]
+188 Part II Basic Concepts and Skills
+Format 10.4 (continued)
+REMEDIATION FOR DIVISION WITH REMAINDERS—
+QUOTIENT TOO SMALL
+TEACHER STUDENTS
+0
+Part B: Writing the Correct Answer
+1. (Give the students a worksheet with the following problems.)
+4 . 4 2,3
+a∙ 5)28 b' 7)3T c' 9)24 d' 9)43
+8,5 6,5
+e∙ 5)42 t 2)13 9' 2)15 h' 5)28
+2. Problem a says 5 goes into 28 four times. We figure the remainder by 
+multiplying 5 × 4 and then subtracting. Do that on your paper.
+3. What's the remainder?
+4. Here's a rule: If the remainder is too big, we make the answer bigger. 
+What do we do if the remainder is too big?
+5. Is the remainder too big?
+So what must we do?
+The remainder is more than 5, so 5 can go into 28 another time. Cross 
+out the 4 and write 5. (Check.) Now erase 20; multiply and subtract to 
+figure the new remainder. What's the new remainder?
+(Note: If the answer to step 4 is no, tell students,) So the answer is 
+correct. Let’s go to the next problem (see step 5).
+6. Is the remainder too big?
+So the answer is correct. Read the problem.
+7. (Repeat steps 2-6 with additional problems, and then have students 
+work remaining problems on their own.)
+8
+Make the answer bigger.
+Yes
+Make the answer bigger.
+3
+No
+5 goes into 28 five times 
+with a remainder of 3.
+Format 10.5
+REMEDIATION FOR DIVISION WITH REMAINDERS—
+QUOTIENT TOO LARGE (See Video Part A)
+TEACHER STUDENTS
+O
+Part A: Recognizing Quotients That Are Too Large
+1. (Write this problem on the board.)
+6
+5)28
+30
+What does this problem say? 5 goes into 28 six times.
+
+[p.189]
+Chapter 10 Division 189
+TEACHER STUDENTS
+2. The problem is worked for you, but there is something wrong. Can you 
+subtract 30 from 28?
+3. Here's a rule: If you can't subtract, make the answer smaller. What do 
+you do if you can't subtract?
+4. We make the answer 1 smaller. What is 1 smaller than 6?
+(Erase 6 and write 5.) What is 5 times 5?
+5. (Erase 30 and write 25.) Can you subtract 25 from 28?
+What is 28 - 25?
+Read the problem.
+No
+Make the answer smaller.
+5
+25
+Yes
+3
+5 goes into 28 five times 
+with a remainder of 3.
+6. (Repeat steps 1-5 with several examples.)
+Part B: Writing the Correct Answer
+1. (Give the students a worksheet with the following problems.)
+6 . 4 2
+a' 5)28 b' 7)3T C 9)24
+. 5 8,7
+d' 9)43 e' 5)42 f' 2)13
+2. Look at the problems on your worksheet. Some of the answers are too
+big. You'll have to fix them.
+3. Look at problem a. What is 6 × 5?
+4. Can you subtract 30 from 28?
+What must you do?
+(Note: Do step 4 only if answer to step 3 is no.)
+5. Cross out the 6. What do you write?
+Work the problem. (Check students' work.)
+(Repeat steps 1-5 with additional problems, and then have students work 
+remaining problems on their own.)
+30
+No
+Make the answer 1 smaller
+5
+Format 10.6
+DIVISION WITH TWO-DIGIT QUOTIENTS
+TEACHER STUDENTS
+Part A: Determining Where to Begin
+1. When a division problem has lots of digits, we work the problem a 
+part at a time. We always begin a problem by underlining the first part 
+we work. Sometimes we underline just the first digit. Sometimes we 
+underline the first two digits.
+continued
+
+[p.190]
+190 Pari II Basic Concepts and Skills
+Format 10.6 (continued)
+DIVISION WITH TWO-DIGIT QUOTIENTS
+TEACHER STUDENTS
+2. (Write the following problem on the board.) 
+6)242
+Read the problem.
+We're dividing by 6. If the first digit in the number we're dividing is at 
+least as big as 6, we underline the first digit in 242. If 6 can't go into the 
+first digit, we underline the first two digits. Look at the numeral we're
+6 goes into 242.
+dividing into. The first digit we're dividing into is 2. Is 2 at least as big as 6? 
+So we underline the first two digits. (Underline 24.) 6)242
+The underlined problem says 6 goes into 24. What does the underlined
+No
+problem say?
+(Repeat step 2 with these problems.) 
+a. 5)87 b. 9)328 c. 4)38
+d. 6)62 e. 3)245 f. 7)832
+Part B: Worksheet on Determining Where to Begin
+1. (Give students a worksheet with the following problems.) 
+a. 7)248 b. 3)527 c. 7)486 d. 5)532
+e. 5)234 f. 6)184 g. 6)932 h. 4)128
+i. 4)436 j. 8)264
+6 goes into 24.
+2. Touch problem a. Read the problem.
+You're going to underline the part of the problem you work first. What
+7 goes into 248.
+are you dividing by? 7
+Is the first digit you're dividing into at least as big as 7? No
+So what do you underline? 24
+Underline 24. Say the underlined problem.
+(Repeat step 2 with five problems. Then have students underline the part 
+they work first in remaining problems.)
+Part C: Structured Board Presentation
+1. (Write the following problem on the board.)
+5)213
+7 goes into 24.
+Read this problem. 5 goes into 213.
+Tell me the part to underline. (Pause. Underline 21.) 5)213 21
+7^o correct: Look at the first digit. Is 2 at least as big as 5? No
+So what do you underline? 21
+What does the underlined problem say? 5 goes into 21.
+2. How many times does 5 go into 21? (Pause.)
+3. I'll write the 4 over the last digit underlined.
+(Write the following:)
+4
+5)213
+4
+
+[p.191]
+Chapter 10 Division 191
+TEACHER STUDENTS
+4. Now multiply 4x5. What is 4 × 5? 
+(Write 20.)
+20
+Now I subtract 20 from 21. What is 1 - 0? 
+(Write 1.)
+1
+5. (Point to 3.) What's the next digit after the underlined part?
+I bring it down and write it after the 1.
+(Write the steps in the problem so far.)
+4
+5?213
+20
+13
+3
+What numeral is under the line now?
+6. The next part of the problem says 5 goes into 13. What does the
+13
+problem say now? 5 goes into 13.
+How many times does 5 go into 13? (Pause.)
+I write the 2 above the digit I brought down.
+(Write this step in the problem.)
+42
+5)213
+20
+13
+2
+7. Now I multiply and subtract. What is 2 × 5? (Pause.) 10
+I write 10 under the 13. (Write 10.) What is 13 minus 10? (Pause.)
+8. The problem is finished. Every digit after the underlined part has a 
+digit over it. 5 goes into 213, forty-two times with a remainder of 3.
+3
+How many times does 5 go into 213?
+(Repeat steps 1-8 with 7)94 2)l35 3)65J
+Part D: Structured Worksheet
+1. (Give students a worksheet with problems similar to the following.) 
+3)137
+42 times with a remainder 
+of 3.
+Touch the first problem. Read the problem. 3 goes into 137.
+What do you underline? (Pause.) 13
+2. Underline 13. What does the underlined problem say? 3 goes into 13.
+3. How many times does 3 go into 13?
+Write 4 above the last digit you underlined.
+4
+4. What numbers do you multiply? 4 × 3
+What is 4 × 3? 12
+5. Write 12 under 13, then subtract. What is 13 - 12? 1
+continued
+
+[p.192]
+192 Part II Basic Concepts and Skills
+Format 10.6 (continued)
+DIVISION WITH TWO-DIGIT QUOTIENTS
+TEACHER STUDENTS
+6. What is the next digit in the number you're dividing into? (Pause.) 7
+Bring down the 7 and write it next to the 1. (Check students' work.) 4 
+3jT37 
+12
+17
+7. What numeral is under the line? 17
+What does this part of the problem say? 3 goes into 17.
+How many times does 3 go into 17? (Pause.) 5
+8. Write the 5 above the digit you brought down (Monitor student 
+responses.)
+9. What numbers do you multiply? 5 × 3
+What is 5 × 3? 15
+Write 15 under 17 and subtract. What is 17 - 15? 2
+Is there another numeral to bring down? No
+10. Every digit after the underlined part has a digit over it. So you finished
+the problem. What's the remainder? 2
+How many times does 3 go into 137?
+(Repeat steps 1-10 with additional problems.)
+45 with a remainder of 2.
+Part E: Less Structured Worksheet
+1. (Give students a worksheet with problems similar to the following.) 
+4)69
+Touch the problem. Read the problem. 4 goes into 69.
+Underline the part you work first. (Check students' work.) 4)69
+Say the underlined problem. 4 goes into 6.
+How many times does 4 go into 6? 1
+2. Write the 1, multiply, subtract, and then bring down the next digit. 
+(Pause.)
+What numeral is under the line now? 29
+3. Say the new problem. 4 goes into 29.
+How many times does 4 go into 29?
+Write 7 in the answer. Then multiply and subtract. (Pause and monitor
+7
+student responses.) Is there another numeral to bring down? No
+Is the problem finished? Yes
+4. How many times does 4 go into 69?
+(Repeat steps 1-4 with additional problems.)
+17 with a remainder of 1.
+
+[p.193]
+Chapter 10 Division 193
+Format 10.7
+ROUNDING TO NEAREST TENS UNIT
+TEACHER STUDENTS
+Part A: Expressing Numerals As Tens Units
+1. (Write the following numeral on the board: 190.)
+What number?
+Another way of saying 190 is 19 tens. What's another way of
+190
+saying 190?
+2. (Repeat step 1 with 80 and 230.)
+19 tens
+3. What's another way of saying 140?
+4. (Repeat step 3 with 280, 30, 580, 420, 60, 500, 280, 40, and 700.)
+Part B: Structured Board Presentation
+1. (Write the following numeral on the board: 186.)
+14 tens
+What number? 186
+2. Is 186 closer to 180 or 190?
+To correct: If we have at least 5 in the ones column, we round off to 
+the next higher tens unit. How many ones in 186? So we round 
+off to 190.
+190
+3. So is 186 closer to 18 tens or 19 tens? (Pause.)
+To correct: 186 is closer to 190. How many tens in 190?
+4. (Repeat steps 2 and 3 with 142, 83, 47, 286, 432, 27, and 529)
+Part C: Structured Worksheet
+1. (Give the students a worksheet with the following problems.)
+142__ tens 87___tens 537___ tens 497___tens
+287__ tens 426___tens 248___ tens 321___tens
+825__ tens 53___tens 632___ tens 503___tens
+546__ tens 182___tens 428___ tens 278___tens
+932__ tens 203___tens 561___ tens 426___tens
+2. Round off these numerals to the nearest ten. Write how many tens in 
+the rounded off numeral.
+19 tens
+3. Touch the first numeral. (Pause.) Read the first numeral. 142
+4. Think: 142 is closest to how many tens?
+To correct: Is 142 closer to 140 or 150? So, is 142 closer to 14 or 15 tens? 
+(Write the answer.)
+5. Write 14 in the blank. (Repeat steps 3-5 with several more problems and 
+then have the students complete the rest independently.)
+14 tens
+
+[p.194]
+194 Part II Basic Concepts and Skills
+Format 10.8
+CORRECT ESTIMATED QUOTIENTS WITH 
+TWO-DIGIT DIVISORS (See Video Part B)
+TEACHER STUDENTS
+Part A: Preskill—Multiplying Quotient Times Divisor Structured Board 
+Presentation
+1. (Write the following problem on the board.)
+4
+54)231
+This problem says 54 goes into 231 four times. What does the 54 goes into 231 four
+problem say? times.
+2. We have to figure out the remainder. We multiply 4 × 54. What do we 
+multiply? 4 × 54
+3. When 1 multiply 4 × 54, first 1 multiply 4 × 4, then 1 multiply 4 × 5. 16
+What is 4 × 4?
+1 write the 6 under the last underlined digit and write the 1 above the 
+5 in 54.
+(Write the 6 on the board.)
+4
+54)231
+6
+4. Now I multiply 4 × 5 and add the 1 I renamed. What is 4 × 5? 20
+And 1 more is? 21
+I write the 21 in front of the 6. (Write this step of the problem on the 
+board.)
+4
+54)231
+216
+5. What is 4 × 54? 216
+6. We subtract 216 from 231 to figure out the remainder. Can we start with No
+1 and subtract 6?
+We must rename. (Write this step:)
+2 1
+2 J 1
+What is 11 - 6? 5
+What is 2 - 1? 1
+7. 54 goes into 231 four times with a remainder of 15. Say that. 54 goes into 231 four times
+(Repeat steps 1-7 with the problems below.)
+3 4
+48)156 94)413
+with a remainder of 15.
+
+[p.195]
+Chapter 10 Division 195
+37)932 Σ
+TEACHER STUDENTS
+Part A: Preskill—Multiplying Quotient Times Divisor Structured Worksheet
+1. (Give students a worksheet with problems like the following.)
+3 . 6 5a' 27∏03 D' 46)278 C 14)80
+2. Read problem a. 27 goes into 103 three 
+times.
+3. You need to multiply 3 × 27. When you multiply 3 × 27, what do you 
+multiply first? 3 X 7
+4. What is 3 × 7? 21
+Write the 1 and the 2 tens. (Monitor student responses.)
+To correct: Write the 1 under the 3. (Pause.) Write the 2 tens above the 
+2 in 27.
+4. Now what do you multiply? 3 × 2
+What is 3 × 2? 6
+Add the 2 above the tens column. What's the answer?
+Write the 8.
+8
+5. Figure out the remainder. Be careful to rename.
+6. What is the remainder? 22
+Yes, 27 goes into 103 three times with a remainder of 22.
+Say that. 27 goes into 103 three times 
+with a remainder of 22.
+(Repeat steps 2-6 with several problems, then have students work 
+additional problems independently.)
+Part B: Preskill-Estimation Structured Board Presentation
+1. (Write the following problem and the box on the board.)
+continued
+What does the problem say? 37 goes into 932.
+2. We have to underline the part we work first. Does 37 go into 9? No
+Does 37 go into 93?
+So I underline the first two digits.
+3. I'll read the part we work first: 37 goes into 93. Say the part we work
+Yes
+first.
+4. To find out how many times 37 goes into 93, we must round off. The box 
+next to the problem is for rounding off.
+37 goes into 93.
+
+[p.196]
+196 Part II Basic Concepts and Skills
+Format 10.8 (continued)
+CORRECT ESTIMATED QUOTIENTS WITH 
+TWO-DIGIT DIVISORS
+TEACHER STUDENTS
+5. First I round off 37; 37 is rounded off to how many tens?
+(Pause and then write the four.)
+47
+93 is rounded off to how many tens? 
+(Pause and then write the 9.)
+4j9
+9
+Read the rounded-off problem.
+To correct: If we have at least 5 in the ones column, we round off 
+to the next higher tens unit. How many ones in 93? So we round 
+off to 9.
+6. Four goes into nine how many times?
+So in the problem we started with, I write 2 over the last underlined 
+digit. (Write the 2.)
+2
+37)932
+(Repeatsteps 1-6 with 24jl36 52)386 34)942.)
+Part B: Preskill-Estimation Structured Worksheet
+1. (Give students a worksheet with problems like the following.)
+2
+a. 79)246 J_____  b. 49)538 )
+C. 27)943 )______ d. 36)193 )
+2. What does problem a say?
+3. What digits do you underline? (Pause.)
+Underline the part you work first. Say the underlined problem.
+4. Let's write the rounded-off problem for 79 into 246 in the box. How 
+many tens does 79 round off to? (Pause.)
+Write 8 in the box. How many tens does 246 round off to? (Pause.)
+Write 25 in the box. Read the rounded-off problem.
+Eight goes into 25 how many times?
+5. Write the answer in the problem you started with. Write it above the 
+last underlined digit.
+(Repeat steps 2-4 with the remaining problems, then have students work 
+additional problems on their own.)
+4 goes into 9.
+79 goes into 246. 
+246
+79 goes into 246.
+8
+25
+8 goes into 25.
+3
+
+[p.197]
+Chapter 10 Division 197
+continued
+TEACHER STUDENTS
+Part C: Structured Worksheet
+1. (Give students a worksheet with problems like the following.)
+38)1432
+)
+)
+Read the problem.
+Underline the part you work first.
+38 goes into 1432.
+What did you underline? 143
+Read the underlined problem. 38 goes into 143.
+2. Write the rounded-off problem in the box. How many tens does 38 round 
+off to? (Pause.) 4
+Write 4. How many tens does 143 round off to? (Pause.) 14
+Write 14. Read the rounded-off problem. 4 goes into 14.
+3. 4 goes into 14 how many times? 3
+Write 3 above the last digit you underlined.
+4. Now we multiply 3 × 38. What is 3 × 8? (Pause.) 24
+Write 4 below the last underlined digit. Write the 2 above the 3 in 38. 
+(Pause.) Now multiply 3 × 3 and add 2. (Pause.)
+What's the answer? (Pause.)
+Write 11 next to the 4.
+11
+5. Now subtract 114 from 143. (Pause.)
+What is 143 - 114? 29
+6. Let's see if there’s a second part to work. Is there a digit after the 
+underlined part to bring down? Yes
+(If the answer to step 6 is no, skip steps 7-10 and go directly to step 11.)
+7. Bring down that digit. What numeral is under the line now? 292
+Say the new problem. 38 goes into 292.
+8. Let's write the rounded-off problem in the second box. How many tens 
+does 38 round off to? 4
+Write 4. How many tens does 292 round off to? 29
+Write 29. Read the rounded-off problem. 4 goes into 29.
+9. How many times does 4 go into 29? 7
+Write 7 in the problem you started with. Write it above the 2 you 
+brought down.
+
+[p.198]
+198 Part ∏ Basic Concepts and Skills
+Format 10.8 (continued)
+CORRECT ESTIMATED QUOTIENTS WITH 
+TWO-DIGIT DIVISORS
+TEACHER STUDENTS
+10. Now we multiply 7 × 38. What do we multiply? 7 × 38
+Multiply and write the answer below 292.
+(Pause.) What is 7 × 38? 266
+Subtract 292 - 266 to find the remainder. (Pause.) What's 292 - 266? 26
+Are there any more digits to bring down? No
+11. So you're done with the problem. How many times does 38 go
+into 1432? 37 times with a remainder
+of 26.
+(Repeat steps 1-11 with several more problems.)
+Part D: Less Structured Worksheet
+1. (Give students a worksheet with problems like the following.)
+18j604
+b_____
+b_____
+Read the problem. 18 goes into 604.
+Underline the part you work first. What did you underline? 60
+Read the underlined problem. 18 goes into 60.
+2. Write the rounded-off problem in the upper box. (Pause.)
+Say the rounded-off problem. 2 goes into 6.
+3. Write the answer, then multiply (Pause.) Say the subtraction problem. 60 - 54
+Subtract 60 - 54. (Pause.) What is 60 - 54? 6
+4. What do you do next? Bring down the 4.
+Do it.
+5. Say the new problem. 18 goes into 64.
+6. Write the rounded-off problem in the second box. (Pause.) Say the
+rounded-off problem. 2 goes into 6.
+7. Write the answer, then multiply and subtract. (Pause.)
+What is the remainder? 10
+8. Are you finished? How many times does 18 go into 604? 33 times with a remainder
+of 10.
+
+[p.199]
+Chapter 10 Division 199
+Format 10.9
+INCORRECT ESTIMATED QUOTIENTS
+7a. Now multiply 6 × 48.
+TEACHER STUDENTS
+Part A: Structured Worksheet
+1. (Give the students a worksheet with the following problems.)
+4 5 5
+a' 37∏42 d' 48)299 C 48)299
+.4 3 f 3
+79)T15 θ' 46)192 52)148
+4 h 5 29’ 82)318 34)178 L 26)δT
+2. The answers to some of these problems are wrong. To find out which 
+ones are wrong, you figure out the remainder. If you can't subtract, you 
+must make the answer smaller. If you find a remainder, but it is too big, 
+you must make the answer bigger.
+3. Touch problem a. What does the problem say? 37 goes into 142 four times.
+4. What are you going to multiply?
+Do the multiplication. Write the minus sign and stop.
+4 × 37.
+5. Say the subtraction problem. 142 - 148
+6. Can you subtract 142 minus 148?
+We can't subtract, so we must make the answer smaller.
+7. So you have to cross out the 4 and write a 3 above it. Do it, then erase 
+the 148.
+8. Now multiply 3 × 37.
+No
+9. Read the subtraction problem now. 142-111
+10. Subtract and figure out the remainder. What is the remainder?
+That’s all we do for now.
+(Steps 4a-8a are for problems in which the estimated quotient is too 
+small, as in the following problem.)
+5
+48)299
+31
+5a. Say the subtraction problem. 299 - 240
+Can you subtract 240 from 299?
+Subtract. (Pause.)
+Yes
+6a. What is the remainder? 59
+Is the remainder too big?
+To correct: What are we dividing by? Is the remainder at least as big 
+as 48?
+You can make another group, so we make the answer bigger. Cross out 
+the 5 and write 6. Erase 240.
+Yes
+continued
+
+[p.200]
+200 Part II Basic Concepts and Skills
+Format 10.9 (continued)
+INCORRECT ESTIMATED QUOTIENTS
+TEACHER STUDENTS
+8a. Read the subtraction problem now.
+Subtract.
+299 - 288
+9a. What's the answer? 11
+Can we make another group of 48?
+So we're all finished.
+(Repeat steps 2-10 or 5a-9a with three of the remaining problems. Have 
+students work the remaining problems on their own.)
+Part B: Less Structured Worksheet
+1. (Give students a worksheet with the following problems.)
+No
+a. 42)197 ) b. 36)203 )
+C. 58)232 ∣J_____
+2. Touch problem a. Read the problem.
+3. Underline the part you work first. (Monitor students' responses.)
+4. Write the rounded-off problem. (Pause.) Say the rounded-off problem.
+5. What is the answer?
+Multiply 5 × 42. (Pause.) Can you subtract?
+(Note: Present step 6 or 7.)
+6. (If the answer to step 5 is no, say,) So what must you do?
+Fix your answer then multiply and subtract.
+6. (If the answer to step 5 is yes, say,) Subtract_________ from__________
+What is the remainder? Is the remainder too big? (Continue if answer is 
+yes.) So what must we do? Erase_________ and write__________, then
+multiply and subtract. (Pause.) What is the remainder? Is that remainder 
+too big? So we're finished. Say the whole answer.
+(Repeat steps 2-6 with remaining problems.)
+42 goes into 197.
+4 goes into 20.
+5
+No

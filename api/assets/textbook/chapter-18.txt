@@ -1,0 +1,1807 @@
+[p.478]
+Chapter
+18
+Pre-algebra
+With Don Crawford
+LEARNING OUTCOMES
+18.1 Identify the recommended sequences for teaching skills in each of the 
+following topics: introducing the coordinate system and algebraic functions, 
+other types of numbers, expressions and equations, and ratio and proportions.
+18.2 Outline two ways in which teachers can integrate conceptual understanding 
+activities into instruction on specific instructional strategies.
+18.3 Discuss how the strategy in this text for teaching students about the coordinate 
+system differs from traditional algebra instruction on the coordinate system and 
+how the differences reduce student confusion.
+18.4 Discuss how understanding “other numbers,” such as integers, serves as a 
+prerequisite for algebraic reasoning.
+18.5 Describe how the equality principle taught in earlier grades is related to the 
+initial instruction in solving equations.
+18.6 Outline how the earlier work on equivalent fractions (Chapter 13) and problem 
+solving using tables (Chapter 11) is incorporated into the strategies for solving 
+ratio and proportion problems.
+18.7 Summarize the diagnosis and remediation procedures for addressing common 
+errors in early algebraic reasoning.
+Algebra is considered to be a “gatekeeper” subject because it is the first in a series of higher-level 
+math courses that prepare students for success in college and the workforce. Consequently, 
+pre-algebra instruction has been included in most commercial middle school curricula as a 
+means for preparing students for their high school math courses. This chapter on pre-algebra 
+addresses four major topics common to middle school courses that are designed to prepare 
+students for algebra: (a) the coordinate system and simple algebraic functions; (b) other types 
+of numbers such as prime numbers, factors, positive and negative integers, and exponents; 
+(c) expressions and equations; and (d) ratios and proportions. Content also commonly found in 
+pre-algebra courses includes many of the more complex skills found in the previous chapters on 
+fractions, percent and ratios, data analysis, probability, geometry, and problem solving.
+
+[p.479]
+Chapter 18 Pre-algebra 479
+SKILL HIERARCHY
+∙∙∙∙∙∙∙∙
+The specific skills for each of the four topics listed above are outlined in the Instructional Sequence 
+and Assessment Chart. The number associated with each skill indicates the grade level at which it 
+is commonly introduced. All of the pre-algebra skills listed may be taught by sixth grade; however, 
+in most commercial programs, pre-algebra skills are taught in seventh or eighth grade.
+Note that the skills under each heading are listed in order for that specific topic. The topics 
+may be taught in any order and simultaneously, with the exception of other types of numbers 
+(OT). Teaching positive and negative integers (found in “other types of numbers”) is a prerequi­
+site for mastering algebraic equations.
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART
+Grade Level Problem Type Performance Indicator
+Coordinate System and Functions (CSF)
+5 Plot points on coordinate
+system given x and y values 
+and reverse
+What letter is (x = 7, y = 5)?
+Write the coordinates for point A.
+5 Students complete a function
+table, plot the points found, and 
+connect the points in a line
+Complete the function table, plot the points, and connect 
+them with a straight line.
+continued
+
+[p.480]
+480 Part III Extended Concepts and Skills
+INSTRUCTIONAL SEQUENCE AND ASSESSMENT CHART (continued)
+Grade Level Problem Type Performance Indicator
+6 Given two pairs of x and y values, 
+students determine the function, 
+complete the function table, and 
+graph the points
+Given a line on the coordinate 
+system, find the points, complete 
+a function table, and find the 
+function
+Other Types of Numbers (OT)
+4
+4
+5
+Prime numbers
+Factoring
+When the total is positive, com­
+bine several subtractions and sev­
+eral additions and find the answer 
+(preskill for integers)
+Solve problems that involve mul­
+tiplication with addition and/or 
+subtraction (preskill for integers)
+Using a number line, combine 
+positive and negative integers with 
+either negative or positive totals
+Absolute value
+Name the prime numbers below 12.
+Give the prime factors for each of these numbers in this form 
+12 = 2 × 2 × 3: 36, 27, 51
+Find the answer to:0 + 18 - 12 + 6- 5- 4 + 9 =
+a. 4 + 6+1 b. 8-5 + 2
+×4 ×6
+-I. F l l÷+.H--∣...IH. I...I...I. H+. H4-10-9 -8 -7 -6 -5 -4 -3 -2 -1 0 1 2 3 4 5 6 7 8 9
+a. -6 + 5 = b. -4 - 2 = c. 8 - 10 =
+6 In each pair of numerals, write the one that is farther from zero: 
+a. -8, +5 b. +7, -4 c. -2, +9
+
+[p.481]
+Chapter 18 Pre-algebra 481
+7 Combine positive and negative a. +2 b. -3 c. -8
+integers without a number line -9 -4 +3
+7 Multiply by a positive or negative a. 2 + 4-1 b. 6 c. 9-8 + 4
+integer × -3 × -4 × -7
+7 Add and subtract positive and 
+negative integers
+a. -4+-3= b. -7--2 =
+8 Name the base and the exponent Name the base and the exponent for each of the following:
+from expanded notation examples a. 4 × 4 × 4 =
+and the reverse b. M×M×M×M×M=
+Write out the expanded notation problem expressed by each of the 
+following:
+c. 14 d. D3 e. 715
+8 Combining exponents Break the group of multiplied values into two groups, the part 
+underlined and the rest.
+6 × 6 × 6×6×6×6×6
+67 =__ X___
+Combine these two terms into one:
+45 × 43 =__
+8 Simplifying exponents Reduce the following terms:
+. .3×3×3×3×3×3×3
+3 3 × 3 × 3 × 3
+. . 7 × 7 × 7
+b 7 × 7 × 7 × 7 X 7 × 7 "
+Expressions and Equations
+6 Write and evaluate expressions a. Find the value of j when 5/ = 25.
+with letters for numbers in b. Find the value of e when 24 = e + 10.
+one-step problems rc. Find the value of r when — = 9.
+6 Write and evaluate expressions a. Find the value of m when 2m + 5 = 17.
+with letters for numbers in 4 1
+two-step problems b. Find the value of y when -y + 1-=2.
+c. Find the value of 7 when 43 = 57 - 7.
+Ratio and Proportion (R∕P)
+6 Ratio tables The ratio of sand to gravel in a mixture is 4 parts sand to 9 parts 
+gravel. If there are 260 pounds in the total mixture, how many 
+pounds of sand are there? How many pounds of gravel are there?
+7 Ratio tables problems using In a factory, of the employees were women. The rest were men.
+fractions for classes 5
+There were 890 employees. How many employees were men? How 
+many employees were women?
+7 Ratio tables problems using Abbey Hill is ~ as high as Howard Hill. Abbey Hill is 240 feet high. How
+fractions that compare 8
+high is Howard Hill? How much higher is Howard Hill than Abbey Hill?
+7 Ratio tables problems using 55% of the bagels are cheese. The rest of the bagels are plain. There
+percentages for classes are 9 plain bagels. How many cheese bagels are there? How many 
+bagels are there altogether?
+7 Ratio tables problems using Train A is 40% longer than train B. If train B is 400 meters long,
+percentages that compare how long is train A? How much longer is train A than train B?
+
+[p.482]
+482 Part III Extended Concepts and Skills
+CONCEPTUAL UNDERSTANDING
+∙∙∙∙∙∙∙∙
+Understanding algebra requires a conceptual understanding of the relationships and functions 
+of numbers. We recommend integrating activities that develop conceptual understanding in 
+two ways—either as an introduction to a topic or as a proof to show the reasoning behind a 
+specific procedure. As with the other topics covered in this text, conceptual understanding may 
+be developed using concrete objects (manipulatives), semi-concrete objects (drawings), and/or 
+real-world examples. Throughout this chapter, specific examples of exercises related to concep­
+tual understanding are embedded in the discussion of each of the four major topics.
+COORDINATE SYSTEM AND FUNCTIONS (CSF)
+• ∙ ∙ ∙ ∙ ∙ ∙ ∙
+The coordinate system and functions can be introduced to students as early as the fourth grade. 
+At the beginning levels, students use only positive integers. Building on their knowledge of 
+graphs and number lines (see Chapter 16), students learn that an x value is the distance of a point 
+to the right of zero. A y value is the distance of a point up from zero. Students begin by finding 
+the x value and the y value for given points on a coordinate system. After several lessons on find­
+ing values, students plot points on the coordinate system given the values.
+Traditional algebra instruction identifies points, or ordered pairs, on the coordinate system as 
+(5, 6), requiring students to remember that the first numeral is the x value and the second numeral 
+is the y value. However, students learn the coordinate system more easily if they initially receive 
+the points written as (x = 5, y = 6). Over time, students will memorize the order of x andy.
+Next, students learn to complete a function table such as the following.
+The teacher models how to apply the function to determine the y value when the x value is given. 
+In the preceding example, the teacher would model substituting 0 for x in the function x + 2 to 
+derive y (0 + 2 = 2; y = 2). After completing the table, the students would plot the points on 
+the coordinate system and connect the points with a straight line.
+After several lessons on completing function tables, students are ready to derive the func­
+tion when given two pairs of values. Initially, they are asked to choose between two possible 
+functions that fit the first pair of values, eliminating the function that does not fit the second pair 
+of values. Once students can choose the correct function, students are ready to derive the func­
+tion given at least two pairs of values. Students are then taught to plot points from the function 
+table on the coordinate system and draw a line. Format 18.1: Using and Plotting a Function 
+outlines procedures for teaching students how to derive a function, plot the points, and draw a 
+line representing the function. Later, the teacher would teach students how to derive the function 
+when given points on the coordinate system connected bylines.
+Coordinate systems allow for the visual representation of the relationship between two sets 
+of data (the function). A function may be thought of as a rule that describes the relationship 
+between two sets of numbers and can be used to solve for an unknown quantity. For example, 
+the function x + 2 could be used to solve the following real-world problem:
+Pearl is 2 years older than Paul. Paul will be 8 when they visit Disneyland again. Pearl 
+wants to know how old she will be. Paul is currently 4. Create a function table to determine 
+how old Pearl will be when she visits Disneyland again.
+
+[p.483]
+Chapter 18 Pre-algebra 483
+Known Quantity Function Answer
+Paul's Age x + 2 Pearl's Age
+4 4 + 2 6
+5 5 + 2 7
+6 6 + 2 8
+7 7 + 2 9
+8 8 + 2 7
+OTHER TYPES OF NUMBERS: PRIMES, FACTORS,
+INTEGERS, AND EXPONENTS
+«•••••••
+Using “other types of numbers” including prime numbers, factors, positive and negative inte­
+gers, and exponents is a necessary prerequisite for algebraic reasoning using unknown variables. 
+For example, finding prime numbers allows students to use an algebraic method and canceling 
+to reduce fractions. Many of the skills introduced in this section may be introduced as early as 
+fourth grade.
+Primes and Factors
+As mentioned above, finding prime factors enables students to use the algebraic method of 
+reducing fractions and “canceling.” Students learn that canceling is possible because they 
+are canceling fractions that equal one and therefore do not change the value of the original 
+24fraction. For example, to reduce the fraction —, students find the prime factors of both 24 36
+and 36 and then cancel the prime factors that appear in the numerator and the denominator 
+(fractions that equal one).
+• 24 _2X2X2X3_^X^X2X3_2 
+36~2×2X3×3~⅛×2×3X3~ 3
+Successfully teaching students to understand prime numbers and factors depends greatly on 
+their facility with multiplication facts. Students who are not fluent with their multiplication facts 
+cannot readily determine prime numbers or the factors of a nonprime number, nor can they use 
+the test recommended in the following paragraph to determine if a number is a prime number.
+Students are taught to test for a prime number by asking themselves, “Can this number 
+be divided by something other than 1 and itself?” If the number in question can be divided by 
+something other than 1 and itself, it is not a prime number. Teachers can have students apply 
+this test to a list of numerals. The list should consist of half prime numbers and half nonprime 
+numbers.
+When adding and subtracting unlike fractions, students learn to find all of the factors of the 
+two numerators. (See Chapter 13.) However, in pre-algebra, students are taught to find the prime 
+factors of numbers and to represent the number as only prime factors multiplied together. The 
+prime factors of 15 are 3 and 5 because both factors are prime numbers and 3 × 5 = 15. 
+The prime factors of 12 are 2, 2, and 3; all factors are prime numbers, and 2×2×3 = 12. 
+The factors 2 and 6 are not prime factors because even though 2 × 6 = 12, 6 is not a prime 
+number. The prime factors of 6 are 2 and 3; therefore, the prime factors of 12 are 2, 2, and 3.
+Finding prime factors involves attempting to divide a number by each prime number, in 
+order, as many times as possible. To find the prime factors of 35, students first attempt to divide 
+35 by 2 and 3 (the first prime numbers). However, neither 2 nor 3 divide into 35 evenly. Next, 
+students would divide 35 by 5 (the next prime number). Since 35 divides by 7 evenly, and both 5 
+and 7 are prime numbers, they are the prime factors of 35.
+
+[p.484]
+484 Part III Extended Concepts and Skills
+For 36, students can divide by 2 evenly 18 times. Since 18 is not a prime number, students 
+must continue the process of dividing until each factor is a prime number. The prime factors for 
+36 are 2, 2, 3, and 3 (see division below).
+36 ÷ 2 = 18
+18 ÷ 2 — 9
+9 ÷ 3 = 3
+2 × 2 × 3 × 3 = 36
+Teachers may instruct students to use a calculator to determine if each of the numerals on the list 
+can be divided evenly by prime numbers less than 20 as a modification for students who are not 
+fluent with their multiplication facts.
+Integers
+Integers include both positive and negative numbers. Many students have difficulty working 
+with negative numbers. To to assist students’ understanding of the concept of negative num­
+bers, we recommend that teachers use a number line. Although students may be familiar with 
+a number line, teachers must be sure that students understand the rule that when adding, you 
+move to the right on a number line, and when subtracting, you move to the left. Students 
+can use the number line to solve problems with positive and negative integers, for example, 
+—6 + 5 = □ or — 1 — 3 — □. Initially, students should be given only addition combinations 
+so that they are not confused by the appearance of both operational signs (plus/minus) and 
+signed values (positive/negative). Limiting initial examples ensures that only one new concept 
+is introduced at a time.
+As mentioned in Chapter 16, the concept of absolute value is introduced to students as “the 
+distance from zero.” Once students understand the concept of absolute value, teachers can use 
+the concept when they teach students to solve problems with positive and negative integers. See 
+Format 18.2: Combining Integers for this strategy. The first step of the structured board pre­
+sentation involves teaching students the following rules:
+1. If the signs of the numbers are the same, you add.
+2. If the signs of the numbers are different, you subtract.
+3. When you subtract, you start with the number that is farther from zero on the number Une 
+and subtract the other number.
+4. The sign in the answer is always the sign of the number that was farther from zero.
+The remaining part of the structured board presentation focuses on the application of these rules. 
+Students will need considerable practice in using the rules to solve computation problems with 
+positive and negative integers. The less structured board presentation provides abbreviated rules 
+to help students master the rules prior to providing worksheet practice.
+Next, students are taught to multiply integers. For a problem such as 5 × (7 — 2 — 3), 
+students copy the sign of each term and, using the distributive property, multiply the posi­
+tive integer and each of the values (35 — 10 — 15). After students have mastered such prob­
+lems, they are taught a rule for multiplying by a negative integer: If you multiply by a negative 
+value, you write the opposite of the sign. Using that rule, — 5 × (7 — 2 — 3) would become 
+(—35 + 10 + 15). The rule is simple and efficient in that students need to learn only one rule 
+rather than the traditional four rules:
+positive × positive = positive
+negative × positive = negative 
+negative × negative = positive 
+positive × negative = negative
+Next, students can be introduced to conventional notation for combining positive and neg­
+ative integers in addition and subtraction problems (—8 H---- 3 = □). Initially, to facilitate 
+learning this notation, teachers may want to use exaggerated signs representing the operations 
+(addition or subtraction). For example, the problem above could be written —8 H—3.
+
+[p.485]
+Chapter 18 Pre-algebra 485
+Next, students are taught to apply two rules. First, they are taught that the big minus sign 
+indicates that you combine (add) the first number with the opposite of the second number. So 
+—4 — —5 becomes —4 + 5 and —4 — +5 becomes —4 + —5.
+The second rule students learn is: The big plus sign means you combine the two terms as 
+they are. So —4 H—5 remains —4 H---- 5. After students master the application of the rules with 
+exaggerated signs, we recommend that they practice rewriting problems using typical notation 
+before solving the problems.
+Exponents
+Writing and combining exponents are skills commonly needed in complex problems. We sug­
+gest initially using expanded notation to assist students in understanding the concept of expo­
+nents. Expanded notation illustrates the relationship between repeated multiplication and 
+exponents. Teachers provide students with several examples of repeated multiplication, such as 
+4×4×4orD×D×jD×Z>, and explain that the number that is repeated is called the base 
+number. The exponent is the number of times the base number is repeated and is written as a 
+little numeral above the base numeral. Therefore, in 4 × 4 × 4, 4 is the base number, and the 
+exponent is 3. This is written as 43.
+Teachers need to provide many examples of repeated multiplication in which students 
+are asked to identify the base number and the exponent. Students should practice writing base 
+numbers and exponents as well. Finally, students should practice writing the expanded notation 
+when given a base number and exponent.
+Combining exponents can be illustrated by presenting examples of expanded notation 
+divided into groups. For example, (6 × 6 × 6) × (6 × 6). The teacher would point out that the 
+examples fall into two groups and then use the examples to show that 63 × 62 = 65.
+Similarly, expanded notation can be used to show how to simplify exponents. Simplifying 
+exponents is just like simplifying prime factors in that the same numbers in the numerator and 
+denominator are canceled (because they are fractions equal to 1).
+EXPRESSIONS AND EQUATIONS
+«•••••••
+Typically, students learn to write and evaluate expressions (3b + 4) with a letter representing a 
+numerical value early in middle school as a preskill for solving algebraic equations. All of the 
+instruction related to algebraic equations in this text is grounded in the equality principle: “We 
+must end with the same number on this side and the other side of the equal sign.” That principle 
+was initially introduced in Chapter 7 as a preskill for the beginning addition strategy. This chapter 
+introduces an extension of that rule: “Whatever you do to one side of an equation you must do to 
+the other.” A double-pan balance may be used to promote conceptual understanding of this rule.
+For example, a teacher may place 3 one-ounce weights on one pan (side) and demonstrate that 
+3 one-ounce weights must be added to the other pan (side) to establish equality between the two 
+sides. The teacher could then add 2 additional one-ounce weights to one side to show inequality 
+between the two sides. In order to balance the two sides, the teacher would add 2 one-ounce 
+weights to the other pan. After the initial demonstration by the teacher, the students may be 
+given the opportunity to manipulate the double-pan balance themselves to solve equations. Elec­
+tronic versions of balance beams also are available for student practice.
+Initial instruction for solving equations focuses on finding the value of one unknown 
+variable in single-step problems, such as 3 + x — 8. After students have mastered that skill,
+
+[p.486]
+486 Part III Extended Concepts and Skills
+students are taught to find the value of a variable in problems requiring more than one step 
+(4 + 5d = 12). Students who successfully isolate and solve problems involving a single vari­
+able are ready to learn to solve problems with multiple variables, combine like terms, and trans­
+late word problems into algebraic equations.
+Solving for a Single Variable
+In Part A of Format 18.3: Solving One-Step Problems with Variables—Addition and 
+Subtraction the teacher introduces the students to the rule “Whatever you do to one side of an 
+equation, you must do to the other.” The teacher then models how to isolate the variable and 
+solve to find the value of that variable. A preskill for isolating a variable is finding the inverse of 
+positive and negative integers. A less structured board presentation and independent work follow 
+to provide additional practice.
+Two example-selection guides are relevant to this format. First, problems should include a 
+variety of addition and subtraction equations. Second, the variables in the equations must appear 
+on the right and left sides of the equal signs in a random order. Note that the range of examples 
+provided in the less structured board presentation includes a variety of addition and subtraction 
+problems as well as the appearance of variables on both sides of the equations.
+After students have mastered finding the value of a variable in one-step problems involv­
+ing addition and subtraction and simplifying fractions, Format 18.4: Solving One-Step 
+Problems with Variables—Multiplication and Division may be presented. In Part A, Pre­
+skill: Finding the Reciprocal, students are taught the procedure for finding the reciprocals of 
+fractions and whole numbers. Part B is a structured board presentation in which the teacher 
+models solving for a variable in equations involving multiplication or division. Part C is a 
+less structured board presentation that provides guided practice. Finally, Part D provides 
+independent practice.
+Students who have mastered finding the value of a variable in one-step problems using all 
+four of the operations are ready to learn to find the value of a variable in two-step problems like 
+the following:
+16 + 4r = 28
+The procedures for finding the value of a variable in two-step problems are similar to the pro­
+cedures outlined in Formats 18.3 and 18.4. The teacher first would model isolating the term 
+with the variable (4r) by adding the inverse of 16 ( —16) to both sides of the equation . Then the 
+teacher would model isolating the variable r by multiplying both sides of the equation by the 
+reciprocal of 4 . The equation would then be solved to determine the value of r. The teacher
+would follow modeling the procedure with guided and independent practice. Note that prior to 
+introducing two-step problems, the teacher would need to teach the vocabulary word “term” to 
+the students.
+Substitutions
+Students who have mastered finding the value of a single variable in one- and two-step problems 
+can be introduced to equations with more than one variable. Students would be taught that the 
+values of the variables in an equation cannot be determined if there is more than one variable. 
+The values can be determined, however, if the value of one of the variables is known. The teacher 
+would begin by writing a problem like the following on the board:
+8p - 3j = 24 7 = 8
+The teacher first would model substituting 8 for j in the equation:
+8p - 3(8) = 24
+Then the teacher would ask the students for the product of 3(8) and update the equation again.
+8p - 24 = 24
+
+[p.487]
+Chapter 18 Pre-algebra 487
+Because only one variable remains, the students are able to isolate the term 8p and solve to 
+determine the value of p. After modeling a few examples, the teacher would provide guided and 
+independent practice to the students including a variety of problems.
+Like Terms
+After teaching students to work with multiple variables, the teacher would build on the students’ 
+knowledge of combining integers to teach combining like terms to solve more complex prob­
+lems. The teacher would introduce the concept by presenting an example and explaining that 
+the terms can be combined when they all have the same variable. For example, 2^ + 5^- 3# 
+can be combined as 4^ because 2 + 5-3 = 4. The teacher would provide additional practice 
+examples until the students demonstrate mastery of combining terms when all of the variables 
+are the same. Then the teacher would introduce combining terms when more than one variable is 
+present (4r + 2/ — 3/ + 5r), stressing the importance of only combining terms with like vari­
+ables (9r - 1∕).
+Word Problems
+Chapter 11 describes instructional procedures for teaching several types of word problems 
+including classification and comparison problems. Once students understand how to solve basic 
+algebraic equations, they can translate word problems into algebraic equations using variables 
+and apply their algebraic knowledge to solving these problems.
+Table 18.1 illustrates the similarities and differences in solving word problems using the 
+fact family strategy introduced in Chapter 11 and algebraic strategies introduced previously in 
+this chapter. If students have learned how to solve problems by applying the fact family rules 
+for finding missing values, then the transition to using algebraic strategies is fairly straightfor­
+ward. Table 18.1 illustrates the application of both strategies for comparison and classification 
+problems.
+The examples provided in Table 18.1 represent the simplest types of word problems 
+that can be solved using algebraic strategies. Algebraic strategies are applicable to more 
+complex problems as well. Word problems become more complex when they include 
+more abstract variations in wording and/or more complex calculations that require knowl­
+edge of fractions, decimals, and percent, for example. Teachers need to be aware of how 
+these variations in wording and how more complex calculations may cause difficulties for 
+students. Table 18.2 illustrates how simple word problems become more complex with both 
+wording changes and more difficult calculation demands. The next section on ratios and 
+proportions also provides teachers instructional strategies to help students solve complex 
+word problems.
+RATIOS AND PROPORTIONS (R∕P)
+«•••••••
+Successfully solving ratio problems first requires that students set up the problem accurately. We 
+recommend teaching students to write the labels in the problem as numerators and denominators 
+on both sides of the equal sign. In the problem below, students write the labels “TVs” as the 
+numerator and “Radios” as the denominator. The students then repeat the fraction of TVs over 
+Radios on the other side of the equal sign.
+The store has 3 TVs for every 7 radios. If there are 28 radios in the store, how many TVs 
+are there?
+TVs TVs
+Radios Radios
+The labels provide a prompt for students to successfully identify the numerals that are associated 
+with TVs and those that are associated with Radios.
+3 TVs DTVs
+7 Radios 28 Radios
+
+[p.488]
+488 Part III Extended Concepts and Skills
+TABLE 18-1 Solving Simple Word Problems Using the Fact Family Strategy
+Word Problem Example
+Fact Family Strategy—Using
+Fact Family Rules Algebraic Strategy
+Comparison Joaquin saved $92 from 
+his after-school job. His 
+twin brother Julio saved 
+$79. How much more did 
+Joaquin save?
+SET-UP
+JU Difference
+79 □ JO
+--------------------- ► 92
+SET-UP
+79 + D - 92
+STRATEGY STRATEGY
+Fact family rule: When the big 
+number is given, subtract to find the 
+other small number. The big number, 
+92, is given; therefore, you need to 
+subtract.
+Isolate the variable by adding the 
+inverse to both sides. To isolate D, 
+add the inverse, -79, to both 
+sides.
+SOLUTION SOLUTION
+92 — 79 = ∣13I 79 + D = 92
+-/79 ξ√9
+D= 13
+Classification There are 17 girls in the 
+chemistry class, which has 
+24 students. How many of 
+the students are boys?
+SET-UP
+G Difference
+17 □ b
+SET-UP
+17 + D = 24
+⅛, n∕∣
+STRATEGY STRATEGY
+Fact family rule: When the big num­
+ber is given, subtract to find the 
+other small number. The big number, 
+24, is given; therefore, you need to 
+subtract.
+Isolate the variable by adding the 
+inverse to both sides. To isolate 
+Dl add the inverse, -17, to both 
+sides.
+SOLUTION SOLUTION
+24-17 =∣T∣ 17 + D = 24
+-47 →7
+7
+TABLE 18.2 Instructional Recommendations for Solving Complex Word Problems
+Simple Word Problem
+Complex Word Problem—Variation 
+in Wording Instructional Recommendation
+The school is 30 miles 
+farther than the park.
+If it is 60 miles to the park, 
+how far is it to the school?
+5 = 30 + p
+It is 30 miles farther to the school 
+than to the park. If it is 60 miles to 
+the park, how far is it to the school? 
+Determining the equation is more 
+difficult because the wording does 
+not directly translate to the equation. 
+Possible error: 30 + s = p
+Prior to introducing word problems with more 
+complex wording, model translating the complex 
+wording into simple sentences that translate 
+directly to the equation and have students practice 
+with similar translations before solving problems. 
+"It is 30 miles farther to the school than the 
+park" translates to "The school is 30 miles farther 
+than the park."
+The school is three times 
+as far as the park. The 
+distance to the school is 
+25 miles. How far is the 
+park?
+1The school is - as far as the park.
+The distance to the school is 25 miles.
+How far is it to the park?
+This problem is more difficult in that it 
+requires knowledge of fractions.
+Teachers must identify the calculation preskills 
+required to solve the problems they encounter 
+(fractions, percent, decimals).
+
+[p.489]
+Chapter 18 Pre-algebra 489
+Once the numerals are written alongside their appropriate labels, the problem can be solved 
+using equivalent fractions. The next step in solving the problem involves identifying the fraction 
+∕4λ . . . . ∕12λequal to one I — I that will yield the equivalent fraction I — I and the answer to the question: If 
+there are 28 radios in the store, how many TVs are there? 12.
+3 TVs
+7 Radios
+12 TVs
+28 Radios
+Using Ratio Tables to Solve Classification Problems
+Ratio tables are especially useful for solving word problems in that they allow students to see the 
+relationships among the values in a problem. Following is an example of how to use a ratio table 
+to solve a classification word problem.
+A factory makes SUVs and cars. It makes 5 SUVs for every 3 cars made. If the factory 
+made 1600 vehicles last year, how many cars and how many SUVs did it make?
+ClassificationRatio
+Cars 3 600
+SUVs 5 1,000
+Vehicles 8 1,600
+The bold information in the table is provided to the students in the text of the problem. Students 
+are to figure out the missing numbers in order to answer the question. Students can apply their 
+previous knowledge of classification word problems to solving ratio problems using tables. (See 
+Chapter 11 for a discussion of classification word problems and table problems.) Since students 
+have already been introduced to classification word problems, they are familiar with the fact that 
+“Cars” and “SUVs” are the subclasses and that “Vehicles” is the superordinate class. They know 
+that if the two small numbers are given (cars and SUVs), they must add to find the big number 
+(3 + 5 = 8 vehicles).
+Once completed, the numerals in the ratio column can be used to state the ratio between 
+any two rows. It is already stated that the ratio of cars to SUVs was 3 to 5. After determining 
+the number of vehicles, the ratio table shows that the ratio of SUVs to vehicles made is 5 to 8 
+and the ratio of cars to vehicles made is 3 to 8. This information enables the students to set up a 
+simple ratio to find the missing information that is requested in the question. The setup to find 
+the number of cars made looks like this:
+3 Cars ( ) _ □ Cars
+8 Vehicles ( ) 1,600 Vehicles
+3 Cars 200 600------------- ×  —  8 Vehicles 200-----1,600
+A similar setup can be used to determine the number of SUVs made.
+Because students are familiar with classification problems, they also know that if the super­
+ordinate class were known, they could find the other subclass by subtracting. For example, if a 
+similar problem indicated that the ratio of SUVs to vehicles was 4 to 10, students could subtract 
+4 SUVs from 10 vehicles to determine the value for the other subclass, 6 cars. Setting up a ratio 
+problem between the quantity given and the quantity requested in the problem will become rou­
+tine for students with practice.
+Using Ratio Tables with Fractions
+Once students have mastered using simple ratio tables, teachers can introduce more sophisti­
+cated ratio tables that include fractions representing classes. Teachers first introduce problems
+
+[p.490]
+490 Part HI Extended Concepts and Skills
+SUMMARY BOX 18.1
+Rationale for Using Numerators of Fractions in Ratio Equations
+1. When working with ratios, it's useful to use whole numbers 
+instead of fractions in the ratio.
+Understanding why the shortcut of using only the numerators 
+works requires demonstrating how to convert the fractions in 
+both the numerator and the denominator into whole numbers.
+Shorter = ~
+^ιι-l
+2. Converting the numerator J for "Shorter" into a whole 
+∕5∖ 15
+number requires multiplying by 5 I γ I to get — or 3. 5 was 
+chosen because it is the denominator in the fraction that 
+represents "All."
+3. Because we need to multiply both the numerator and the 
+denominator by the same fraction, we need to multiply — 
+by — as well.
+Multiplying the fraction by a fraction equal to one creates an 
+equivalent fraction.
+4. Students reduce the fractions in both the numerator and 
+denominator to obtain whole numbers.
+---35∖1∕ 5
+5∖1∕ 5
+15
+5 _ 3 _ Shorter
+25 “ 5 ~ ~^A∣Γ~
+5
+5. The result is whole numbers for the ratio of shorter children to 
+all children. The whole numbers in the ratio are the numerators 
+of each of the fractions in the original problem.
+Shorter = 3
+All = 5
+SUMMARY BOX 18.2
+Ratio Tables Using Fractions for Classes
+1. Students read the problem and figure 
+out the fraction number family.
+Two-thirds of the people at the coffee shop 
+are drinking coffee. The rest are drinking 
+tea. If 15 people are drinking tea, how many 
+people are drinking coffee? How many people 
+are in the coffee shop?
+Fraction 
+family Ratio Quantity
+Coffee
+Tea
+People
+2. Students complete the fraction 
+family column.
+Fraction 
+family Ratio Quantity
+Coffee 2
+3
+Tea 2 
+3
+People 3
+3
+
+[p.491]
+Chapter 18 Pre-algebra 491
+3. Students use numerator of fraction to 
+complete ratio column.
+Fraction 
+family Ratio Quantity
+Coffee 2
+3 2
+Tea 2
+3 1
+People 3
+3 3
+4. Students fill in known quantities.
+2 Coffee = Q Coffee
+1 Tea 15 Tea
+Fraction 
+family Ratio Quantity
+Coffee 2
+3 2
+Tea 1^
+3
+1 15
+People 3
+3 3
+5. Students write ratio equation.
+6. Students solve ratio problem to answer 
+question about coffee drinkers.
+Fraction 
+family Ratio Quantity
+Coffee 2
+3
+2 30
+Tea 1
+3 1 15
+People 3
+3 3
+7. Students use the number-family strategy 
+to determine how many people are in the 
+shop and complete the table.
+Fraction 
+family Ratio Quantity
+Coffee 2
+3 2 30
+Tea 2
+3 1 15
+People 3
+3 3 45
+in which one class is a fraction: For example, — of the plants were trees. Since students know 
+3 3 2
+that all of the plants are represented as —, they can easily determine that - of the plants are not 
+trees. The superordinate class is always a fraction equal to one, and the two subclasses combine 
+to equal one. Given a set of classifications represented as fractions, students can create a ratio 
+table using the numerators of the fractions as the ratio. The problem below illustrates this type of 
+problem along with a completed ratio table.
+Three-fifths of the children in the school are shorter than the principal. If 128 children 
+are taller than the principal, how many are shorter? How many children are there in the 
+school?
+
+[p.492]
+492 Part III Extended Concepts and Skills
+ClassificationFraction Family Ratio Answer
+Shorter 3
+5 3 192
+Taller 2
+5
+2 128
+All 5
+5
+5 320
+Students have been taught that if — of the children are shorter, then the fraction that represents
+. 5 2all the children is —. They subtract to find out that — of the children are taller. The numera­
+Format 18.58: Ratio 
+Tables Using
+Fractions for Classes
+Watch how Kristen leads her stu­
+dents through setting up a ratio 
+table using fractions.
+tors express the ratio of each of those terms. In Part B of Format 18.5: Ratio Tables Using 
+Fractions for Classes students are taught to put the numerators of the fraction family into the 
+ratio column. To promote conceptual understanding, the teacher may choose to demonstrate 
+to students why the numerators only can express the ratio. This explanation can be found in 
+Summary Box 18.1.
+The numerators express the ratio of each of those classes, so that the ratio of shorter chil­
+dren to all the children is 3 to 5, and the ratio of the taller children to all children is 2 to 5. Once 
+the ratios are determined, the students can find the unknown quantities by constructing a ratio 
+between the known quantity (128 children who are taller) and the unknown quantity (“How 
+many children are shorter?”). This is solved in the same manner as other ratio equations.
+Taller 2 ( ) 128
+-------- × Z ~ ----Shorter 3 ( ) □
+Taller 2 64 128-------- × — = ---
+Shorter 3 64 192
+See Summary Box 18.2 for an illustration of the recommended steps in solving a ratio 
+problem using fractions.
+Using Ratio Tables to Solve Comparison Problems
+Ratio tables also can be used to solve comparison problems. These problems contain a sentence 
+that indicates the basis for the comparison. For example:
+Louise was paid — of what her boss was paid. If Louise is paid $1,800 a month, how much 6
+more does her boss get paid, and what does her boss get paid?
+5Louise was paid — of what her boss was paid. Louise is being compared to her boss. Therefore, 6
+6her boss is equal to one whole, —. To determine the difference, students are taught to generate the 6
+equation below. Note that teachers may want to call attention to the use of the word “difference” 
+in labeling the parts of the family.
+Difference
+£
+6
+Louise
+5
+6
+Boss
+6
+6
+Once the number family is completed, students can put the numerators into a ratio table. 
+Given any of the three values (Louise’s pay, the difference, or her boss’s pay), the students can 
+construct ratio equations to determine the other two values. Here is a completed ratio table for 
+the problem in which Louise is paid $1,800 a month. The solution to the word problem is that 
+her boss was paid $2,160.
+
+[p.493]
+Chapter 18 Pre-algebra 493
+Comparison Ratio Pay
+Difference 7 360
+Louise 5 1,800
+Boss 6 2,160
+Using Ratio Tables with Percent Problems
+Another type of ratio table students may be introduced to is a classification ratio table using per­
+centages. Students are given one class as a percentage of the whole and the second class as the 
+rest. For example:
+A store got 40% of its oranges from California. The store got the rest of its oranges from 
+Florida. If the store had 170 total oranges, how many were from California and how many 
+from Florida?
+In the problem above, students learn that the superordinate class (all of the oranges) is always 
+equal to 100%. Since the big number is known (100%), this is a subtraction problem. The per­
+centage that came from Florida is determined by subtracting (100% — 40% = 60%). Below is 
+the completed number family that represents this problem.
+California Florida All
+40% + 60% = 100%
+Students then put the information from the number family into a ratio table. Given the 
+quantity of any of the three variables (total oranges, oranges from California, oranges from 
+Florida), students can solve for the other two quantities. A completed ratio table for this prob­
+lem appears below.
+California 40% 68
+Florida 60% 102
+All 100% 170
+The ratio equation to figure out the number of California oranges is
+California 4 × ()_ □
+All 10 × () 170
+California 4 × 17 _ 68
+All 10 X 17 “ 170
+Finally, students can learn to solve comparison problems using percentages. These are per­
+haps the most counterintuitive and difficult type of word problems. Determining the appropriate 
+number sentence is critical to solving this type of problem. Students must understand that one 
+of the variables that is being compared will be the variable equal to 100%. For example, in the 
+problem below, students must compare the number of women’s bicycles sold to the number of 
+men’s bicycles sold. The problem indicates that fewer women’s bicycles are sold compared to 
+the number of men’s bicycles sold; therefore, the number of men’s bicycles sold is the variable 
+equal to 100% in this problem.
+A bike store sold 25% fewer women’s bicycles than men’s bicycles. (Hint: Women's bicy­
+cles are being compared to men's, so which variable is equal to 100%?) If the store sold 
+175 fewer women’s bicycles, how many men’s and women’s bicycles did it sell?
+Difference Women’s Bicycles Men’s Bicycles
+25% + 75% = 100%
+
+[p.494]
+494 Part III Extended Concepts and Skills
+Difference 25% 175
+Women's 75% 525
+Men's W0% 700
+Difference 25 × ( ) 175
+Men’s 100 × ( ) □
+Difference 25 × (7) _ 175
+Men’s 100 × (7) ~ 700
+Difference 25 × ( ) _175
+Women’s 75 X ( ) □
+Difference 25 × (7) _ 175
+Women’s 75 × (7) ~ 525
+Students use the information given in the word problem to complete the ratio table and generate 
+equations like the ones above to solve for the unknown values. Using that information, students 
+can generate the answers to the questions in the problem. (The shop sold 700 men’s bicycles and 
+525 women’s bicycles.)
+DIAGNOSIS AND REMEDIATION
+Common errors related to pre-algebra skills outlined in this chapter fall into the basic error cate­
+gories that have been used throughout this text: fact errors (missing a math fact), component-skill 
+errors (calculation or confusion errors), and strategy errors. The diagnosis and remediation pro­
+cedures for the skills and concepts taught in all of the algebraic reasoning sections in this chapter 
+should begin with determining the cause of the error. Each of the pre-algebra sections includes a 
+discussion of critical discriminations and concepts students must master prior to the introduction 
+of the pre-algebra strategy. Those discussions were included to highlight common misunder­
+standings that could cause student errors. As always, teachers need to confirm their diagnosis 
+by analyzing the error and interviewing the student, if necessary. Once the diagnosis has been 
+confirmed, the remediation usually involves reviewing critical parts of the relevant formats and 
+providing students with additional practice.
+Examples of common errors for each of the pre-algebra sections discussed in this chapter 
+are outlined in Figure 18.1 along with suggested remediation procedures.
+FIGURE 18.1 Pre-algebra diagnosis and remediation
+Error Pattern
+Plot the point for the coordinates (6, 2).
+0 1 2 3 4 5 6
+Diagnosis
+Students confuse the 
+x and y axes when 
+plotting two coordi­
+nates on a graph.
+Remediation 
+Procedures
+The teacher would 
+reintroduce the 
+coordinate system 
+to students using 
+points written as 
+(x = 6, y = 2). Once 
+students have mas­
+tered finding and 
+plotting coordinates 
+using equations, the 
+shortcut (6, 2) can be 
+introduced.
+Remediation 
+Examples
+Provide worksheet 
+practice on plot­
+ting coordinates on 
+a graph using the 
+equations. One stu­
+dents have mastered 
+that skill, introduce 
+the shortcut during 
+a guided practice 
+exercise.
+
+[p.495]
+Chapter 18 Pre-algebra 495
+Error Pattern
+Find the function for this table:
+X Function
+Answer 
+y
+1 2
+2 4
+but not for all pairs.
+Diagnosis
+Remediation 
+Procedures
+Remediation
+Examples
+Student does not 
+test the function 
+with both pairs of 
+values.
+Present the struc­
+tured worksheet from 
+Format 18.1. Focus 
+on the procedure for 
+determining if the 
+proposed function 
+rule will work with all 
+pairs of values.
+Provide examples 
+similar to the one 
+on which the stu­
+dent made the error. 
+Include examples in 
+which more than one 
+function rule may 
+work for the first pair
+Student answer: Function isx + 1.
+-16
+-15
+31
+Student uses the 
+wrong sign in the 
+answer.
+Solve for x:
+3x + 23 = 41
+Student's work
+3x + 23 = 41
+-23 -23
+3x = 23
+x = 7.7
+This is a calculation 
+error. The student 
+incorrectly sub­
+tracted 23 from 41 
+on the right side of 
+the equation.
+Show the solution process to the follow­
+ing comparison problem with percentages 
+using the ratio table shown.
+Deshawn is 10% taller than his little 
+brother. If Deshawn is 5 inches taller than 
+his little brother, how tall is Deshawn, and 
+how tall is his brother? (Hint: The little 
+brother is being compared to Deshawn, so 
+who is equal to one or 100%?) 
+Student's work:
+The student didn't 
+set up the ratio table 
+correctly. Deshawn is 
+100%.
+Reteach the less struc­
+tured board presenta­
+tion of the format for 
+combining integers 
+focusing on the fourth 
+rule.
+Assess the student's 
+work to determine if 
+subtraction errors are 
+cause by regrouping 
+errors.
+If so, reteach using the 
+structured worksheet 
+part of Format 8.3: 
+Subtraction with 
+Renaming.
+This is a strategy error. 
+The teacher would 
+model setting up the 
+ratio table with sev­
+eral word problems. 
+This can be followed 
+with a structured 
+worksheet like the 
+one found in 
+Format 18.5.
+-13 -9
+-8 +20
+-5 -7
++7 -8
+Problems that do 
+and do not require 
+renaming
+53
+-26
+42
+-30
+% Inches
+Deshawn 90
+Brother 100
+Difference 10 5
+The Lakers scored 
+10% fewer points 
+than the Bulls. 
+(Hint: Lakers are 
+being compared to 
+the Bulls, so who is 
+100%?) If the Lak­
+ers scored 12 fewer 
+points than the Bulls, 
+how many points did 
+the Lakers and the 
+Bulls score?
+W × (.5) 5
+90 (.5) '
+90 × .5 = 45 inches for Deshawn. 
+His brother is 5 inches shorter or 
+45 - 5 = 40 inches.
+
+[p.496]
+496 Part III Extended Concepts and Skills
+APPLY WHAT YOU LEARNED j
+Click on the V to answer the questions online.
+1. Describe how a teacher might sequence the skills listed in the four topics in this chapter.
+2. How can teachers promote conceptual understanding for solving one-variable algebraic equations?
+3. Describe the procedure for teaching students to complete the following function table.
+X Function
+Answer 
+y
+0 0
+1 4
+2 8
+3
+4
+5
+4. Construct a set of problems for use in Format 18.2 for combining integers.
+5. Construct a set of examples and nonexamples for students to use in determining if a number is a 
+prime number.
+6. Write a classification problem with fractions to be solved with a ratio table and show the solution.
+7. Show the solution process to the following comparison problem with percentages using the ratio 
+table shown.
+Sondra’s new phone costs 20% more than Ruth’s new phone. If Sondra’s phone costs 
+$200.00 more than Ruth’s phone, how much is Sondra’s phone, and how much is Ruth’s? 
+(Hint: Sondra is being compared to Ruth, so who is equal to one or 100%?)
+Difference 20% $200.00
+Sondra's phone
+Ruth's phone
+8. Outline the steps for remediation in teaching students to solve the following problem: 
+4t = 16
+t = 12
+
+[p.497]
+Chapter 18 Pre-algebra 497
+Format 18.1
+USING AND PLOTTING A FUNCTION
+TEACHER STUDENTS
+Part A: Structured Board Presentation
+Function
+4
+3
+0
+5
+Answer
+y
+2
+8
+1. You have made points on the coordinate system by using a table that shows 
+the x values and the y values. When you connect the points, you get a 
+straight line. The reason you get a straight line is that all of the points follow 
+the same function rule. If you're following the same rule about adding, 
+subtracting, multiplying, or dividing the x value to get the y value, you will 
+get a straight line on the coordinate system. Let's find the function for this 
+table, complete the table, plot the values, and see if we get a straight line.
+The first x value is 1. What is the y value?
+2. What would it take to get from 1 to 2? What would you add?
+3. Let's see if adding 1 will solve everything in this table. What is the second 
+x value?
+What is the y value?
+Can you add 1 to the x value of 4 to get the y value?
+If adding didn't work, let's try multiplication. 4 × what number = 8?
+Go back and check the first values. The x value is 1. Can you multiply it by 2 
+to get the y value of 2?
+4. So how do we know that the function is x × 2?
+5. So we fill in the function part of this table as x × 2. What is the third x value?
+So what is 3 × 2?
+And where do we write that 6?
+6. What is the fourth x value?
+So what is 0 × 2?
+So what is the fourth y value?
+2
+Add 1
+4
+8
+No
+2
+Yes
+Because the first × 
+value of 1 X 2 = the 
+first y value of 2 and 
+the second x value of 
+4 × 2 = the second y 
+value of 8
+3
+6
+As they value
+0
+0
+0
+continued
+
+[p.498]
+498 Part III Extended Concepts and Skills
+Format 18.1 (continued)
+USING AND PLOTTING A FUNCTION
+TEACHER
+7. Figure out the fifth y value and fill it in. What did you fill in for the fifth y 
+value?
+8. Now we need to plot these points. The first two points are already plotted. 
+What is the × value for the third point?
+So the × value moves to the right how many spaces?
+The y value moves up how many spaces?
+Now plot that point and the two other points.
+9. Connect those dots with a ruler. Raise your hand if you got a straight line.
+Part B: Structured Worksheet 
+Function
+STUDENTS
+10
+3
+3 spaces
+6 spaces
+x
+7
+4
+3 
+0
+5
+Answer
+y
+4
+7
+1. Let's find the function for this table, complete the table, plot the values, and 
+see if we get a straight line.
+The first × value is 1. What is the y value?
+2. What would you add to get from 1 to 4?
+3. Look at the second pair of values. Can you add 3 to the second × value and 
+get the y value?
+What is the number sentence for those values?
+4. So what is the function?
+5. Find the rest of the values. Raise your hand when you're done.
+What is the fourth pair of values?
+What is the fifth pair of values?
+6. Plot those values then connect those dots with a ruler. Raise your hand if 
+you got a straight line.
+7. (Do steps 1-7 using different functions.)
+4
+3
+Yes
+4 + 3 = 7
+x + 3
+x = 0, y = 3
+x = 5, y = 8
+
+[p.499]
+Chapter 18 Pre-algebra 499
+Format 18.2
+COMBINING INTEGERS
+TEACHER
+Part A: Structured Board Presentation
+1. You've worked with positive and negative numbers on the number 
+line. Here are some rules you can use to solve problems without using a 
+number line (Write the following on a board or on a poster.)
+1. If the signs of the numbers are the same, you add.
+2. If the signs of the numbers are different, you subtract.
+3. When you subtract, you start with the number that is farther from 
+zero on the number line and subtract the other number.
+4. The sign in the answer is always the sign of the number that is farther 
+from zero.
+2. (Write this problem on the board.)
+-9
++20
+3. Are the signs the same or different?
+4. If the signs are different, do we add or subtract?
+5. We start with the number that is farther from zero. Which number is 
+farther from zero, 9 or 20?
+6. Start with 20 and subtract 9. What is the answer?
+7. The last rule tells us how to determine the correct sign. Read the rule.
+8. So is the answer positive 11 or negative 11?
+How do you know?
+9. (Write this problem on the board.)
+-7
+-9
+10. Are the signs the same or different?
+11. Do we add or subtract?
+12. Add 7 and 9. What is the answer?
+13. The last rule tells us how to determine the correct sign. Read the rule.
+14. So is the answer positive 16 or negative 16?
+15. How do you know?
+STUDENTS
+Different
+Subtract
+20
+11
+The sign in the answer 
+is always the sign of the 
+number that is farther 
+from zero.
+Positive 11
+Because 20 is the number 
+farther from zero and it 
+is positive
+The same
+Add
+16
+The sign in the answer is 
+always the number that 
+is farther sign of the from 
+zero.
+Negative 16
+Because 9 is the number 
+farther from zero and it 
+is negative
+continued
+
+[p.500]
+500 Part III Extended Concepts and Skills
+Format 18.2 (continued)
+COMBINING INTEGERS
+TEACHER STUDENTS
+16. (Write this problem on the board.)
+12
+—7
+17. Are the signs the same or different? Different
+18. If the signs are different, do we add or subtract? Subtract
+19. We start with the number that is farther from zero. Which number is 
+farther from zero, 12 or 7? 12
+20. Start with 12 and subtract 7. What's the answer? 5
+21. The last rule tells us what? The sign in the answer
+22. So is the answer positive 5 or negative 5?
+is always the sign of the 
+number that is farther 
+from zero.
+Positive 5
+23. How do you know? Because 12 is the number
+Part B: Less Structured Board Presentation
+1. (Write the following abbreviations for the four rules.)
+Same: Add
+Different: Subtract
+Start with number farther from zero
+Use sign of number farther from zero
+2. Here is a short reminder of the four rules for combining positive and
+farther from zero and it 
+is positive
+If the signs of the same,
+negative numbers. Who can tell me the first rule? you add.
+3. Who can tell me the second rule? If the signs of the
+4. Who can tell me the third rule?
+numbers shown are 
+different, you subtract.
+When you subtract, you
+5. And who can tell me the last rule?
+start with the number 
+that is farther from 
+zero on the number line 
+and subtract the other 
+number.
+The sign in the answer
+6. (Write this problem on the board.)
+-5
++7
+is always the sign of the 
+number that is farther 
+from zero.
+
+[p.501]
+Chapter 18 Pre-algebra 501
+TEACHER STUDENTS
+7. Let's just talk about what we are going to do. Do we add or subtract? Subtract
+8. How do you know? Because the signs are 
+different
+9. What number do we start with? 7
+10. How do you know? Because it is farther from 
+zero
+11. Will the answer be positive or negative? Positive
+12. How do you know? Because the 7 is positive
+13. Do the problem now. (Pause.) What's the answer? 2
+14. (Write this problem on the board.)
+-3
+-9
+15. Do we add or subtract? Add
+16. How do you know? Because the signs are the 
+same
+17. Will the answer be positive or negative? Negative
+18. How do you know? Because the 9 is negative
+19. Work the problem. (Pause.) What's the answer. Negative 12
+20. (Write this problem on the board.)
+-13
++7
+21. Do we add or subtract? Subtract
+22. How do you know? Because the signs are 
+different
+23. What number do we start with? 13
+24. How do you know? Because it is farther from 
+zero
+25. Will the answer be positive or negative? Negative
+26. How do you know? Because the 13 is 
+negative
+27. Work the problem. What's the answer? Negative 6
+Part C: Structured Worksheet
+1. (Students have worksheets with problems such as these.)
+a. -7 b. +4 c. +9 d. -3
+-8 -2 -13 +6
+2. Before you do these problems, let's review the rules. What do you do if Add
+the signs are the same?
+3. And if you add, what sign will the answer be? The sign of the number 
+farther from zero
+continued
+
+[p.502]
+502 Part III Extended Concepts and Skills
+Format 18.2 (continued)
+COMBINING INTEGERS
+TEACHER STUDENTS
+4. When do we subtract?
+5. When we subtract, which number do we start with?
+6. What sign will the answer be?
+7. Work the problems.
+When the signs of the 
+numbers are different
+With the number that is 
+farther from zero
+The sign of the number 
+that is farther from zero
+Format 18.3
+SOLVING ONE-STEP PROBLEMS WITH VARIABLES—ADDITION
+AND SUBTRACTION
+TEACHER
+Part A: Structured Board Presentation
+1. (Write the following equation on the board.)
+p - 4 = 6
+2. You're going to learn how to find the value of a letter in an equation. First, 
+you need to know that everything to the left of the equal sign is called the 
+"left side." (Point to the left side of the equation.) What is everything to the 
+left of the equal sign called?
+Everything to the right of the equal sign is called the "right side." (Point to 
+the right side of the equation.) What is everything to the right of the equal 
+sign called?
+3. We want to find the value for the letter p in this equation. To do that, we 
+need to get p all by itself on one side of the equation. We're going to get 
+p all by itself by adding the inverse of negative 4. What is the inverse of 
+negative 4?
+Negative 4 plus 4 equals 0, leaving p all by itself. (Add to the equation so it 
+looks like the following:)
+p - 4 = 6
++ 4
+4. Here's an important rule about changing an equation: Whatever you do to 
+one side of an equation, you must do to the other. Say the rule.
+4
+We added 4 to the left side of the equation. That means we also must add 4 
+to the right side of the equation. What do we need to do to the right side of 
+the equation?
+STUDENTS
+The left side
+The right side
+Whatever you do 
+to one side of an 
+equation, you must do 
+to the other.
+Add 4
+
+[p.503]
+Chapter 18 Pre-algebra 503
+continued
+TEACHER STUDENTS
+Yes, we added 4 to the left side of the equation, so we also need to add 4 
+to the right side of the equation. (Add to the equation so it looks like the 
+following:)
+p - 4 = 6 + 4
++ 4
+5. Now that we have added 4 to both sides of the equation, we can work the
+equation. What is -4 plus 4?
+Yes, so we can cross out -4 and +4 on the left side of the equation. (Add to 
+the equation so it looks like the following:)
+p— A = 6 + 4
+Zero
+6. Now we work the right side of the equation. What is 6 + 4?
+Right! Now our equation looks like this: (Write the following next to the 
+original equation on the board.)
+p = 10
+7. We changed both sides of the equation to find out that p = 10. What does p
+Ten
+equal?
+8. We can check our work by rewriting the equation with 10 in the place of p. 
+(Write the following on the board.)
+10-4 = 6
+10
+Does 10 - 4 = 6?
+Yes, it does. So we know that p = 10 because 10-4 = 6.
+9. (Repeat steps 1-8 with additional examples.)
+Part B: Less Structured Board Presentation
+1. (Write problems like the following on the board. Give students paper and 
+pencils for solving the equations.)
+a. r + 2 = 18
+b. 23 + a = 30
+c. 15 = e - 5
+d. 12 - p = 7
+e. 45 = u + 25
+Yes
+2. Read problem a.
+We want to find the value for r. To do that, you need to get r by itself by
+r + 2 = 18
+adding the inverse. What do you need to do to get r by itself? Add the inverse
+What's the inverse of 2?
+Do that. Add - 2 to the side of the equation with r. (Monitor students' work.)
+3. Now that you have added -2 to the left side of the equation, what must you
+-2
+do to the right side of the equation?
+Yes, whatever you do to one side of an equation you must do to another.
+Add -2 to the right side of the equation. (Monitor students' work.)
+Add -2
+
+[p.504]
+504 Part III Extended Concepts and Skills
+Format 18.3 (continued)
+SOLVING ONE-STEP PROBLEMS WITH VARIABLES—ADDITION
+AND SUBTRACTION
+TEACHER STUDENTS
+4. Now you can finish working the equation to find the value of r. Do that now. 
+(Monitor students as they solve for r.)
+5. What does r equal? r equals 16
+6. You can check your work by rewriting the equation with 16 in the place of r. 
+Do that now. (Monitor students.)
+You put 16 in the place of r. Read the new equation. 16 + 2 = 18
+Does that make sense? Yes
+Yes, it does. So your answer is correct.
+7. (Repeat steps 2-6 with the remaining problems. Instruct the students to follow 
+the same steps to find the value of the letter regardless of which side the 
+letter is on.)
+Part C: Independent Practice
+1. (Write problems like the following on the board. Give students paper and 
+pencils for solving the equations.)
+a. m + 17 = 20
+b. 50 - d = 25
+c. 80 = 90 - z
+d. 13 = j + 5
+e. 9 + k = 9
+2. Find the value of the variable in each of the equations. Remember to check 
+your work by rewriting the equation with the value of the variable. (Monitor 
+students as they work.)
+Format 18.4
+SOLVING ONE-STEP PROBLEMS WITH
+VARIABLES—MULTIPLICATION AND DIVISION
+TEACHER STUDENTS
+Part A: Preskill: Finding the Reciprocal
+1. You've learned how to find the value of a variable in addition and 
+subtraction problems. Now you're going to learn how to find the value of 
+a variable in multiplication and division problems. To do that, you need to 
+know how to find the reciprocal of a number. The reciprocal of any number 
+is the number you multiply by to equal one.
+2. The reciprocal of a whole number is 1 over that number. Let's say I wanted to 
+find the reciprocal of 15. (Write 15 on the board.) To find the reciprocal of 15, 
+I write a fraction with 1 as the numerator and 15 as the denominator. (Write
+1 1— on the board.) The reciprocal of 15 is ■ . What is the reciprocal of 15? 1
+15
+
+[p.505]
+Chapter 18 Pre-algebra 505
+TEACHER STUDENTS
+13. Let's see if that works. (Write 15 x — — .) We need to convert the whole15
+15 1number to a fraction. (Write — × — = .) We multiply across when
+multiplying fractions. (Point to the numerators.) What is 15 × 1? 15
+15 1(Write 15 in the place for the numerator after — × — = . Point to the
+denominators.) What is 1 × 15? 15
+15 1 15 1(Write 15 in the place for the denominator after
+, 15 4 . . 15equals —. What does — equal? One
+(Repeat steps 2 and 3 with 3, 4, 29, and 100.)
+44. To get the reciprocal of a fraction, turn the fraction upside down. (Write — on
+4the board.) I need to find the reciprocal of —. I'm going to turn the fraction
+4 5upside down to get the reciprocal of -. (Write — on the board.) The reciprocal 5
+4
+4 5 4of — is —. What is the reciprocal of ~?
+4 55. Let's see if that works. (Write — × - = . Point to the numerators.) What is
+4X5? 20
+(Write 20 in the place for the numerator. Point to the denominators.) What is
+5X4? 20
+4 5 20 20(Write 20 in the place for the denominator.) — × — = —. What does -θ equal? One
+2 7 1 7(Repeat steps 4 and 5 with -, -, -, and -.) 3 5 2 o
+Part B: Structured Board Presentation
+1. (Write the following equation on the board.)
+5e = 15
+2. We want to find the value for the variable e in this equation. To do that, we
+need to get e all by itself on one side of the equation. We're going to get e
+all by itself by multiplying by the reciprocal of 5, so that we end up with 1e. 2
+What is the reciprocal of 5? 5
+15 multiplied by - equals 1, leaving 1e or e. (Add to the equation so it looks
+like the following:)
+G>θ=15
+continued
+
+[p.506]
+506 Part III Extended Concepts and Skills
+Format 18.4 (continued)
+SOLVING ONE-STEP PROBLEMS WITH
+VARIABLES—MULTIPLICATION AND DIVISION
+TEACHER STUDENTS
+3. Remember the rule about changing an equation: Whatever you do to one 
+side of an equation, you must do to the other. Say the rule.
+Whatever you do 
+to one side of an 
+equation, you must do 
+to the other.
+1We multiplied the left side of the equation by —. That means we must
+1multiply the right side of the equation by -. What do we need to do to the 
+right side of the equation?
+1Yes, we multiplied the left side of the equation by -, so we need to multiply
+1the right side of the equation by -. (Add to the equation so it looks like the 
+following:)
+5e = 15
+14. Now that we have multiplied both sides of the equation by —, we can work
+1the equation. What is - multiplied by 5?
+1Yes, so we can cross out — and 5 on the left side of the equation. (Add to the 
+equation so it looks like the following:)
+15
+1 Multiply by -
+I
+5
+2
+5
+5
+1
+15. Now we work the right side of the equation. What is 15 times -? (Pause
+while students work.)
+Right! Now our equation looks like this: (Write the following next to the 
+original equation on the board.)
+e = 3
+6. We changed both sides of the equation to find out that e = 3. What does e 
+equal?
+3
+3
+7. We can check our work by rewriting the equation with 3 in the place of e. 
+(Write the following on the board.)
+5(3) = 15
+Does 5 × 3 = 15?
+Yes, it does. So we know that e = 3 because 5 × 3 = 15.
+8. Let's try another one. (Write the following equation on the board.)
+Yes
+
+[p.507]
+Chapter 18 Pre-algebra 507
+continued
+TEACHER STUDENTS
+9. We want to find the value for the variable b in this equation. To do that, we 
+need to get b all by itself on one side of the equation. You need to know 
+that — is the same as ( — )b. (Erase — and write ( — }b in its place.) We're
+1going to get b all by itself by multiplying by the reciprocal of -, so that we
+1end up with ↑b. What is the reciprocal of —? 2
+1
+1 2multiplied by — equals 1, leaving 1b or b. (Add to the equation so it looks
+like the following:)
+∕2V1C n— — ]b = 9∖1Λ2∕
+10. Remember the rule about changing an equation: Whatever you do to one 
+side of an equation, you must do to the other. We multiplied the left side of
+2the equation by -. What must we do to the right side of the equation? Multiply by ∣
+2Yes, we multiplied the left side of the equation by -, so we need to multiply
+2the right side of the equation by —. (Add to the equation so it looks like the
+following:)
+<2y1∖ J2∖
+∖1A2∕ ∖1∕
+211. Now that we have multiplied both sides of the equation by -, we can work
+2 1the equation. What is — multiplied by —? 1
+2 1Yes, so we can cross out - and - on the left side of the equation. (Add to 
+the equation so it looks like the following:)
+212. Now we work the right side of the equation. What is 9 times -? (Pause 
+while students work.) 18
+Now our equation looks like this: (Write the following next to the original 
+equation on the board.)
+b = 18
+13. We changed both sides of the equation to find out that b = 18. What does 
+b equal? 18
+
+[p.508]
+508 Part III Extended Concepts and Skills
+Format 18.4 (continued)
+SOLVING ONE-STEP PROBLEMS WITH
+VARIABLES—MULTIPLICATION AND DIVISION
+TEACHER STUDENTS
+14. We can check our work by rewriting the equation with 18 in the place of b. 
+(Write the following on the board.)
+τ-
+Does 18 divided by 2 equal 9?
+Yes, it does. So we know that b = 18 because 18 divided by 2 equals 9.
+Yes
+15. (Repeat with the following examples.) 14 = 2s, 5f = 25, 4 =
+Part C: Less Structured Board Presentation
+1. (Write problems like the following on the board. Give students paper and 
+pencils for solving the equations.)
+a. 5y = 30
+b. 18 = 6e
+21c. — = 7
+X
+d.45 = 5n
+2. Read problem a. 5y = 30
+3. We want to find the value for y. What do you need to do to get y by itself? Multiply by the 
+reciprocal of 5
+What's the reciprocal of 5? 1
+1After you multiply the side of the equation with y by -, what will you do?
+J
+Multiply the other side 
+τ , . , 1of the equation by -
+Yes, whatever you do to one side of an equation you must do to the other.
+4. Work the equation now to find the value of y. (Monitor students as they 
+solve for×.)
+5. What does y equal? y equals 6
+6. You can check your work by rewriting the equation with 6 in the place of y. 
+Do that now. (Monitor students.)
+You put 6 in the place of y. Read the new equation. 5 times 6 equals 30
+Does that make sense? Yes
+Yes, it does. So your answer is correct.
+7. (Repeat steps 2-6 with the remaining problems. Instruct the students to 
+follow the same steps to find the value of the variable regardless of which 
+side the variable is on.)
+
+[p.509]
+Chapter 18 Pre-algebra 509
+TEACHER STUDENTS
+Part D: Independent Practice
+1. (Write problems like the following on the board. Give students paper and 
+pencils for solving the equations.)
+a. 2t = 20
+. ιθθb.-----= 25X
+c. 80 = 20f
+d. 13 = ∣
+e. 9k = 9
+2. Find the value of the variable in each of the equations. Remember to check 
+your work by rewriting the equation with the value of the variable. (Monitor 
+students as they work.)
+Format 18.5
+RATIO TABLES USING FRACTIONS FOR CLASSES (See Video in Part B)
+TEACHER STUDENTS
+Part A: Structured Board Presentation: Figuring Out Fraction Number Families
+1. (Put this problem on the board.)
+Three-fifths of the bottles of glue in the store are white glue and the rest are 
+super glue. If there are 26 bottles of super glue, how many bottles of white 
+glue are in the store? How many total bottles of glue are in the store?
+Read the problem with students.
+2. This is a classification word problem. What words tell us about the classes in 
+this problem?
+3. What is the first class named in the problem? Underline that class.
+4. What is the next class named in the problem? Underline that class.
+5. What is the next class named in the problem? Underline that class.
+(Write this on board.)____ +_____ =_____
+6. Write a number sentence like the one on the board. (Pause.)
+What is the big class?
+Write that under the last blank. (Pause.)
+7. So what are the two smaller classes?
+Glue, white glue, 
+super glue
+Glue
+White glue
+Super glue
+Glue
+White glue and super 
+glue
+8. Where do we write those? Under the first two 
+blanks
+9. Do that now. (Pause.)
+10. Let's look at the classes one at a time. Let's start with white glue. What 
+fraction of the bottles of glue are white glue?
+3
+5
+continued
+
+[p.510]
+510 Part III Extended Concepts and Skills
+Format 18.5 (continued)
+RATIO TABLES USING FRACTIONS FOR CLASSES
+TEACHER STUDENTS
+11. Where do we write —?
+12. Do that now. Does the problem tell us what fraction of the bottles of glue is 
+super glue?
+13. What do we write over super glue?
+14. Do that now. (Pause.) What do we write over the big class, glue?
+5 515. Yes, -. The problem doesn't say —. So who remembers how we know that
+the big class is equal to ~?
+16. The big number is given, so do we add or subtract?
+17. So what is the answer?
+o
+Part B: Structured Board Presentation: Ratio Tables
+1. Now we are ready to draw and use a ratio table to solve problems. (Draw this 
+table on the board and ask students to copy it.)
+Over the blank labeled 
+white glue.
+No
+A box
+5
+5
+Because the big class 
+is all of the glue, so it 
+is equal to one whole, 
+5
+°r 5
+Subtract
+2
+5
+Fraction family Ratio Quantity
+White glue
+Super glue
+Glue
+2. We have just figured out the fraction number family. What fraction of the 
+bottles is white glue?
+3. Write ∣ in the fraction family column next to white glue.
+4. What fraction is super glue?
+5. Write that next to super glue. (Pause.)
+6. What fraction do we write for the big class of glue?
+7. Write - in the fraction family column. (Pause.)
+8. Now we are ready to complete the ratio column. We write the numerators of 
+our fractions in the ratio column.
+What is the fraction for white glue?
+What is the numerator?
+Write the numerator in the ratio column. (Pause.)
+2
+5
+5
+5
+3
+5
+3
+5
+3
+
+[p.511]
+Chapter 18 Pre-algebra 511
+TEACHER
+9. What is the fraction for super glue?
+What is the numerator?
+Write the numerator in the ratio column. (Pause.) 
+10. What is the fraction for glue?
+What is the numerator?
+Write the numerator in the ratio column. (Pause.) 
+(The completed table should look like the one below.)
+Fraction family Ratio Quantity
+White glue 3/5 3
+Super glue 2/5 2
+Glue 5/5 5
+11. Now we are ready to solve the problem. We are going to do that by using 
+ratio equations. We begin by writing into the table the quantity we know. 
+Read the problem. (Pause.) What quantity of glue bottles is stated in the 
+problem?
+Write that quantity in the column across from super glue. (Pause.) Since we 
+know the quantity of super glue, we call super glue the known quantity.
+12. What does the problem ask us to find out first?
+13. To find the answer, we are going to make a ratio equation of our known 
+quantity, super glue, to our unknown quantity, white glue. First, we'll set up 
+the ratio equation with the appropriate labels, then we'll fill in the known 
+quantities
+Here's how we write the ratio equation. We start by labeling the numerator 
+and denominator in the first fraction like this. (Write the following equation 
+on the board.)
+super glue
+white glue
+Then we write an equal sign and write the labels for the fraction on the 
+other side.
+(Write the following on the board.)
+super glue super glue
+white glue white glue
+Now we fill in the correct ratio for the first fraction. Look at the ratio 
+column. What is the ratio of super glue to white glue?
+Complete the ratio for the first fraction.
+(Write the following on the board.)
+2 super glue super glue
+3 white glue white glue
+STUDENTS
+2
+5
+2
+5
+5
+5
+26 bottles of super 
+glue
+How many bottles of 
+white glue were in the 
+store
+2
+3
+continued
+
+[p.512]
+512 Part III Extended Concepts and Skills
+Format 18.5 (continued)
+RATIO TABLES USING FRACTIONS FOR CLASSES
+TEACHER STUDENTS
+Now we fill in the known quantity for the second fraction. Look at the 26 bottles of super
+quantity column and find the known quantity. (Pause.) What is the known 
+quantity?
+Write the known quantity in the appropriate fraction on the other side of 
+the equation. (Write the quantity on the board.)
+2 super glue _ 26 super glue
+3 white glue white glue
+14. Now we're ready to solve for the quantity of white glue. Write a box by the 
+label for white glue in the equation.
+2 super glue 26 super glue
+3 white glue □ white glue
+We solve this by using equivalent fractions.
+We are looking for a fraction equal to one. What number times two
+glue
+equals 26?
+So we write in 13 over 13.
+2 super glue ∕13∖ _ 26 super glue
+3 white glue ∖13√ □ white glue
+Here's what you should have. What do we multiply to find out how many
+13
+bottles of white glue were in the store? 3 × 13
+What's the answer? 39 bottles of white 
+glue
+15. Now we can fill in the quantity for white glue in the table. Where are we In the quantity column
+going to write 39?
+16. We now have 26 bottles for super glue and 39 bottles for white glue. How
+next to white glue
+do we find out how many bottles of glue in all? Add 26 and 39
+What is your answer?
+Write that in your table and you're done.
+65 bottles of glue
