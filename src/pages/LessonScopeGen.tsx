@@ -452,7 +452,12 @@ function Builder({ onLaunched, onBack }: { onLaunched: (id: string) => void; onB
   const registryLessons = registryExists ? (snapshot?.lessons ?? []).filter((l) => l.status === 'ACTIVE') : []
   const seedLessons: { title: string; sub: string }[] = dataModel
     ? dataModel.lessons.map((l) => ({ title: l.lessonTitle, sub: [l.unitName, l.standardId].filter(Boolean).join(' · ') }))
-    : (sourceScope?.units ?? []).flatMap((u) => u.lessons.map((l) => ({ title: l.title, sub: u.title })))
+    : // Same display title the backend snapshot carries (snapshotFromScope):
+      // the student-friendly title when present — the picker's includedLessons
+      // must literally match the snapshot's lessonTitle values.
+      (sourceScope?.units ?? []).flatMap((u) =>
+        u.lessons.map((l) => ({ title: (l.studentFriendlyTitle ?? '').trim() || l.title, sub: u.title })),
+      )
   const pickerLessons = registryExists
     ? registryLessons.map((l) => ({ title: l.lessonTitle, sub: [l.unitName, l.standardId].filter(Boolean).join(' · ') }))
     : seedLessons

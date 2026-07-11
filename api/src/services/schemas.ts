@@ -124,6 +124,7 @@ const EXEMPLAR = obj({
 const LESSON = obj({
   id: STR,
   title: STR,
+  studentFriendlyTitle: STR, // the title as a student sees it (CARD_RULES item 17)
   type: enums(LESSON_TYPES),
   evidenceStatus: enums(EVIDENCE_STATUS),
   fields: obj({
@@ -572,6 +573,7 @@ export interface WireDecision {
 export interface WireLesson {
   id: string
   title: string
+  studentFriendlyTitle: string
   type: LessonType
   evidenceStatus: 'observed' | 'inferred' | 'mixed'
   fields: Record<keyof Lesson['fields'], WireCardField>
@@ -794,9 +796,11 @@ export function toLesson(w: WireLesson, validItemIds: Set<string>, fallbackItemR
   // The unconstrained fallback path does not guarantee the narrative properties exist.
   const sequencingRationale = (w.sequencingRationale ?? '').trim()
   const granularityRationale = (w.granularityRationale ?? '').trim()
+  const studentFriendlyTitle = (w.studentFriendlyTitle ?? '').trim()
   return {
     id: w.id,
     title: w.title,
+    ...(studentFriendlyTitle.length > 0 ? { studentFriendlyTitle } : {}),
     type: w.type,
     evidenceStatus: w.evidenceStatus,
     fields,

@@ -1,6 +1,7 @@
 import { InvocationContext } from '@azure/functions'
 import { JobMessage, Lesson, Proposal, Scope } from '../domain/types'
 import { getScope, getScopeEvidenceSet, mutateScope, snapshotScope } from '../data/entities'
+import { dedupeStudentTitles } from './titles'
 import { mutateJob, pushLog } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
 import { generateStructured } from '../services/claude'
@@ -190,6 +191,9 @@ export async function applyProposalRunStep(msg: JobMessage, ctx: InvocationConte
         byId.set(existing.id, { ...toLesson(wire, validItemIds), id: existing.id } satisfies Lesson)
       }
       freshUnit.lessons = freshUnit.lessons.map((l) => byId.get(l.id) ?? l)
+      // Applied lessons mint titles without a course-wide view — re-enforce
+      // display-title uniqueness across the whole scope.
+      dedupeStudentTitles(s.units)
       p.appliedUnits = [...(p.appliedUnits ?? []), unit.id]
       s.updated = today()
     })

@@ -28,6 +28,7 @@ export type CardKey =
   | 'standardId'
   | 'standardDescription'
   | 'lessonTitle'
+  | 'studentFriendlyTitle'
 
 export interface CardFieldMeta {
   key: CardKey
@@ -50,22 +51,23 @@ export const fieldMeta: CardFieldMeta[] = [
   { key: 'standardDescription', n: 5, label: 'Standard Description', purpose: 'The official standard wording, verbatim', record: 'standards' },
   { key: 'substandard', n: 6, label: 'Substandard', purpose: 'The single teachable behavior this lesson is responsible for teaching', record: 'substandard' },
   { key: 'lessonTitle', n: 7, label: 'Lesson Title', purpose: 'The shortest verb-led title that names the atom this lesson teaches' },
-  { key: 'objectives', n: 8, label: 'Objectives', purpose: 'The minimal-complete set of observable objectives that define mastery of this atom', record: 'objectives' },
-  { key: 'emphasis', n: 9, label: 'Major / Supporting', purpose: 'Determines instructional weight in sequencing', record: 'emphasis' },
-  { key: 'progression', n: 10, label: 'Progression Placement', purpose: 'Situates the atom in the vertical story', record: 'progression' },
-  { key: 'prerequisites', n: 11, label: 'Prerequisites', purpose: 'What must already be secure before this lesson', record: 'prerequisites' },
-  { key: 'boundary', n: 12, label: 'Assessment Boundary', purpose: 'The atom’s edges', record: 'boundary' },
-  { key: 'newLearning', n: 13, label: 'New Learning', purpose: 'The one thing this lesson teaches', record: 'newLearning' },
-  { key: 'approach', n: 14, label: 'Instructional Approach', purpose: 'How students are taught to do the problems', record: 'approach' },
-  { key: 'nonGoals', n: 15, label: 'Non-Goals', purpose: 'Drift protection — what not to accidentally teach yet', record: 'nonGoals' },
-  { key: 'ceiling', n: 16, label: 'Difficulty Ceiling', purpose: 'What “hard” can look like without leaving the grade', record: 'ceiling' },
-  { key: 'assessment', n: 17, label: 'Assessment Evidence', purpose: 'What mastery looks like', record: 'assessment' },
-  { key: 'releasedItems', n: 18, label: 'Released Items (If Applicable)', purpose: 'The empirical anchors — shown, not cited', record: 'releasedItems' },
+  { key: 'studentFriendlyTitle', n: 8, label: 'Student Friendly Title', purpose: 'The title as a student sees it — concise, descriptive, developmentally on grade level' },
+  { key: 'objectives', n: 9, label: 'Objectives', purpose: 'The minimal-complete set of observable objectives that define mastery of this atom', record: 'objectives' },
+  { key: 'emphasis', n: 10, label: 'Major / Supporting', purpose: 'Determines instructional weight in sequencing', record: 'emphasis' },
+  { key: 'progression', n: 11, label: 'Progression Placement', purpose: 'Situates the atom in the vertical story', record: 'progression' },
+  { key: 'prerequisites', n: 12, label: 'Prerequisites', purpose: 'What must already be secure before this lesson', record: 'prerequisites' },
+  { key: 'boundary', n: 13, label: 'Assessment Boundary', purpose: 'The atom’s edges', record: 'boundary' },
+  { key: 'newLearning', n: 14, label: 'New Learning', purpose: 'The one thing this lesson teaches', record: 'newLearning' },
+  { key: 'approach', n: 15, label: 'Instructional Approach', purpose: 'How students are taught to do the problems', record: 'approach' },
+  { key: 'nonGoals', n: 16, label: 'Non-Goals', purpose: 'Drift protection — what not to accidentally teach yet', record: 'nonGoals' },
+  { key: 'ceiling', n: 17, label: 'Difficulty Ceiling', purpose: 'What “hard” can look like without leaving the grade', record: 'ceiling' },
+  { key: 'assessment', n: 18, label: 'Assessment Evidence', purpose: 'What mastery looks like', record: 'assessment' },
+  { key: 'releasedItems', n: 19, label: 'Released Items (If Applicable)', purpose: 'The empirical anchors — shown, not cited', record: 'releasedItems' },
 ]
 
 // ---------------------------------------------------------------------------
 // Derived-content resolution — shared by the card view, the CSV export, and
-// the canonical JSON export so all three present the same 18 fields.
+// the canonical JSON export so all three present the same 19 fields.
 // ---------------------------------------------------------------------------
 
 /** Card header values derived from the scope's request and standard set(s). */
@@ -205,6 +207,8 @@ export function cardContent(key: CardKey, lesson: Lesson, ctx: ScopeCardContext)
       return ctx.standardSet
     case 'lessonTitle':
       return lesson.title
+    case 'studentFriendlyTitle':
+      return (lesson.studentFriendlyTitle ?? '').trim()
     case 'standardId':
       return splitStandards(lesson.fields.standards?.content ?? '', ctx.prefixFor).standardId
     case 'standardDescription':

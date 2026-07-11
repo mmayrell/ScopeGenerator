@@ -245,7 +245,7 @@ function LessonCard({ scope, lesson, lessonNumber, packet }: { scope: Scope; les
         </div>
       </header>
 
-      {/* fields 01–18, each backed field followed by its own decision record */}
+      {/* fields 01–19, each backed field followed by its own decision record */}
       <div className="mt-7 overflow-hidden rounded-2xl border border-hairline bg-panel shadow-(--shadow-lift)">
         {fieldMeta.map((fm) => {
           // Derived header fields (Subject, Course, Standard Set, Standard ID,

@@ -7,6 +7,7 @@ import { completeUnit, createJob, getJob, mutateJob, pushLog } from '../data/job
 import { enqueueJob } from '../data/queue'
 import { generateStructured } from '../services/claude'
 import { cardsPrompt, courseMapPrompt, unitPlanPrompt } from '../services/prompts'
+import { dedupeStudentTitles } from './titles'
 import {
   COURSE_MAP_SCHEMA,
   CourseMap,
@@ -833,6 +834,9 @@ export async function generateFinalizeStep(msg: JobMessage, ctx: InvocationConte
     if (!unit) throw new Error(`unit checkpoint ${i} missing for job ${msg.jobId}`)
     units.push(unit)
   }
+  // Student-facing display titles are a downstream identity key — enforce
+  // course-wide uniqueness (sibling card batches pick theirs independently).
+  dedupeStudentTitles(units)
 
   const scope = await getScope(scopeId)
   const evidenceSet = await getScopeEvidenceSet(scope)

@@ -319,7 +319,9 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
    record (`sequencingRationale` — why the units are ordered as they are and why the lesson holds
    its position; `granularityRationale` — why exactly this granularity, arguing both why not more
    and why not less; optional on legacy scopes, rendered in the trailing Lesson Decision Record and
-   leading the CSV `scoping_rationale` column),
+   leading the CSV `scoping_rationale` column), and a required `studentFriendlyTitle` (the title as
+   a student sees it — concise, descriptive, on grade level; optional on legacy scopes; the JSON
+   export's `lessonTitle` uses it, falling back to `title`),
    `generatedExemplars` for lessons with no in-boundary items (never-empty Released Items, spec §7.14).
    Card calls carry the same 8.5-minute abort: a cut call re-enqueues the unit message with
    `payload.cuts` + `payload.callSize` (finished lessons are checkpointed; the retry runs at

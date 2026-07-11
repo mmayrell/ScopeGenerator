@@ -114,7 +114,10 @@ export function buildScopeJson(
         unitName: u.title,
         lessonOrder: courseLessonNumber,
         standardId,
-        lessonTitle: l.title,
+        // The JSON is the student-facing deliverable: the student-friendly
+        // title stands in for the engineering title (older scopes without
+        // the field fall back).
+        lessonTitle: (l.studentFriendlyTitle ?? '').trim() || l.title,
         deactivationReason: null,
         objectives: content(f.objectives),
         assessmentBoundary: content(f.boundary),

@@ -204,6 +204,13 @@ export interface GeneratedExemplar {
 export interface Lesson {
   id: string // e.g. U3.L3
   title: string
+  /**
+   * The title as a STUDENT sees it — as concise but descriptive as possible,
+   * developmentally appropriate and on grade level (no codes, no curriculum
+   * vocabulary). The JSON export uses it as lessonTitle. Optional only for
+   * scopes generated before the field existed.
+   */
+  studentFriendlyTitle?: string
   type: LessonType
   evidenceStatus: 'observed' | 'inferred' | 'mixed'
   fields: {

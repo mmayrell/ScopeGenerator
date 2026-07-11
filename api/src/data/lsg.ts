@@ -141,7 +141,12 @@ export function snapshotFromScope(
       return {
         lessonId: l.id,
         unitName: unit.title,
-        lessonTitle: l.title,
+        // The platform lessonTitle is the STUDENT-FACING title, matching the
+        // scope JSON export exactly — the registry's (unitName, lessonTitle)
+        // identity keys must agree with what exports/DM uploads carry, or a
+        // re-import of the same scope mass-deactivates and duplicates every
+        // lesson. Legacy scopes without the field keep the engineering title.
+        lessonTitle: (l.studentFriendlyTitle ?? '').trim() || l.title,
         standardId,
         lessonOrder: order,
         status: 'ACTIVE' as const,

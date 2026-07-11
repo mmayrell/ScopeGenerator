@@ -1,6 +1,7 @@
 import { InvocationContext } from '@azure/functions'
 import { JobMessage, Lesson, Scope, Unit } from '../domain/types'
 import { getScope, getScopeEvidenceSet, getScopeSourceSets, mutateScope, snapshotScope } from '../data/entities'
+import { dedupeStudentTitles } from './titles'
 import { mutateJob, pushLog } from '../data/jobs'
 import { generateStructured } from '../services/claude'
 import { rerunLessonPrompt, rerunUnitPrompt } from '../services/prompts'
@@ -91,6 +92,8 @@ export async function rerunRunStep(msg: JobMessage, ctx: InvocationContext): Pro
   const modeLabel = mode === 'split' ? 'more granular' : mode === 'merge' ? 'less granular' : 'regenerate in place'
   const updated = await mutateScope(scope.id, (s) => {
     applyChanges(s)
+    // A rerun mints titles without a course-wide view — re-enforce display-title uniqueness.
+    dedupeStudentTitles(s.units)
     s.version += 1
     s.status = 'complete'
     delete s.error
