@@ -5,27 +5,15 @@ import heroBanner from '../assets/hero-banner.png'
 const workspace = [
   {
     n: '01',
-    title: 'Item Repository',
-    text: 'A research assistant that hunts the public web for released items.',
-    to: '/packets',
+    title: 'Generate a Scope',
+    text: 'Evidence-locked course designs, unit by unit, card by card — every instructional decision documented.',
+    to: '/scopes/new',
   },
   {
     n: '02',
-    title: 'Reference Library',
-    text: 'The document shelf — four roles, filed by framework and grade.',
-    to: '/library',
-  },
-  {
-    n: '03',
-    title: 'Standard Sets',
-    text: 'The evidence libraries scopes are built from. Create, curate, publish.',
-    to: '/sets',
-  },
-  {
-    n: '04',
-    title: 'Scope',
-    text: 'Evidence-locked course designs, unit by unit, card by card.',
-    to: '/scopes',
+    title: 'Generate a DI Video Script',
+    text: 'Turn lesson cards into production-ready scripts for Direct Instruction videos with checked interactions.',
+    to: '/videos',
   },
 ]
 
@@ -72,7 +60,7 @@ export default function Home() {
       {/* the workspace */}
       <div className="px-6 pt-7 pb-12 lg:px-10">
         <div className="mb-4 font-mono text-[11px] font-semibold tracking-[0.18em] text-ink">THE WORKSPACE</div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {workspace.map((w) => (
             <Link
               key={w.n}
