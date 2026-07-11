@@ -576,30 +576,29 @@ doctrine versions.
 
 ## Scope Evaluations (kind `eval`, step `run`)
 
-The rubric-sheet QC layer: after every scope generation (enqueued best-effort by finalize — a
-dispatch failure never fails the generation) and on demand, an agent scores the scope against the
-**rubrics written into the evaluation spreadsheet's column headings** (`services/evalsheet.ts`
-fetches the sheet's public CSV export at evaluation time, so editing a rubric in Google retunes
-the agent with no deploy). Column roles derive from the sheet itself: trailing 3 columns = the
-human SME's (always blank); the `Results` band computes programmatically; short-headed leading
-columns are administrative; bold `**…**` headings are hard gates. Two Claude calls per
-evaluation: the lesson band scores a stratified ~10-lesson sample of full cards; the course band
-scores the full course structure + standards digest + the auto-QC results. Replies bind by echoed
-heading; a skipped column scores a fail-loud `1`. Results follow the sheet's own Automatic
-Verdict formula (FAIL on any `1`/`Inaccurate`; PASS — GOOD when no fails, all hard gates `3`,
-average ≥ 2.70; else PASS — GOOD ENOUGH); AI-QC Notes carry one line per defect. The scope
-document is hosted for the sheet's JSON column in the anonymous `screenshots` container
-(`evals/<scopeId>.json`).
+The built-in rubric QC layer (the Google-Sheet/webhook era is retired): after every scope
+generation (enqueued best-effort by finalize — a dispatch failure never fails the generation) and
+on demand, an agent scores the scope against the **rubric compiled into `data/eval-rubric.ts`**
+(29 columns: 4 administrative, 13 lesson-band + 4 course-band rubrics — six marked hard gates —
+5 computed results, 3 SME columns the pipeline never writes; editing a rubric is a deploy). Two
+Claude calls per evaluation: the lesson band scores a stratified ~10-lesson sample of full cards
+(checkpointed to `jobs/<jobId>/eval-lesson-band.json` + re-enqueue under the time budget); the
+course band scores the full course structure + standards digest + the auto-QC results. Replies
+bind by echoed heading; a skipped column scores a fail-loud `1`. Results follow the verdict rule
+(FAIL on any `1`/`Inaccurate`; PASS — GOOD when no fails, ALL hard gates `3`, average ≥ 2.70;
+else PASS — GOOD ENOUGH); AI-QC Notes lead with the verdict + criterion, then per-gate reasoning.
+The scope document is hosted for the JSON column in the anonymous `screenshots` container
+(`evals/<scopeId>.json`). A re-evaluation refreshes the agent's cells but PRESERVES the SME
+fields and `created`.
 
-- **Storage**: `evals/records/<scopeId>.json` (latest evaluation wins) + `evals/config.json`
-  (webhook config); index partition `eval`.
-- **Sheet writes** go through a user-pasted **Apps Script web-app webhook** (Google's API needs
-  OAuth for writes; the bound script is the zero-secret bridge). The script upserts by scopeId
-  kept in column 30, outside the visible rubric, so re-evaluations update their row. Until
-  connected, rows keep `exportStatus: 'pending-export'` and the Evaluations page offers a push.
-- **Routes** (`http-evals.ts`): `GET evals` (sheet URL + connected + summaries) · `PUT
-  evals/config` (webhook URL, must be script.google.com) · `POST evals/{scopeId}/run` (202,
-  completed scopes only) · `POST evals/{scopeId}/push` (retry a pending row).
+- **Storage**: `evals/records/<scopeId>.json` (latest evaluation wins; carries `values` +
+  `headings` for CSV export, `cells`, results, and the SME fields); index partition `eval`.
+- **Routes** (`http-evals.ts`): `GET evals` (rubric + summaries) · `GET/DELETE evals/{scopeId}`
+  (full record / permanent run deletion incl. the hosted JSON copy) · `PUT evals/{scopeId}/sme`
+  (`{ sme, smeVerdict, smeNotes }`, verdict ∈ FAIL | PASS — GOOD | PASS — GOOD ENOUGH | '') ·
+  `POST evals/{scopeId}/run` (202, completed scopes only).
+- CSV export is client-side (the page joins each record's stored `headings`/`values` + SME
+  fields under the current rubric's two header rows).
 - Worker: evaluation is an observer — a terminal `eval` job failure records only on the job row,
   never on the scope.
 

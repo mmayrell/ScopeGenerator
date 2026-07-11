@@ -1,30 +1,30 @@
 import { InvocationContext } from '@azure/functions'
-import { EvalCell, JobMessage, Lesson, ScopeEvaluation, Unit } from '../domain/types'
+import { EvalCell, JobMessage, Lesson, Unit } from '../domain/types'
 import { getScope, getScopeEvidenceSet } from '../data/entities'
-import { saveEvaluation } from '../data/evals'
+import { mutateEvaluation, saveEvaluation } from '../data/evals'
+import {
+  EVAL_GOOD_AVERAGE,
+  EVAL_HARD_GATES,
+  EVAL_ROW_COLUMNS,
+  EVAL_RUBRIC_BANDS,
+  EvalRubricColumn,
+} from '../data/eval-rubric'
 import { getJob, mutateJob, pushLog } from '../data/jobs'
 import { getJsonOrUndefined, putJson } from '../data/blobs'
 import { dataContainer, screenshotsContainer } from '../data/clients'
 import { enqueueJob } from '../data/queue'
 import { generateStructured } from '../services/claude'
-import {
-  EvalSheetColumn,
-  fetchEvalSheetModel,
-  getEvalConfig,
-  pushEvalRow,
-  SME_COLUMN_COUNT,
-} from '../services/evalsheet'
 import { evalScorePrompt } from '../services/prompts'
 import { EVAL_SCORES_SCHEMA, WireEvalScores } from '../services/schemas'
 import { nowIso } from '../shared/util'
 
 // Scope Evaluation step (kind 'eval' / step 'run') — runs after a scope
-// generation completes (enqueued by finalize; also on demand). The rubric
-// spreadsheet's headers ARE the evaluation spec: columns are fetched live,
-// scored by the agent band-by-band, results computed per the sheet's own
-// verdict formula, and the finished row pushed to Google through the
-// configured Apps Script webhook (kept locally as pending-export until the
-// webhook is connected). SME columns are always left blank.
+// generation completes (enqueued by finalize; also on demand). The rubric is
+// BUILT IN (data/eval-rubric.ts): the agent scores every rubric column
+// band-by-band, results are computed per the verdict rule, and the finished
+// evaluation is stored for the Scope Evaluations page (details view, SME
+// input, CSV export). SME fields belong to the human — a re-evaluation
+// refreshes the agent's cells but never touches them.
 
 const EXECUTION_DEADLINE_MS = 8.5 * 60 * 1000
 /** Launch no further Claude call past this point — checkpoint and re-enqueue instead. */
@@ -82,17 +82,24 @@ export function sampleLessons(units: Unit[], max: number): { lessons: Lesson[]; 
 }
 
 /**
- * The model must answer '1' | '2' | '3' or a categorical term the rubric
- * itself defines. Anything else must NOT slip through as a silent pass with
- * a smaller average denominator — it normalizes or fails loud.
+ * The model must answer '1' | '2' | '3' (or Accurate/Inaccurate where the
+ * rubric defines that scale). Verbal scale answers map to their digits —
+ * every rubric spells its scale as "3 = Pass–Good … 1 = Fail", so a bare
+ * "Fail" stored verbatim would dodge isFail/numericScore and publish an
+ * agent-failed run as a pass on a smaller average denominator. Anything
+ * unmappable fails loud.
  */
 export function normalizeVerdict(raw: string, rubric: string): { verdict: string; extraNote: string } {
   const v = raw.trim()
   if (/^[123]$/.test(v)) return { verdict: v, extraNote: '' }
   const lead = /^([123])\b/.exec(v)
   if (lead) return { verdict: lead[1], extraNote: '' }
-  if (v.length > 0 && v.length <= 40 && rubric.toLowerCase().includes(v.toLowerCase())) {
-    return { verdict: v, extraNote: '' } // a categorical term the rubric defines (e.g. Accurate / Inaccurate)
+  const canon = v.toLowerCase().replace(/[–—]/g, '-').replace(/[()]/g, '').replace(/\s+/g, ' ').trim()
+  if (/^pass[ -]*good enough$/.test(canon) || /^good enough$/.test(canon)) return { verdict: '2', extraNote: '' }
+  if (/^pass[ -]*good$/.test(canon) || /^good$/.test(canon)) return { verdict: '3', extraNote: '' }
+  if (/^fail(ed)?$/.test(canon)) return { verdict: '1', extraNote: '' }
+  if (/^(accurate|inaccurate)$/i.test(v) && rubric.toLowerCase().includes(v.toLowerCase())) {
+    return { verdict: v[0].toUpperCase() + v.slice(1).toLowerCase(), extraNote: '' }
   }
   return {
     verdict: '1',
@@ -123,14 +130,16 @@ export async function evalRunStep(msg: JobMessage, ctx: InvocationContext): Prom
 
   const scope = await getScope(scopeId)
   const set = await getScopeEvidenceSet(scope)
-  const model = await fetchEvalSheetModel()
+
+  const lessonBand = EVAL_RUBRIC_BANDS.lesson
+  const courseBand = EVAL_RUBRIC_BANDS.course
 
   await mutateJob(msg.jobId, (r) => {
     r.status = 'running'
     r.totalStages = 3
     r.stagesDone = 0
-    r.stage = 'Evaluating the scope against the rubric sheet'
-    pushLog(r, `Rubric sheet loaded: ${model.rubricColumns.length} rubric columns across ${model.columns.length}`)
+    r.stage = 'Evaluating the scope against the built-in rubric'
+    pushLog(r, `Rubric loaded: ${lessonBand.length + courseBand.length} rubric columns (built-in)`)
   })
 
   const started = Date.now()
@@ -140,12 +149,9 @@ export async function evalRunStep(msg: JobMessage, ctx: InvocationContext): Prom
     return { signal: controller.signal, dispose: () => clearTimeout(timer) }
   }
 
-  // Band split follows the sheet's own group bands: lesson-band rubrics score
-  // a stratified sample of full cards; course-band rubrics score the whole
-  // course structure (compact skeleton of every lesson) plus the standards
-  // digest, which Standard Coverage needs.
-  const lessonBand = model.rubricColumns.filter((c) => /lesson/i.test(c.group))
-  const courseBand = model.rubricColumns.filter((c) => !/lesson/i.test(c.group))
+  // Band split: lesson-band rubrics score a stratified sample of full cards;
+  // course-band rubrics score the whole course structure (compact skeleton of
+  // every lesson) plus the standards digest, which Standard Coverage needs.
   const { lessons: sample, unitsCovered } = sampleLessons(scope.units, SAMPLE_LESSONS)
   const courseOverview = scope.units.map((u) => ({
     id: u.id,
@@ -162,7 +168,7 @@ export async function evalRunStep(msg: JobMessage, ctx: InvocationContext): Prom
 
   const scoreBand = async (
     bandName: string,
-    columns: EvalSheetColumn[],
+    columns: EvalRubricColumn[],
     evidence: Record<string, unknown>,
   ): Promise<EvalCell[]> => {
     if (columns.length === 0) return []
@@ -245,39 +251,24 @@ export async function evalRunStep(msg: JobMessage, ctx: InvocationContext): Prom
     pushLog(r, `Course-band rubrics scored (${courseCells.length} columns)`)
   })
 
-  // ---- Assemble the sheet row: admin columns mechanically, rubric columns
-  // from the agent, results per the sheet's own verdict formula, SME blank ----
+  // ---- Assemble the row: admin columns mechanically, rubric columns from
+  // the agent, results per the verdict rule, SME columns never written ----
   const cells = [...lessonCells, ...courseCells]
   const cellByHeading = new Map(cells.map((c) => [c.heading.trim().toLowerCase(), c]))
   const numeric = cells.map((c) => numericScore(c.verdict)).filter((n): n is number => n !== undefined)
   const failCells = cells.filter((c) => isFail(c.verdict))
-  const hardGateFails = model.rubricColumns
-    .filter((c) => c.hardGate)
-    .filter((c) => {
-      const cell = cellByHeading.get(c.heading.trim().toLowerCase())
-      return cell !== undefined && isFail(cell.verdict)
-    })
-    .map((c) => c.heading)
+  const hardGateFails = EVAL_HARD_GATES.filter((c) => {
+    const cell = cellByHeading.get(c.heading.trim().toLowerCase())
+    return cell !== undefined && isFail(cell.verdict)
+  }).map((c) => c.heading)
   const average = numeric.length > 0 ? numeric.reduce((a, b) => a + b, 0) / numeric.length : 0
   const averageScore = numeric.length > 0 ? average.toFixed(2) : ''
-  const hardGates = model.rubricColumns.filter((c) => c.hardGate)
-  const allGatesPass = hardGates.every((c) => cellByHeading.get(c.heading.trim().toLowerCase())?.verdict.trim() === '3')
-  // The PASS — GOOD threshold comes from the sheet's own verdict formula, so
-  // editing "average ≥ 2.70" there retunes this without a deploy.
-  const thresholdMatch = /average\s*(?:score)?\s*(?:≥|>=)\s*([0-9.]+)/i.exec(model.verdictRubric)
-  const goodThreshold = thresholdMatch ? Number(thresholdMatch[1]) : 2.7
+  const allGatesPass = EVAL_HARD_GATES.every(
+    (c) => cellByHeading.get(c.heading.trim().toLowerCase())?.verdict.trim() === '3',
+  )
   const autoVerdict =
-    failCells.length > 0 ? 'FAIL' : allGatesPass && average >= goodThreshold ? 'PASS — GOOD' : 'PASS — GOOD ENOUGH'
-  // Gate-count reconciliation: the formula text may name a count ("all five
-  // hard gates") that differs from how many columns are bold-marked — surface
-  // the discrepancy instead of silently picking a side.
-  const WORD_NUMBERS: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 }
-  const gateWord = /all\s+(\w+)\s+hard gates/i.exec(model.verdictRubric)?.[1]?.toLowerCase()
-  const statedGates = gateWord ? (WORD_NUMBERS[gateWord] ?? (Number(gateWord) || undefined)) : undefined
-  const gateMismatchNote =
-    statedGates !== undefined && statedGates !== hardGates.length
-      ? `Sheet inconsistency: the verdict formula says "all ${gateWord} hard gates" but ${hardGates.length} columns are bold-marked as gates (${hardGates.map((c) => c.heading).join(', ')}) — this evaluation used the bold-marked set.`
-      : ''
+    failCells.length > 0 ? 'FAIL' : allGatesPass && average >= EVAL_GOOD_AVERAGE ? 'PASS — GOOD' : 'PASS — GOOD ENOUGH'
+
   // The AI-QC Notes column explains the verdict, not just a defect dump: the
   // verdict line with the criterion it followed, every failed hard gate with
   // the agent's reasoning, other failing columns, then remaining flags.
@@ -289,11 +280,11 @@ export async function evalRunStep(msg: JobMessage, ctx: InvocationContext): Prom
             ? `, including ${hardGateFails.length} hard gate${hardGateFails.length === 1 ? '' : 's'}`
             : ''
         }. Any column scored 1 fails the scope.`
-      : allGatesPass && average >= goodThreshold
-        ? `VERDICT: PASS — GOOD. Every hard gate scored 3 and the average ${averageScore} meets the ${goodThreshold.toFixed(2)} bar.`
+      : allGatesPass && average >= EVAL_GOOD_AVERAGE
+        ? `VERDICT: PASS — GOOD. Every hard gate scored 3 and the average ${averageScore} meets the ${EVAL_GOOD_AVERAGE.toFixed(2)} bar.`
         : `VERDICT: PASS — GOOD ENOUGH. No column failed, but ${
             allGatesPass
-              ? `the average ${averageScore} falls short of the ${goodThreshold.toFixed(2)} bar for GOOD`
+              ? `the average ${averageScore} falls short of the ${EVAL_GOOD_AVERAGE.toFixed(2)} bar for GOOD`
               : 'not every hard gate reached a 3'
           }.`
   const gateLines = hardGateFails.map((h) => `HARD GATE FAILED — ${h}: ${noteOf(h) || 'scored 1 against its rubric.'}`)
@@ -303,7 +294,20 @@ export async function evalRunStep(msg: JobMessage, ctx: InvocationContext): Prom
   const flagLines = cells
     .filter((c) => !isFail(c.verdict) && c.note.length > 0)
     .map((c) => `${c.heading} (scored ${c.verdict}): ${c.note}`)
-  const notes = [verdictLine, ...gateLines, ...otherFailLines, ...flagLines, ...(gateMismatchNote ? [gateMismatchNote] : [])].join('\n')
+  const notes = [verdictLine, ...gateLines, ...otherFailLines, ...flagLines].join('\n')
+
+  // Deletion race guard: DELETE /evals/{scopeId} flags this job
+  // cancelRequested before removing the record — re-check here so a run
+  // deleted mid-evaluation is not resurrected by the save below.
+  const finalCheck = await getJob(msg.jobId)
+  if (finalCheck.cancelRequested === true) {
+    await mutateJob(msg.jobId, (r) => {
+      r.status = 'cancelled'
+      r.stage = 'Stopped'
+      pushLog(r, 'Evaluation was deleted while running — results discarded')
+    })
+    return
+  }
 
   // Host the scope document for the JSON column (anonymous-read container —
   // the same one that already serves item screenshots publicly).
@@ -316,8 +320,10 @@ export async function evalRunStep(msg: JobMessage, ctx: InvocationContext): Prom
     ctx.warn(`eval ${scopeId}: could not host the scope JSON — the column stays empty: ${String(e)}`)
   }
 
-  const values: string[] = model.columns.map((col) => {
-    if (col.role === 'sme') return ''
+  // The stored row covers every non-SME column, in rubric order; `headings`
+  // records the order the values were built against so the CSV export stays
+  // correct even if the rubric changes in a later deploy.
+  const values: string[] = EVAL_ROW_COLUMNS.map((col) => {
     if (col.role === 'rubric') return cellByHeading.get(col.heading.trim().toLowerCase())?.verdict ?? ''
     if (col.role === 'results') {
       if (/# of fails/i.test(col.heading)) return String(failCells.length)
@@ -336,44 +342,43 @@ export async function evalRunStep(msg: JobMessage, ctx: InvocationContext): Prom
     if (/json/i.test(col.heading)) return jsonUrl
     return ''
   })
+  const headings = EVAL_ROW_COLUMNS.map((c) => c.heading)
 
-  // The pushed row EXCLUDES the trailing SME columns: the Apps Script writes
-  // exactly values.length cells, and a full-width upsert would wipe the
-  // human's entries on every re-evaluation. `headings` fingerprint the
-  // column layout this row was built against — the push endpoint refuses to
-  // write a stale row into a re-arranged sheet.
-  const pushable = values.slice(0, model.columns.length - SME_COLUMN_COUNT)
-  const headings = model.columns.slice(0, model.columns.length - SME_COLUMN_COUNT).map((c) => c.heading)
-
+  // A re-evaluation refreshes the agent's fields IN PLACE via the ETag
+  // mutate, so a concurrent SME save can never be lost (and the SME fields +
+  // created stamp survive untouched). Only a scope with no record at all
+  // gets a fresh create.
   const now = nowIso()
-  const evaluation: ScopeEvaluation = {
-    scopeId,
-    scopeTitle: scope.title,
-    values: pushable,
-    headings,
-    cells,
-    failCount: failCells.length,
-    hardGateFails,
-    averageScore,
-    autoVerdict,
-    exportStatus: 'pending-export',
-    created: now,
-    updated: now,
+  try {
+    await mutateEvaluation(scopeId, (r) => {
+      r.scopeTitle = scope.title
+      r.values = values
+      r.headings = headings
+      r.cells = cells
+      r.failCount = failCells.length
+      r.hardGateFails = hardGateFails
+      r.averageScore = averageScore
+      r.autoVerdict = autoVerdict
+      r.updated = now
+      delete r.exportStatus
+      delete r.exportError
+    })
+  } catch (e) {
+    if ((e as { status?: number }).status !== 404) throw e
+    await saveEvaluation({
+      scopeId,
+      scopeTitle: scope.title,
+      values,
+      headings,
+      cells,
+      failCount: failCells.length,
+      hardGateFails,
+      averageScore,
+      autoVerdict,
+      created: now,
+      updated: now,
+    })
   }
-
-  // Push to the sheet when the webhook is connected; otherwise the row waits
-  // locally and the Evaluations page offers a push once connected.
-  const config = await getEvalConfig()
-  if (config.webhookUrl) {
-    try {
-      await pushEvalRow(config.webhookUrl, scopeId, pushable)
-      evaluation.exportStatus = 'exported'
-    } catch (e) {
-      evaluation.exportError = e instanceof Error ? e.message : String(e)
-      ctx.warn(`eval ${scopeId}: sheet push failed — kept pending: ${evaluation.exportError}`)
-    }
-  }
-  await saveEvaluation(evaluation)
 
   await mutateJob(msg.jobId, (r) => {
     r.status = 'complete'
@@ -383,7 +388,7 @@ export async function evalRunStep(msg: JobMessage, ctx: InvocationContext): Prom
       r,
       `Evaluation complete: ${autoVerdict} (${failCells.length} fail${failCells.length === 1 ? '' : 's'}${
         hardGateFails.length > 0 ? `, hard gates: ${hardGateFails.join(', ')}` : ''
-      }, avg ${averageScore})${evaluation.exportStatus === 'exported' ? ' — row written to the sheet' : ' — row pending sheet connection'}`,
+      }, avg ${averageScore})`,
     )
   })
 }

@@ -16,6 +16,8 @@ import type {
   PacketSummary,
   Proposal,
   Scope,
+  EvalRubricColumn,
+  ScopeEvaluation,
   ScopeEvaluationSummary,
   VideoScript,
   VsgCourseRow,
@@ -331,17 +333,19 @@ export const api = {
   getVideoScript: (courseId: string, lessonId: string) =>
     request<VideoScript>('GET', `/vsg/scripts/${encodeURIComponent(courseId)}/${encodeURIComponent(lessonId)}`),
 
-  // ---- Scope Evaluations (rubric-sheet QC) ----
+  // ---- Scope Evaluations (built-in rubric QC) ----
 
   listEvals: () =>
-    request<{ sheetUrl: string; connected: boolean; evaluations: ScopeEvaluationSummary[] }>('GET', '/evals'),
+    request<{ rubric: EvalRubricColumn[]; evaluations: ScopeEvaluationSummary[] }>('GET', '/evals'),
 
-  setEvalsWebhook: (webhookUrl: string) =>
-    request<{ connected: boolean }>('PUT', '/evals/config', { webhookUrl }),
+  getEval: (scopeId: string) => request<ScopeEvaluation>('GET', `/evals/${encodeURIComponent(scopeId)}`),
+
+  deleteEval: (scopeId: string) => request<{ ok: true }>('DELETE', `/evals/${encodeURIComponent(scopeId)}`),
+
+  saveEvalSme: (scopeId: string, body: { sme: string; smeVerdict: string; smeNotes: string }) =>
+    request<ScopeEvaluationSummary>('PUT', `/evals/${encodeURIComponent(scopeId)}/sme`, body),
 
   runEval: (scopeId: string) => request<{ jobId: string }>('POST', `/evals/${encodeURIComponent(scopeId)}/run`),
-
-  pushEval: (scopeId: string) => request<{ exported: boolean }>('POST', `/evals/${encodeURIComponent(scopeId)}/push`),
 
   // ---- Reference Library (framework → grade → four document slots) ----
 

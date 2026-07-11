@@ -193,6 +193,18 @@ export async function latestJobForScope(scopeId: string): Promise<JobRecord | un
   return latest
 }
 
+/** Latest EVALUATION job for a scope — the eval DELETE flags it cancelRequested. */
+export async function latestEvalJobForScope(scopeId: string): Promise<JobRecord | undefined> {
+  const filter = odata`PartitionKey eq ${'job'} and scopeId eq ${scopeId}`
+  let latest: JobRecord | undefined
+  for await (const e of jobsTable().listEntities({ queryOptions: { filter } })) {
+    const rec = fromEntity(e as TableEntityResult<Record<string, unknown>>)
+    if (rec.kind !== 'eval') continue
+    if (!latest || rec.created > latest.created) latest = rec
+  }
+  return latest
+}
+
 /** Mirrors latestJobForScope for set-bound jobs (ingest) — used to make publish idempotent. */
 export async function latestJobForSet(setId: string): Promise<JobRecord | undefined> {
   const filter = odata`PartitionKey eq ${'job'} and setId eq ${setId}`

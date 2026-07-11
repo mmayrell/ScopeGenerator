@@ -876,16 +876,16 @@ export interface VsgRunSummary {
 }
 
 // ---------------------------------------------------------------------------
-// Scope Evaluations — after every scope generation, an evaluation agent
-// scores the scope against the rubric spreadsheet's column headings (the
-// rubrics live IN the sheet, fetched at evaluation time, so editing the
-// sheet retunes the agent without a deploy) and appends a row. The last
-// three columns (SME / SME Verdict / SME Notes) belong to the human reviewer
-// and are always left blank. Writes reach Google through a user-provided
-// Apps Script webhook; evaluations compute and store locally either way.
+// Scope Evaluations — after every scope generation (and on demand), an
+// evaluation agent scores the scope against the BUILT-IN rubric
+// (data/eval-rubric.ts; editing a rubric is a deploy). Results live in the
+// app: the Scope Evaluations page renders the per-column details, the human
+// SME records their review in the sme* fields (preserved verbatim across
+// re-evaluations), the table exports as CSV client-side, and runs are
+// deletable.
 // ---------------------------------------------------------------------------
 
-/** One evaluated rubric column: the sheet heading's first line + the agent's cell value. */
+/** One evaluated rubric column: the rubric heading + the agent's cell value. */
 export interface EvalCell {
   heading: string
   /** The cell value: '3' | '2' | '1', or the rubric's own categorical term (e.g. 'Accurate'). */
@@ -897,18 +897,23 @@ export interface EvalCell {
 export interface ScopeEvaluation {
   scopeId: string
   scopeTitle: string
-  /** The sheet row in column order, truncated BEFORE the trailing SME columns (never pushed). */
+  /** The evaluation row over every non-SME rubric column, in rubric order (CSV export source). */
   values: string[]
-  /** Headings the row was built against (same truncation) — the push endpoint 409s on drift. */
+  /** Headings `values` was built against — keeps old rows exporting correctly if the rubric changes. */
   headings?: string[]
   cells: EvalCell[]
-  /** Computed results: fails, hard-gate fails (bold ** headings scored 1), average, verdict. */
+  /** Computed results: fails, hard-gate fails (gate-marked columns scored 1), average, verdict. */
   failCount: number
   hardGateFails: string[]
   averageScore: string
   autoVerdict: string
-  /** 'pending-export' until the webhook accepts the row; 'exported' after. */
-  exportStatus: 'pending-export' | 'exported'
+  /** The human SME's entries — preserved verbatim across re-evaluations, never agent-written. */
+  sme?: string
+  smeVerdict?: string
+  smeNotes?: string
+  smeUpdated?: string
+  /** Legacy Google-Sheet-era fields (the webhook export is gone) — kept so old records parse. */
+  exportStatus?: 'pending-export' | 'exported'
   exportError?: string
   created: string
   updated: string
@@ -922,8 +927,7 @@ export interface ScopeEvaluationSummary {
   failCount: number
   hardGateFails: string[]
   averageScore: string
-  exportStatus: ScopeEvaluation['exportStatus']
-  exportError?: string
+  smeVerdict?: string
   updated: string
 }
 

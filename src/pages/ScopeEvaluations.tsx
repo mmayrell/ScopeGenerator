@@ -1,22 +1,15 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { UnauthorizedError, api, clearAccessCode } from '../api'
 import { useStore } from '../store'
-import type { ScopeEvaluationSummary } from '../types'
-import { Btn, Pill, SectionLabel } from '../ui'
+import type { EvalCell, EvalRubricColumn, ScopeEvaluation, ScopeEvaluationSummary } from '../types'
+import { Btn, Modal, Pill, SectionLabel } from '../ui'
 
-// Scope Evaluations — the rubric spreadsheet, embedded, plus the agent that
-// fills it. Every generated scope is scored automatically against the
-// rubrics that live IN the sheet's column headings (edit a rubric there and
-// the next evaluation uses it — no deploy); the last three columns belong to
-// the human SME and are never touched. Rows reach Google through an Apps
-// Script webhook pasted once below.
-
-const SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1HYeLKwtRv-PujoNowQ0CqMMUTfdazvhYXfKt2_IX-9w/edit?gid=0#gid=0'
-
-/** Stop watching a dispatched evaluation after this long — its job page has the error. */
-const DISPATCH_WATCH_MS = 15 * 60 * 1000
-const POLL_MS = 5000
+// Scope Evaluations — the built-in rubric QC layer. Every generated scope is
+// scored automatically against the rubric compiled into the backend
+// (api/src/data/eval-rubric.ts): the agent fills every rubric column with a
+// verdict + note, results are computed per the verdict rule, and the SME
+// records their own verdict here. Runs are deletable and the whole table
+// exports as CSV.
 
 const errText = (e: unknown, fallback: string): string => {
   if (e instanceof UnauthorizedError) {
@@ -30,6 +23,12 @@ const errText = (e: unknown, fallback: string): string => {
 const when = (iso: string): string =>
   new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
 
+/** Stop watching a dispatched evaluation after this long — its job page has the error. */
+const DISPATCH_WATCH_MS = 15 * 60 * 1000
+const POLL_MS = 5000
+
+const SME_VERDICTS = ['FAIL', 'PASS — GOOD', 'PASS — GOOD ENOUGH']
+
 const verdictPill = (verdict: string) =>
   /fail/i.test(verdict) ? (
     <Pill tone="red">{verdict}</Pill>
@@ -39,69 +38,58 @@ const verdictPill = (verdict: string) =>
     <Pill tone="green">{verdict}</Pill>
   )
 
-const APPS_SCRIPT = `function doPost(e) {
-  var lock = LockService.getScriptLock();
-  var locked = false;
-  try {
-    lock.waitLock(20000);
-    locked = true;
-    return upsertRow(JSON.parse(e.postData.contents));
-  } catch (err) {
-    return jsonReply({ ok: false, error: String(err) });
-  } finally {
-    if (locked) {
-      // Commit buffered writes BEFORE the next caller can read, or the lock
-      // does not actually serialize the sheet state.
-      SpreadsheetApp.flush();
-      lock.releaseLock();
+const scoreTone = (verdict: string): string => {
+  const v = verdict.trim()
+  if (v === '3' || /^accurate$/i.test(v)) return 'bg-moss/10 text-moss-deep'
+  if (v === '2') return 'bg-amber-500/10 text-amber-700'
+  if (v === '1' || /^inaccurate$/i.test(v)) return 'bg-rust/10 text-rust'
+  return 'bg-ink/5 text-ink-2'
+}
+
+/** Heading matcher tolerant of sheet-era suffixes ('Major/Supporting *If applicable '). */
+const normHeading = (h: string): string => h.toLowerCase().replace(/[^a-z0-9]/g, '')
+const headingsMatch = (a: string, b: string): boolean => {
+  const na = normHeading(a)
+  const nb = normHeading(b)
+  return na === nb || na.startsWith(nb) || nb.startsWith(na)
+}
+
+// RFC 4180 quoting plus formula neutralization (mirrors scope-csv.ts): Excel
+// and Sheets evaluate a cell beginning with = + - or @ even when quoted, and
+// these cells carry model- and SME-authored free text.
+const csvField = (v: string): string => {
+  const neutralized = /^[=+\-@]/.test(v) ? `'${v}` : v
+  return `"${neutralized.replace(/"/g, '""')}"`
+}
+
+function buildCsv(rubric: EvalRubricColumn[], records: ScopeEvaluation[]): string {
+  const cols = rubric.filter((c) => c.role !== 'sme')
+  const smeCols = rubric.filter((c) => c.role === 'sme')
+  const groups = [...cols.map((c) => c.group), ...smeCols.map((c) => c.group)]
+  const heads = [...cols.map((c) => c.heading), ...smeCols.map((c) => c.heading)]
+  const rows = records.map((ev) => {
+    const stored = ev.headings ?? []
+    const valueFor = (heading: string): string => {
+      const i = stored.findIndex((h) => headingsMatch(h, heading))
+      return i >= 0 ? (ev.values[i] ?? '') : ''
     }
-  }
+    return [...cols.map((c) => valueFor(c.heading)), ev.sme ?? '', ev.smeVerdict ?? '', ev.smeNotes ?? '']
+  })
+  return [groups, heads, ...rows].map((r) => r.map(csvField).join(',')).join('\r\n')
 }
 
-function upsertRow(body) {
-  var ss = SpreadsheetApp.openById('1HYeLKwtRv-PujoNowQ0CqMMUTfdazvhYXfKt2_IX-9w');
-  var sheet = ss.getSheets().filter(function (s) { return s.getSheetId() === 0; })[0] || ss.getSheets()[0];
-  var ID_COL = 50; // scopeId column, far past every heading
-  var FIRST_DATA_ROW = 3; // rows 1-2 are the group + heading headers
-  // The last 3 headed columns belong to the human SME: cap every write short
-  // of them, whatever the caller sends.
-  var heads = sheet.getRange(2, 1, 1, ID_COL - 1).getValues()[0];
-  var headed = 0;
-  for (var h = 0; h < heads.length; h++) if (String(heads[h]).trim() !== '') headed = h + 1;
-  var width = Math.min(body.values.length, Math.max(1, headed - 3));
-
-  var scan = Math.max(sheet.getLastRow(), FIRST_DATA_ROW) - FIRST_DATA_ROW + 1;
-  var ids = sheet.getRange(FIRST_DATA_ROW, ID_COL, scan, 1).getValues();
-  var dates = sheet.getRange(FIRST_DATA_ROW, 1, scan, 1).getValues();
-  var row = 0;
-  var firstFree = 0;
-  for (var i = 0; i < scan; i++) {
-    if (String(ids[i][0]) === String(body.scopeId)) { row = FIRST_DATA_ROW + i; break; }
-    if (!firstFree && ids[i][0] === '' && dates[i][0] === '') firstFree = FIRST_DATA_ROW + i;
-  }
-  if (!firstFree) firstFree = sheet.getLastRow() + 1;
-  if (row === 0) {
-    // New scope: take the first unused slot. Template placeholders below the
-    // headers inflate getLastRow(), so never blindly append at the bottom.
-    row = firstFree;
-  } else if (firstFree < row) {
-    // Heal a row stranded far down the sheet: move it whole (SME entries
-    // included) up into the first unused slot, then clear the stray copy.
-    sheet.getRange(firstFree, 1, 1, ID_COL).setValues(sheet.getRange(row, 1, 1, ID_COL).getValues());
-    sheet.getRange(row, 1, 1, ID_COL).clearContent();
-    row = firstFree;
-  }
-  sheet.getRange(row, 1, 1, width).setValues([body.values.slice(0, width)]);
-  sheet.getRange(row, ID_COL).setValue(body.scopeId);
-  return jsonReply({ ok: true });
+function downloadCsv(content: string, fileName: string): void {
+  // BOM so Excel opens the UTF-8 content (em dashes in the verdicts) correctly.
+  const url = URL.createObjectURL(new Blob(['﻿' + content], { type: 'text/csv;charset=utf-8' }))
+  const a = document.createElement('a')
+  a.href = url
+  a.download = fileName
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
 }
 
-function jsonReply(payload) {
-  return ContentService.createTextOutput(JSON.stringify(payload))
-    .setMimeType(ContentService.MimeType.JSON);
-}`
-
-/** A dispatched evaluation being watched: the row's `updated` at dispatch time (skew-immune "done" test) + a watch deadline. */
 interface DispatchWatch {
   prevUpdated: string
   startedAt: number
@@ -109,20 +97,28 @@ interface DispatchWatch {
 
 export default function ScopeEvaluations() {
   const { scopes } = useStore()
-  const [connected, setConnected] = useState(false)
+  const [rubric, setRubric] = useState<EvalRubricColumn[]>([])
   const [evals, setEvals] = useState<ScopeEvaluationSummary[] | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [webhook, setWebhook] = useState('')
-  const [showSetup, setShowSetup] = useState(false)
   const [busy, setBusy] = useState<Set<string>>(new Set())
   const [dispatched, setDispatched] = useState<Record<string, DispatchWatch>>({})
+  const [openId, setOpenId] = useState<string | null>(null)
+  const [detail, setDetail] = useState<ScopeEvaluation | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<ScopeEvaluationSummary | null>(null)
+  // Mirrors openId for async guards: a slow getEval response for a
+  // previously opened run must never replace the currently open one.
+  const openIdRef = useRef<string | null>(null)
+  const setOpen = (id: string | null) => {
+    openIdRef.current = id
+    setOpenId(id)
+  }
 
   const load = useCallback(
     () =>
       api
         .listEvals()
         .then((d) => {
-          setConnected(d.connected)
+          setRubric(d.rubric)
           setEvals(d.evaluations)
           setError(null)
         })
@@ -133,7 +129,7 @@ export default function ScopeEvaluations() {
     void load()
   }, [load])
 
-  // While any dispatched evaluation is outstanding, poll for its row.
+  // While any dispatched evaluation is outstanding, poll for its result.
   const watching = Object.keys(dispatched).length > 0
   useEffect(() => {
     if (!watching) return
@@ -161,6 +157,20 @@ export default function ScopeEvaluations() {
     })
   }, [evals])
 
+  // Refresh the open details view when its evaluation completes a re-run.
+  useEffect(() => {
+    if (!openId || !evals) return
+    const summary = evals.find((e) => e.scopeId === openId)
+    if (summary && detail && summary.updated !== detail.updated) {
+      api
+        .getEval(openId)
+        .then((d) => {
+          if (openIdRef.current === d.scopeId) setDetail(d)
+        })
+        .catch(() => undefined)
+    }
+  }, [evals, openId, detail])
+
   const act = async (key: string, fn: () => Promise<unknown>) => {
     setBusy((b) => new Set(b).add(key))
     setError(null)
@@ -171,9 +181,9 @@ export default function ScopeEvaluations() {
       setError(errText(e, 'The action failed.'))
     } finally {
       setBusy((b) => {
-        const nextSet = new Set(b)
-        nextSet.delete(key)
-        return nextSet
+        const next = new Set(b)
+        next.delete(key)
+        return next
       })
     }
   }
@@ -190,6 +200,30 @@ export default function ScopeEvaluations() {
       }))
     })
 
+  const openDetails = (scopeId: string) => {
+    if (openId === scopeId) {
+      setOpen(null)
+      setDetail(null)
+      return
+    }
+    setOpen(scopeId)
+    setDetail(null)
+    api
+      .getEval(scopeId)
+      .then((d) => {
+        if (openIdRef.current === d.scopeId) setDetail(d)
+      })
+      .catch((e: unknown) => setError(errText(e, 'Could not load the evaluation details.')))
+  }
+
+  const exportCsv = () =>
+    void act('csv', async () => {
+      const ids = (evals ?? []).map((e) => e.scopeId)
+      if (ids.length === 0) throw new Error('No evaluations to export yet.')
+      const records = await Promise.all(ids.map((id) => api.getEval(id)))
+      downloadCsv(buildCsv(rubric, records), `scope-evaluations-${new Date().toISOString().slice(0, 10)}.csv`)
+    })
+
   const evaluated = new Set((evals ?? []).map((e) => e.scopeId))
   const unevaluated = scopes.filter((s) => s.status === 'complete' && !evaluated.has(s.id))
 
@@ -199,13 +233,13 @@ export default function ScopeEvaluations() {
         <div>
           <h1 className="font-display text-[28px] font-semibold tracking-tight text-ink">Scope Evaluations</h1>
           <p className="mt-1 max-w-3xl text-[13.5px] text-ink-2">
-            Every generated scope gets a row: an evaluation agent scores it against the rubric written into each
-            column heading of the sheet, fills the row, and computes the verdict — the last three columns stay blank
-            for the SME. Edit a rubric in the sheet and the next evaluation scores against it.
+            Every generated scope gets a validation run: an evaluation agent scores it against the built-in rubric —
+            column by column, hard gates marked — computes the verdict, and explains every deduction. Open a run to
+            read the details and record the SME verdict.
           </p>
         </div>
-        <Btn kind="primary" onClick={() => window.open(SHEET_URL, '_blank', 'noopener,noreferrer')}>
-          Open in Google Sheets
+        <Btn kind="primary" disabled={busy.has('csv') || (evals ?? []).length === 0} onClick={exportCsv}>
+          {busy.has('csv') ? 'Building…' : 'Download CSV'}
         </Btn>
       </div>
 
@@ -213,103 +247,74 @@ export default function ScopeEvaluations() {
         <div className="animate-rise mt-4 rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] leading-relaxed text-rust">{error}</div>
       )}
 
-      {/* connection strip */}
-      <div className="mt-6 flex flex-wrap items-center gap-3 rounded-xl border border-hairline bg-panel px-4 py-3">
-        {connected ? <Pill tone="green">Sheet Writing Connected</Pill> : <Pill tone="amber">Sheet Writing Not Connected</Pill>}
-        <span className="text-[12px] text-ink-3">
-          {connected
-            ? 'Evaluation rows write to the sheet automatically.'
-            : 'Evaluations run and store here; rows reach the sheet once the webhook is connected.'}
-        </span>
-        <button
-          onClick={() => setShowSetup((s) => !s)}
-          className="ml-auto cursor-pointer text-[12px] font-medium text-accent-deep hover:underline"
-        >
-          {showSetup ? 'Hide setup' : connected ? 'Change connection' : 'Connect the sheet (2 minutes)'}
-        </button>
-      </div>
-
-      {showSetup && (
-        <div className="mt-3 rounded-xl border border-hairline bg-panel/50 p-4">
-          <SectionLabel>Connect Sheet Writing</SectionLabel>
-          <ol className="mt-2 list-decimal space-y-1 pl-5 text-[12.5px] leading-relaxed text-ink-2">
-            <li>Open the sheet → Extensions → Apps Script, and paste this code (replaces everything):</li>
-          </ol>
-          <pre className="mt-2 max-h-56 overflow-auto rounded-lg border border-hairline bg-night p-3 text-[11px] leading-relaxed text-white">{APPS_SCRIPT}</pre>
-          <ol className="mt-2 list-decimal space-y-1 pl-5 text-[12.5px] leading-relaxed text-ink-2" start={2}>
-            <li>Deploy → New deployment → type "Web app" → Execute as <span className="font-semibold">Me</span>, access <span className="font-semibold">Anyone</span> → Deploy.</li>
-            <li>Copy the web-app URL and paste it here:</li>
-          </ol>
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <input
-              value={webhook}
-              onChange={(e) => setWebhook(e.target.value)}
-              placeholder="https://script.google.com/macros/s/…/exec"
-              className="w-full max-w-xl rounded-lg border border-hairline bg-panel px-3 py-2 text-[12.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
-            />
-            <Btn
-              kind="primary"
-              disabled={busy.has('connect') || !webhook.trim()}
-              onClick={() =>
-                void act('connect', async () => {
-                  await api.setEvalsWebhook(webhook.trim())
-                  setShowSetup(false)
-                  setWebhook('')
-                })
-              }
-            >
-              {busy.has('connect') ? 'Saving…' : 'Save Connection'}
-            </Btn>
-          </div>
-        </div>
-      )}
-
-      {/* evaluation rows */}
+      {/* evaluation runs */}
       <div className="mt-8">
-        <SectionLabel>Evaluations</SectionLabel>
+        <SectionLabel>Validation Runs</SectionLabel>
         <div className="mt-2 space-y-2">
           {(evals ?? []).map((ev) => (
-            <div key={ev.scopeId} className="flex flex-wrap items-center gap-3 rounded-xl border border-hairline bg-panel px-4 py-3">
-              <span className="text-[13px] font-semibold text-ink">{ev.scopeTitle}</span>
-              {verdictPill(ev.autoVerdict)}
-              <span className="text-[11.5px] text-ink-3">
-                {ev.failCount} fail{ev.failCount === 1 ? '' : 's'}
-                {ev.hardGateFails.length > 0 ? ` · hard gates: ${ev.hardGateFails.join(', ')}` : ''} · avg {ev.averageScore || '—'} ·{' '}
-                {when(ev.updated)}
-              </span>
-              <div className="ml-auto flex items-center gap-2">
-                {dispatched[ev.scopeId] && <Pill tone="amber">Evaluating…</Pill>}
-                {ev.exportStatus === 'exported' ? (
-                  <Pill tone="green">In Sheet</Pill>
-                ) : (
-                  <Pill tone="amber">Pending Export</Pill>
+            <div key={ev.scopeId} className="rounded-xl border border-hairline bg-panel">
+              <div className="flex flex-wrap items-center gap-3 px-4 py-3">
+                <span className="text-[13px] font-semibold text-ink">{ev.scopeTitle}</span>
+                {verdictPill(ev.autoVerdict)}
+                {ev.smeVerdict && (
+                  <span className="flex items-center gap-1 text-[11px] text-ink-3">
+                    SME: {verdictPill(ev.smeVerdict)}
+                  </span>
                 )}
-                {connected && (
-                  <Btn
-                    disabled={busy.has(`push-${ev.scopeId}`)}
-                    onClick={() => void act(`push-${ev.scopeId}`, () => api.pushEval(ev.scopeId))}
-                  >
-                    {busy.has(`push-${ev.scopeId}`) ? 'Pushing…' : ev.exportStatus === 'exported' ? 'Re-push' : 'Push to Sheet'}
+                <span className="text-[11.5px] text-ink-3">
+                  {ev.failCount} fail{ev.failCount === 1 ? '' : 's'}
+                  {ev.hardGateFails.length > 0 ? ` · hard gates: ${ev.hardGateFails.join(', ')}` : ''} · avg{' '}
+                  {ev.averageScore || '—'} · {when(ev.updated)}
+                </span>
+                <div className="ml-auto flex items-center gap-2">
+                  {dispatched[ev.scopeId] && <Pill tone="amber">Evaluating…</Pill>}
+                  <Btn onClick={() => openDetails(ev.scopeId)}>{openId === ev.scopeId ? 'Hide Details' : 'View Details'}</Btn>
+                  <Btn disabled={busy.has(`run-${ev.scopeId}`) || dispatched[ev.scopeId] !== undefined} onClick={() => runEval(ev.scopeId)}>
+                    {busy.has(`run-${ev.scopeId}`) ? 'Dispatching…' : 'Re-evaluate'}
                   </Btn>
-                )}
-                <Btn disabled={busy.has(`run-${ev.scopeId}`) || dispatched[ev.scopeId] !== undefined} onClick={() => runEval(ev.scopeId)}>
-                  {busy.has(`run-${ev.scopeId}`) ? 'Dispatching…' : 'Re-evaluate'}
-                </Btn>
+                  <Btn
+                    kind="danger"
+                    disabled={dispatched[ev.scopeId] !== undefined || busy.has(`delete-${ev.scopeId}`)}
+                    onClick={() => setConfirmDelete(ev)}
+                  >
+                    Delete
+                  </Btn>
+                </div>
               </div>
-              {ev.exportError && <p className="w-full text-[11.5px] text-rust">Last push failed: {ev.exportError}</p>}
+              {openId === ev.scopeId && (
+                <div className="border-t border-hairline px-4 py-4">
+                  {detail && detail.scopeId === ev.scopeId ? (
+                    <EvalDetails
+                      key={ev.scopeId}
+                      rubric={rubric}
+                      detail={detail}
+                      saving={busy.has(`sme-${ev.scopeId}`)}
+                      onSaveSme={(body) =>
+                        void act(`sme-${ev.scopeId}`, async () => {
+                          await api.saveEvalSme(ev.scopeId, body)
+                          setDetail(await api.getEval(ev.scopeId))
+                        })
+                      }
+                    />
+                  ) : (
+                    <p className="text-[12.5px] text-ink-3">Loading details…</p>
+                  )}
+                </div>
+              )}
             </div>
           ))}
           {evals !== null && evals.length === 0 && (
             <p className="rounded-xl border border-hairline bg-panel px-4 py-3 text-[12.5px] text-ink-3">
-              No evaluations yet — they run automatically when a scope finishes generating, or evaluate an existing
-              scope below.
+              No validation runs yet — they run automatically when a scope finishes generating, or run one on an
+              existing course below.
             </p>
           )}
           {evals === null && !error && <p className="text-[12.5px] text-ink-3">Loading evaluations…</p>}
         </div>
+
         {unevaluated.length > 0 && (
           <div className="mt-3 rounded-xl border border-hairline bg-panel/50 px-4 py-3">
-            <p className="text-[11.5px] text-ink-3">Published scopes without an evaluation:</p>
+            <p className="text-[11.5px] text-ink-3">Run a validation on a generated course:</p>
             <div className="mt-1.5 flex flex-wrap gap-2">
               {unevaluated.map((s) => (
                 <Btn key={s.id} disabled={busy.has(`run-${s.id}`) || dispatched[s.id] !== undefined} onClick={() => runEval(s.id)}>
@@ -325,18 +330,196 @@ export default function ScopeEvaluations() {
         )}
       </div>
 
-      {/* the sheet itself */}
-      <div className="mt-8">
-        <SectionLabel>The Rubric Sheet</SectionLabel>
-        <div className="mt-2 overflow-hidden rounded-2xl border border-hairline bg-panel shadow-(--shadow-lift)">
-          <iframe src={SHEET_URL} title="Scope evaluation rubric sheet" className="h-[72vh] w-full border-0" />
-        </div>
-        <p className="mt-2 text-[11px] leading-relaxed text-ink-3">
-          Editing requires being signed into a Google account with access — otherwise use "Open in Google Sheets".
-          The SME, SME Verdict, and SME Notes columns are yours; the agent never writes them.
+      <Modal open={confirmDelete !== null} onClose={() => setConfirmDelete(null)} title="Delete This Validation Run?">
+        <p className="text-[13px] leading-relaxed text-ink-2">
+          This permanently deletes the evaluation of{' '}
+          <span className="font-semibold text-ink">{confirmDelete?.scopeTitle}</span>, including any SME entries on
+          it. The scope itself is untouched, and a fresh evaluation can be run at any time.
         </p>
-      </div>
+        <div className="mt-5 flex justify-end gap-2">
+          <Btn onClick={() => setConfirmDelete(null)}>Cancel</Btn>
+          <Btn
+            kind="danger"
+            onClick={() => {
+              const target = confirmDelete
+              setConfirmDelete(null)
+              if (target) {
+                if (openId === target.scopeId) {
+                  setOpen(null)
+                  setDetail(null)
+                }
+                void act(`delete-${target.scopeId}`, () => api.deleteEval(target.scopeId))
+              }
+            }}
+          >
+            Delete
+          </Btn>
+        </div>
+      </Modal>
       <div className="h-16" />
+    </div>
+  )
+}
+
+function EvalDetails({
+  rubric,
+  detail,
+  saving,
+  onSaveSme,
+}: {
+  rubric: EvalRubricColumn[]
+  detail: ScopeEvaluation
+  saving: boolean
+  onSaveSme: (body: { sme: string; smeVerdict: string; smeNotes: string }) => void
+}) {
+  const [sme, setSme] = useState(detail.sme ?? '')
+  const [smeVerdict, setSmeVerdict] = useState(detail.smeVerdict ?? '')
+  const [smeNotes, setSmeNotes] = useState(detail.smeNotes ?? '')
+  // Unsaved edits survive detail refreshes (a re-evaluation completing while
+  // the SME is typing must not wipe the draft) — the form only re-syncs from
+  // the server when it is pristine.
+  const [dirty, setDirty] = useState(false)
+  useEffect(() => {
+    if (dirty) return
+    setSme(detail.sme ?? '')
+    setSmeVerdict(detail.smeVerdict ?? '')
+    setSmeNotes(detail.smeNotes ?? '')
+  }, [detail, dirty])
+
+  const cellFor = (heading: string): EvalCell | undefined =>
+    detail.cells.find((c) => headingsMatch(c.heading, heading))
+  const valueFor = (heading: string): string => {
+    const stored = detail.headings ?? []
+    const i = stored.findIndex((h) => headingsMatch(h, heading))
+    return i >= 0 ? (detail.values[i] ?? '') : ''
+  }
+  const adminCols = rubric.filter((c) => c.role === 'admin')
+  const bands = [
+    { name: 'Lesson-Specific Fields', cols: rubric.filter((c) => c.role === 'rubric' && /lesson/i.test(c.group)) },
+    { name: 'Course-Specific Fields', cols: rubric.filter((c) => c.role === 'rubric' && !/lesson/i.test(c.group)) },
+  ]
+  const jsonUrl = valueFor('JSON')
+  const notes = valueFor('AI-QC Notes')
+
+  return (
+    <div className="space-y-5">
+      {/* administrative details */}
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-[12px] text-ink-2">
+        {adminCols.map((c) =>
+          c.heading === 'JSON' ? (
+            jsonUrl ? (
+              <a key={c.heading} href={jsonUrl} target="_blank" rel="noopener noreferrer" className="font-medium text-accent-deep hover:underline">
+                Scope JSON ↗
+              </a>
+            ) : null
+          ) : (
+            <span key={c.heading}>
+              <span className="text-ink-3">{c.heading}:</span> <span className="font-medium text-ink">{valueFor(c.heading) || '—'}</span>
+            </span>
+          ),
+        )}
+      </div>
+
+      {/* rubric bands */}
+      {bands.map((band) => (
+        <div key={band.name}>
+          <SectionLabel>{band.name}</SectionLabel>
+          <div className="mt-1.5 overflow-hidden rounded-xl border border-hairline">
+            {band.cols.map((col, i) => {
+              const cell = cellFor(col.heading)
+              return (
+                <div
+                  key={col.heading}
+                  className={`flex flex-wrap items-start gap-3 px-3.5 py-2.5 ${i % 2 === 1 ? 'bg-panel/60' : 'bg-panel'}`}
+                >
+                  <div className="w-52 shrink-0">
+                    <span className="text-[12.5px] font-semibold text-ink" title={col.rubric}>
+                      {col.heading}
+                    </span>
+                    {col.hardGate && <span className="ml-1.5 rounded bg-rust/10 px-1 py-0.5 text-[9.5px] font-bold tracking-wide text-rust">HARD GATE</span>}
+                  </div>
+                  <span className={`inline-flex min-w-7 justify-center rounded-md px-1.5 py-0.5 text-[12px] font-bold ${scoreTone(cell?.verdict ?? '')}`}>
+                    {cell?.verdict ?? '—'}
+                  </span>
+                  <p className="min-w-0 flex-1 text-[12px] leading-relaxed text-ink-2">{cell?.note || <span className="text-ink-3">No defects noted.</span>}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      ))}
+
+      {/* results */}
+      <div>
+        <SectionLabel>Results</SectionLabel>
+        <div className="mt-1.5 rounded-xl border border-hairline bg-panel px-4 py-3">
+          <div className="flex flex-wrap items-center gap-3">
+            {verdictPill(detail.autoVerdict)}
+            <span className="text-[12px] text-ink-2">
+              {detail.failCount} fail{detail.failCount === 1 ? '' : 's'} · hard gate fails:{' '}
+              {detail.hardGateFails.length > 0 ? detail.hardGateFails.join(', ') : 'none'} · average{' '}
+              {detail.averageScore || '—'}
+            </span>
+          </div>
+          {notes && <pre className="mt-2.5 font-sans whitespace-pre-wrap text-[12px] leading-relaxed text-ink-2">{notes}</pre>}
+        </div>
+      </div>
+
+      {/* SME entry */}
+      <div>
+        <SectionLabel>SME Review</SectionLabel>
+        <div className="mt-1.5 rounded-xl border border-hairline bg-panel px-4 py-3.5">
+          <div className="flex flex-wrap items-center gap-3">
+            <input
+              value={sme}
+              onChange={(e) => {
+                setSme(e.target.value)
+                setDirty(true)
+              }}
+              placeholder="SME (your name or initials)"
+              className="w-56 rounded-lg border border-hairline bg-panel px-3 py-2 text-[12.5px] outline-none placeholder:text-ink-3 focus:border-accent/40"
+            />
+            <select
+              value={smeVerdict}
+              onChange={(e) => {
+                setSmeVerdict(e.target.value)
+                setDirty(true)
+              }}
+              className="cursor-pointer rounded-lg border border-hairline bg-panel px-3 py-2 text-[12.5px] outline-none focus:border-accent/40"
+            >
+              <option value="">SME verdict…</option>
+              {SME_VERDICTS.map((v) => (
+                <option key={v} value={v}>
+                  {v}
+                </option>
+              ))}
+            </select>
+            {detail.smeUpdated && <span className="text-[11px] text-ink-3">last saved {when(detail.smeUpdated)}</span>}
+          </div>
+          <textarea
+            value={smeNotes}
+            onChange={(e) => {
+              setSmeNotes(e.target.value)
+              setDirty(true)
+            }}
+            rows={3}
+            placeholder="SME notes — agreements, disagreements, required changes…"
+            className="mt-2.5 w-full rounded-lg border border-hairline bg-panel px-3 py-2 text-[12.5px] leading-relaxed outline-none placeholder:text-ink-3 focus:border-accent/40"
+          />
+          <div className="mt-2 flex justify-end">
+            <Btn
+              kind="primary"
+              disabled={saving}
+              onClick={() => {
+                setDirty(false)
+                onSaveSme({ sme, smeVerdict, smeNotes })
+              }}
+            >
+              {saving ? 'Saving…' : 'Save SME Review'}
+            </Btn>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,47 +1,92 @@
 import { getScope } from '../data/entities'
-import { getEvaluationOrUndefined, listEvaluations, saveEvaluation, toEvaluationSummary } from '../data/evals'
-import { createJob, mutateJob, pushLog } from '../data/jobs'
+import { deleteEvaluationDocs, getEvaluationOrUndefined, listEvaluations, mutateEvaluation, toEvaluationSummary } from '../data/evals'
+import { EVAL_RUBRIC_COLUMNS } from '../data/eval-rubric'
+import { screenshotsContainer } from '../data/clients'
+import { createJob, latestEvalJobForScope, mutateJob, pushLog } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
-import { EVAL_SHEET_URL, fetchEvalSheetModel, getEvalConfig, pushEvalRow, saveEvalConfig, SME_COLUMN_COUNT } from '../services/evalsheet'
 import { HttpError } from '../shared/errors'
 import { api, ok, readJson, requireParam } from '../shared/http'
 import { newId, nowIso } from '../shared/util'
 
 /**
- * Scope Evaluations (contract §Scope Evaluations) — the rubric-sheet QC
+ * Scope Evaluations (contract §Scope Evaluations) — the built-in rubric QC
  * layer. Evaluations run automatically after every generation (see
- * generate.ts finalize) and on demand here; rows reach the Google sheet
- * through the configured Apps Script webhook.
+ * generate.ts finalize) and on demand here; the rubric lives in
+ * data/eval-rubric.ts, results live in the app (details view, SME entry,
+ * client-side CSV export), and runs can be deleted.
  */
 
-// GET /api/evals → { sheetUrl, connected, evaluations: ScopeEvaluationSummary[] }
+const VALID_SME_VERDICTS = ['', 'FAIL', 'PASS — GOOD', 'PASS — GOOD ENOUGH']
+
+// GET /api/evals → { rubric, evaluations: ScopeEvaluationSummary[] }
 api({
   name: 'evals-list',
   methods: ['GET'],
   route: 'evals',
   handler: async () => {
-    const [evals, config] = await Promise.all([listEvaluations(), getEvalConfig()])
+    const evals = await listEvaluations()
     return ok({
-      sheetUrl: EVAL_SHEET_URL,
-      connected: config.webhookUrl.length > 0,
+      rubric: EVAL_RUBRIC_COLUMNS,
       evaluations: evals.map(toEvaluationSummary).sort((a, b) => b.updated.localeCompare(a.updated)),
     })
   },
 })
 
-// PUT /api/evals/config { webhookUrl } → { connected } — the Apps Script web-app URL
+// GET /api/evals/{scopeId} → ScopeEvaluation (full record for the details view)
+// DELETE /api/evals/{scopeId} → { ok } — permanently delete an evaluation run
+// (the record and the publicly hosted scope-JSON copy; the scope is untouched)
 api({
-  name: 'evals-config',
-  methods: ['PUT'],
-  route: 'evals/config',
+  name: 'evals-get-delete',
+  methods: ['GET', 'DELETE'],
+  route: 'evals/{scopeId}',
   handler: async (req) => {
-    const body = await readJson<{ webhookUrl?: string }>(req)
-    const webhookUrl = String(body.webhookUrl ?? '').trim().slice(0, 500)
-    if (webhookUrl && !/^https:\/\/script\.google(?:usercontent)?\.com\//.test(webhookUrl)) {
-      throw new HttpError(400, 'the webhook must be a Google Apps Script web-app URL (https://script.google.com/…)')
+    const scopeId = requireParam(req, 'scopeId')
+    if (req.method === 'DELETE') {
+      // A run may be re-evaluating right now — flag its job so the worker
+      // discards its results instead of resurrecting the deleted record.
+      const job = await latestEvalJobForScope(scopeId)
+      if (job && (job.status === 'queued' || job.status === 'running')) {
+        await mutateJob(job.jobId, (r) => {
+          r.cancelRequested = true
+          pushLog(r, 'Evaluation deleted — the run stops at its next checkpoint')
+        })
+      }
+      await deleteEvaluationDocs(scopeId)
+      await screenshotsContainer()
+        .getBlockBlobClient(`evals/${scopeId}.json`)
+        .deleteIfExists()
+        .catch(() => undefined)
+      return ok({ ok: true })
     }
-    await saveEvalConfig({ webhookUrl })
-    return ok({ connected: webhookUrl.length > 0 })
+    const ev = await getEvaluationOrUndefined(scopeId)
+    if (!ev) throw new HttpError(404, `no evaluation for scope ${scopeId}`)
+    return ok(ev)
+  },
+})
+
+// PUT /api/evals/{scopeId}/sme { sme?, smeVerdict?, smeNotes? } → ScopeEvaluationSummary
+api({
+  name: 'evals-sme',
+  methods: ['PUT'],
+  route: 'evals/{scopeId}/sme',
+  handler: async (req) => {
+    const scopeId = requireParam(req, 'scopeId')
+    const body = await readJson<{ sme?: string; smeVerdict?: string; smeNotes?: string }>(req)
+    const smeVerdict = String(body.smeVerdict ?? '').trim()
+    if (!VALID_SME_VERDICTS.includes(smeVerdict)) {
+      throw new HttpError(400, `smeVerdict must be one of: ${VALID_SME_VERDICTS.filter(Boolean).join(' | ')} (or empty)`)
+    }
+    // ETag mutate: an SME save must never clobber (or be clobbered by) a
+    // re-evaluation finishing concurrently. `updated` is deliberately NOT
+    // bumped — it means "when the agent last evaluated", and the page's
+    // dispatch watch keys on it.
+    const ev = await mutateEvaluation(scopeId, (r) => {
+      r.sme = String(body.sme ?? '').slice(0, 2000).trim()
+      r.smeVerdict = smeVerdict
+      r.smeNotes = String(body.smeNotes ?? '').slice(0, 20000).trim()
+      r.smeUpdated = nowIso()
+    })
+    return ok(toEvaluationSummary(ev))
   },
 })
 
@@ -74,41 +119,5 @@ api({
       throw e
     }
     return ok({ jobId }, 202)
-  },
-})
-
-// POST /api/evals/{scopeId}/push → { exported } — retry the sheet write for a pending row
-api({
-  name: 'evals-push',
-  methods: ['POST'],
-  route: 'evals/{scopeId}/push',
-  handler: async (req) => {
-    const scopeId = requireParam(req, 'scopeId')
-    const ev = await getEvaluationOrUndefined(scopeId)
-    if (!ev) throw new HttpError(404, `no evaluation for scope ${scopeId}`)
-    const config = await getEvalConfig()
-    if (!config.webhookUrl) throw new HttpError(409, 'connect the sheet first (paste the Apps Script web-app URL)')
-    // A stored row is only valid against the column layout it was built for.
-    // If the sheet's headings have changed since, pushing would land verdicts
-    // under the wrong rubrics — refuse and ask for a re-evaluation instead.
-    if (ev.headings) {
-      const model = await fetchEvalSheetModel()
-      const current = model.columns.slice(0, model.columns.length - SME_COLUMN_COUNT).map((c) => c.heading)
-      if (current.length !== ev.headings.length || current.some((h, i) => h !== ev.headings![i])) {
-        throw new HttpError(409, 'the sheet\'s columns have changed since this evaluation ran — re-evaluate the scope, then push')
-      }
-    }
-    try {
-      await pushEvalRow(config.webhookUrl, scopeId, ev.values)
-      ev.exportStatus = 'exported'
-      delete ev.exportError
-    } catch (e) {
-      ev.exportError = e instanceof Error ? e.message : String(e)
-      ev.exportStatus = 'pending-export'
-      await saveEvaluation({ ...ev, updated: nowIso() })
-      throw new HttpError(502, `the sheet webhook rejected the row: ${ev.exportError}`)
-    }
-    await saveEvaluation({ ...ev, updated: nowIso() })
-    return ok({ exported: true })
   },
 })

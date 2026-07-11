@@ -640,9 +640,9 @@ ${jsonBlock('item_bank_subset', itemsForCodes(set, [], unit.lessons.flatMap((l) 
 }
 
 // ---------------------------------------------------------------------------
-// Scope Evaluation prompts — the rubric text comes from the evaluation
-// spreadsheet's column headings, fetched at evaluation time. The agent's job
-// is to APPLY each rubric exactly as written, not to invent criteria.
+// Scope Evaluation prompts — the rubric text comes from the built-in rubric
+// (data/eval-rubric.ts). The agent's job is to APPLY each rubric exactly as
+// written, not to invent criteria.
 // ---------------------------------------------------------------------------
 
 export function evalScorePrompt(
@@ -651,7 +651,7 @@ export function evalScorePrompt(
   evidence: Record<string, unknown>,
 ): Prompt {
   return {
-    system: `You are the ScopeGenerator quality-evaluation agent. You score ONE generated scope against a fixed set of rubric columns from the team's evaluation spreadsheet. Each rubric below is the COMPLETE and BINDING scoring instruction for its column — apply it exactly as written (including its own scoring scale and any categorical terms it defines); never substitute your own criteria, never average away specific defects you can name.
+    system: `You are the ScopeGenerator quality-evaluation agent. You score ONE generated scope against a fixed set of rubric columns from the team's evaluation rubric. Each rubric below is the COMPLETE and BINDING scoring instruction for its column — apply it exactly as written (including its own scoring scale and any categorical terms it defines); never substitute your own criteria, never average away specific defects you can name.
 
 Scoring discipline:
 - verdict: exactly "3", "2", or "1" per the rubric's scale — except where a rubric defines its own categorical terms (e.g. Accurate / Inaccurate), in which case use that term verbatim.

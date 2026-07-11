@@ -764,8 +764,41 @@ export interface VsgRunSummary {
 }
 
 // ---------------------------------------------------------------------------
-// Scope Evaluations — rubric-sheet QC rows. Mirrors api/src/domain/types.ts.
+// Scope Evaluations — the built-in rubric QC layer. Mirrors
+// api/src/domain/types.ts and api/src/data/eval-rubric.ts.
 // ---------------------------------------------------------------------------
+
+export interface EvalRubricColumn {
+  group: string
+  heading: string
+  rubric: string
+  hardGate: boolean
+  role: 'admin' | 'rubric' | 'results' | 'sme'
+}
+
+export interface EvalCell {
+  heading: string
+  verdict: string
+  note: string
+}
+
+export interface ScopeEvaluation {
+  scopeId: string
+  scopeTitle: string
+  values: string[]
+  headings?: string[]
+  cells: EvalCell[]
+  failCount: number
+  hardGateFails: string[]
+  averageScore: string
+  autoVerdict: string
+  sme?: string
+  smeVerdict?: string
+  smeNotes?: string
+  smeUpdated?: string
+  created: string
+  updated: string
+}
 
 export interface ScopeEvaluationSummary {
   scopeId: string
@@ -774,8 +807,7 @@ export interface ScopeEvaluationSummary {
   failCount: number
   hardGateFails: string[]
   averageScore: string
-  exportStatus: 'pending-export' | 'exported'
-  exportError?: string
+  smeVerdict?: string
   updated: string
 }
 

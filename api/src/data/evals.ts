@@ -1,29 +1,59 @@
 import { odata } from '@azure/data-tables'
 import { ScopeEvaluation, ScopeEvaluationSummary } from '../domain/types'
+import { HttpError } from '../shared/errors'
+import { sleep } from '../shared/util'
 import { dataContainer, entitiesTable } from './clients'
-import { getJsonOrUndefined, putJson } from './blobs'
+import { getJsonOrUndefined, getJsonWithEtag, putJson, putJsonIfMatch } from './blobs'
 
 // Scope Evaluations storage: one blob per scope (latest evaluation wins —
-// re-evaluations overwrite), indexed for listing. Blob layout (contract
-// §Storage layout): evals/records/<scopeId>.json + evals/config.json (the
-// webhook config, owned by services/evalsheet).
+// re-evaluations overwrite, preserving the SME fields), indexed for listing.
+// Blob layout (contract §Storage layout): evals/records/<scopeId>.json.
+// Concurrent writers exist (the worker's re-evaluation vs the SME's PUT), so
+// updates to an EXISTING record go through mutateEvaluation (ETag retry) —
+// plain saveEvaluation is for creation only.
 
 const evalBlobPath = (scopeId: string) => `evals/records/${scopeId}.json`
 
-export async function saveEvaluation(ev: ScopeEvaluation): Promise<void> {
-  await putJson(dataContainer(), evalBlobPath(ev.scopeId), ev)
+async function upsertEvalRow(ev: ScopeEvaluation): Promise<void> {
   await entitiesTable().upsertEntity(
     {
       partitionKey: 'eval',
       rowKey: ev.scopeId,
       scopeTitle: ev.scopeTitle,
       autoVerdict: ev.autoVerdict,
-      exportStatus: ev.exportStatus,
       updated: ev.updated,
       blobPath: evalBlobPath(ev.scopeId),
     },
     'Replace',
   )
+}
+
+export async function saveEvaluation(ev: ScopeEvaluation): Promise<void> {
+  await putJson(dataContainer(), evalBlobPath(ev.scopeId), ev)
+  await upsertEvalRow(ev)
+}
+
+/** Read–modify–write with ETag optimistic concurrency (worker save vs SME PUT). Throws 404 when no record exists. */
+export async function mutateEvaluation(scopeId: string, fn: (ev: ScopeEvaluation) => void): Promise<ScopeEvaluation> {
+  let lastError: unknown
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const found = await getJsonWithEtag<ScopeEvaluation>(dataContainer(), evalBlobPath(scopeId))
+    if (!found) throw new HttpError(404, `no evaluation for scope ${scopeId}`)
+    const ev = found.doc
+    fn(ev)
+    try {
+      await putJsonIfMatch(dataContainer(), evalBlobPath(scopeId), ev, found.etag)
+    } catch (err) {
+      const status = (err as { statusCode?: number }).statusCode
+      if (status !== 412) throw err
+      lastError = err
+      await sleep(50 + attempt * 50 + Math.floor(Math.random() * 100))
+      continue
+    }
+    await upsertEvalRow(ev)
+    return ev
+  }
+  throw new Error(`evaluation ${scopeId}: gave up after 10 optimistic-concurrency retries: ${String(lastError)}`)
 }
 
 export async function getEvaluationOrUndefined(scopeId: string): Promise<ScopeEvaluation | undefined> {
@@ -69,9 +99,8 @@ export function toEvaluationSummary(ev: ScopeEvaluation): ScopeEvaluationSummary
     failCount: ev.failCount,
     hardGateFails: ev.hardGateFails,
     averageScore: ev.averageScore,
-    exportStatus: ev.exportStatus,
     updated: ev.updated,
   }
-  if (ev.exportError !== undefined) summary.exportError = ev.exportError
+  if (ev.smeVerdict !== undefined && ev.smeVerdict !== '') summary.smeVerdict = ev.smeVerdict
   return summary
 }
