@@ -111,7 +111,13 @@ function scriptChildren(script: VideoScript, pageBreak = false): Paragraph[] {
       heading: HeadingLevel.HEADING_1,
       pageBreakBefore: pageBreak,
       spacing: { after: 80 },
-      children: [new TextRun({ text: xmlSafe(`Video Script — ${script.lessonTitle}`), bold: true, color: ACCENT })],
+      children: [
+        new TextRun({
+          text: xmlSafe(`Video Script — ${script.lessonTitle}${script.durationEstimate ? ` (${script.durationEstimate})` : ''}`),
+          bold: true,
+          color: ACCENT,
+        }),
+      ],
     }),
     para(
       `${script.unitName} · ${script.standardId} · grade band ${script.gradeBand} · ${script.durationEstimate} · ${script.interactionCount} interactions`,

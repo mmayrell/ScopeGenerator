@@ -752,6 +752,8 @@ export interface VsgRunLesson {
   error?: string
   conflicts: VsgConflict[]
   scriptVersion?: number
+  /** The produced script's total run time "M:SS" (set when the lesson completes). */
+  durationEstimate?: string
 }
 
 export interface VsgRun {

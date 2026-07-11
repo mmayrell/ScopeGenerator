@@ -366,6 +366,7 @@ export async function vsgRunStep(msg: JobMessage, ctx: InvocationContext): Promi
         if (l) {
           l.status = 'complete'
           l.scriptVersion = script.version
+          l.durationEstimate = script.durationEstimate
           delete l.error
         }
         r.updated = nowIso()

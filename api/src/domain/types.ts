@@ -885,6 +885,8 @@ export interface VsgRunLesson {
   conflicts: VsgConflict[]
   /** Version of the script this run produced (set when status is complete). */
   scriptVersion?: number
+  /** The produced script's total run time "M:SS" (set when status is complete) — the run list shows it. */
+  durationEstimate?: string
 }
 
 export interface VsgRun {

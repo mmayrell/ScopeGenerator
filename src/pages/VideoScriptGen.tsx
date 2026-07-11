@@ -820,7 +820,7 @@ function LessonRow({ run, lesson, onChanged }: { run: VsgRun; lesson: VsgRunLess
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-[13.5px] font-semibold text-ink">{lesson.lessonTitle}</span>
           {lessonStatusPill(lesson.status)}
-          {lesson.scriptVersion !== undefined && <span className="text-[11px] text-ink-3">v{lesson.scriptVersion}</span>}
+          {lesson.durationEstimate && <span className="text-[11px] text-ink-3">{lesson.durationEstimate}</span>}
         </div>
         <div className="flex items-center gap-2">
           {lesson.status === 'complete' && (
