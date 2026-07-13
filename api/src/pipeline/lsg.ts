@@ -308,6 +308,8 @@ function assembleOutput(
       lessonTitle: l.lessonTitle,
       deactivationReason: l.operation === 'DEACTIVATE' ? l.deactivationReason || 'Deactivated by the new target plan.' : null,
       ...fields,
+      // STRICT output rule: released items are always an array.
+      releasedItems: splitReleasedItems(fields.releasedItems),
     }
   })
   return {
@@ -406,6 +408,20 @@ function toCourseLesson(l: LsgOutputLesson, lessonId: string): LsgCourseLesson {
     instructionalApproach: l.instructionalApproach,
     nonGoals: l.nonGoals,
     assessmentEvidence: l.assessmentEvidence,
-    releasedItems: l.releasedItems,
+    // The output contract carries released items as an ARRAY; the registry
+    // stores the blank-line-joined string (the card-field shape).
+    releasedItems: joinReleasedItems(l.releasedItems),
   }
+}
+
+/** Output-contract shape: released items are ALWAYS an array — one entry per item reference or exemplar. */
+export function splitReleasedItems(text: string): string[] {
+  return text
+    .split(/\n{2,}/)
+    .map((b) => b.trim())
+    .filter((b) => b.length > 0)
+}
+
+export function joinReleasedItems(items: string[] | string): string {
+  return Array.isArray(items) ? items.join('\n\n') : String(items ?? '')
 }

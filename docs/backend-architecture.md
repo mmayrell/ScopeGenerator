@@ -465,6 +465,13 @@ update an existing course when only some lessons change.
 - **Snapshot at create**: `POST /lsg/runs` captures the Course Snapshot onto the run doc, so every
   worker attempt plans against one stable view. The snapshot (not the model) decides
   `courseOperation`: course exists → UPDATE, else CREATE.
+- **Output-envelope contract** (`LsgOutputLesson` — the shape of scope JSON exports AND LSG run
+  downloads): `releasedItems` is ALWAYS an array (one entry per item reference or exemplar; the
+  registry internally stores the blank-line-joined card-field string — `splitReleasedItems`/
+  `joinReleasedItems` convert at the boundary), and `standardId` is EXACTLY ONE standard — the
+  most relevant, most granular code (card generation orders the primary standard first on field 1;
+  the scope export maps to it alone). The DM upload parser accepts both the array shape and legacy
+  string downloads.
 - **Seeded snapshots**: when the registry has no course under the name, the request may seed the
   pre-edit state from an uploaded existing data model (`dataModel.lessons`, ids `dm-<n>`) or from a
   completed scope (`sourceScopeId` — lesson ids are the scope's "U3.L3" ids; the fourteen card

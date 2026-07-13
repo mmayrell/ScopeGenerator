@@ -325,7 +325,17 @@ function parseDataModel(text: string): LsgDataModelLesson[] {
     const mapped: Record<string, string> = {}
     for (const [k, v] of Object.entries(row)) {
       const target = KEY_MAP[norm(k)]
-      if (target && (typeof v === 'string' || typeof v === 'number')) mapped[target] = String(v)
+      if (!target) continue
+      if (typeof v === 'string' || typeof v === 'number') {
+        mapped[target] = String(v)
+      } else if (Array.isArray(v)) {
+        // Newer exports write released items (and potentially other fields)
+        // as arrays — join back to the card-field string for the snapshot.
+        mapped[target] = v
+          .filter((x): x is string | number => typeof x === 'string' || typeof x === 'number')
+          .map(String)
+          .join('\n\n')
+      }
     }
     if (!mapped.lessonTitle?.trim()) continue
     out.push({
@@ -934,7 +944,10 @@ function OutputLessonCard({ lesson }: { lesson: LsgOutputLesson }) {
       {open && !deactivated && (
         <div className="space-y-3 border-t border-hairline px-4 py-3.5">
           {FIELD_LABELS.map(([key, label]) => {
-            const value = lesson[key]
+            const raw = lesson[key]
+            // releasedItems ships as an array (the strict output rule);
+            // everything else stays a string.
+            const value = Array.isArray(raw) ? raw.join('\n\n') : raw
             if (!value.trim()) return null
             return (
               <div key={key}>
@@ -1043,7 +1056,10 @@ function CourseLessonCard({ lesson }: { lesson: LsgCourseLesson }) {
       {open && (
         <div className="space-y-3 border-t border-hairline px-4 py-3.5">
           {FIELD_LABELS.map(([key, label]) => {
-            const value = lesson[key]
+            const raw = lesson[key]
+            // releasedItems ships as an array (the strict output rule);
+            // everything else stays a string.
+            const value = Array.isArray(raw) ? raw.join('\n\n') : raw
             if (!value.trim()) return null
             return (
               <div key={key}>

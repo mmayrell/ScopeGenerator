@@ -641,15 +641,18 @@ export interface LsgSnapshot {
 }
 
 /** One lesson of the LSG output: operation + identity + generated fields (design doc §3). */
-export interface LsgOutputLesson extends LsgLessonFields {
+export interface LsgOutputLesson extends Omit<LsgLessonFields, 'releasedItems'> {
   /** Echoed snapshot lessonId for UPDATE/DEACTIVATE; null for CREATE — the platform assigns one on persist. */
   lessonId: string | null
   operation: LsgOperation
   unitName: string
   lessonOrder: number
+  /** EXACTLY ONE standard — the most relevant, most granular code of the set. Never a list. */
   standardId: string
   lessonTitle: string
   deactivationReason: string | null
+  /** STRICT RULE: released items are ALWAYS an array — one entry per item reference or exemplar. */
+  releasedItems: string[]
 }
 
 export interface LsgOutput {

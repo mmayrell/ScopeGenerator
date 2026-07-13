@@ -73,8 +73,12 @@ function exemplarLines(l: Lesson): string[] {
   )
 }
 
-/** All released-item references and exemplars as one string (blank line between entries) per the schema. */
-function releasedItemsText(l: Lesson, itemsById: Map<string, ResolvedScopeItem>, imageLinks: Record<string, string>): string {
+/**
+ * All released-item references and exemplars as an ARRAY — one entry per
+ * item reference or exemplar (STRICT output rule: released items are always
+ * written in arrays, never one concatenated string).
+ */
+function releasedItemsArray(l: Lesson, itemsById: Map<string, ResolvedScopeItem>, imageLinks: Record<string, string>): string[] {
   const entries = l.itemRefs
     .map((rid) => itemsById.get(rid))
     .filter((entry): entry is NonNullable<typeof entry> => !!entry)
@@ -82,7 +86,7 @@ function releasedItemsText(l: Lesson, itemsById: Map<string, ResolvedScopeItem>,
   const blocks = [...entries, ...exemplarLines(l)]
   // Neither resolved items nor exemplars: the field's own content states the
   // situation (never empty per the card rules).
-  return (blocks.length > 0 ? blocks : [content(l.fields.releasedItems)].filter(Boolean)).join('\n\n')
+  return blocks.length > 0 ? blocks : [content(l.fields.releasedItems)].filter(Boolean)
 }
 
 // ---------------------------------------------------------------------------
@@ -106,8 +110,12 @@ export function buildScopeJson(
     u.lessons.map((l): LsgOutputLesson => {
       courseLessonNumber += 1
       const f = l.fields
-      // standardId is forced into canonical <Standard Set Prefix>.<Standard Code> format.
-      const { standardId } = splitStandards(content(f.standards), prefixFor)
+      // standardId is forced into canonical <Standard Set Prefix>.<Standard Code>
+      // format and is EXACTLY ONE standard: multi-standard lessons list their
+      // PRIMARY standard first on the card (the generation orders it by the
+      // lesson's main objective), and the export maps to that one alone.
+      const { standardId: allIds } = splitStandards(content(f.standards), prefixFor)
+      const standardId = allIds.split(';')[0].trim()
       return {
         lessonId: null,
         operation: 'CREATE',
@@ -128,7 +136,7 @@ export function buildScopeJson(
         instructionalApproach: content(f.approach),
         nonGoals: content(f.nonGoals),
         assessmentEvidence: content(f.assessment),
-        releasedItems: releasedItemsText(l, itemsById, imageLinks),
+        releasedItems: releasedItemsArray(l, itemsById, imageLinks),
       }
     }),
   )
