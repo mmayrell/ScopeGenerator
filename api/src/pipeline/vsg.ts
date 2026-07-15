@@ -9,6 +9,7 @@ import {
   VsgSegment,
 } from '../domain/types'
 import { getLsgCourseOrUndefined } from '../data/lsg'
+import { VSG_PLAYBOOK_VERSION } from '../data/video-playbook'
 import { deleteVideoScriptDocs, getVideoScriptOrUndefined, getVsgRunOrUndefined, mutateVsgRun, saveVideoScript } from '../data/vsg'
 import { getJob, mutateJob, pushLog } from '../data/jobs'
 import { enqueueJob } from '../data/queue'
@@ -807,7 +808,10 @@ function toVideoScript(
     transferTest: wire.transferTest,
     qa: qaOf(wire, gradeBand),
     conflictsResolved: resolutions,
-    playbookVersion: run.playbookVersion,
+    // The version the script actually GENERATED under — not the run's
+    // creation-time stamp, which goes stale when a lesson is regenerated
+    // after a rulebook upgrade.
+    playbookVersion: `VSG Playbook ${VSG_PLAYBOOK_VERSION}`,
     doctrineVersion: run.doctrineVersion,
     version,
     created: nowIso(),
