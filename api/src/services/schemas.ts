@@ -8,6 +8,7 @@ import {
   LessonType,
   ProposalChange,
   VsgCaseClass,
+  VsgSlide,
   VsgChannel,
   VsgInteraction,
   VsgSegmentKind,
@@ -388,6 +389,19 @@ const VSG_LINE = obj({
   // "M:SS" moment the line lands — simultaneity = adjacent lines sharing a
   // stamp (playbook §2.5/§3); also powers the 30s-interaction-cadence QA.
   time: STR,
+  // Two-digit slide number this line belongs to ("01"…), per §15 Formatting.
+  slide: STR,
+})
+
+// §15 Formatting of the Script: every script is a sequence of numbered
+// slides with a typed header. The slide registry lives at the script level;
+// lines reference slides by number. Header metadata is production-only.
+const VSG_SLIDE = obj({
+  number: STR, // two-digit, "01"…
+  title: STR, // student-facing; also the slide's opening [TEXT] line
+  slideType: enums(['Opening', 'Concept', 'Example', 'Practice', 'Wrap']),
+  canvas: enums(['NEW', 'CONTINUES']),
+  continuesFrom: STR, // slide number when canvas is CONTINUES, '' when NEW
 })
 
 // Rulebook v2 skeleton (§15): opening (absorbs title+intro; title portion
@@ -424,6 +438,7 @@ export const VSG_SCRIPT_SCHEMA: Schema = {
     conflicts: arr(ref('vsgConflict')),
     gradeBand: STR,
     durationEstimate: STR,
+    slides: arr(ref('vsgSlide')),
     segments: arr(ref('vsgSegment')),
     formatRefs: arr(STR),
     coverageNote: arr(ref('vsgCaseClass')),
@@ -437,6 +452,7 @@ export const VSG_SCRIPT_SCHEMA: Schema = {
   }),
   $defs: {
     vsgLine: VSG_LINE,
+    vsgSlide: VSG_SLIDE,
     vsgInteraction: VSG_INTERACTION,
     vsgSegment: VSG_SEGMENT,
     vsgConflict: VSG_CONFLICT,
@@ -457,6 +473,7 @@ export interface WireVsgLine {
   channel: VsgChannel
   content: string
   time: string
+  slide: string
 }
 
 export interface WireVsgSegment {
@@ -472,6 +489,7 @@ export interface WireVsgScript {
   conflicts: WireVsgConflict[]
   gradeBand: string
   durationEstimate: string
+  slides: VsgSlide[]
   segments: WireVsgSegment[]
   formatRefs: string[]
   coverageNote: VsgCaseClass[]

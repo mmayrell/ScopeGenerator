@@ -559,15 +559,29 @@ doctrine versions.
   resumes at the still-open lessons. Same deadline machinery as the other pipelines (8.5-minute
   in-process abort, `payload.cuts`+`cutLesson` per-lesson escalation, 4.5-minute launch budget
   with same-message re-enqueue).
-- **The generator runs under RULEBOOK v2** (`data/video-playbook.ts` — the "[in progress] NO HITL
-  DI Video Script Generator v2" BrainLift embedded verbatim, Access section stripped): authority
-  stack A1 Stein → A2 card → A3 registries → A4 Mayer → A5 MathEd/Psych; numbered registries with
-  STABLE rule IDs (SEQ/TIM/INT/LANG/VIS/GRADE/DEV) cited in NOTE lines, conflicts, and QA
-  findings; the Transfer Test (SEQ 09) replaces the fixed 3:00 cap — length is an output (typical
-  2–5 min by grade band; > 6:00 = TIM 02 granularity flag, never compressed); scripts carry a
-  machine-readable `coverageNote` (case classes taught vs deferred, SEQ 10) and a `transferTest`
-  verdict; segment kinds `opening → i-do → we-do (repeatable) → discrimination? → wrap` (legacy
-  `title`/`intro` survive on old scripts).
+- **The generator runs under RULEBOOK v2.1 (Experiment 7.14)** (`data/video-playbook.ts` — the
+  "NO HITL DI Video Script Generator v2 (Experiment)" BrainLift embedded verbatim, adopted
+  2026-07-14, Access section stripped): authority stack A1 Stein → A2 card → A3 registries → A4
+  Mayer → A5 MathEd/Psych; numbered registries with STABLE rule IDs (SEQ/TIM/INT/LANG/VIS/GRADE/
+  DEV) cited in NOTE lines, conflicts, and QA findings; the Transfer Test (SEQ 09) replaces the
+  fixed 3:00 cap — length is an output (typical 2–5 min by grade band; > 6:00 = TIM 02 granularity
+  flag, never compressed); scripts carry a machine-readable `coverageNote` (case classes taught vs
+  deferred, SEQ 10) and a `transferTest` verdict; segment kinds `opening → i-do → we-do
+  (repeatable) → discrimination? → wrap` (legacy `title`/`intro` survive on old scripts).
+  v2.1 additions: **numbered slides** (§15 Formatting — wire carries a `slides` registry
+  {number, title, slideType Opening|Concept|Example|Practice|Wrap, canvas NEW|CONTINUES+from} and
+  every line tags its slide; QA enforces title patterns, banned generic titles, matched
+  Example–Practice pairs word-for-word, Wrap = "Summary", canvas back-references; absent on legacy
+  scripts); **VIS 14** (every VISUAL line carries a production-only `<< >>` description —
+  measurable specs, never referenced by student-facing channels; both QA hard fails); **card
+  selection/MCQ response forms are QUIZ-OWNED** (§16.1 — deferred via the coverage note; in-video
+  MCQ only for genuine discrete step-decisions per INT 04/§18.2); "My turn"/"Your turn" revoked
+  for "example"/"practice" (§18.1); the duplicate SEQ 09 resolved (ceiling-not-required is SEQ 16;
+  body cross-refs still say SEQ 09 — the prompt disambiguates); NEW SEQ 17 (printed-book-page
+  citations; the generator copies pages from the supplied format stamps and never invents
+  screenshot links — those attach downstream); INT 21–25 definitions are missing from the source's
+  registry (QA checklist still cites INT 21–24, so the pipeline keeps enforcing resume-state /
+  Show-model / no-blocking-modal).
 - **The ENTIRE textbook ships with the API** (`assets/textbook/` — all 18 chapters + Appendix A/B,
   cover to cover, page-stamped; built from the source PDF; copy-assets fails the build without
   it). **Retrieval stays page-targeted, never whole-book** (rulebook §13.5): `services/formats.ts`

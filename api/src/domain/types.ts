@@ -767,7 +767,25 @@ export interface VsgLine {
   content: string
   /** "M:SS" moment the line lands (simultaneous lines share a stamp). */
   time?: string
+  /** Two-digit slide number ("01"…) per §15 Formatting — absent on scripts stored before slides existed. */
+  slide?: string
   interaction?: VsgInteraction
+}
+
+/**
+ * One numbered slide of the §15 Formatting contract — one stable
+ * learner-facing canvas with one instructional focus. The header fields are
+ * production metadata, never shown or spoken to the student; `title` is the
+ * student-facing slide title (also the slide's opening [TEXT] line).
+ */
+export interface VsgSlide {
+  /** Two-digit slide number, "01"… */
+  number: string
+  title: string
+  slideType: 'Opening' | 'Concept' | 'Example' | 'Practice' | 'Wrap'
+  canvas: 'NEW' | 'CONTINUES'
+  /** The slide this canvas continues from when canvas is CONTINUES; '' when NEW. */
+  continuesFrom: string
 }
 
 /**
@@ -851,6 +869,8 @@ export interface VideoScript {
   gradeBand: string
   /** Total run-time estimate "M:SS" — length is an OUTPUT (TIM 01): typical 2–5 min by band, >6:00 flags granularity. */
   durationEstimate: string
+  /** The §15 slide registry (lines reference these by number) — absent on scripts stored before slides existed. */
+  slides?: VsgSlide[]
   segments: VsgSegment[]
   interactionCount: number
   /** Stein formats consulted, page-stamped (e.g. "Format 7.6 — ADDING TWO NUMERALS WITH RENAMING (p. 213)"). */

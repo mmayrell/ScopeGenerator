@@ -2,7 +2,7 @@
 // line channel-tagged and channel-colored (playbook §3), interactions as
 // structured blocks with their full feedback ladders. Loaded lazily so the
 // docx library stays out of the main bundle.
-import { Document, HeadingLevel, Packer, Paragraph, TextRun } from 'docx'
+import { Document, HeadingLevel, Packer, Paragraph, ShadingType, TextRun } from 'docx'
 import type { VideoScript, VsgChannel, VsgInteraction } from '../types'
 
 const INK = '23232B'
@@ -166,6 +166,7 @@ function scriptChildren(script: VideoScript, pageBreak = false): Paragraph[] {
     children.push(para(`Review flags: ${script.qa.flags.join(' · ')}`, { color: INK2, size: 18, italics: true }))
   }
 
+  const slideOf = new Map((script.slides ?? []).map((sl) => [sl.number, sl]))
   for (const seg of script.segments) {
     children.push(
       new Paragraph({
@@ -180,7 +181,31 @@ function scriptChildren(script: VideoScript, pageBreak = false): Paragraph[] {
         ],
       }),
     )
+    // §15 slide headers render where each slide starts (legacy scripts carry
+    // no slide numbers and render exactly as before).
+    let lastSlide = ''
     for (const line of seg.lines) {
+      if (line.slide && line.slide !== lastSlide) {
+        const sl = slideOf.get(line.slide)
+        if (sl) {
+          children.push(
+            new Paragraph({
+              spacing: { before: 140, after: 50 },
+              shading: { type: ShadingType.CLEAR, fill: '23232B' },
+              children: [
+                new TextRun({ text: `SLIDE ${sl.number}: `, bold: true, size: 19, color: 'FFFFFF' }),
+                new TextRun({ text: xmlSafe(sl.title), bold: true, size: 19, color: 'FFFFFF' }),
+                new TextRun({
+                  text: xmlSafe(`   ${sl.slideType} · canvas ${sl.canvas === 'CONTINUES' ? `continues from ${sl.continuesFrom}` : 'new'}`),
+                  size: 15,
+                  color: 'D0D0D8',
+                }),
+              ],
+            }),
+          )
+        }
+        lastSlide = line.slide
+      }
       children.push(channelLine(line.channel, line.content, line.time))
       if (line.interaction) children.push(...interactionParas(line.interaction))
     }

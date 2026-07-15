@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundError, UnauthorizedError, api, clearAccessCode, type JobStatus } from '../api'
 import { useStore } from '../store'
 import type {
@@ -1023,32 +1023,53 @@ function ScriptViewer({ script }: { script: VideoScript }) {
       )}
 
       <div className="mt-4 space-y-5">
-        {script.segments.map((seg, si) => (
-          <div key={si}>
-            <div className="flex items-baseline gap-2 border-b border-hairline pb-1">
-              <span className="font-display text-[14px] font-semibold text-ink">{SEGMENT_LABELS[seg.kind] ?? seg.kind}</span>
-              <Mono className="text-[11px] text-ink-3">
-                {seg.start}–{seg.end}
-              </Mono>
-              <span className="text-[11px] text-ink-3">{seg.purpose}</span>
+        {script.segments.map((seg, si) => {
+          const slideOf = new Map((script.slides ?? []).map((sl) => [sl.number, sl]))
+          // The header renders where a slide starts (once per slide-number
+          // change within the segment).
+          let lastSlide = ''
+          return (
+            <div key={si}>
+              <div className="flex items-baseline gap-2 border-b border-hairline pb-1">
+                <span className="font-display text-[14px] font-semibold text-ink">{SEGMENT_LABELS[seg.kind] ?? seg.kind}</span>
+                <Mono className="text-[11px] text-ink-3">
+                  {seg.start}–{seg.end}
+                </Mono>
+                <span className="text-[11px] text-ink-3">{seg.purpose}</span>
+              </div>
+              <div className="mt-2 space-y-1.5">
+                {seg.lines.map((line, li) => {
+                  const slide = line.slide && line.slide !== lastSlide ? slideOf.get(line.slide) : undefined
+                  if (line.slide) lastSlide = line.slide
+                  return (
+                    <Fragment key={li}>
+                      {slide && (
+                        <div className="mt-3 flex flex-wrap items-baseline gap-2 rounded-lg bg-night px-3 py-1.5 first:mt-0">
+                          <Mono className="text-[10px] font-semibold text-white/70">SLIDE {slide.number}</Mono>
+                          <span className="text-[12px] font-semibold text-white">{slide.title}</span>
+                          <span className="text-[10px] text-white/60">
+                            {slide.slideType} · canvas {slide.canvas === 'CONTINUES' ? `continues from ${slide.continuesFrom}` : 'new'}
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex items-start gap-2">
+                        {line.time && <Mono className="mt-0.5 w-9 shrink-0 text-right text-[10px] text-ink-3">{line.time}</Mono>}
+                        <span className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[9.5px] font-semibold tracking-wide ${CHANNEL_STYLE[line.channel].tag}`}>
+                          {line.channel}
+                        </span>
+                        {line.interaction ? (
+                          <InteractionBlock label={line.content} interaction={line.interaction} />
+                        ) : (
+                          <p className={`text-[12.5px] leading-relaxed whitespace-pre-wrap ${CHANNEL_STYLE[line.channel].text}`}>{line.content}</p>
+                        )}
+                      </div>
+                    </Fragment>
+                  )
+                })}
+              </div>
             </div>
-            <div className="mt-2 space-y-1.5">
-              {seg.lines.map((line, li) => (
-                <div key={li} className="flex items-start gap-2">
-                  {line.time && <Mono className="mt-0.5 w-9 shrink-0 text-right text-[10px] text-ink-3">{line.time}</Mono>}
-                  <span className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[9.5px] font-semibold tracking-wide ${CHANNEL_STYLE[line.channel].tag}`}>
-                    {line.channel}
-                  </span>
-                  {line.interaction ? (
-                    <InteractionBlock label={line.content} interaction={line.interaction} />
-                  ) : (
-                    <p className={`text-[12.5px] leading-relaxed whitespace-pre-wrap ${CHANNEL_STYLE[line.channel].text}`}>{line.content}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

@@ -22,7 +22,7 @@ export interface FormatScript {
   id: string
   /** The format's title as printed (e.g. "ADDING TWO NUMERALS WITH RENAMING"). */
   title: string
-  /** 1-based PDF page of the 5th-edition text the script starts on. */
+  /** The PRINTED book page the script starts on (SEQ 17; converted from the asset's PDF page at load). */
   page: number
   /** The verbatim script block (TEACHER/STUDENTS parts A–D as extracted). */
   text: string
@@ -54,6 +54,15 @@ const APPENDIX_A_CHARS = 14_000
 let cached: FormatScript[] | undefined
 let warnedMissing = false
 
+/**
+ * assets/formats.json stamps each script with the PDF file page it starts on,
+ * but SEQ 17 requires citations to use the page number PRINTED on the book
+ * page — the two differ by the front matter, a constant 17 pages (verified
+ * against the printed [p.N] stamps of the cover-to-cover corpus at formats
+ * 4.1: PDF 51 / printed 34, 12.6: 293/276, and 18.5: 526/509).
+ */
+const PDF_TO_PRINTED_PAGE_OFFSET = 17
+
 function allFormats(): FormatScript[] {
   if (cached) return cached
   const candidates = [
@@ -63,7 +72,10 @@ function allFormats(): FormatScript[] {
   for (const candidate of candidates) {
     try {
       const parsed = JSON.parse(fs.readFileSync(candidate, 'utf8')) as { formats?: FormatScript[] }
-      cached = Array.isArray(parsed.formats) ? parsed.formats : []
+      cached = (Array.isArray(parsed.formats) ? parsed.formats : []).map((f) => ({
+        ...f,
+        page: f.page - PDF_TO_PRINTED_PAGE_OFFSET,
+      }))
       return cached
     } catch {
       /* try the next location */

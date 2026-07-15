@@ -68,6 +68,17 @@ const BANNED_STUDENT_TERMS_CS = /\b(I Do|We Do|You Do)\b/
 const FLAGGED_STUDENT_TERMS = /\b(atoms?|discriminations?|interactions?|assessment boundary|difficulty ceiling|boundar(?:y|ies)|ceilings?)\b/i
 /** INT 16 hard-fails a bare generic retry with no pointer. */
 const GENERIC_TRY_AGAIN = /^\s*try again[.!]?\s*$/i
+/**
+ * §15's banned generic slide titles, verbatim. The caller tests BOTH the full
+ * title and its remainder after the "Concept: "/"Example of "/"Practice "
+ * pattern prefix, so "Concept: New Concept" is as banned as "New Concept";
+ * a remainder with no letters ("Example of 47") is item-specific and banned
+ * too. Titles must name the specific mathematics, never the slide's role.
+ */
+const GENERIC_SLIDE_TITLE =
+  /^(concept introduction|new concept|learn the rule|getting started|example \d*|teacher example|watch me|my turn|your turn|we do|try one|let'?s practice|practice \d*|now you try|introduction|lesson goal|today'?s lesson)$/i
+/** Strips well-formed production-only << >> spans (sanctioned on TEXT/VISUAL lines) before student-facing scans. */
+const stripProductionSpecs = (t: string): string => t.replace(/<<.*?>>/gs, ' ')
 
 const isTruncation = (e: unknown): boolean =>
   /truncated \(max_tokens|max_tokens reached/i.test(e instanceof Error ? e.message : String(e))
@@ -542,10 +553,15 @@ function qaOf(wire: WireVsgScript, gradeBand: string): { hardFails: string[]; fl
     flags.push(`${mcqs} of ${interactions} interactions are MCQ — INT 04 makes direct production the default; verify each MCQ is a genuine choice`)
   }
   // LANG 11 — internal vocabulary in student-facing text (narration, on-screen
-  // text, prompts, feedback). NOTE lines are production-facing and exempt.
+  // text, prompts, feedback). NOTE lines are production-facing and exempt;
+  // TEXT lines may carry a sanctioned << >> placement/sync spec (§14/VIS 14)
+  // whose production wording is NOT student-facing — strip it before scanning.
   const studentTexts: string[] = []
   for (const s of wire.segments) {
-    for (const l of s.lines) if (l.channel === 'SAY' || l.channel === 'TEXT') studentTexts.push(l.content)
+    for (const l of s.lines) {
+      if (l.channel === 'SAY') studentTexts.push(l.content)
+      if (l.channel === 'TEXT') studentTexts.push(stripProductionSpecs(l.content))
+    }
     for (const i of s.interactions) {
       studentTexts.push(i.prompt, i.correctFeedback, i.try1Hint, i.try2ShowAndMoveOn, ...i.options)
     }
@@ -607,6 +623,131 @@ function qaOf(wire: WireVsgScript, gradeBand: string): { hardFails: string[]; fl
       flags.push(`longest stretch without a student action is ${worst}s — past the ~30s target (TIM 04), inside the 60s cap`)
     }
   }
+
+  // ---- §15 Formatting: the numbered-slide contract ----
+  const slides = Array.isArray(wire.slides) ? wire.slides : []
+  if (slides.length === 0) {
+    fails.push('no slides — §15 requires every script formatted as numbered slides with typed headers')
+  } else {
+    const numOf = (s: string): number => Number(s.replace(/[^0-9]/g, '') || 'NaN')
+    const byNumeric = new Map(slides.map((sl) => [numOf(sl.number), sl]))
+    const byNumber = new Map(slides.map((sl) => [sl.number.trim(), sl]))
+    // Numbering: two-digit, ascending, contiguous from 01 (cosmetic drift is
+    // repairable — flag, don't burn the corrective pass).
+    const misnumbered = slides.some((sl, i) => sl.number.trim() !== String(i + 1).padStart(2, '0'))
+    if (misnumbered) {
+      flags.push(`slide numbers are not contiguous two-digit from 01 (§15): ${slides.map((sl) => sl.number).join(', ')}`)
+    }
+    for (const sl of slides) {
+      const title = sl.title.trim()
+      // Banned generics apply to the full title AND the remainder behind the
+      // pattern prefix ("Concept: New Concept" is as banned as "New Concept");
+      // a remainder with no letters is item-specific ("Example of 47").
+      const remainder = title.replace(/^(Concept: |Example of |Practice )/, '').trim()
+      if (GENERIC_SLIDE_TITLE.test(title) || GENERIC_SLIDE_TITLE.test(remainder)) {
+        fails.push(`slide ${sl.number} title "${title}" is a banned generic title (§15) — name the specific mathematics`)
+      } else if (remainder.length > 0 && !/[a-z]/i.test(remainder)) {
+        fails.push(`slide ${sl.number} title "${title}" is item-specific (§15 bans titles like "Example of 47") — name the mathematical action, not the numbers`)
+      }
+      if (title.includes('<<')) {
+        fails.push(`slide ${sl.number} title carries production-only << >> content (§15) — titles are student-facing`)
+      }
+      if (sl.slideType === 'Wrap' && title !== 'Summary') {
+        fails.push(`the Wrap slide is titled "${title}" — §15 always titles the Wrap slide "Summary"`)
+      }
+      if (sl.slideType === 'Concept' && !/^Concept: /.test(title)) {
+        flags.push(`Concept slide ${sl.number} title "${title}" does not follow the "Concept: <specific concept>" pattern (§15)`)
+      }
+      if (sl.slideType === 'Example' && !/^Example of /.test(title)) {
+        fails.push(`Example slide ${sl.number} title "${title}" must begin "Example of " (§15)`)
+      }
+      if (sl.slideType === 'Practice' && !/^Practice /.test(title)) {
+        fails.push(`Practice slide ${sl.number} title "${title}" must begin "Practice " (§15)`)
+      }
+      if (sl.canvas === 'CONTINUES') {
+        // Digit-normalized on both sides: "SLIDE 03", "3", and "03" all name
+        // slide 03 — format drift is cosmetic (same policy as the numbering
+        // flag above), only a genuinely missing/later target hard-fails.
+        const fromNum = numOf(sl.continuesFrom)
+        if (!byNumeric.has(fromNum) || fromNum >= numOf(sl.number)) {
+          fails.push(`slide ${sl.number} continues from "${sl.continuesFrom}" — CONTINUES FROM must name an EARLIER slide (§15)`)
+        }
+      }
+    }
+    // Matched Example–Practice pairs: every Practice title's remainder must
+    // match a PRECEDING Example's remainder exactly (§15).
+    const seenExamples: string[] = []
+    for (const sl of slides) {
+      const title = sl.title.trim()
+      if (sl.slideType === 'Example') seenExamples.push(title.replace(/^Example of /, ''))
+      if (sl.slideType === 'Practice') {
+        const rest = title.replace(/^Practice /, '')
+        if (!seenExamples.includes(rest)) {
+          fails.push(`Practice slide ${sl.number} "${title}" has no preceding matched "Example of ${rest}" — paired titles must match word-for-word (§15)`)
+        }
+      }
+    }
+    // Every line belongs to a declared slide; a slide spanning segments is a
+    // layout smell (flag — the boundary rules are judgment calls).
+    const usedSlides = new Map<string, Set<string>>()
+    let unassigned = 0
+    for (const s of wire.segments) {
+      for (const l of s.lines) {
+        const n = (l.slide ?? '').trim()
+        if (!n || !byNumber.has(n)) {
+          unassigned++
+          continue
+        }
+        if (!usedSlides.has(n)) usedSlides.set(n, new Set())
+        usedSlides.get(n)!.add(s.kind)
+      }
+    }
+    if (unassigned > 0) {
+      fails.push(`${unassigned} line(s) reference no declared slide — every line carries its slide number (§15)`)
+    }
+    for (const [n, segKinds] of usedSlides) {
+      if (segKinds.size > 1) {
+        flags.push(`slide ${n} spans segments (${[...segKinds].join(', ')}) — a slide is one stable canvas with one focus (§15)`)
+      }
+    }
+    const declared = new Set(usedSlides.keys())
+    const orphans = slides.filter((sl) => !declared.has(sl.number.trim()))
+    if (orphans.length > 0) {
+      flags.push(`slide(s) ${orphans.map((sl) => sl.number).join(', ')} declare headers but own no lines (§15)`)
+    }
+  }
+  // VIS 14: every visual carries a production-only << >> description —
+  // measurable, complete enough for a producer to reconstruct the visual.
+  const bareVisuals = wire.segments.reduce(
+    (n, s) => n + s.lines.filter((l) => l.channel === 'VISUAL' && !(l.content.includes('<<') && l.content.includes('>>'))).length,
+    0,
+  )
+  if (bareVisuals > 0) {
+    fails.push(`${bareVisuals} VISUAL line(s) carry no << >> production description — VIS 14 makes it mandatory on every visual`)
+  }
+  // VIS 14: student-facing content never references the production
+  // description. SAY may never carry '<<' at all; TEXT lines legitimately
+  // carry a << >> placement/sync spec (§14), so only RESIDUAL markers after
+  // stripping well-formed spans (an unclosed spec) are flagged; interaction
+  // prompts/options/feedback are fully student-facing — any '<<' hard-fails.
+  const sayLeak = wire.segments.some((s) => s.lines.some((l) => l.channel === 'SAY' && l.content.includes('<<')))
+  if (sayLeak) {
+    fails.push('a SAY line carries << >> production content — narration never speaks the VIS 14 description')
+  }
+  const unclosedTextSpec = wire.segments.some((s) =>
+    s.lines.some((l) => l.channel === 'TEXT' && stripProductionSpecs(l.content).includes('<<')),
+  )
+  if (unclosedTextSpec) {
+    flags.push('a TEXT line carries an unclosed << production marker — placement/sync specs must be fully enclosed in << >> (§14/VIS 14)')
+  }
+  const interactionLeak = wire.segments.some((s) =>
+    s.interactions.some((i) =>
+      [i.prompt, i.answer, i.correctFeedback, i.try1Hint, i.try2ShowAndMoveOn, ...i.options].some((t) => t.includes('<<')),
+    ),
+  )
+  if (interactionLeak) {
+    fails.push('an interaction prompt/option/feedback carries << >> production content — students never see the VIS 14 description (its failure condition)')
+  }
   return { hardFails: fails, flags: [...flags, ...(wire.qa?.flags ?? [])] }
 }
 
@@ -627,7 +768,12 @@ function toVideoScript(
   const segments: VsgSegment[] = wire.segments.map((s) => {
     let next = 0
     const lines: VsgLine[] = s.lines.map((l) => {
-      const base: VsgLine = { channel: l.channel, content: l.content, ...(l.time ? { time: l.time } : {}) }
+      const base: VsgLine = {
+        channel: l.channel,
+        content: l.content,
+        ...(l.time ? { time: l.time } : {}),
+        ...(l.slide ? { slide: l.slide } : {}),
+      }
       if (l.channel === 'INTERACTION' && next < s.interactions.length) {
         return { ...base, interaction: s.interactions[next++] }
       }
@@ -653,6 +799,7 @@ function toVideoScript(
     standardId: card.standardId,
     gradeBand,
     durationEstimate: wire.durationEstimate,
+    ...(Array.isArray(wire.slides) && wire.slides.length > 0 ? { slides: wire.slides } : {}),
     segments,
     interactionCount: segments.reduce((n, s) => n + s.lines.filter((l) => l.interaction).length, 0),
     formatRefs: wire.formatRefs,

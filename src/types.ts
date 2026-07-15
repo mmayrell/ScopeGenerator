@@ -678,7 +678,18 @@ export interface VsgLine {
   channel: VsgChannel
   content: string
   time?: string // "M:SS" moment the line lands (simultaneous lines share a stamp)
+  /** Two-digit slide number ("01"…) per rulebook §15 — absent on scripts stored before slides existed. */
+  slide?: string
   interaction?: VsgInteraction
+}
+
+/** One numbered slide (rulebook §15): header fields are production metadata; title is student-facing. */
+export interface VsgSlide {
+  number: string
+  title: string
+  slideType: 'Opening' | 'Concept' | 'Example' | 'Practice' | 'Wrap'
+  canvas: 'NEW' | 'CONTINUES'
+  continuesFrom: string
 }
 
 /** Rulebook v2 kinds plus legacy 'title'/'intro' (scripts stored before v2). */
@@ -728,6 +739,8 @@ export interface VideoScript {
   standardId: string
   gradeBand: string
   durationEstimate: string
+  /** The §15 slide registry — absent on scripts stored before slides existed. */
+  slides?: VsgSlide[]
   segments: VsgSegment[]
   interactionCount: number
   formatRefs: string[]
