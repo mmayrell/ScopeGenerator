@@ -197,7 +197,7 @@ export interface GeneratedExemplar {
 export interface Lesson {
   id: string // e.g. U3.L3
   title: string
-  /** The title as a student sees it — concise, descriptive, on grade level (absent on scopes generated before the field existed). */
+  /** The student-facing title — easier to process without losing mathematical precision; may equal `title` (absent on scopes generated before the field existed). */
   studentFriendlyTitle?: string
   type: LessonType
   evidenceStatus: 'observed' | 'inferred' | 'mixed'

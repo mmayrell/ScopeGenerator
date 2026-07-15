@@ -51,7 +51,7 @@ export const fieldMeta: CardFieldMeta[] = [
   { key: 'standardDescription', n: 5, label: 'Standard Description', purpose: 'The official standard wording, verbatim', record: 'standards' },
   { key: 'substandard', n: 6, label: 'Substandard', purpose: 'The single teachable behavior this lesson is responsible for teaching', record: 'substandard' },
   { key: 'lessonTitle', n: 7, label: 'Lesson Title', purpose: 'The shortest verb-led title that names the atom this lesson teaches' },
-  { key: 'studentFriendlyTitle', n: 8, label: 'Student Friendly Title', purpose: 'The title as a student sees it — concise, descriptive, developmentally on grade level' },
+  { key: 'studentFriendlyTitle', n: 8, label: 'Student Friendly Title', purpose: 'The student-facing title — easier to process, same mathematical precision as the lesson title' },
   { key: 'objectives', n: 9, label: 'Objectives', purpose: 'The minimal-complete set of observable objectives that define mastery of this atom', record: 'objectives' },
   { key: 'emphasis', n: 10, label: 'Major / Supporting', purpose: 'Determines instructional weight in sequencing', record: 'emphasis' },
   { key: 'progression', n: 11, label: 'Progression Placement', purpose: 'Situates the atom in the vertical story', record: 'progression' },

@@ -319,8 +319,10 @@ Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeo
    record (`sequencingRationale` — why the units are ordered as they are and why the lesson holds
    its position; `granularityRationale` — why exactly this granularity, arguing both why not more
    and why not less; optional on legacy scopes, rendered in the trailing Lesson Decision Record and
-   leading the CSV `scoping_rationale` column), and a required `studentFriendlyTitle` (the title as
-   a student sees it — concise, descriptive, on grade level; optional on legacy scopes; the JSON
+   leading the CSV `scoping_rationale` column), and a required `studentFriendlyTitle` (the
+   student-facing title — easier to process WITHOUT losing mathematical precision: same behavior,
+   object, and distinguishing constraints as the formal title, no nicknames or invented strategy
+   names, may equal the formal title when it is already clear; optional on legacy scopes; the JSON
    export's `lessonTitle` uses it, falling back to `title`),
    `generatedExemplars` for lessons with no in-boundary items (never-empty Released Items, spec §7.14).
    Card calls carry the same 8.5-minute abort: a cut call re-enqueues the unit message with
