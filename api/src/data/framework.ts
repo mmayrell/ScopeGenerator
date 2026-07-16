@@ -85,18 +85,19 @@ For every standard, make the following considerations in order.
 - 7 — Validate instructional coverage and rigor. Ask: "Does this sequence fully prepare students for the demonstrated rigor of the standard?" If released assessment items or other admissible evidence reveal a documented instructional demand that is not yet explicitly taught, insert additional atoms until every in-scope demand is covered. When problem solving, word problems, mathematical modeling, or other application tasks are within the standard's scope, they must be explicitly taught rather than assumed. Do not create new atoms solely because numbers become larger or examples become more numerous when the underlying generalization remains unchanged.
 - 8 — Identify bridge lessons. A lesson may combine multiple previously mastered skills only to teach one new instructional capability. The prerequisite skills are not new learning; they are coordinated in service of a single objective (e.g., discrimination, comparison, selection, or integration). A lesson must not introduce more than one independent new capability.
 
-## Split Decision Rules
+## Split Decision Rules (the Split Decision Framework)
 
 Split into a new atom whenever instruction introduces:
 
-- a new rule
-- a new algorithm
-- a new representation
-- a new vocabulary concept
-- a new decision point
-- a new prerequisite
-- a new discrimination
-- a new integration behavior
+- a new rule/strategy not previously taught (requires explicit demonstration with clean worked examples and contrasting non-examples before practice)
+- a new vocabulary or concept label that must be stabilized before the procedure (examples/non-examples without computation)
+- a new or hidden decision step that changes the routine (like-denominator vs unlike-denominator fraction addition: finding the common denominator is a new step)
+- a new integration behavior requiring coordination of previously mastered atoms (strategy selection across a mixed set; no new computational procedures)
+- an unmastered representation or notation (students cannot yet map the symbols/graph/table to meaning; the encoding must be modeled before scaffolds fade)
+- high confusability with a look-alike skill (needs discrimination training with side-by-side non-examples: similarity vs congruency)
+- a foundational preskill missing or weak (the prerequisite must be taught and stabilized before the composite routine)
+- a demand-band jump (e.g. selection vs construction; bare computation → real-world problems)
+- a data-driven error pattern — a systematic, high-frequency misconception needing error-based modeling before independent practice (the placeholder-zero pattern in 3,204 × 203: nominally the same algorithm as the no-zero case, but the systematic error warrants its own micro-lesson)
 
 Do not split merely because numbers become larger.
 
@@ -104,14 +105,27 @@ Do not split merely because numbers become larger.
 
 Remain one atom when only:
 
-- numbers become larger
+- the strategy steps are the same as taught (no new decisions)
+- numbers become larger (or benign decimals/fractions enter)
 - context changes
 - wording changes
 - formatting changes
 - problem difficulty increases
 - additional practice is needed
+- already-mastered representations are being used
+- mixed practice requires no new strategy-selection behavior because the relevant integration atom is already mastered
 
 …provided the cognitive routine remains identical.
+
+## Tie-Breakers (edge cases)
+
+- Would a novice need new decision cues — never seen before — to start or choose steps? → Split.
+- Can the item be rewritten with friendlier numbers or shorter text and the routine stays identical? → Don't split.
+- Is there a prerequisite gap that cannot be refreshed quickly without new rules or explicit instruction and practice? → Split (teach and stabilize the prerequisite first).
+
+## Editing Splits (the error-pattern bar)
+
+High-frequency or systematic errors inform what must be taught explicitly — not automatically whether an atom splits. Errors justify splitting only when analysis reveals a new or unstable start cue/problem type, a new decision step or rule, or a missing prerequisite that must be taught and stabilized first. Otherwise, errors are addressed through improved modeling, contrast cases, scaffolding, or sequencing within the same atom.
 
 ## Types of Lessons
 
@@ -370,7 +384,7 @@ Coherence webs (step 14): the atom web's edge list is all direct consumptions wi
 
 To cover STAAR problems involving real-world application of comparing fractions, the released problems include: finding a fraction greater/less than a given fraction; identifying which comparison is true from a word problem; given a fraction model, determining which inequality is true; identifying true comparisons from tables.
 
-Determining lesson granularity: granularity is driven by the smallest new behavior (atom) the lesson can provide. Some problems compare two explicitly given fractions; others require determining WHICH fractions to compare — a new decision point with additional steps and higher cognitive load. The split rules fire (a new decision point), so the lesson splits into two: "Word Problems Involving Identifying Correct Fraction Comparisons" and "Word Problems Involving Comparing Multiple Fractions".
+Determining lesson granularity: granularity is driven by the smallest new behavior (atom) the lesson can provide. Some problems compare two explicitly given fractions; others require determining WHICH fractions to compare — a new decision step with additional steps and higher cognitive load. The split rules fire (a new or hidden decision step), so the lesson splits into two: "Word Problems Involving Identifying Correct Fraction Comparisons" and "Word Problems Involving Comparing Multiple Fractions".
 
 Determining which problems to model — for each lesson, the minimum viable modeling set: Lesson 1 models EASY (fraction model → which inequality is true), MEDIUM (identifying correct comparisons from a word problem with two or three fractions), HARD (a table with 4–5 values → which comparison is true); Lesson 2 models EASY (finding a fraction greater/less than a given fraction) and MEDIUM (a table with qualitative answer choices requiring multiple comparisons). Problems that look different but measure the same mastered skill, differ only in formatting, or sit at the same rigor over already-mastered representations go straight to practice.`
 
@@ -422,8 +436,14 @@ export function getFramework(): FrameworkDoc {
       name: 'Curriculum Atomization, Item Alignment & Coherence Guide',
       description:
         'The academic specification for the curriculum scope generator, compiled from the Curriculum Atomization, Item Alignment & Coherence Guide — a Direct Instruction framework for decomposing standards into teachable lessons, aligning state-level assessment items, and mapping coherence across lessons, units, and grades. It defines the atom conditions, the discovery process, split and don\u2019t-split rules, the five lesson types, ordering rules, the Cumulative Mastery Ledger, the released-item Placement Rule and Exclusion Triage, the Item Generation Doctrine, and the three-tier coherence webs that govern how standards-aligned curriculum scopes are produced.',
-      version: 'v4.0',
-      updated: '2026-07-09',
+      // v4.1 (2026-07-16): Split Decision Rules expanded to the No-HITL
+      // Curriculum Scope Generator Specification's nine named criteria
+      // (adding demand-band jump and data-driven error pattern), Don't-Split
+      // gains already-mastered representations and mastered-integration mixed
+      // practice, and the Tie-Breakers + Editing Splits (error-pattern bar)
+      // sections are now formal engine text.
+      version: 'v4.1',
+      updated: '2026-07-16',
       content: ENGINE_CONTENT,
     },
     doctrine: {

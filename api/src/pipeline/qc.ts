@@ -237,6 +237,28 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
   const plannedStandardCodes = new Set(
     plan.units.flatMap((u) => u.lessons.flatMap((l) => l.standardCodes.map((c) => c.toUpperCase()))),
   )
+  // 11b. Example Progression presence (spec §5/§8 field 14) — the
+  // within-lesson progression is a REQUIRED structure on teaching lessons:
+  // Modeled Set (ordered), Delayed Modeling Cases, and Vary / Hold Constant.
+  // Its absence means within-lesson variation has nowhere to live and tends
+  // to leak into fake atoms or undifferentiated practice.
+  const teachingLessons = lessons.filter((l) => l.type === 'new-learning' || l.type === 'preskill')
+  const missingProgression = teachingLessons.filter((l) => {
+    const approach = (l.fields.approach?.content ?? '').toLowerCase()
+    return !(approach.includes('model') && approach.includes('vary') && approach.includes('hold constant'))
+  })
+  checks.push({
+    name: 'Example Progression presence',
+    status: missingProgression.length > 0 ? 'flag' : 'pass',
+    detail:
+      missingProgression.length > 0
+        ? `${missingProgression.length} teaching lesson(s) lack the required Example Progression structure (Modeled Set · Delayed Modeling Cases · Vary/Hold Constant) in the Instructional Approach: ${missingProgression
+            .slice(0, 6)
+            .map((l) => l.id)
+            .join(', ')}${missingProgression.length > 6 ? ', …' : ''} — the within-lesson progression must be explicit (spec §5).`
+        : `All ${teachingLessons.length} teaching lessons carry an explicit Example Progression (Modeled Set · Vary/Hold Constant).`,
+  })
+
   const perStandard = plannedStandardCodes.size > 0 ? lessons.length / plannedStandardCodes.size : 0
   checks.push({
     name: 'Atomization depth',

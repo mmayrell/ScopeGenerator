@@ -1,5 +1,6 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
+import { chapterProcedures } from './textbook'
 
 // Doctrine consultation: topical chapter excerpts from Stein, Kinder, Silbert
 // & Carnine, Direct Instruction Mathematics (5th ed.) — the controlling method
@@ -145,20 +146,35 @@ export function doctrineExcerptsFor(query: DoctrineQuery): string | undefined {
     .map((s) => ({ ch: { slug: s.slug, title: s.title }, score: s.score }))
     .slice(0, MAX_CHAPTERS)
 
-  const texts = scored
-    .map((s) => ({ title: s.ch.title, text: chapterText(s.ch.slug) }))
-    .filter((t): t is { title: string; text: string } => !!t.text)
-  if (texts.length === 0) return undefined
-
-  // Score-ordered allocation: the best match takes what it needs (capped so a
-  // long primary cannot starve the secondary); later chapters share what's left.
+  // PRINTED-PAGE-STAMPED text is the primary source: the cover-to-cover
+  // corpus (assets/textbook/, services/textbook.ts) carries "[p.N]" markers
+  // with the book's printed page numbers, so doctrine citations can name the
+  // real page — the curated page-less excerpts left the model unable to
+  // identify pages and remain only as a degraded-deploy fallback.
+  // Focus terms are WORDS (whole multi-word lesson titles almost never occur
+  // verbatim in book prose), and the ACTUAL per-chapter allocation is passed
+  // into chapterProcedures so its focus-window logic runs whenever a
+  // chapter's procedures front exceeds the slot — a start-anchored re-cut
+  // here would silently drop the late-chapter procedures the focus terms
+  // point at.
+  const focusWords = [...new Set(
+    `${query.lessonTitles.join(' ')} ${query.unitTitle}`
+      .toLowerCase()
+      .split(/[^a-z-]+/)
+      .filter((w) => w.length >= 5),
+  )]
   let remaining = TOTAL_BUDGET_CHARS
   const blocks: string[] = []
-  for (let i = 0; i < texts.length; i++) {
-    const cap = i === texts.length - 1 ? remaining : Math.min(remaining, PRIMARY_CAP_CHARS)
-    const body = truncateAtParagraph(texts[i].text, cap)
+  for (let i = 0; i < scored.length; i++) {
+    if (remaining <= 0) break
+    const cap = i === scored.length - 1 ? remaining : Math.min(remaining, PRIMARY_CAP_CHARS)
+    const num = Number(/^ch(\d+)/.exec(scored[i].ch.slug)?.[1] ?? NaN)
+    const corpus = Number.isFinite(num) ? chapterProcedures(num, cap, focusWords) : ''
+    const body = corpus || truncateAtParagraph(chapterText(scored[i].ch.slug) ?? '', cap)
+    if (body.length === 0) continue
     remaining = Math.max(0, remaining - body.length)
-    blocks.push(`--- Doctrine chapter: ${texts[i].title} ---\n${body}`)
+    blocks.push(`--- Doctrine chapter: ${scored[i].ch.title} ---\n${body}`)
   }
+  if (blocks.length === 0) return undefined
   return blocks.join('\n\n')
 }

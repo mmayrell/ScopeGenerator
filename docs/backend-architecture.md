@@ -686,13 +686,24 @@ proceeds and logs (RerunEvent detail + QC flag), per spec §8.
   and worked examples, not a paraphrase. Card prompts must
   demand ≥1 citation per field and the mandatory *Generated exemplar — not a released item* label.
 - **Doctrine chapter excerpts** (`api/src/services/doctrine.ts`): card-writing stages (cards,
-  rerun-lesson, rerun-unit, apply) additionally inject up to 2 keyword/CCSS-domain-matched chapter
-  `.txt` extracts of *Direct Instruction Mathematics* (5th ed., Stein et al.) from
-  `api/assets/doctrine/` — score-ordered budget of 150k chars total, primary chapter capped at
-  110k so it ships (nearly) whole. The prompt makes doctrine citations mandatory where the
-  excerpts govern: the Instructional Approach and its strategy decision entry cite the chapter
-  with a format/section locator and a verbatim excerpt; QC flags new-learning and preskill
-  lessons whose strategy selection carries no doctrine citation ("Doctrine grounding").
+  rerun-lesson, rerun-unit, apply) additionally inject up to 2 keyword/CCSS-domain-matched
+  chapter extracts of *Direct Instruction Mathematics* (5th ed., Stein et al.) — sourced from
+  the **page-stamped cover-to-cover corpus** (`assets/textbook/`, `services/textbook.ts`
+  `chapterProcedures` with lesson/unit focus terms; `[p.N]` markers carry the PRINTED book
+  pages), falling back to the page-less curated `api/assets/doctrine/` extracts only on a
+  degraded deploy. Score-ordered budget of 150k chars total, primary chapter capped at 110k.
+  The prompt makes doctrine citations mandatory where the excerpts govern, and **printed page
+  numbers are mandatory in every doctrine locator** (read from the nearest `[p.N]` marker —
+  never invented or omitted); the Instructional Sequence and Assessment Chart rows are named
+  as atomization evidence; doctrine-consistent generalizations of a book format are flagged as
+  such, never presented as verbatim prescriptions. QC flags new-learning and preskill lessons
+  whose strategy selection carries no doctrine citation ("Doctrine grounding") and teaching
+  lessons whose Instructional Approach lacks the required Example Progression structure
+  ("Example Progression presence" — Modeled Set · Delayed Modeling Cases · Vary/Hold Constant,
+  spec §5's within-lesson progression). Planning and card prompts carry the spec's TWO
+  PROGRESSIONS framework (atom progression across lessons vs within-lesson progression of
+  cases, the unchanged-decision-path tie-breaker, level-tagged Decision Record entries) and
+  the nine-criterion Split Decision Framework with the Editing Splits error-pattern bar.
 
 ## Seed data
 
