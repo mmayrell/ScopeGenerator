@@ -472,9 +472,15 @@ function gate2StringChecks(scope: Scope, set: StandardSet): { findings: FindingD
   const treeText = new Map<string, string>()
   const walk = (nodes: StandardNode[]): void => {
     for (const n of nodes) {
-      // Grouping nodes carry their official heading in `label` (wording is ''
-      // for pure grouping nodes) — cluster citations quote the heading.
-      const text = norm(`${n.label ?? ''} ${n.wording ?? ''} ${(n.limits ?? []).join(' ')}`)
+      // A node's quotable surface is EVERYTHING the tree stores about it:
+      // grouping nodes carry their official heading in `label` (wording is
+      // '' for pure grouping nodes), and cards legitimately quote the
+      // emphasis attribute ('"emphasis": "not designated"') — proven live on
+      // the first production run, where 58 emphasis-attribute quotes were
+      // falsely blocked as fabricated.
+      const text = norm(
+        `${n.label ?? ''} ${n.wording ?? ''} ${(n.limits ?? []).join(' ')}${n.emphasis ? ` emphasis: ${n.emphasis}` : ''}${n.fluency ? ' fluency expectation' : ''}`,
+      )
       if (n.code) treeText.set(codeKey(n.code), text)
       if (n.norm) treeText.set(codeKey(n.norm), text)
       if (n.children) walk(n.children)
@@ -495,7 +501,13 @@ function gate2StringChecks(scope: Scope, set: StandardSet): { findings: FindingD
   // the standing rule that scopes keep the versions they were generated
   // under. Only same-version scopes get engine-quote fidelity.
   const engineCurrent = scope.engineVersion === ENGINE_VERSION
-  const itemText = norm(set.items.map((i) => `${i.stem} ${(i.choices ?? []).join(' ')}`).join(' '))
+  // An item's quotable surface includes its Repository metadata — cards quote
+  // demand profiles and response formats, not just stems.
+  const itemText = norm(
+    set.items
+      .map((i) => `${i.source} ${i.test} ${i.alignmentCode} ${i.demandProfile} ${i.responseFormat} ${i.stem} ${(i.choices ?? []).join(' ')}`)
+      .join(' '),
+  )
 
   for (const unit of scope.units) {
     for (const lesson of unit.lessons) {
