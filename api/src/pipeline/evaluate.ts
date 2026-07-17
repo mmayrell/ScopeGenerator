@@ -244,7 +244,9 @@ export async function evalRunStep(msg: JobMessage, ctx: InvocationContext): Prom
     scope_request: scope.request,
     course_overview: courseOverview,
     standards_tree_digest: treeDigest,
-    scope_decisions: (scope.qc ?? []).map((q) => ({ name: q.name, status: q.status, detail: q.detail.slice(0, 300) })),
+    // Honest label: these are the pipeline's mechanical QC results, not the
+    // plan's scopeDecisions (which live in the plan checkpoint, not the scope).
+    auto_qc_checks: (scope.qc ?? []).map((q) => ({ name: q.name, status: q.status, detail: q.detail.slice(0, 300) })),
   })
   await mutateJob(msg.jobId, (r) => {
     r.stagesDone = 2

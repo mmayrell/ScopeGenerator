@@ -156,7 +156,7 @@ Rubric: The doctrine, cross-cutting: preskills before the composites that consum
   course(
     'Unit Organization',
     `◆ HARD GATE ◆
-Rubric: The lesson belongs to its unit's strand and visible skill chain — builds from nearby lessons, prepares for upcoming ones. The unit is a strand-coherent block, not a thin spiral, with a rationale traceable to the framework's emphasis statements or progression streams. 3 = Pass–Good: In-strand, in-chain, rationale cited. | 2 = Pass–Good Enough: In-strand; the chain link to a neighbor stated loosely, noted. | 1 = Fail: A stranded atom outside its unit's chain, a mixed-strand unit without a defended rationale, or a missing rationale.`,
+Rubric: The lesson belongs to its unit's strand and visible skill chain — builds from nearby lessons, prepares for upcoming ones. The unit is a strand-coherent block, not a thin spiral, with a rationale traceable to the framework's emphasis statements or progression streams. NOTE — distributed interleaving is NOT spiraling (engine Ordering rule 10, Interleaving After Dependency): a strand may legitimately appear as multiple NON-ADJACENT units (Place Value A → Multiplication A → Place Value B) when each unit is internally a coherent strand-block and the alternation respects prerequisites; judge each unit's INTERNAL coherence, and treat a strand revisit as spiraling only when the units involved are NOT coherent blocks (thin scatter). 3 = Pass–Good: In-strand, in-chain, rationale cited. | 2 = Pass–Good Enough: In-strand; the chain link to a neighbor stated loosely, noted. | 1 = Fail: A stranded atom outside its unit's chain, a mixed-strand unit without a defended rationale, or a missing rationale.`,
     true,
   ),
   course(

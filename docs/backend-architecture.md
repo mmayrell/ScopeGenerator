@@ -704,6 +704,14 @@ proceeds and logs (RerunEvent detail + QC flag), per spec §8.
   PROGRESSIONS framework (atom progression across lessons vs within-lesson progression of
   cases, the unchanged-decision-path tie-breaker, level-tagged Decision Record entries) and
   the nine-criterion Split Decision Framework with the Editing Splits error-pattern bar.
+- **Interleaving After Dependency** (engine v4.2, Ordering rule 10): ordering runs in two
+  stages — the dependency graph is non-negotiable; among dependency-valid orders, distributed
+  interleaving beats massed-topic blocks (compatible strands stay active concurrently and may
+  alternate units; a strand retires when its purpose is fulfilled). Never: standards-document
+  order alone · exhausting a strand solely for convenience · interleaving across prerequisite
+  or tightly coupled dependencies · fragmenting units merely for alternation. Significant
+  sequencing choices are documented against the dependency-valid alternatives (course-map
+  scopeDecisions + each card's sequencingRationale).
 
 ## Seed data
 

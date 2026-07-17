@@ -150,6 +150,24 @@ The generator orders lessons to produce the shortest coherent instructional path
 - 7. Evidence determines rigor. If admissible evidence demonstrates an instructional demand that has not yet been explicitly taught, insert additional lessons before students are assessed on that demand.
 - 8. Units follow coherent knowledge progressions. Units group closely related atoms that build toward a common mathematical idea. Unit boundaries should minimize prerequisite crossings and maximize instructional coherence.
 - 9. The sequence forms a coherent dependency graph. Every lesson unlocks later learning, every dependency points forward, and no lesson appears before the knowledge it requires.
+- 10. Interleaving after dependency. When the dependency graph admits multiple valid orders, prefer distributed interleaving over massed-topic instruction (see Interleaving After Dependency below). Rule 8's crossing-minimization governs each unit's INTERNAL coherence and keeps tightly coupled dependency chains adjacent — a later arc consuming its strand's already-MASTERED entries across units is retrieval, not a crossing penalty, and never vetoes alternation by itself.
+
+## Interleaving After Dependency
+
+Lesson order is determined in two stages. First, satisfy instructional dependencies: prerequisite knowledge is established before it is required, simpler behaviors precede more complex ones, algorithms precede the representations or applications that depend on them, and bridge or integration lessons appear only after their parent atoms are independently mastered. This dependency graph is non-negotiable and always takes precedence.
+
+Second, when the dependency graph admits multiple valid orders, prefer distributed interleaving over massed-topic instruction. Rather than exhausting one topic before beginning the next, keep multiple compatible strands active concurrently whenever doing so strengthens retrieval, retention, and transfer. Lessons from different strands may alternate when they do not introduce prerequisite violations, allowing students to revisit recently learned ideas while acquiring new ones. Splitting a strand into coherent arcs to enable retrieval-spaced alternation is NOT fragmentation, provided each arc remains internally coherent and tightly coupled chains stay adjacent; a later arc consuming the earlier arc's mastered entries is the retrieval benefit sought, not a coherence cost.
+
+Interleaving must never be mechanical. Preserve instructional coherence: each lesson still builds naturally from nearby lessons and prepares for upcoming ones. A strand remains active only while it continues to support future learning; once its instructional purpose has been fulfilled and no longer benefits from continued retrieval, it retires and is replaced by another strand whose prerequisites are now satisfied.
+
+The generator must never:
+
+- order lessons according to the published order of standards alone;
+- complete an entire mathematical strand before beginning another solely for organizational convenience;
+- interleave lessons that violate prerequisite readiness or separate tightly coupled instructional dependencies; or
+- sacrifice coherent unit structure merely to increase alternation.
+
+When multiple valid sequences exist, preference goes to the ordering that maximizes long-term retention, retrieval opportunities, and transfer while preserving Direct Instruction principles, prerequisite integrity, and coherent instructional units. Any significant sequencing choice is documented in the Decision Record so reviewers can trace why the selected order was preferred over other dependency-valid alternatives.
 
 ## Representation Doctrine
 
@@ -442,7 +460,12 @@ export function getFramework(): FrameworkDoc {
       // gains already-mastered representations and mastered-integration mixed
       // practice, and the Tie-Breakers + Editing Splits (error-pattern bar)
       // sections are now formal engine text.
-      version: 'v4.1',
+      // v4.2 (2026-07-16): Ordering gains rule 10 and the Interleaving After
+      // Dependency section — dependency-valid orders prefer distributed
+      // interleaving over massed-topic blocks; strands retire when their
+      // instructional purpose is fulfilled; significant sequencing choices
+      // are documented against the dependency-valid alternatives.
+      version: 'v4.2',
       updated: '2026-07-16',
       content: ENGINE_CONTENT,
     },
