@@ -1,18 +1,111 @@
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useStore } from './store'
 import { Btn, Spark } from './ui'
 import lwaiLogo from './assets/lwai-logo.png'
 
 const nav = [
   { to: '/', label: 'Home', end: true },
-  { to: '/packets', label: 'Item Repository' },
-  { to: '/library', label: 'Reference Library' },
-  { to: '/sets', label: 'Standard Sets' },
   { to: '/scopes', label: 'Scopes' },
   { to: '/lsg', label: 'Lesson Scope Edits' },
   { to: '/videos', label: 'Video Script Generator' },
   { to: '/evaluations', label: 'Scope Evaluations' },
 ]
+
+const companionNav = [
+  { to: '/packets', label: 'Item Repository' },
+  { to: '/library', label: 'Reference Library' },
+  { to: '/sets', label: 'Standard Sets' },
+]
+
+/**
+ * The three companion surfaces grouped under one dropdown so the header nav
+ * fits without scrolling. The menu is PORTALED to <body> at fixed viewport
+ * coordinates — the header scrolls horizontally on narrow windows
+ * (overflow-x-auto), which would clip an in-flow absolute menu.
+ */
+function CompanionTools() {
+  const location = useLocation()
+  const [open, setOpen] = useState(false)
+  const [anchor, setAnchor] = useState<DOMRect | null>(null)
+  const btnRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const hoverTimer = useRef<number | undefined>(undefined)
+  const active = companionNav.some((n) => location.pathname === n.to || location.pathname.startsWith(`${n.to}/`))
+
+  useEffect(() => {
+    if (!open) return
+    const close = (e: MouseEvent) => {
+      const t = e.target as Node
+      if (btnRef.current?.contains(t) || menuRef.current?.contains(t)) return
+      setOpen(false)
+    }
+    // Fixed-position menus don't track scroll — close instead of drifting.
+    const onScroll = () => setOpen(false)
+    document.addEventListener('mousedown', close)
+    window.addEventListener('scroll', onScroll, true)
+    return () => {
+      document.removeEventListener('mousedown', close)
+      window.removeEventListener('scroll', onScroll, true)
+    }
+  }, [open])
+  useEffect(() => setOpen(false), [location.pathname])
+  useEffect(() => () => window.clearTimeout(hoverTimer.current), [])
+
+  const show = () => {
+    window.clearTimeout(hoverTimer.current)
+    if (btnRef.current) setAnchor(btnRef.current.getBoundingClientRect())
+    setOpen(true)
+  }
+  const leave = () => {
+    window.clearTimeout(hoverTimer.current)
+    hoverTimer.current = window.setTimeout(() => setOpen(false), 150)
+  }
+
+  return (
+    <span onMouseEnter={show} onMouseLeave={leave}>
+      <button
+        ref={btnRef}
+        onClick={() => (open ? setOpen(false) : show())}
+        className={`flex cursor-pointer items-center gap-1.5 border-b-2 pb-0.5 text-[13px] font-medium whitespace-nowrap transition-colors ${
+          active ? 'border-accent text-ink' : 'border-transparent text-ink-2 hover:text-ink'
+        }`}
+      >
+        Companion Tools
+        <svg width="9" height="9" viewBox="0 0 16 16" fill="none" className={`transition-transform ${open ? 'rotate-180' : ''}`}>
+          <path d="M3 6l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      {open &&
+        anchor !== null &&
+        createPortal(
+          <div
+            ref={menuRef}
+            style={{ position: 'fixed', top: anchor.bottom + 10, left: Math.max(8, Math.min(anchor.left - 10, window.innerWidth - 208)) }}
+            className="animate-rise z-50 w-[200px] rounded-xl border border-hairline bg-panel p-1.5 shadow-(--shadow-float)"
+            onMouseEnter={() => window.clearTimeout(hoverTimer.current)}
+            onMouseLeave={leave}
+          >
+            {companionNav.map((n) => (
+              <NavLink
+                key={n.to}
+                to={n.to}
+                className={({ isActive }) =>
+                  `block rounded-lg px-3 py-2 text-[13px] font-medium transition-colors ${
+                    isActive ? 'bg-accent/8 text-accent' : 'text-ink-2 hover:bg-ink/4 hover:text-ink'
+                  }`
+                }
+              >
+                {n.label}
+              </NavLink>
+            ))}
+          </div>,
+          document.body,
+        )}
+    </span>
+  )
+}
 
 export default function Shell() {
   const { scopes, loading, error, refresh, actionError, clearActionError } = useStore()
@@ -39,6 +132,7 @@ export default function Shell() {
               {n.to === '/scopes' && generating && <span className="stage-pulse h-1.5 w-1.5 rounded-full bg-accent" />}
             </NavLink>
           ))}
+          <CompanionTools />
         </nav>
         <div className="ml-auto flex shrink-0 items-center gap-2.5">
           <Spark />
