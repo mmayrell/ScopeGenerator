@@ -559,11 +559,12 @@ doctrine versions.
   resumes at the still-open lessons. Same deadline machinery as the other pipelines (8.5-minute
   in-process abort, `payload.cuts`+`cutLesson` per-lesson escalation, 4.5-minute launch budget
   with same-message re-enqueue).
-- **The generator runs under RULEBOOK v2.2 (Experiment 7.14, wrap-summary amendment)**
+- **The generator runs under RULEBOOK v2.3 (Experiment 7.14, house amendments)**
   (`data/video-playbook.ts` — the "NO HITL DI Video Script Generator v2 (Experiment)" BrainLift
-  embedded verbatim, adopted 2026-07-14, Access section stripped; house amendment 2026-07-17:
+  embedded verbatim, adopted 2026-07-14, Access section stripped; house amendments 2026-07-17:
   the wrap concludes with a concise one-line summary of the strategy/rule/key idea and never
-  bridges to the mastery quiz): authority stack A1 Stein → A2 card → A3 registries → A4
+  bridges to the mastery quiz, and NEW LANG 14 — no em dashes in student-facing text, enforced
+  as a mechanical hard fail in pipeline QA): authority stack A1 Stein → A2 card → A3 registries → A4
   Mayer → A5 MathEd/Psych; numbered registries with STABLE rule IDs (SEQ/TIM/INT/LANG/VIS/GRADE/
   DEV) cited in NOTE lines, conflicts, and QA findings; the Transfer Test (SEQ 09) replaces the
   fixed 3:00 cap — length is an output (typical 2–5 min by grade band; > 6:00 = TIM 02 granularity

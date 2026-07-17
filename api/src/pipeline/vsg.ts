@@ -586,6 +586,13 @@ function qaOf(wire: WireVsgScript, gradeBand: string): { hardFails: string[]; fl
   if (soft.size > 0) {
     flags.push(`possible internal vocabulary in student-facing text (LANG 11): ${[...soft].join(', ')} — verify these read as math, not pipeline jargon`)
   }
+  // LANG 14 — em dashes never appear in student-facing text (NOTE/VISUAL
+  // lines and << >> specs are production-facing and exempt; studentTexts is
+  // already the exact student-facing surface).
+  const emDashed = studentTexts.filter((t) => t.includes('—')).length
+  if (emDashed > 0) {
+    fails.push(`${emDashed} student-facing text(s) contain an em dash (LANG 14) — rewrite as separate sentences or with a comma or colon`)
+  }
   // Mathematical Language Style Guide review pass — older-practice markers in
   // student-facing text. Review flags, never fails: the guide allows bridge
   // language when promptly paired with the precise term; verify the pairing.
