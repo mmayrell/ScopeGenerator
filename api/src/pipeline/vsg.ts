@@ -9,6 +9,7 @@ import {
   VsgSegment,
 } from '../domain/types'
 import { getLsgCourseOrUndefined } from '../data/lsg'
+import { LANG_GUIDE_NAME, LANG_GUIDE_VERSION, langGuideFindings } from '../data/lang-guide'
 import { VSG_PLAYBOOK_VERSION } from '../data/video-playbook'
 import { deleteVideoScriptDocs, getVideoScriptOrUndefined, getVsgRunOrUndefined, mutateVsgRun, saveVideoScript } from '../data/vsg'
 import { getJob, mutateJob, pushLog } from '../data/jobs'
@@ -558,6 +559,10 @@ function qaOf(wire: WireVsgScript, gradeBand: string): { hardFails: string[]; fl
   // TEXT lines may carry a sanctioned << >> placement/sync spec (§14/VIS 14)
   // whose production wording is NOT student-facing — strip it before scanning.
   const studentTexts: string[] = []
+  // Slide titles are student-facing (§15: also the slide's opening [TEXT]
+  // line) — scan the registry directly; the TEXT-line duplication is a
+  // convention no check enforces.
+  for (const sl of wire.slides ?? []) studentTexts.push(sl.title)
   for (const s of wire.segments) {
     for (const l of s.lines) {
       if (l.channel === 'SAY') studentTexts.push(l.content)
@@ -580,6 +585,13 @@ function qaOf(wire: WireVsgScript, gradeBand: string): { hardFails: string[]; fl
   }
   if (soft.size > 0) {
     flags.push(`possible internal vocabulary in student-facing text (LANG 11): ${[...soft].join(', ')} — verify these read as math, not pipeline jargon`)
+  }
+  // Mathematical Language Style Guide review pass — older-practice markers in
+  // student-facing text. Review flags, never fails: the guide allows bridge
+  // language when promptly paired with the precise term; verify the pairing.
+  // forVsg skips entries the rulebook itself sanctions (LANG 10/DEV 01).
+  for (const finding of langGuideFindings(studentTexts, { forVsg: true })) {
+    flags.push(`Math Language Style Guide: student-facing text uses ${finding}`)
   }
   for (const s of wire.segments) {
     const lineCount = s.lines.filter((l) => l.channel === 'INTERACTION').length
@@ -813,6 +825,7 @@ function toVideoScript(
     // after a rulebook upgrade.
     playbookVersion: `VSG Playbook ${VSG_PLAYBOOK_VERSION}`,
     doctrineVersion: run.doctrineVersion,
+    langGuideVersion: `${LANG_GUIDE_NAME} ${LANG_GUIDE_VERSION}`,
     version,
     created: nowIso(),
   }

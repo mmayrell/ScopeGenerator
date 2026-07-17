@@ -582,6 +582,20 @@ doctrine versions.
   screenshot links — those attach downstream); INT 21–25 definitions are missing from the source's
   registry (QA checklist still cites INT 21–24, so the pipeline keeps enforcing resume-state /
   Show-model / no-blocking-modal).
+- **The Mathematical Language Style Guide (Grades K–8, adopted 2026-07-16)** is the house
+  authority on mathematical language (`data/lang-guide.ts`): the FULL guide is embedded in the
+  VSG system prompt at A5 (the LANG registry and the card outrank it; it never changes Stein's
+  strategy/step order/examples), with one recorded house translation — older-practice wording in
+  a retrieved Stein format ("borrow", "carry the one", divisor-first "goes into") is recast to
+  the guide's preferred practice in student-facing lines, cited in a NOTE. The scope-side
+  prompts (`systemCore`, `lsgSystem`) carry `LANG_GUIDE_CORE`, a compression of the vertical
+  commitments (full text wins on any disagreement). Mechanical review pass on both sides via
+  `langGuideFindings` (`LANG_GUIDE_WATCH` markers): VSG QA emits review FLAGS on student-facing
+  text; scope auto-QC has a flag-level "Math language style" check over card text — never hard
+  fails, because the guide explicitly permits bridge language paired promptly with the precise
+  term. Provenance: new scopes list the guide in `doctrineVersions` (index 0 stays the
+  BrainLift — VSG runs stamp `DOCTRINE_VERSIONS[0]`); new scripts stamp `langGuideVersion`
+  (optional on pre-guide scripts), shown in the script header and DOCX export.
 - **The ENTIRE textbook ships with the API** (`assets/textbook/` — all 18 chapters + Appendix A/B,
   cover to cover, page-stamped; built from the source PDF; copy-assets fails the build without
   it). **Retrieval stays page-targeted, never whole-book** (rulebook §13.5): `services/formats.ts`

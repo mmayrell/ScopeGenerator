@@ -123,7 +123,7 @@ function scriptChildren(script: VideoScript, pageBreak = false): Paragraph[] {
       `${script.unitName} · ${script.standardId} · grade band ${script.gradeBand} · ${script.durationEstimate} · ${script.interactionCount} interactions`,
       { color: INK2 },
     ),
-    para(`${script.playbookVersion} · ${script.doctrineVersion} · script v${script.version} · generated ${script.created.slice(0, 10)}`, {
+    para(`${script.playbookVersion} · ${script.doctrineVersion}${script.langGuideVersion ? ` · ${script.langGuideVersion}` : ''} · script v${script.version} · generated ${script.created.slice(0, 10)}`, {
       color: INK2,
       size: 18,
     }),

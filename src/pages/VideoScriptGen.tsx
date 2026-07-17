@@ -975,7 +975,8 @@ function ScriptViewer({ script }: { script: VideoScript }) {
         <Pill tone="neutral">{script.interactionCount} interactions</Pill>
         <Pill tone="neutral">grade band {script.gradeBand}</Pill>
         <span>
-          {script.playbookVersion} · {script.doctrineVersion} · v{script.version}
+          {script.playbookVersion} · {script.doctrineVersion}
+          {script.langGuideVersion ? ` · ${script.langGuideVersion}` : ''} · v{script.version}
         </span>
       </div>
       {script.formatRefs.length > 0 && (

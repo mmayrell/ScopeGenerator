@@ -1,4 +1,5 @@
 import { ItemRecord, Lesson, QCCheck, Unit } from '../domain/types'
+import { langGuideFindings } from '../data/lang-guide'
 import { PlanOutput } from '../services/schemas'
 
 /**
@@ -257,6 +258,46 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
             .map((l) => l.id)
             .join(', ')}${missingProgression.length > 6 ? ', …' : ''} — the within-lesson progression must be explicit (spec §5).`
         : `All ${teachingLessons.length} teaching lessons carry an explicit Example Progression (Modeled Set · Vary/Hold Constant).`,
+  })
+
+  // 11c. Mathematical Language Style Guide review pass — older-practice
+  // markers in the instructional text a card carries (titles, objectives,
+  // approach, boundary, exemplars). Flag-level: the guide allows bridge
+  // language when promptly paired with the precise term; a hit asks the
+  // reviewer to verify that pairing, never rejects the card.
+  const langHits: { id: string; finding: string }[] = []
+  for (const l of lessons) {
+    // Every prose field a card carries EXCEPT standards/cluster (verbatim
+    // framework codes and wording — not ours to reword).
+    const texts = [
+      l.title,
+      l.studentFriendlyTitle ?? '',
+      l.fields.substandard?.content ?? '',
+      l.fields.objectives?.content ?? '',
+      l.fields.emphasis.content,
+      l.fields.progression.content,
+      l.fields.prerequisites.content,
+      l.fields.boundary.content,
+      l.fields.newLearning.content,
+      l.fields.approach.content,
+      l.fields.nonGoals.content,
+      l.fields.ceiling.content,
+      l.fields.assessment.content,
+      l.fields.releasedItems.content,
+      ...(l.generatedExemplars ?? []).map((e) => `${e.stem} ${e.answer} ${(e.choices ?? []).join(' ')}`),
+    ]
+    for (const finding of langGuideFindings(texts)) langHits.push({ id: l.id, finding })
+  }
+  checks.push({
+    name: 'Math language style',
+    status: langHits.length > 0 ? 'flag' : 'pass',
+    detail:
+      langHits.length > 0
+        ? `${langHits.length} older-practice marker(s) from the Mathematical Language Style Guide in card text: ${langHits
+            .slice(0, 6)
+            .map((h) => `${h.id}: ${h.finding}`)
+            .join(' · ')}${langHits.length > 6 ? ' · …' : ''} — bridge wording is allowed only when promptly paired with the precise term; verify or reword (verbatim released-item quotes and exemplars mirroring the assessment program's own conventions are exempt — verify, don't reword them).`
+        : 'No older-practice language markers from the Mathematical Language Style Guide in card text.',
   })
 
   const perStandard = plannedStandardCodes.size > 0 ? lessons.length / plannedStandardCodes.size : 0

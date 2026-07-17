@@ -1,9 +1,12 @@
 /** Fixed actor string — real user identity is a v1 non-goal (contract §Non-goals). */
 export const ACTOR = 'doreen.mayrell@learnwith.ai'
 
-/** Engine/doctrine version strings recorded on every generated scope — must stay in step with the fixed documents in data/framework.ts. */
+/** Engine/doctrine version strings recorded on every generated scope — must stay in step with the fixed documents in data/framework.ts and data/lang-guide.ts. Index 0 stays the DI BrainLift (VSG runs stamp DOCTRINE_VERSIONS[0] as their doctrineVersion). */
 export const ENGINE_VERSION = 'Engine v4.2 (adopted 2026-07-16)'
-export const DOCTRINE_VERSIONS = ['DI BrainLift v1.8 (Stein et al. 2017)']
+export const DOCTRINE_VERSIONS = [
+  'DI BrainLift v1.8 (Stein et al. 2017)',
+  'Mathematical Language Style Guide, Grades K-8 v1.0 (adopted 2026-07-16)',
+]
 
 export const today = (): string => new Date().toISOString().slice(0, 10)
 

@@ -885,6 +885,8 @@ export interface VideoScript {
   conflictsResolved: VsgConflict[]
   playbookVersion: string
   doctrineVersion: string
+  /** The Mathematical Language Style Guide version the script generated under. Absent on scripts generated before the guide was adopted. */
+  langGuideVersion?: string
   /** Per (course, lesson) version counter. */
   version: number
   created: string
