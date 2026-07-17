@@ -11,7 +11,8 @@ import { huntPacketStep } from '../pipeline/packets'
 import { applyProposalRunStep, iterateRunStep, proposalRunStep } from '../pipeline/proposals'
 import { rerunRunStep } from '../pipeline/rerun'
 import { vsgRunStep } from '../pipeline/vsg'
-import { evalRunStep } from '../pipeline/evaluate'
+import { qcInvestigateStep, qcRunStep } from '../pipeline/qc-gates'
+import { mutateFlagLedger, mutateInvestigationLog, mutateQcRun } from '../data/qc'
 import { mutateVsgRun } from '../data/vsg'
 import { nowIso, today } from '../shared/util'
 
@@ -193,8 +194,20 @@ async function dispatch(msg: JobMessage, context: InvocationContext): Promise<vo
       return lsgRunStep(msg, context)
     case 'vsg/run':
       return vsgRunStep(msg, context)
+    case 'qc/run':
+      return qcRunStep(msg, context)
+    case 'qc/investigate':
+      return qcInvestigateStep(msg, context)
     case 'eval/run':
-      return evalRunStep(msg, context)
+      // The rubric evaluation system was replaced by the four-gate QC stack
+      // (Quality Control & Loop Engineering); settle legacy queued messages
+      // cleanly instead of poisoning them.
+      await mutateJob(msg.jobId, (r) => {
+        r.status = 'cancelled'
+        r.stage = 'Superseded'
+        pushLog(r, 'The rubric evaluation was replaced by the QC gates — run Quality Control on the scope instead')
+      })
+      return
     case 'ingest/lexicon':
       // The lexicon step was removed from the pipeline; settle legacy queued
       // messages cleanly instead of poisoning them.
@@ -249,6 +262,13 @@ async function markFailed(msg: JobMessage, error: string, context: InvocationCon
     // was scoring; the failed job row (plus its log) is the whole record.
     return
   }
+  if (msg.kind === 'qc') {
+    // QC is READ-ONLY against the scope — a terminal QC failure settles only
+    // the QC surfaces, never the scope document. Without this branch a dead
+    // qc job would fall through to mutateScope below and bump scope.updated.
+    await markQcFailed(msg, error, context)
+    return
+  }
   if (!msg.scopeId) return
   try {
     const settled = await mutateScope(msg.scopeId, (scope) => settleFailedScope(scope, msg, error))
@@ -258,6 +278,56 @@ async function markFailed(msg: JobMessage, error: string, context: InvocationCon
     if (msg.kind === 'apply-proposal') await snapshotScope(settled)
   } catch (e) {
     context.error(`genjobs-worker: could not settle scope ${msg.scopeId} after job failure`, e)
+  }
+}
+
+/**
+ * Terminal-failure settlement for kind 'qc' — the QC surfaces are the only
+ * things touched. step 'run': the run doc flips to 'failed' with the error so
+ * the page never shows a permanent 'running' zombie. step 'investigate': the
+ * investigation record fails and its flags roll back to 'open' so they can be
+ * re-investigated. Every write is best-effort — the failed job row is the
+ * record of last resort.
+ */
+async function markQcFailed(msg: JobMessage, error: string, context: InvocationContext): Promise<void> {
+  if (!msg.scopeId) return
+  if (msg.step === 'investigate') {
+    const investigationId = msg.payload ? String(msg.payload.investigationId ?? '') : ''
+    if (!investigationId) return
+    let flagIds: string[] = []
+    try {
+      await mutateInvestigationLog(msg.scopeId, (l) => {
+        const inv = l.investigations.find((i) => i.id === investigationId)
+        if (inv && inv.status === 'running') {
+          inv.status = 'failed'
+          inv.error = error
+          inv.updated = nowIso()
+          flagIds = inv.flagIds
+        }
+      })
+      if (flagIds.length > 0) {
+        await mutateFlagLedger(msg.scopeId, (l) => {
+          for (const f of l.flags) if (flagIds.includes(f.id) && f.status === 'investigating') f.status = 'open'
+        })
+      }
+    } catch (e) {
+      context.error(`genjobs-worker: could not settle failed investigation ${investigationId}`, e)
+    }
+    return
+  }
+  try {
+    await mutateQcRun(msg.scopeId, (run) => {
+      if (run.status === 'running') {
+        run.status = 'failed'
+        run.error = error
+        run.updated = nowIso()
+      }
+    })
+  } catch (e) {
+    // 404 = the run doc was deleted (or never shelled) — nothing to settle.
+    if ((e as { status?: number }).status !== 404) {
+      context.error(`genjobs-worker: could not settle failed QC run for scope ${msg.scopeId}`, e)
+    }
   }
 }
 

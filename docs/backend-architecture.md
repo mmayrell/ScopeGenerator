@@ -626,33 +626,79 @@ doctrine versions.
   else `complete` if any script was written, else `failed`. `markVsgFailed` (worker terminal
   failure) fails only still-open lessons — finished scripts and reconciliation flags survive.
 
-## Scope Evaluations (kind `eval`, step `run`)
+## Quality Control & Loop Engineering (kind `qc`, steps `run` / `investigate`)
 
-The built-in rubric QC layer (the Google-Sheet/webhook era is retired): after every scope
-generation (enqueued best-effort by finalize — a dispatch failure never fails the generation) and
-on demand, an agent scores the scope against the **rubric compiled into `data/eval-rubric.ts`**
-(29 columns: 4 administrative, 13 lesson-band + 4 course-band rubrics — six marked hard gates —
-5 computed results, 3 SME columns the pipeline never writes; editing a rubric is a deploy). Two
-Claude calls per evaluation: the lesson band scores a stratified ~10-lesson sample of full cards
-(checkpointed to `jobs/<jobId>/eval-lesson-band.json` + re-enqueue under the time budget); the
-course band scores the full course structure + standards digest + the auto-QC results. Replies
-bind by echoed heading; a skipped column scores a fail-loud `1`. Results follow the verdict rule
-(FAIL on any `1`/`Inaccurate`; PASS — GOOD when no fails, ALL hard gates `3`, average ≥ 2.70;
-else PASS — GOOD ENOUGH); AI-QC Notes lead with the verdict + criterion, then per-gate reasoning.
-The scope document is hosted for the JSON column in the anonymous `screenshots` container
-(`evals/<scopeId>.json`). A re-evaluation refreshes the agent's cells but PRESERVES the SME
-fields and `created`.
+The four-gate QC stack (spec "Quality Control and Loop Engineering", adopted 2026-07-16 —
+completely replaces the 29-column rubric evaluations). One signal model: every quality event is a
+`QcFinding` (source, gate, checkFamily, ruleTag, location, summary, evidence, severity
+blocking|major|advisory, repairContract). **Everything is read-only against the scope** —
+findings, confidences, and repair proposals live on the QC surfaces; existing scopes keep the
+versions they were generated under.
 
-- **Storage**: `evals/records/<scopeId>.json` (latest evaluation wins; carries `values` +
-  `headings` for CSV export, `cells`, results, and the SME fields); index partition `eval`.
-- **Routes** (`http-evals.ts`): `GET evals` (rubric + summaries) · `GET/DELETE evals/{scopeId}`
-  (full record / permanent run deletion incl. the hosted JSON copy) · `PUT evals/{scopeId}/sme`
-  (`{ sme, smeVerdict, smeNotes }`, verdict ∈ FAIL | PASS — GOOD | PASS — GOOD ENOUGH | '') ·
-  `POST evals/{scopeId}/run` (202, completed scopes only).
-- CSV export is client-side (the page joins each record's stored `headings`/`values` + SME
-  fields under the current rubric's two header rows).
-- Worker: evaluation is an observer — a terminal `eval` job failure records only on the job row,
-  never on the scope.
+**`qc/run`** — after every generation (best-effort finalize dispatch; a failure never fails the
+generation) and on demand — one at a time per scope (409 while a QC job is queued/running).
+Gate 1 Structural Validation is deterministic code over the WHOLE scope (`qc-gates.ts
+gate1Findings`): schema completeness (era-aware PER LESSON — pre-contract lessons get advisories,
+not blockers), coverage census (COURSE-mode requests only — a standard/topic scope's universe is
+its request; exact-or-deeper citation covers a leaf, ancestor-only citation is advisory, no
+citation is blocking; every lesson must trace to a standard in all modes), graph integrity
+(taught-in-course prerequisite order, acyclicity), referential integrity (U#.L# forwards resolve;
+itemRefs resolve in the evidence set), boundary algebra's mechanical slice (sibling Included-line
+disjointness; ceiling-inside-boundary and excluded-included-once run adversarially at Gate 3),
+and format & phrasing (title filler, "Students are able to" + no percentages P8,
+generated-exemplar labels). Gate 2 Evidence Verification: string checks over every card
+(citation resolution against the tree, TEKS-paren/HS-hyphen tolerant; quote fidelity for
+QUOTE-WRAPPED excerpts only — commentary excerpts are not verbatim claims — against tree
+label/wording/limits and the full doctrine corpus (BrainLift + curated chapters + the
+cover-to-cover textbook); an unlocatable standards/doctrine/engine quote is BLOCKING "treated as
+fabricated", an unlocatable item quote is MAJOR (item stems are stand-ins for screenshots);
+engine quotes are version-locked — checked only when the scope generated under the current
+engine) plus one independent-AI call (claim support, inference honesty, precedence audit) over a
+stratified ~10-lesson sample with a grade-filtered standards digest (wording+limits at 400
+chars). Gate 3 Adversarial Review: two AI calls over the sample — structure audits (split
+challenge, atom-triple, sequence probe) and communication audits (faultless-communication probe,
+boundary probe, boundary algebra, solvability audit over the sampled cards' exemplars AND their
+referenced items' actual content, doctrine rubric P1–P12). Gate 2/3 reviewers re-derive from
+evidence + engine + doctrine and never see generator reasoning as authority. Gate 4 composes
+per-card Confidence Scores (badge mix, gate 2/3 exposure, acknowledged-coverage-gap exposure by
+whole-word grade.domain match; the self-consistency term is honestly unmeasured in stack v1.0).
+AI calls checkpoint to `jobs/<jobId>/qc-gate2.json` / `qc-gate3-*.json` + re-enqueue under the
+time budget; the scope version is checkpointed on the first execution and a scope change between
+executions drops the AI checkpoints (no mixed-version reports). Verdict: any blocking finding →
+`quarantined` (cards listed); else findings → `advisories`; else `clean`. The report stamps
+`QC_STACK_VERSION` and the seeded-defect catch rate (suite v0: "not yet measured"). Terminal
+worker failure settles the QC surfaces only (run → `failed`; investigation → `failed` + flags
+back to `open`) and NEVER touches the scope document (`markQcFailed` — kind `qc` early-returns
+before the scope-settlement fallthrough).
+
+**Flags + `qc/investigate`** — the per-scope Flag Ledger persists across runs; flags
+(rigor|granularity|sequencing|wording|evidence|other + note + location + scopeVersion) cost
+nothing to raise. An investigation runs the six steps in one AI call: re-derivation, verdict per
+flag (confirmed w/ severity + root cause, or returned with a cited defense — a flag is a
+question, not an order), pattern sweep across the full skeleton, gate-gap analysis, and proposed
+repairs as DIFFS. Accept/edit/reject on a repair records telemetry with a required reason —
+**nothing is ever applied to the scope automatically** (apply by hand via Lesson Scope Edits,
+then re-run the gates). Dispatch failures roll flags back to `open`.
+
+- **Storage**: `qc/runs/<scopeId>.json` (current report, re-runs overwrite) · `qc/flags/<scopeId>.json`
+  · `qc/investigations/<scopeId>.json`; index partition `qcrun`. Scope DELETE cascades all three.
+- **Routes** (`http-qc.ts`): `GET qc` (summaries + open-flag counts) · `GET/DELETE qc/{scopeId}`
+  (report+flags+investigations / permanent deletion, mid-flight runs discard at their next
+  checkpoint) · `POST qc/{scopeId}/run` (202, completed scopes only) · `POST qc/{scopeId}/flags` ·
+  `DELETE qc/{scopeId}/flags/{flagId}` (open flags only — investigated flags are the audit trail)
+  · `POST qc/{scopeId}/investigate` (`{flagIds?}`, default all open) ·
+  `PUT qc/{scopeId}/investigations/{invId}/repairs/{index}` (`{decision, editedText?, reason}`).
+- Worker: QC is an observer — a terminal `qc` job failure records only on the job row, never on
+  the scope. Legacy queued `eval/run` messages settle as cancelled ("superseded").
+- Deferred to later stack versions (report to Doreen 2026-07-16): the regeneration loop (would
+  edit scopes), the seeded-defect suite + golden scopes, Gate 4 self-consistency re-runs, the
+  Review Queue and full Trends dashboard surfaces (the page carries a trends strip; autonomy is
+  truthfully L0), classroom PerformanceReport intake into investigations, an actual PUBLISH gate
+  consuming `quarantinedCards` (quarantine is a report state + banner today — the tool has no
+  scope-publish control to disable), and the lesson-card surface extensions (findings rendered
+  beneath the fields they govern, per-field flag controls on the cards, rail dots, the Card
+  Confidence Score beside the evidence badge — flags are raised from the Quality Control page
+  for now).
 
 ## Guardrails (synchronous, data-driven)
 

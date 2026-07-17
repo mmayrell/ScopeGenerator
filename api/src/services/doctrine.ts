@@ -95,6 +95,9 @@ export const truncateAtParagraph = (text: string, max: number): string => {
 /** Read access for sibling services (the video generator's format retrieval). */
 export const chapterTextOf = (slug: string): string | undefined => chapterText(slug)
 
+/** Every curated chapter text — the QC quote-fidelity corpus needs the same texts card citations quote from. */
+export const allDoctrineChapterTexts = (): string[] => CHAPTERS.map((c) => chapterText(c.slug) ?? '')
+
 export interface DoctrineQuery {
   unitTitle: string
   strand: string

@@ -885,30 +885,32 @@ export async function generateFinalizeStep(msg: JobMessage, ctx: InvocationConte
     r.stage = 'Complete'
     pushLog(r, `Scope complete: ${units.length} units, ${lessons} lessons, QC ${qc.filter((c) => c.status === 'pass').length}/${qc.length} pass`)
   })
-  // Every generated scope gets an evaluation row (Scope Evaluations sheet) —
-  // best-effort observer: a dispatch failure must never fail the generation.
-  const evalJobId = newId('job')
-  let evalJobCreated = false
+  // Every generated scope passes the four QC gates (spec: the gates run as
+  // pipeline stages after generation) — best-effort observer: a dispatch
+  // failure must never fail the generation, and the gates are read-only
+  // against the scope they check.
+  const qcJobId = newId('job')
+  let qcJobCreated = false
   try {
     await createJob({
-      jobId: evalJobId,
-      kind: 'eval',
+      jobId: qcJobId,
+      kind: 'qc',
       scopeId,
-      totalStages: 3,
+      totalStages: 5,
       stage: 'Queued',
-      detail: `Rubric evaluation dispatched for "${scope.title}"`,
+      detail: `Four-gate QC dispatched for "${scope.title}"`,
     })
-    evalJobCreated = true
-    await enqueueJob({ jobId: evalJobId, kind: 'eval', step: 'run', scopeId })
+    qcJobCreated = true
+    await enqueueJob({ jobId: qcJobId, kind: 'qc', step: 'run', scopeId })
   } catch (e) {
-    ctx.warn(`generate/finalize ${msg.jobId}: evaluation dispatch failed (scope unaffected): ${String(e)}`)
-    if (evalJobCreated) {
+    ctx.warn(`generate/finalize ${msg.jobId}: QC dispatch failed (scope unaffected): ${String(e)}`)
+    if (qcJobCreated) {
       // The job record exists but no queue message will ever pick it up —
       // mark it failed rather than leaving an eternal 'Queued'.
-      await mutateJob(evalJobId, (r) => {
+      await mutateJob(qcJobId, (r) => {
         r.status = 'failed'
-        r.error = 'Failed to dispatch the evaluation job'
-        pushLog(r, 'Dispatch failed; re-run from the Scope Evaluations page')
+        r.error = 'Failed to dispatch the QC run'
+        pushLog(r, 'Dispatch failed; run the gates from the Quality Control page')
       }).catch(() => undefined)
     }
   }

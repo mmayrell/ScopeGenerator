@@ -16,9 +16,12 @@ import type {
   PacketSummary,
   Proposal,
   Scope,
-  EvalRubricColumn,
-  ScopeEvaluation,
-  ScopeEvaluationSummary,
+  QcFlag,
+  QcFlagType,
+  QcInvestigation,
+  QcLocation,
+  QcRun,
+  QcRunSummary,
   VideoScript,
   VsgCourseRow,
   VsgRun,
@@ -333,19 +336,28 @@ export const api = {
   getVideoScript: (courseId: string, lessonId: string) =>
     request<VideoScript>('GET', `/vsg/scripts/${encodeURIComponent(courseId)}/${encodeURIComponent(lessonId)}`),
 
-  // ---- Scope Evaluations (built-in rubric QC) ----
+  // ---- Quality Control & Loop Engineering (four gates, flags, investigations) ----
 
-  listEvals: () =>
-    request<{ rubric: EvalRubricColumn[]; evaluations: ScopeEvaluationSummary[] }>('GET', '/evals'),
+  listQcRuns: () => request<{ runs: QcRunSummary[] }>('GET', '/qc'),
 
-  getEval: (scopeId: string) => request<ScopeEvaluation>('GET', `/evals/${encodeURIComponent(scopeId)}`),
+  getQc: (scopeId: string) =>
+    request<{ run: QcRun; flags: QcFlag[]; investigations: QcInvestigation[] }>('GET', `/qc/${encodeURIComponent(scopeId)}`),
 
-  deleteEval: (scopeId: string) => request<{ ok: true }>('DELETE', `/evals/${encodeURIComponent(scopeId)}`),
+  deleteQc: (scopeId: string) => request<{ ok: true }>('DELETE', `/qc/${encodeURIComponent(scopeId)}`),
 
-  saveEvalSme: (scopeId: string, body: { sme: string; smeVerdict: string; smeNotes: string }) =>
-    request<ScopeEvaluationSummary>('PUT', `/evals/${encodeURIComponent(scopeId)}/sme`, body),
+  runQcGates: (scopeId: string) => request<{ jobId: string }>('POST', `/qc/${encodeURIComponent(scopeId)}/run`),
 
-  runEval: (scopeId: string) => request<{ jobId: string }>('POST', `/evals/${encodeURIComponent(scopeId)}/run`),
+  raiseQcFlag: (scopeId: string, body: { location?: QcLocation; type: QcFlagType; note: string }) =>
+    request<QcFlag>('POST', `/qc/${encodeURIComponent(scopeId)}/flags`, body),
+
+  withdrawQcFlag: (scopeId: string, flagId: string) =>
+    request<{ ok: true }>('DELETE', `/qc/${encodeURIComponent(scopeId)}/flags/${encodeURIComponent(flagId)}`),
+
+  investigateQc: (scopeId: string, flagIds?: string[]) =>
+    request<{ jobId: string; investigationId: string }>('POST', `/qc/${encodeURIComponent(scopeId)}/investigate`, { flagIds }),
+
+  decideQcRepair: (scopeId: string, invId: string, index: number, body: { decision: 'accept' | 'edit' | 'reject'; editedText?: string; reason: string }) =>
+    request<QcInvestigation>('PUT', `/qc/${encodeURIComponent(scopeId)}/investigations/${encodeURIComponent(invId)}/repairs/${index}`, body),
 
   // ---- Reference Library (framework → grade → four document slots) ----
 

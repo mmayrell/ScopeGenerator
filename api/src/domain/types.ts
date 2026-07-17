@@ -948,62 +948,179 @@ export interface VsgRunSummary {
 }
 
 // ---------------------------------------------------------------------------
-// Scope Evaluations — after every scope generation (and on demand), an
-// evaluation agent scores the scope against the BUILT-IN rubric
-// (data/eval-rubric.ts; editing a rubric is a deploy). Results live in the
-// app: the Scope Evaluations page renders the per-column details, the human
-// SME records their review in the sme* fields (preserved verbatim across
-// re-evaluations), the table exports as CSV client-side, and runs are
-// deletable.
+// Quality Control & Loop Engineering (spec: "Quality Control and Loop
+// Engineering", adopted 2026-07-16 — replaces the rubric Scope Evaluations).
+// One signal model: every quality event is a Finding. Four ordered gates run
+// after every generation and on demand (Gate 1 deterministic structural code,
+// Gate 2 evidence verification, Gate 3 adversarial review, Gate 4 confidence
+// composition). Humans raise Flags into the per-scope Flag Ledger;
+// investigations re-derive flagged decisions and propose repair DIFFS —
+// nothing ever edits a generated scope (repairs are telemetry + manual
+// application). Existing scopes keep the versions they were generated under.
 // ---------------------------------------------------------------------------
 
-/** One evaluated rubric column: the rubric heading + the agent's cell value. */
-export interface EvalCell {
-  heading: string
-  /** The cell value: '3' | '2' | '1', or the rubric's own categorical term (e.g. 'Accurate'). */
-  verdict: string
-  /** One-line note (only defects/deviations carry one; '' otherwise). */
-  note: string
+/** Finding severity (spec §One Signal Model): blocking cannot publish; major publishes only through a recorded override; advisory records without blocking. */
+export type QcSeverity = 'blocking' | 'major' | 'advisory'
+
+export type QcFindingSource = 'gate' | 'flag' | 'audit' | 'kickback' | 'classroom' | 'trend' | 'investigation'
+
+/** Where a finding/flag lives: scope-level when all fields are absent. */
+export interface QcLocation {
+  unitId?: string
+  lessonId?: string
+  field?: string
 }
 
-export interface ScopeEvaluation {
+/**
+ * The machine-actionable record of a defect from any source — the unit of
+ * work of every loop (spec §One Signal Model). Never prose alone.
+ */
+export interface QcFinding {
+  id: string
+  source: QcFindingSource
+  /** Which gate raised it (source 'gate'/'audit'). */
+  gate?: 1 | 2 | 3 | 4
+  /** Check family, e.g. 'Coverage census', 'Quote fidelity', 'Split challenge'. */
+  checkFamily: string
+  /** The rule the finding enforces: P1–P12, a gate rule id (G1.x), or an engine rule tag. */
+  ruleTag: string
+  location: QcLocation
+  summary: string
+  /** Citations, probe artifacts, or performance data establishing the defect. */
+  evidence: string
+  severity: QcSeverity
+  /** Required change class + the verification that will retire the finding. */
+  repairContract: string
+}
+
+export interface QcGateResult {
+  gate: 1 | 2 | 3 | 4
+  name: string
+  status: 'pass' | 'findings' | 'skipped'
+  findingCount: number
+  detail: string
+}
+
+/** Composite per-card score: routes review, never edits content (spec Gate 4). */
+export interface QcCardConfidence {
+  lessonId: string
+  /** 0–100. */
+  score: number
+  band: 'high' | 'medium' | 'low'
+  components: { badgeMix: number; gate2: number; gate3: number; coverageExposure: number }
+}
+
+/**
+ * The QC Report for one scope — one current run per scope, re-runs overwrite
+ * (the Flag Ledger lives separately and persists across runs). Read-only
+ * against the scope: gates and investigations never modify scope content.
+ */
+export interface QcRun {
   scopeId: string
   scopeTitle: string
-  /** The evaluation row over every non-SME rubric column, in rubric order (CSV export source). */
-  values: string[]
-  /** Headings `values` was built against — keeps old rows exporting correctly if the rubric changes. */
-  headings?: string[]
-  cells: EvalCell[]
-  /** Computed results: fails, hard-gate fails (gate-marked columns scored 1), average, verdict. */
-  failCount: number
-  hardGateFails: string[]
-  averageScore: string
-  autoVerdict: string
-  /** The human SME's entries — preserved verbatim across re-evaluations, never agent-written. */
-  sme?: string
-  smeVerdict?: string
-  smeNotes?: string
-  smeUpdated?: string
-  /** Legacy Google-Sheet-era fields (the webhook export is gone) — kept so old records parse. */
-  exportStatus?: 'pending-export' | 'exported'
-  exportError?: string
+  status: 'running' | 'complete' | 'failed'
+  error?: string
+  gates: QcGateResult[]
+  findings: QcFinding[]
+  confidences: QcCardConfidence[]
+  /** Terminal state (spec §In the Application): clean · advisories · quarantined. */
+  verdict: 'clean' | 'advisories' | 'quarantined'
+  /** Lesson ids carrying blocking findings. Quarantine is a REPORT state here — publication gating is a later integration. */
+  quarantinedCards: string[]
+  qcStackVersion: string
+  /** Seeded-defect catch rate of the stack version that ran (spec: printed in every QC Report). Honest v1 stamp: not yet measured. */
+  seededCatchRate: string
+  /** scope.updated at run time — the scope version the report attaches to. */
+  scopeVersion: string
   created: string
   updated: string
 }
 
-/** Slim row for the evaluations list. */
-export interface ScopeEvaluationSummary {
+export type QcFlagType = 'rigor' | 'granularity' | 'sequencing' | 'wording' | 'evidence' | 'other'
+
+/** A human-raised question attached to a field/card/unit/scope. Investigated, then confirmed into a finding or returned with a cited defense. */
+export interface QcFlag {
+  id: string
+  location: QcLocation
+  type: QcFlagType
+  note: string
+  /** scope.updated when the flag was raised. */
+  scopeVersion: string
+  status: 'open' | 'investigating' | 'confirmed' | 'not-confirmed'
+  raised: string
+  resolution?: {
+    investigationId: string
+    verdict: 'confirmed' | 'not-confirmed'
+    severity?: QcSeverity
+    /** Confirmed: the finding's evidence. Not confirmed: the citations defending the original decision. */
+    rationale: string
+  }
+}
+
+/** Per-scope Flag Ledger document. */
+export interface QcFlagLedger {
   scopeId: string
-  scopeTitle: string
-  autoVerdict: string
-  failCount: number
-  hardGateFails: string[]
-  averageScore: string
-  smeVerdict?: string
+  flags: QcFlag[]
   updated: string
 }
 
-export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg' | 'vsg' | 'eval'
+/** One accept/edit/reject decision on a proposed repair — telemetry only; repairs are NEVER auto-applied to the scope. */
+export interface QcRepairDecision {
+  repairIndex: number
+  decision: 'accept' | 'edit' | 'reject'
+  editedText?: string
+  reason: string
+  decided: string
+}
+
+/** The scope-repair loop record (spec §Flags and Investigation Runs): six steps, proposals as diffs, nothing applied automatically. */
+export interface QcInvestigation {
+  id: string
+  scopeId: string
+  flagIds: string[]
+  status: 'running' | 'complete' | 'failed'
+  error?: string
+  verdicts: {
+    flagId: string
+    verdict: 'confirmed' | 'not-confirmed'
+    severity?: QcSeverity
+    /** Why the scope is wrong (confirmed) — stale calibration, missed evidence, misapplied criterion, acknowledged corpus gap. */
+    rootCause?: string
+    /** Confirmed: the evidence. Not confirmed: the cited defense of the original decision. */
+    rationale: string
+  }[]
+  /** The confirmed defect class searched across the whole scope — unflagged cards carrying the same defect. */
+  patternSweep: { defectClass: string; additionalCards: { lessonId: string; field: string; evidence: string }[] }[]
+  /** Why the gates missed it — recorded as a regression case for the QC stack. */
+  gateGaps: { defectClass: string; gate: 1 | 2 | 3 | 4; whyMissed: string }[]
+  /** Repair DIFFS with decision records. Proposals only — accepting records telemetry; application to the scope is manual (Lesson Scope Edits). */
+  proposedRepairs: { lessonId: string; field: string; currentExcerpt: string; proposedText: string; decisionRecord: string }[]
+  repairDecisions: QcRepairDecision[]
+  created: string
+  updated: string
+}
+
+/** Per-scope investigations document. */
+export interface QcInvestigationLog {
+  scopeId: string
+  investigations: QcInvestigation[]
+  updated: string
+}
+
+/** Slim row for the QC runs list. */
+export interface QcRunSummary {
+  scopeId: string
+  scopeTitle: string
+  status: QcRun['status']
+  verdict: QcRun['verdict']
+  findingCount: number
+  blockingCount: number
+  quarantinedCount: number
+  openFlagCount: number
+  updated: string
+}
+
+export type JobKind = 'generate' | 'rerun' | 'proposal' | 'iterate' | 'apply-proposal' | 'ingest' | 'packet' | 'lsg' | 'vsg' | 'eval' | 'qc'
 
 export interface JobStatus {
   jobId: string
@@ -1024,7 +1141,7 @@ export interface JobStatus {
 export interface JobMessage {
   jobId: string
   kind: JobKind
-  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'lexicon' | 'hunt' // 'run' for single-step kinds (incl. kinds 'lsg' and 'vsg'); 'lexicon' only for legacy queued messages; 'hunt' for kind 'packet'
+  step: 'plan' | 'cards' | 'finalize' | 'run' | 'extract' | 'lexicon' | 'hunt' | 'investigate' // 'run' for single-step kinds (incl. 'lsg', 'vsg', 'qc'); 'investigate' for kind 'qc' investigations; 'lexicon' only for legacy queued messages; 'hunt' for kind 'packet'
   scopeId?: string
   setId?: string
   packetId?: string

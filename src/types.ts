@@ -808,46 +808,119 @@ export interface VsgRunSummary {
 // api/src/domain/types.ts and api/src/data/eval-rubric.ts.
 // ---------------------------------------------------------------------------
 
-export interface EvalRubricColumn {
-  group: string
-  heading: string
-  rubric: string
-  hardGate: boolean
-  role: 'admin' | 'rubric' | 'results' | 'sme'
+// ---- Quality Control & Loop Engineering (replaces the rubric evaluations) ----
+
+export type QcSeverity = 'blocking' | 'major' | 'advisory'
+export type QcFindingSource = 'gate' | 'flag' | 'audit' | 'kickback' | 'classroom' | 'trend' | 'investigation'
+
+export interface QcLocation {
+  unitId?: string
+  lessonId?: string
+  field?: string
 }
 
-export interface EvalCell {
-  heading: string
-  verdict: string
-  note: string
+/** The machine-actionable record of a defect from any source — the unit of work of every loop. */
+export interface QcFinding {
+  id: string
+  source: QcFindingSource
+  gate?: 1 | 2 | 3 | 4
+  checkFamily: string
+  ruleTag: string
+  location: QcLocation
+  summary: string
+  evidence: string
+  severity: QcSeverity
+  repairContract: string
 }
 
-export interface ScopeEvaluation {
+export interface QcGateResult {
+  gate: 1 | 2 | 3 | 4
+  name: string
+  status: 'pass' | 'findings' | 'skipped'
+  findingCount: number
+  detail: string
+}
+
+export interface QcCardConfidence {
+  lessonId: string
+  score: number
+  band: 'high' | 'medium' | 'low'
+  components: { badgeMix: number; gate2: number; gate3: number; coverageExposure: number }
+}
+
+export interface QcRun {
   scopeId: string
   scopeTitle: string
-  values: string[]
-  headings?: string[]
-  cells: EvalCell[]
-  failCount: number
-  hardGateFails: string[]
-  averageScore: string
-  autoVerdict: string
-  sme?: string
-  smeVerdict?: string
-  smeNotes?: string
-  smeUpdated?: string
+  status: 'running' | 'complete' | 'failed'
+  error?: string
+  gates: QcGateResult[]
+  findings: QcFinding[]
+  confidences: QcCardConfidence[]
+  verdict: 'clean' | 'advisories' | 'quarantined'
+  quarantinedCards: string[]
+  qcStackVersion: string
+  seededCatchRate: string
+  scopeVersion: string
   created: string
   updated: string
 }
 
-export interface ScopeEvaluationSummary {
+export type QcFlagType = 'rigor' | 'granularity' | 'sequencing' | 'wording' | 'evidence' | 'other'
+
+export interface QcFlag {
+  id: string
+  location: QcLocation
+  type: QcFlagType
+  note: string
+  scopeVersion: string
+  status: 'open' | 'investigating' | 'confirmed' | 'not-confirmed'
+  raised: string
+  resolution?: {
+    investigationId: string
+    verdict: 'confirmed' | 'not-confirmed'
+    severity?: QcSeverity
+    rationale: string
+  }
+}
+
+export interface QcRepairDecision {
+  repairIndex: number
+  decision: 'accept' | 'edit' | 'reject'
+  editedText?: string
+  reason: string
+  decided: string
+}
+
+export interface QcInvestigation {
+  id: string
+  scopeId: string
+  flagIds: string[]
+  status: 'running' | 'complete' | 'failed'
+  error?: string
+  verdicts: {
+    flagId: string
+    verdict: 'confirmed' | 'not-confirmed'
+    severity?: QcSeverity
+    rootCause?: string
+    rationale: string
+  }[]
+  patternSweep: { defectClass: string; additionalCards: { lessonId: string; field: string; evidence: string }[] }[]
+  gateGaps: { defectClass: string; gate: 1 | 2 | 3 | 4; whyMissed: string }[]
+  proposedRepairs: { lessonId: string; field: string; currentExcerpt: string; proposedText: string; decisionRecord: string }[]
+  repairDecisions: QcRepairDecision[]
+  created: string
+  updated: string
+}
+
+export interface QcRunSummary {
   scopeId: string
   scopeTitle: string
-  autoVerdict: string
-  failCount: number
-  hardGateFails: string[]
-  averageScore: string
-  smeVerdict?: string
+  status: QcRun['status']
+  verdict: QcRun['verdict']
+  findingCount: number
+  blockingCount: number
+  quarantinedCount: number
+  openFlagCount: number
   updated: string
 }
 

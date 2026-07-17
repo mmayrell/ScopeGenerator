@@ -498,26 +498,96 @@ export interface WireVsgScript {
 }
 
 // ---------------------------------------------------------------------------
-// Scope Evaluations — the agent scores rubric columns fetched live from the
-// evaluation spreadsheet; every column echoes its heading so replies bind to
-// the sheet model positionally-independently.
+// Quality Control gates — Gates 2/3 return findings in the one-signal shape
+// (machine-actionable, never prose alone); investigations return the
+// six-step record. lessonId/field are '' for scope-level findings.
 // ---------------------------------------------------------------------------
 
-export const EVAL_SCORES_SCHEMA: Schema = obj({
-  columns: arr(
+const QC_WIRE_FINDING = obj({
+  /** The check that raised it, e.g. 'Quote fidelity', 'Split challenge'. */
+  checkFamily: STR,
+  /** The rule enforced: P1–P12, an engine rule tag, or the gate's own rule id. */
+  ruleTag: STR,
+  /** Lesson id (e.g. 'U3.L2') or '' for a scope-level finding. */
+  lessonId: STR,
+  /** Card field name (e.g. 'boundary') or '' when the finding is card-level. */
+  field: STR,
+  summary: STR,
+  /** The citations / probe artifacts that establish the defect — a challenge is defeated by citations, never eloquence. */
+  evidence: STR,
+  severity: enums(['blocking', 'major', 'advisory']),
+  /** Required change class + the verification that retires the finding. */
+  repairContract: STR,
+})
+
+export const QC_FINDINGS_SCHEMA: Schema = obj({ findings: arr(QC_WIRE_FINDING) })
+
+export interface WireQcFinding {
+  checkFamily: string
+  ruleTag: string
+  lessonId: string
+  field: string
+  summary: string
+  evidence: string
+  severity: 'blocking' | 'major' | 'advisory'
+  repairContract: string
+}
+export interface WireQcFindings {
+  findings: WireQcFinding[]
+}
+
+export const QC_INVESTIGATION_SCHEMA: Schema = obj({
+  verdicts: arr(
     obj({
-      /** Echo of the column heading being scored (validated against the sheet model). */
-      heading: STR,
-      /** '3' | '2' | '1', or the rubric's own categorical term where the rubric defines one. */
-      verdict: STR,
-      /** One line per defect/deviation; '' when the score is a clean pass. */
-      note: STR,
+      /** Echo of the flag id being ruled on. */
+      flagId: STR,
+      verdict: enums(['confirmed', 'not-confirmed']),
+      /** Severity when confirmed; '' when not confirmed. */
+      severity: enums(['blocking', 'major', 'advisory', '']),
+      /** Why the scope is wrong (confirmed): stale calibration, evidence missed at generation, misapplied criterion, acknowledged corpus gap. '' when not confirmed. */
+      rootCause: STR,
+      /** Confirmed: the establishing evidence. Not confirmed: the citations that defend the original decision (the tool argues back). */
+      rationale: STR,
+    }),
+  ),
+  patternSweep: arr(
+    obj({
+      defectClass: STR,
+      additionalCards: arr(obj({ lessonId: STR, field: STR, evidence: STR })),
+    }),
+  ),
+  gateGaps: arr(
+    obj({
+      defectClass: STR,
+      /** Which gate should have caught it. */
+      gate: enums(['1', '2', '3', '4']),
+      whyMissed: STR,
+    }),
+  ),
+  proposedRepairs: arr(
+    obj({
+      lessonId: STR,
+      field: STR,
+      /** The current text being replaced (verbatim excerpt, trimmed). */
+      currentExcerpt: STR,
+      proposedText: STR,
+      /** The repair's decision record, citing the investigation. */
+      decisionRecord: STR,
     }),
   ),
 })
 
-export interface WireEvalScores {
-  columns: { heading: string; verdict: string; note: string }[]
+export interface WireQcInvestigation {
+  verdicts: {
+    flagId: string
+    verdict: 'confirmed' | 'not-confirmed'
+    severity: 'blocking' | 'major' | 'advisory' | ''
+    rootCause: string
+    rationale: string
+  }[]
+  patternSweep: { defectClass: string; additionalCards: { lessonId: string; field: string; evidence: string }[] }[]
+  gateGaps: { defectClass: string; gate: '1' | '2' | '3' | '4'; whyMissed: string }[]
+  proposedRepairs: { lessonId: string; field: string; currentExcerpt: string; proposedText: string; decisionRecord: string }[]
 }
 
 // Flat StandardNode list — parentCode '' marks a root; the tree is rebuilt in code.

@@ -10,7 +10,7 @@ import EvidencePackets from './pages/EvidencePackets'
 import ReferenceLibrary from './pages/ReferenceLibrary'
 import LessonScopeGen from './pages/LessonScopeGen'
 import VideoScriptGen from './pages/VideoScriptGen'
-import ScopeEvaluations from './pages/ScopeEvaluations'
+import QualityControl from './pages/QualityControl'
 
 export default function App() {
   return (
@@ -26,7 +26,7 @@ export default function App() {
         <Route path="/packets" element={<EvidencePackets />} />
         <Route path="/lsg" element={<LessonScopeGen />} />
         <Route path="/videos" element={<VideoScriptGen />} />
-        <Route path="/evaluations" element={<ScopeEvaluations />} />
+        <Route path="/evaluations" element={<QualityControl />} />
       </Route>
     </Routes>
   )

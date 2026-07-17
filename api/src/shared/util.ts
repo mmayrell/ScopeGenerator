@@ -8,6 +8,9 @@ export const DOCTRINE_VERSIONS = [
   'Mathematical Language Style Guide, Grades K-8 v1.0 (adopted 2026-07-16)',
 ]
 
+/** The QC stack version printed in every QC Report (spec: the report carries the exact stack version that ran). */
+export const QC_STACK_VERSION = 'QC Stack v1.0 — Quality Control and Loop Engineering (adopted 2026-07-16); seeded-defect suite v0'
+
 export const today = (): string => new Date().toISOString().slice(0, 10)
 
 export const nowIso = (): string => new Date().toISOString()

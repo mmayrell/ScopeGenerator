@@ -10,7 +10,7 @@ const nav = [
   { to: '/scopes', label: 'Scopes' },
   { to: '/lsg', label: 'Lesson Scope Edits' },
   { to: '/videos', label: 'Video Script Generator' },
-  { to: '/evaluations', label: 'Scope Evaluations' },
+  { to: '/evaluations', label: 'Quality Control' },
 ]
 
 const companionNav = [
