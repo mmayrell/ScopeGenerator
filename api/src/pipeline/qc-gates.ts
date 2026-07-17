@@ -112,6 +112,16 @@ const norm = (s: string): string =>
 /** An excerpt is a verbatim-quote CLAIM only when it is actually quote-wrapped — descriptive commentary excerpts are not checked for fidelity. */
 const isQuoteWrapped = (excerpt: string): boolean => /^["“‘']/.test(excerpt.trim())
 
+/**
+ * Attribute-shaped excerpts ('"emphasis": "not designated"',
+ * '"emphasisSource": "not declared" …', '"fluency": true') quote the evidence
+ * corpus's METADATA in JSON-ish form, not source prose — their serialization
+ * varies per card, so fidelity skips them rather than blocking on spelling
+ * (both live false-blocking incidents on the first production runs were this
+ * class). Genuine standards prose never opens with a key:value pair.
+ */
+const isAttributeQuote = (excerpt: string): boolean => /^\s*["“‘']?[A-Za-z_][A-Za-z0-9_]{0,40}["”’']?\s*:/.test(excerpt.trim())
+
 /** Longest ellipsis-free segment of a quoted excerpt — the searchable core. */
 const quoteCore = (excerpt: string): string => {
   const parts = excerpt
@@ -517,8 +527,9 @@ function gate2StringChecks(scope: Scope, set: StandardSet): { findings: FindingD
       ]
       for (const { field, c } of citations) {
         // Fidelity applies to QUOTE CLAIMS only — an excerpt that is not
-        // quote-wrapped is commentary, not a verbatim assertion.
-        const quoted = isQuoteWrapped(c.excerpt ?? '')
+        // quote-wrapped is commentary, and an attribute-shaped excerpt quotes
+        // dataset metadata whose serialization is the card's own.
+        const quoted = isQuoteWrapped(c.excerpt ?? '') && !isAttributeQuote(c.excerpt ?? '')
         const core = quoteCore(c.excerpt ?? '')
         if (c.sourceType === 'standards') {
           const codes = codesIn(`${c.label} ${c.locator}`)
