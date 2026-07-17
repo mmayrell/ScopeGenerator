@@ -53,13 +53,12 @@ const para = (text: string, opts?: RunOpts & { before?: number; after?: number; 
     children: textRuns(text, opts),
   })
 
-/** A channel-tagged script line: time stamp, bold colored [TAG], then the content in the channel color. */
-const channelLine = (channel: VsgChannel, content: string, time?: string, indent = 0): Paragraph =>
+/** A channel-tagged script line: bold colored [TAG], then the content in the channel color (timestamps are viewer-only). */
+const channelLine = (channel: VsgChannel, content: string, indent = 0): Paragraph =>
   new Paragraph({
     spacing: { after: 50 },
     indent: indent ? { left: indent } : undefined,
     children: [
-      ...(time ? [new TextRun({ text: `${time}  `, size: 16, color: INK2 })] : []),
       new TextRun({ text: `[${channel}] `, bold: true, size: 18, color: CHANNEL_COLORS[channel] }),
       ...textRuns(content, {
         size: 21,
@@ -149,21 +148,9 @@ function scriptChildren(script: VideoScript, pageBreak = false): Paragraph[] {
       ),
     )
   }
-  if ((script.coverageNote ?? []).length > 0) {
-    children.push(
-      para(
-        `Coverage note (SEQ 10): ${(script.coverageNote ?? [])
-          .map((c) => `${c.name} — ${c.status === 'taught' ? `taught (${c.where})` : `deferred → ${c.where}`}`)
-          .join(' · ')}`,
-        { color: INK2, size: 18 },
-      ),
-    )
-  }
+  // Coverage notes and review flags are viewer-only — omitted from the export.
   if (script.qa.hardFails.length > 0) {
     children.push(para(`UNRESOLVED HARD QA FAILURES: ${script.qa.hardFails.join(' · ')}`, { color: 'B00020', bold: true }))
-  }
-  if (script.qa.flags.length > 0) {
-    children.push(para(`Review flags: ${script.qa.flags.join(' · ')}`, { color: INK2, size: 18, italics: true }))
   }
 
   const slideOf = new Map((script.slides ?? []).map((sl) => [sl.number, sl]))
@@ -174,7 +161,7 @@ function scriptChildren(script: VideoScript, pageBreak = false): Paragraph[] {
         spacing: { before: 200, after: 60 },
         children: [
           new TextRun({
-            text: xmlSafe(`${SEGMENT_LABELS[seg.kind] ?? seg.kind} · ${seg.start}–${seg.end} · ${seg.purpose}`),
+            text: xmlSafe(`${SEGMENT_LABELS[seg.kind] ?? seg.kind} · ${seg.purpose}`),
             bold: true,
             color: INK,
           }),
@@ -206,7 +193,7 @@ function scriptChildren(script: VideoScript, pageBreak = false): Paragraph[] {
         }
         lastSlide = line.slide
       }
-      children.push(channelLine(line.channel, line.content, line.time))
+      children.push(channelLine(line.channel, line.content))
       if (line.interaction) children.push(...interactionParas(line.interaction))
     }
   }
