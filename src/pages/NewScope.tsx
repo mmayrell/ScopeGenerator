@@ -58,7 +58,10 @@ export default function NewScope() {
     .filter((s) => s.published)
     .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }))
   const [setIds, setSetIds] = useState<string[]>(published[0] ? [published[0].id] : [])
-  const [mode, setMode] = useState<'course' | 'standard' | 'topic'>('course')
+  const [mode, setMode] = useState<'course' | 'standard' | 'topic' | 'supplemental'>('course')
+  // Supplemental mode: which selected set is the core/baseline course
+  // (typically CCSS) — the other selected set(s) are the target framework(s).
+  const [baselineSetId, setBaselineSetId] = useState<string | null>(null)
   // Entered by the user with every request — they become card fields 01/02
   // (Subject, Course) and ride the scope request into the pipeline.
   const [courseName, setCourseName] = useState('')
@@ -102,6 +105,11 @@ export default function NewScope() {
 
   const toggleSet = (id: string) =>
     setSetIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+
+  // Deselecting the baseline set would leave a dangling baseline pick.
+  useEffect(() => {
+    setBaselineSetId((prev) => (prev && !setIds.includes(prev) ? null : prev))
+  }, [setIds])
 
   // Deselecting a set removes its codes from the visible list — prune them from
   // the selection too, or they would invisibly gate and submit.
@@ -154,12 +162,16 @@ export default function NewScope() {
 
   const run = async () => {
     const gradeSpans = [...new Set(selectedSets.map((s) => s.gradeSpan).filter(Boolean))].join(' + ')
+    const baselineSet = selectedSets.find((s) => s.id === baselineSetId)
+    const targetNames = selectedSets.filter((s) => s.id !== baselineSetId).map((s) => s.name).join(' + ')
     const params =
       mode === 'course'
         ? `${gradeSpans} (all published domains)`
-        : mode === 'standard'
-          ? selectedCodes.map(normalizeCodeText).join(', ')
-          : normalizeCodeText(topic)
+        : mode === 'supplemental'
+          ? `${targetNames} — supplemental to ${baselineSet?.name ?? 'baseline'} (delta only)`
+          : mode === 'standard'
+            ? selectedCodes.map(normalizeCodeText).join(', ')
+            : normalizeCodeText(topic)
     setLaunching(true)
     setLaunchError(null)
     try {
@@ -171,7 +183,7 @@ export default function NewScope() {
         await Promise.all(topicFiles.map((f) => api.uploadScopePdf(token, f.name, f)))
         uploads = { token, names: topicFiles.map((f) => f.name) }
       }
-      const id = await createScope(setIds, mode, params, courseName.trim(), subject.trim(), uploads)
+      const id = await createScope(setIds, mode, params, courseName.trim(), subject.trim(), uploads, undefined, mode === 'supplemental' ? (baselineSetId ?? undefined) : undefined)
       setJob(null)
       setFailure(null)
       setRunning(id)
@@ -210,7 +222,11 @@ export default function NewScope() {
       <div className="mx-auto max-w-2xl px-10 py-16">
         <SectionLabel>Generating scope</SectionLabel>
         <h1 className="mt-1 font-display text-[26px] font-semibold tracking-tight text-ink">
-          {mode === 'course' ? courseName.trim() || 'Full Course' : mode === 'standard' ? selectedCodes.map(normalizeCodeText).join(', ') : normalizeCodeText(topic)}
+          {mode === 'course' || mode === 'supplemental'
+            ? courseName.trim() || (mode === 'supplemental' ? 'Supplemental Course' : 'Full Course')
+            : mode === 'standard'
+              ? selectedCodes.map(normalizeCodeText).join(', ')
+              : normalizeCodeText(topic)}
         </h1>
         <p className="mt-1 text-[13px] text-ink-2">
           {selectedSets.map((s) => s.name).join(' + ')} · {systemArtifacts.map((a) => `${a.kind === 'engine' ? 'Engine' : 'DI BrainLift'} ${a.version}`).join(' · ')}
@@ -364,7 +380,7 @@ export default function NewScope() {
             ))}
             {published.length === 0 && <p className="text-[13px] text-ink-3">No published sets yet — publish one from Standard sets.</p>}
           </div>
-          {setIds.length > 1 && (
+          {setIds.length > 1 && mode !== 'supplemental' && (
             <div className="animate-rise mt-2 rounded-xl border border-accent/25 bg-accent-wash/40 px-4 py-2.5 text-[12px] leading-relaxed text-ink-2">
               <span className="font-semibold text-ink">Cross-framework union:</span> one combined course covering every
               standard of each selected set. Standards unique to a set get their own lessons; standards that overlap
@@ -400,12 +416,13 @@ export default function NewScope() {
 
         <div>
           <SectionLabel>Scope</SectionLabel>
-          <div className="mt-2 grid grid-cols-3 gap-2">
+          <div className="mt-2 grid grid-cols-2 gap-2">
             {(
               [
-                { m: 'course', label: 'Course', note: 'A whole grade — every published domain' },
+                { m: 'course', label: 'Complete Course', note: 'A whole grade — every published domain' },
                 { m: 'standard', label: 'Standard', note: 'Pick by code from the set’s tree' },
                 { m: 'topic', label: 'Topic', note: 'Any hierarchy node, or free text mapped to standards' },
+                { m: 'supplemental', label: 'Supplemental Course', note: 'Only the lessons a state framework adds beyond a core baseline course (e.g. NY, TEKS, or Florida B.E.S.T. beyond CCSS)' },
               ] as const
             ).map((o) => (
               <button
@@ -420,6 +437,46 @@ export default function NewScope() {
               </button>
             ))}
           </div>
+
+          {mode === 'supplemental' && (
+            <div className="animate-rise mt-3 rounded-xl border border-hairline bg-panel p-3.5">
+              <div className="text-[13px] font-semibold text-ink">Baseline course</div>
+              <p className="mt-0.5 text-[11.5px] leading-snug text-ink-3">
+                Select at least two standard sets above, then mark which one is the core baseline course (typically
+                CCSS). The generated course contains only the lessons the other selected framework(s) add: standards
+                with no baseline counterpart are covered in full; standards that extend a baseline standard contribute
+                exactly the added component; standards the baseline already covers are excluded.
+              </p>
+              {setIds.length < 2 ? (
+                <p className="mt-2.5 rounded-lg bg-amber-wash px-3 py-2 text-[12px] leading-snug text-amber-ink">
+                  Select the target state framework AND the baseline set in the Standard set list above.
+                </p>
+              ) : (
+                <div className="mt-2.5 space-y-1.5">
+                  {selectedSets.map((s) => (
+                    <label
+                      key={s.id}
+                      className={`flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-1.5 ${baselineSetId === s.id ? 'bg-accent-wash' : 'hover:bg-ink/[0.03]'}`}
+                    >
+                      <input
+                        type="radio"
+                        name="baseline-set"
+                        checked={baselineSetId === s.id}
+                        onChange={() => setBaselineSetId(s.id)}
+                        className="accent-(--color-accent)"
+                      />
+                      <span className="text-[12.5px] font-medium text-ink">{s.name}</span>
+                      {baselineSetId === s.id ? (
+                        <Pill tone="accent">baseline — core course</Pill>
+                      ) : (
+                        <span className="text-[11px] text-ink-3">target framework</span>
+                      )}
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {mode === 'standard' && (
             <div className="mt-3 max-h-56 space-y-1 overflow-y-auto rounded-xl border border-hairline bg-panel p-2">
@@ -523,7 +580,7 @@ export default function NewScope() {
         <div className="flex items-center justify-end border-t border-hairline pt-5">
           <Btn
             kind="primary"
-            disabled={launching || setIds.length === 0 || !courseName.trim() || !subject.trim() || (mode === 'standard' && selectedCodes.length === 0) || (mode === 'topic' && !topicMapped)}
+            disabled={launching || setIds.length === 0 || !courseName.trim() || !subject.trim() || (mode === 'standard' && selectedCodes.length === 0) || (mode === 'topic' && !topicMapped) || (mode === 'supplemental' && (setIds.length < 2 || !baselineSetId))}
             onClick={() => void run()}
           >
             {launching ? 'Starting…' : 'Run generation'}

@@ -103,7 +103,7 @@ blob; rotating the storage account key revokes them all.
 | `GET /framework` | → `FrameworkDoc` | the fixed engine/doctrine documents (read-only — no PUT; new versions ship with the tool). The payload keeps a legacy `register: []` so pre-removal bundles render an empty exemplar register during deploy skew |
 | `GET /framework-file/{kind}` | → 302 to a blob SAS URL | downloads the engine/doctrine source PDF (`kind` = `engine`\|`doctrine`). A browser navigation, so auth also accepts `?code=` (mirrors `library-file`); redirects to a 15-minute read-only SAS on `uploads/framework/<kind>.pdf` with `content-disposition: attachment` so the browser pulls the file straight from storage (the doctrine source is ~61 MB). 404 until a PDF has been uploaded |
 | `PUT /framework-file/{kind}` | raw bytes (`application/pdf`) → `{ ok: true, size }` (201) | replaces the stored source PDF when a new edition is adopted (see `infra/upload-framework-docs.ps1`); the framework text/versions in `api/src/data/framework.ts` are updated in code alongside it |
-| `POST /scopes` | `{ setId, setIds?, mode, params, courseName?, subject?, packetId?, uploadsToken?, uploadNames? }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job. `courseName`/`subject` are the user-entered course identity (required by the UI, optional at the API for deploy skew): stamped on `request.courseName`/`request.subject`, used for the course-mode title, and rendered as lesson-card fields 01/02 (legacy scopes without them fall back to the first set's `subject`/`gradeSpan`). Optional `packetId` links a completed evidence packet as the scope's released-items source (400 if unknown or still hunting): its hunted items are converted to `ItemRecord`s and merged into the pipeline's evidence set, and `request.packetId`/`packetTitle` are stamped on the scope so the UI and exports can resolve packet items and their screenshots. Lesson granularity is always determined by the engine document (its full text is embedded in every generation-stage system prompt); the former `granular` flag (Granular Track Scoping) is no longer accepted — `Scope.request.granular` survives only on legacy documents and is ignored by the pipeline |
+| `POST /scopes` | `{ setId, setIds?, mode, params, courseName?, subject?, packetId?, uploadsToken?, uploadNames?, baselineSetId? }` → `{ id, jobId }` | creates scope doc (status `generating`), enqueues `generate` job. `mode` is one of `course` (complete course) \| `standard` \| `topic` \| `supplemental` (delta over a baseline set — requires ≥2 `setIds` and `baselineSetId` among them, 400 otherwise; see Supplemental course under the generation pipeline). `courseName`/`subject` are the user-entered course identity (required by the UI, optional at the API for deploy skew): stamped on `request.courseName`/`request.subject`, used for the course-mode title, and rendered as lesson-card fields 01/02 (legacy scopes without them fall back to the first set's `subject`/`gradeSpan`). Optional `packetId` links a completed evidence packet as the scope's released-items source (400 if unknown or still hunting): its hunted items are converted to `ItemRecord`s and merged into the pipeline's evidence set, and `request.packetId`/`packetTitle` are stamped on the scope so the UI and exports can resolve packet items and their screenshots. Lesson granularity is always determined by the engine document (its full text is embedded in every generation-stage system prompt); the former `granular` flag (Granular Track Scoping) is no longer accepted — `Scope.request.granular` survives only on legacy documents and is ignored by the pipeline |
 | `GET /scopes/{id}` | → `Scope` | |
 | `GET /scopes/{id}/job` | → `JobStatus` (below) | polled by the generation screen |
 | `POST /scopes/{id}/pause-generation` | → `{ jobId }` (202) | cooperative: flags the job; workers halt at the next checkpoint, scope → `paused` |
@@ -242,6 +242,23 @@ own lessons; overlapping standards merge into one lesson chain whose assessment 
 the UNION of the frameworks' demands (widenings logged with both standards cited); P1 runs against
 the union (in-boundary if ANY selected framework includes it); coverage requires every standard of
 every selected set to have a covering lesson. Single-set scopes are unchanged ([] source sets).
+
+**Supplemental course (mode `'supplemental'`).** The multi-set request's OTHER reading — mutually
+exclusive with union mode (`frameworksBlock` dispatches on `request.mode`). One selected set is the
+BASELINE core course (`request.baselineSetId`, typically CCSS — validated at create, moved to the
+END of `setIds` so the primary set is always a target framework); the rest are the TARGET
+framework(s) (e.g. NY Next Gen, TEKS, Florida B.E.S.T.). `supplementalBlock` binds the pipeline to
+the delta: a content-based crosswalk classifies every most-granular target standard as COVERED
+(baseline already teaches it → excluded, logged only), UNIQUE (no baseline counterpart, e.g.
+NY-K.MD.4 coins → atomized in full with its skill chain), or EXTENDED (adds a component to a
+baseline standard, e.g. NY-6.RP.3c's "finding a part of a whole given the percent" → ONLY the
+delta gets lessons; baseline-covered performance is excluded and forwarded "→ taught in the core
+course"). Baseline coverage is treated as prior mastery (enters M(0) as core-course prerequisite
+entries — never re-taught, never preskill atoms); P1 and ceilings run against the TARGET
+standard; items answerable from baseline skills alone are excluded; the completion test runs over
+target standards only (every one classified, every unique/extended delta covered). The
+course-mode leaf census does NOT run for supplemental scopes. Title: `<courseName> — Supplemental
+Course`; requires ≥2 sets and a valid `baselineSetId` (400 otherwise).
 
 **The Stein Direct-Match doctrine (SDM, house rule adopted 2026-07-18, `STEIN_MATCH` in
 `services/prompts.ts`)** binds every scope-generation stage (planning, cards, reruns) and rides

@@ -182,12 +182,13 @@ export const api = {
 
   createScope: (
     setIds: string[],
-    mode: 'course' | 'standard' | 'topic',
+    mode: 'course' | 'standard' | 'topic' | 'supplemental',
     params: string,
     courseName: string,
     subject: string,
     uploads?: { token: string; names: string[] },
     packetId?: string,
+    baselineSetId?: string,
   ) =>
     // setId rides along for deploy-skew compatibility (an older API requires it).
     request<{ id: string; jobId: string }>('POST', '/scopes', {
@@ -200,6 +201,7 @@ export const api = {
       uploadsToken: uploads?.token,
       uploadNames: uploads?.names,
       packetId,
+      baselineSetId,
     }),
 
   /** Released-question PDFs attached to a topic request — uploaded BEFORE createScope (generation starts on create). */

@@ -47,12 +47,13 @@ interface Store {
   rerun: (scopeId: string, target: string, mode: string, override?: boolean) => Promise<RerunResult>
   createScope: (
     setIds: string[],
-    mode: 'course' | 'standard' | 'topic',
+    mode: 'course' | 'standard' | 'topic' | 'supplemental',
     params: string,
     courseName: string,
     subject: string,
     uploads?: { token: string; names: string[] },
     packetId?: string,
+    baselineSetId?: string,
   ) => Promise<string>
   submitReport: (scopeId: string, target: string, text: string) => Promise<Proposal>
   iterateProposal: (scopeId: string, proposalId: string, feedback: string) => Promise<void>
@@ -318,14 +319,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const createScope = useCallback(
     async (
       setIds: string[],
-      mode: 'course' | 'standard' | 'topic',
+      mode: 'course' | 'standard' | 'topic' | 'supplemental',
       params: string,
       courseName: string,
       subject: string,
       uploads?: { token: string; names: string[] },
       packetId?: string,
+      baselineSetId?: string,
     ): Promise<string> => {
-      const { id } = await guard(() => api.createScope(setIds, mode, params, courseName, subject, uploads, packetId))
+      const { id } = await guard(() => api.createScope(setIds, mode, params, courseName, subject, uploads, packetId, baselineSetId))
       await refreshScope(id) // pull the new 'generating' document into state
       return id
     },

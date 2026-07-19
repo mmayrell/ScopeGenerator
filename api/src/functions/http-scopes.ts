@@ -57,15 +57,28 @@ api({
       uploadsToken?: string
       uploadNames?: string[]
       packetId?: string
+      baselineSetId?: string
     }>(req)
-    const requestedIds = [
+    let requestedIds = [
       ...new Set(
         Array.isArray(body.setIds) && body.setIds.length > 0 ? body.setIds : body.setId ? [body.setId] : [],
       ),
     ]
     if (requestedIds.length === 0 || !body.mode) throw new HttpError(400, 'setIds and mode are required')
     const mode = body.mode
-    if (!['course', 'standard', 'topic'].includes(mode)) throw new HttpError(400, `unknown mode: ${mode}`)
+    if (!['course', 'standard', 'topic', 'supplemental'].includes(mode)) throw new HttpError(400, `unknown mode: ${mode}`)
+    // Supplemental course: one selected set is the core/baseline course
+    // (typically CCSS); the rest are the target framework(s) whose delta is
+    // scoped. The baseline moves to the END of the id list so the primary set
+    // (setIds[0] — grade span, item digest) is always a target framework.
+    const baselineSetId = typeof body.baselineSetId === 'string' ? body.baselineSetId : undefined
+    if (mode === 'supplemental') {
+      if (requestedIds.length < 2) throw new HttpError(400, 'supplemental mode requires at least two sets: the target framework(s) and the baseline set')
+      if (!baselineSetId || !requestedIds.includes(baselineSetId)) {
+        throw new HttpError(400, 'supplemental mode requires baselineSetId to be one of the selected sets')
+      }
+      requestedIds = [...requestedIds.filter((sid) => sid !== baselineSetId), baselineSetId]
+    }
     const params = capsStandardCodes(body.params ?? '')
     // User-entered course identity — becomes card fields 01/02 and the scope
     // title. Optional at the API for deploy-skew compatibility; the frontend
@@ -95,9 +108,11 @@ api({
     const title =
       mode === 'course'
         ? `${courseName || `${gradeSpans || 'Course'} ${subject || 'Mathematics'}`} — Full Course`
-        : mode === 'standard'
-          ? `Scope — ${params}`
-          : `Topic Scope — ${params}`
+        : mode === 'supplemental'
+          ? `${courseName || `${gradeSpans || 'Course'} ${subject || 'Mathematics'}`} — Supplemental Course`
+          : mode === 'standard'
+            ? `Scope — ${params}`
+            : `Topic Scope — ${params}`
     const scope: Scope = {
       id,
       setId: set.id,
@@ -106,6 +121,7 @@ api({
       request: {
         mode,
         params,
+        ...(mode === 'supplemental' && baselineSetId ? { baselineSetId } : {}),
         ...(courseName ? { courseName } : {}),
         ...(subject ? { subject } : {}),
         // User-attached released questions (topic requests): keep the token so

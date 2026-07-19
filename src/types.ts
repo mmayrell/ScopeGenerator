@@ -345,8 +345,11 @@ export interface Scope {
   setIds?: string[]
   title: string
   request: {
-    mode: 'course' | 'standard' | 'topic'
+    /** 'course' = complete course (whole grade); 'supplemental' = only the lessons of the target framework(s) that differ from or extend beyond the baseline set's core course. */
+    mode: 'course' | 'standard' | 'topic' | 'supplemental'
     params: string
+    /** Supplemental mode only: the set (among setIds) that is the core/baseline course (typically CCSS) — the other selected set(s) are the target framework(s) whose delta is scoped. */
+    baselineSetId?: string
     /** User-entered course name (e.g. "Grade 4 Mathematics"). Optional only on scopes created before the field existed. */
     courseName?: string
     /** User-entered subject (e.g. "Mathematics"). Optional only on scopes created before the field existed. */

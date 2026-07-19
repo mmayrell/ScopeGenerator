@@ -868,9 +868,11 @@ export async function generateFinalizeStep(msg: JobMessage, ctx: InvocationConte
       detail: `${
         scope.request.mode === 'course'
           ? 'Full-course'
-          : scope.request.mode === 'standard'
-            ? 'Single-standard'
-            : 'Topic'
+          : scope.request.mode === 'supplemental'
+            ? 'Supplemental-course (delta over baseline)'
+            : scope.request.mode === 'standard'
+              ? 'Single-standard'
+              : 'Topic'
       } generation. ${versionLabels}. ${lessons} lessons, ${units.length} unit${units.length === 1 ? '' : 's'}.`,
     },
   ]

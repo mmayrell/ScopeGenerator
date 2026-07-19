@@ -549,6 +549,7 @@ export default function ScopeView() {
               ? { token: scope.request.uploadsToken, names: scope.request.uploadNames ?? [] }
               : undefined,
             scope.request.packetId,
+            scope.request.baselineSetId,
           )
           nav(`/scopes/${newId}`)
         } catch {

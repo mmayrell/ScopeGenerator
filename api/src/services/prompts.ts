@@ -336,6 +336,41 @@ CROSS-FRAMEWORK UNION MODE is ON — this scope draws on ${sourceSets.length} st
 }
 
 /**
+ * Supplemental-course mode — active when the request mode is 'supplemental'.
+ * One selected set is the BASELINE (the core course, typically CCSS); the
+ * other selected set(s) are the TARGET framework(s) (e.g. NY Next Gen, TEKS,
+ * Florida B.E.S.T.). The course contains ONLY the lessons that differ from or
+ * extend beyond the baseline core course. Replaces the union block — the two
+ * modes are mutually exclusive readings of a multi-set request.
+ */
+const supplementalBlock = (scope: Scope, sourceSets: StandardSet[]): string => {
+  if (scope.request.mode !== 'supplemental' || sourceSets.length < 2) return ''
+  const baselineId = scope.request.baselineSetId
+  const baseline = sourceSets.find((s) => s.id === baselineId) ?? sourceSets[sourceSets.length - 1]
+  const targets = sourceSets.filter((s) => s.id !== baseline.id)
+  const targetNames = targets.map((s) => `"${s.name}" (scheme: ${s.codingScheme})`).join(' · ')
+  return `
+SUPPLEMENTAL COURSE MODE is ON — this is NOT a union scope. The BASELINE framework is "${baseline.name}" (scheme: ${baseline.codingScheme}): a complete core course over it is assumed to already exist and be taught. The TARGET framework(s): ${targetNames}. Produce the SUPPLEMENTAL course — only the lessons a student of the baseline core course additionally needs to master the target framework(s). BINDING rules:
+- CROSSWALK FIRST (content-based, never code-based — the P2 philosophy): classify every most-granular content standard of every TARGET set against the baseline framework, judged from the official wordings, and log every classification in scopeDecisions. Three classes:
+  (a) COVERED — the target standard's full demand is already covered in substance by the baseline framework → EXCLUDED from this course entirely (the core course teaches it); no lesson, logged in scopeDecisions only.
+  (b) UNIQUE — the target standard has no baseline counterpart (e.g. NY-K.MD.4, coins added to Kindergarten where the baseline has no coin standard) → full coverage: the standard is atomized completely, with its full skill chain, exactly as a complete course would treat it.
+  (c) EXTENDED — the target standard shares substance with a baseline standard but adds or changes a component (e.g. NY-6.RP.3c adds "finding a part of a whole given the percent" to 6.RP.3c's "finding the whole, given a part and the percent") → include ONLY THE DELTA: lessons cover exactly the added/changed component; the baseline-covered performance is OUT OF BOUNDARY, stated in the Excluded list and forwarded in words to the core course ("→ taught in the core ${baseline.name} course"), never to an invented lesson id.
+- THE BASELINE COURSE IS PRIOR MASTERY: treat every skill the baseline framework teaches (at or before the target standard's grade) as already-mastered prior instruction — it enters the ledger through M(0) prerequisite entries labeled as core-course mastery, exactly like prior-grade skills. Delta lessons build FROM that mastery; never re-teach baseline-covered content as new lessons, and never insert preskill atoms for skills the core course already teaches (reference them as prerequisites instead).
+- Field 1 (Standard) of every lesson carries the TARGET framework's canonical code and verbatim wording; when the lesson covers an EXTENDED delta, the field also names the exact added component taught (the delta), and the crosswalked baseline standard is cited in the decision record with both wordings quoted.
+- Boundary discipline for delta lessons: the Included list carries ONLY the supplemental demand; demand shared with the baseline appears in Excluded with the core-course forward. The ceiling calibrates to the TARGET framework's own demand (its released items and interpretive documents), never past the target standard's wording (P1 runs against the TARGET standard).
+- Items: the target set(s)' released items are the demand evidence. An item fully answerable from baseline-covered skills belongs to the core course — EXCLUDE it (log the exclusion); place only items that exercise the delta. Generated exemplars for delta lessons instantiate the delta demand specifically.
+- Sequencing: ONE coherent supplemental course — small units are normal and expected (the delta may be thin at some grades); group deltas by strand and order by the sequencing rules. A unit may hold a single lesson when the delta is genuinely one atom.
+- COVERAGE IS THE COMPLETION TEST, run over the TARGET framework(s) only: every most-granular target content standard is classified (a)/(b)/(c) in scopeDecisions, and every (b) and (c) standard has covering lessons traceable through standardCodes. Baseline standards NEVER get lessons of their own — a lesson whose content the baseline course already teaches is a planning defect.`
+}
+
+/**
+ * Multi-set framing — exactly one of the two blocks applies: supplemental
+ * delta mode when the request says so, else cross-framework union.
+ */
+const frameworksBlock = (scope: Scope, sourceSets: StandardSet[]): string =>
+  scope.request.mode === 'supplemental' ? supplementalBlock(scope, sourceSets) : unionBlock(sourceSets)
+
+/**
  * The standards evidence for the prompt: per-set blocks (framework-labeled)
  * when union mode is active — the crosswalk needs to know which framework
  * each tree belongs to, which the merged corpus erases — else the single
@@ -354,9 +389,11 @@ const standardsEvidenceBlocks = (set: StandardSet, sourceSets: StandardSet[]): s
 const requestDescriptionOf = (set: StandardSet, scope: Scope): string =>
   scope.request.mode === 'course'
     ? `Whole-course scope: cover every published content standard of the set over the full grade span (${set.gradeSpan}), TOGETHER WITH the full skill chain each standard requires (P4 — atomize the entire standard). The introductory, foundational, and scaffolding atoms (preskills, first-instance lessons, bridges, application tiers) that build toward each skill are FIRST-CLASS lessons and are included even when no released item aligns to them — no evidence is not no lesson (P5); released items are demand evidence, never the inclusion filter. Untested components stay in scope on flagged inference with generated exemplars. Released-item demand profiles calibrate how hard each lesson goes (never past the standard's own limits, P1), never whether the atoms that build the assessed skills appear in the course.`
-    : scope.request.mode === 'standard'
-      ? `Standard scope: exactly the selected standard(s) "${scope.request.params}" and their skill chains (preskills, bridges, application tiers directly serving them). When several standards are selected, produce ONE coherent scope — a single sequenced set of units covering all of them together, ordered per the sequencing rules across the whole selection, never one disconnected mini-scope per standard.`
-      : `Topic scope: the request "${scope.request.params}" — map it onto the set's hierarchy and include exactly the standards that constitute that topic.`
+    : scope.request.mode === 'supplemental'
+      ? `Supplemental-course scope: "${scope.request.params}" — ONLY the lessons of the target framework(s) that differ from or extend beyond the baseline framework's core course, per the SUPPLEMENTAL COURSE MODE rules below. The crosswalk classifications drive everything: covered standards are excluded, unique standards atomize fully, extended standards contribute exactly their delta.`
+      : scope.request.mode === 'standard'
+        ? `Standard scope: exactly the selected standard(s) "${scope.request.params}" and their skill chains (preskills, bridges, application tiers directly serving them). When several standards are selected, produce ONE coherent scope — a single sequenced set of units covering all of them together, ordered per the sequencing rules across the whole selection, never one disconnected mini-scope per standard.`
+        : `Topic scope: the request "${scope.request.params}" — map it onto the set's hierarchy and include exactly the standards that constitute that topic.`
 
 /**
  * Planning pass 1 — the course map. Scope resolution and unit architecture
@@ -395,14 +432,14 @@ Responsibilities, in order:
 6. Grade-progression context per unit (guide §23 — topics ONLY, short noun phrases at progressions-document grain, ≤3 per side, [] when the evidence genuinely names none): topic, priorGradeTopics, nextGradeTopics.
 
 ${requestDescriptionOf(set, scope)}
-${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
+${frameworksBlock(scope, sourceSets)}${userUploadsBlock(userUploadNames)}
 ${jsonBlock('scope_request', scope.request)}
 ${standardsEvidenceBlocks(set, sourceSets)}
 ${jsonBlock('item_digest', itemDigest)}
 
 Output:
 - units: in teaching order, ids "U1", "U2", …; each { id, title (Title Case), rationale (strand-coherent, traceable to theme/emphasis statements or progression streams), strand, topic, priorGradeTopics, nextGradeTopics, standardCodes }.
-- scopeDecisions: terse records of scope-level calls (P1 vetoes, P2 corpus observations, the partition used, unit-formation and ordering rationale, grade-progression topic sources${sourceSets.length >= 2 ? ', and EVERY union crosswalk classification — each standard unique-to-set or overlapping, per the union rules' : ''}), each tagged with its rule id (P#/A#).`,
+- scopeDecisions: terse records of scope-level calls (P1 vetoes, P2 corpus observations, the partition used, unit-formation and ordering rationale, grade-progression topic sources${scope.request.mode === 'supplemental' ? ', and EVERY supplemental crosswalk classification — each target standard covered/unique/extended against the baseline, per the supplemental rules' : sourceSets.length >= 2 ? ', and EVERY union crosswalk classification — each standard unique-to-set or overlapping, per the union rules' : ''}), each tagged with its rule id (P#/A#).`,
   }
 }
 
@@ -472,7 +509,7 @@ Stage 4c — Dependency Extraction (this produces dependsOn and prereqs):
 ${WEB_EXTRACTION}
 dependsOn edges may name EARLIER lessons of THIS unit, lessons of PRIOR units (by their ids in cumulative_ledger), or this unit's prereq node ids — never later lessons.
 
-${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
+${frameworksBlock(scope, sourceSets)}${userUploadsBlock(userUploadNames)}
 ${jsonBlock('scope_request', scope.request)}
 ${standardsEvidenceBlocks(set, sourceSets)}
 ${jsonBlock('course_map', map)}
@@ -514,7 +551,7 @@ export function cardsPrompt(
     user: `Generate complete lesson cards (all fourteen card fields plus per-field decision records) for the ${batch.length} lesson(s) of unit "${unit.id} — ${unit.title}" listed in batch_lessons, following the approved plan skeleton exactly (same lesson ids, same order, same types). Output ONLY the batch_lessons lessons — the unit's remaining lessons are produced by sibling calls; the full unit_skeleton is supplied so relational fields (Prerequisites, Progression Placement, Assessment Boundary, Non-Goals) can reference them by lesson id.
 
 ${CARD_RULES}
-${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: batch.map((l) => l.title), standardCodes: batch.flatMap((l) => l.standardCodes) })}${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
+${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: batch.map((l) => l.title), standardCodes: batch.flatMap((l) => l.standardCodes) })}${frameworksBlock(scope, sourceSets)}${userUploadsBlock(userUploadNames)}
 Additional requirements:
 - evidence-locking is mandatory: generation returns { content, citations[], rationale } per field; uncited fields 5–14 are rejected pre-QC (spec §6 Stage 5); fields 1–4 return citations: [] but still carry a full rationale.
 - decision entries must carry rule ids (P#/A#/D#) and quote both sides on every contradiction.
@@ -553,7 +590,7 @@ export function rerunLessonPrompt(
     user: `Regenerate the lesson card "${lesson.id} — ${lesson.title}" in place at the same granularity (spec §6 rerun re-entry: "regenerate-in-place → Stage 5 for that card"). Keep the lesson id, type, and position in the chain; produce a fresh card cited per the card rules (fields 5–14 cited; fields 1–4 citations: []).
 
 ${CARD_RULES}
-${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: [lesson.title], standardCodes: codes })}${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
+${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: [lesson.title], standardCodes: codes })}${frameworksBlock(scope, sourceSets)}${userUploadsBlock(userUploadNames)}
 ${jsonBlock('scope_request', scope.request)}
 ${scopeUnitsOverview(scope)}
 ${jsonBlock('containing_unit', { id: unit.id, title: unit.title, strand: unit.strand, lessons: unit.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type })) })}
@@ -585,7 +622,7 @@ export function rerunUnitPrompt(
 
 ${APPENDIX_A}
 ${TWO_PROGRESSIONS}
-${unionBlock(sourceSets)}${userUploadsBlock(userUploadNames)}
+${frameworksBlock(scope, sourceSets)}${userUploadsBlock(userUploadNames)}
 ${BLAST_RADIUS}
 
 ${override ? `An explicit user override of a protected hard-split boundary is in force for this merge: execute the merge, and log the override in the affected lessons' Decision records (type "override", both sides cited, rule id of the overridden criterion).` : ''}
