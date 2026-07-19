@@ -503,55 +503,74 @@ export interface WireVsgScript {
 }
 
 // ---------------------------------------------------------------------------
-// Quality Control gates — Gates 2/3 return findings in the one-signal shape
-// (machine-actionable, never prose alone); investigations return the
-// six-step record. lessonId/field are '' for scope-level findings.
+// The QC Bar — the independent judge returns per-lesson per-criterion
+// verdicts (cold read, work shown BEFORE the ruling so verdicts are grounded
+// in evidence, not vibes); investigations return note verdicts routed to
+// their real cause. Revisions and fresh starts reuse UNIT_CARDS_BATCH_SCHEMA
+// (they return full lesson cards).
 // ---------------------------------------------------------------------------
 
-const QC_WIRE_FINDING = obj({
-  /** The check that raised it, e.g. 'Quote fidelity', 'Split challenge'. */
-  checkFamily: STR,
-  /** The rule enforced: P1–P12, an engine rule tag, or the gate's own rule id. */
-  ruleTag: STR,
-  /** Lesson id (e.g. 'U3.L2') or '' for a scope-level finding. */
-  lessonId: STR,
-  /** Card field name (e.g. 'boundary') or '' when the finding is card-level. */
-  field: STR,
-  summary: STR,
-  /** The citations / probe artifacts that establish the defect — a challenge is defeated by citations, never eloquence. */
+const QC_JUDGE_RESULT = obj({
+  /** Echo of the criterion id being applied. */
+  criterionId: STR,
+  /** Your own work FIRST — your reading of the boundary, your solution to the example — the ruling must follow from it. */
+  workShown: STR,
+  pass: BOOL,
+  /** The evidence for a failure ("the boundary says X, which permits reading Y"); '' on pass. */
   evidence: STR,
-  severity: enums(['blocking', 'major', 'advisory']),
-  /** Required change class + the verification that retires the finding. */
-  repairContract: STR,
+  /** A concrete revision instruction the writer can follow; '' on pass. */
+  revisionInstruction: STR,
 })
 
-export const QC_FINDINGS_SCHEMA: Schema = obj({ findings: arr(QC_WIRE_FINDING) })
+export const QC_JUDGE_SCHEMA: Schema = obj({
+  lessons: arr(
+    obj({
+      /** Echo of the lesson id being judged. */
+      lessonId: STR,
+      results: arr(QC_JUDGE_RESULT),
+    }),
+  ),
+})
 
-export interface WireQcFinding {
-  checkFamily: string
-  ruleTag: string
-  lessonId: string
-  field: string
-  summary: string
+export interface WireQcJudgeResult {
+  criterionId: string
+  workShown: string
+  pass: boolean
   evidence: string
-  severity: 'blocking' | 'major' | 'advisory'
-  repairContract: string
+  revisionInstruction: string
 }
-export interface WireQcFindings {
-  findings: WireQcFinding[]
+export interface WireQcJudge {
+  lessons: { lessonId: string; results: WireQcJudgeResult[] }[]
+}
+
+export const QC_COURSE_JUDGE_SCHEMA: Schema = obj({
+  results: arr(
+    obj({
+      criterionId: STR,
+      workShown: STR,
+      pass: BOOL,
+      evidence: STR,
+      revisionInstruction: STR,
+      /** The lessons responsible for the failure (revision routes to them); [] when no single lesson can fix it — a course-level red flag. */
+      responsibleLessonIds: arr(STR),
+    }),
+  ),
+})
+
+export interface WireQcCourseJudge {
+  results: (WireQcJudgeResult & { responsibleLessonIds: string[] })[]
 }
 
 export const QC_INVESTIGATION_SCHEMA: Schema = obj({
   verdicts: arr(
     obj({
-      /** Echo of the flag id being ruled on. */
-      flagId: STR,
-      verdict: enums(['confirmed', 'not-confirmed']),
-      /** Severity when confirmed; '' when not confirmed. */
-      severity: enums(['blocking', 'major', 'advisory', '']),
-      /** Why the scope is wrong (confirmed): stale calibration, evidence missed at generation, misapplied criterion, acknowledged corpus gap. '' when not confirmed. */
-      rootCause: STR,
-      /** Confirmed: the establishing evidence. Not confirmed: the citations that defend the original decision (the tool argues back). */
+      /** Echo of the note id being ruled on. */
+      noteId: STR,
+      /** Confirmed — the note is right. Defended — the original decision stands (the tool argues back; a note is a question, not an order). */
+      verdict: enums(['confirmed', 'defended']),
+      /** Confirmed problems route to their real cause: card (generation got it wrong), bar (the rubric should have caught it), specifications (the sources genuinely contradict). '' when defended. */
+      rootCause: enums(['card', 'bar', 'specifications', '']),
+      /** Confirmed: the establishing evidence. Defended: the citations that justify the original decision. */
       rationale: STR,
     }),
   ),
@@ -561,38 +580,59 @@ export const QC_INVESTIGATION_SCHEMA: Schema = obj({
       additionalCards: arr(obj({ lessonId: STR, field: STR, evidence: STR })),
     }),
   ),
-  gateGaps: arr(
-    obj({
-      defectClass: STR,
-      /** Which gate should have caught it. */
-      gate: enums(['1', '2', '3', '4']),
-      whyMissed: STR,
-    }),
-  ),
+  /** Card-cause repairs: before/after diffs. */
   proposedRepairs: arr(
     obj({
       lessonId: STR,
       field: STR,
-      /** The current text being replaced (verbatim excerpt, trimmed). */
       currentExcerpt: STR,
       proposedText: STR,
-      /** The repair's decision record, citing the investigation. */
       decisionRecord: STR,
+    }),
+  ),
+  /** Bar-cause: drafted criteria pre-filled for approval. */
+  proposedCriteria: arr(
+    obj({
+      title: STR,
+      /** The failure condition, written for a strict grader. */
+      rule: STR,
+      level: enums(['lesson', 'course']),
+      severity: enums(['blocking', 'advisory']),
+      /** The lesson whose defect taught the bar — added to the test deck on accept. */
+      offendingLessonId: STR,
+    }),
+  ),
+  /** Specification-cause: contradiction reports quoting both passages. */
+  contradictionReports: arr(
+    obj({
+      passageAQuote: STR,
+      passageACitation: STR,
+      passageBQuote: STR,
+      passageBCitation: STR,
+      readingTaken: STR,
+      affectedLessons: arr(STR),
     }),
   ),
 })
 
 export interface WireQcInvestigation {
   verdicts: {
-    flagId: string
-    verdict: 'confirmed' | 'not-confirmed'
-    severity: 'blocking' | 'major' | 'advisory' | ''
-    rootCause: string
+    noteId: string
+    verdict: 'confirmed' | 'defended'
+    rootCause: 'card' | 'bar' | 'specifications' | ''
     rationale: string
   }[]
   patternSweep: { defectClass: string; additionalCards: { lessonId: string; field: string; evidence: string }[] }[]
-  gateGaps: { defectClass: string; gate: '1' | '2' | '3' | '4'; whyMissed: string }[]
   proposedRepairs: { lessonId: string; field: string; currentExcerpt: string; proposedText: string; decisionRecord: string }[]
+  proposedCriteria: { title: string; rule: string; level: 'lesson' | 'course'; severity: 'blocking' | 'advisory'; offendingLessonId: string }[]
+  contradictionReports: {
+    passageAQuote: string
+    passageACitation: string
+    passageBQuote: string
+    passageBCitation: string
+    readingTaken: string
+    affectedLessons: string[]
+  }[]
 }
 
 // Flat StandardNode list — parentCode '' marks a root; the tree is rebuilt in code.

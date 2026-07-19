@@ -16,12 +16,19 @@ import type {
   PacketSummary,
   Proposal,
   Scope,
-  QcFlag,
-  QcFlagType,
+  QcBar,
+  QcCriterion,
+  QcDeck,
+  QcDeckCard,
+  QcDeckRunResult,
+  QcDryRunResult,
   QcInvestigation,
   QcLocation,
-  QcRun,
-  QcRunSummary,
+  QcNote,
+  QcNoteType,
+  QcPlanStep,
+  QcReport,
+  QcReportSummary,
   VideoScript,
   VsgCourseRow,
   VsgRun,
@@ -338,28 +345,45 @@ export const api = {
   getVideoScript: (courseId: string, lessonId: string) =>
     request<VideoScript>('GET', `/vsg/scripts/${encodeURIComponent(courseId)}/${encodeURIComponent(lessonId)}`),
 
-  // ---- Quality Control & Loop Engineering (four gates, flags, investigations) ----
+  // ---- The QC Bar (automatic reports, notes/investigations, the bar itself) ----
 
-  listQcRuns: () => request<{ runs: QcRunSummary[] }>('GET', '/qc'),
+  listQcReports: () => request<{ reports: QcReportSummary[] }>('GET', '/qc'),
 
   getQc: (scopeId: string) =>
-    request<{ run: QcRun; flags: QcFlag[]; investigations: QcInvestigation[] }>('GET', `/qc/${encodeURIComponent(scopeId)}`),
+    request<{ report: QcReport; notes: QcNote[]; investigations: QcInvestigation[] }>('GET', `/qc/${encodeURIComponent(scopeId)}`),
 
   deleteQc: (scopeId: string) => request<{ ok: true }>('DELETE', `/qc/${encodeURIComponent(scopeId)}`),
 
-  runQcGates: (scopeId: string) => request<{ jobId: string }>('POST', `/qc/${encodeURIComponent(scopeId)}/run`),
+  sweepQc: (scopeId: string) => request<{ jobId: string }>('POST', `/qc/${encodeURIComponent(scopeId)}/sweep`),
 
-  raiseQcFlag: (scopeId: string, body: { location?: QcLocation; type: QcFlagType; note: string }) =>
-    request<QcFlag>('POST', `/qc/${encodeURIComponent(scopeId)}/flags`, body),
+  raiseQcNote: (scopeId: string, body: { location?: QcLocation; type: QcNoteType; note: string }) =>
+    request<QcNote>('POST', `/qc/${encodeURIComponent(scopeId)}/notes`, body),
 
-  withdrawQcFlag: (scopeId: string, flagId: string) =>
-    request<{ ok: true }>('DELETE', `/qc/${encodeURIComponent(scopeId)}/flags/${encodeURIComponent(flagId)}`),
+  withdrawQcNote: (scopeId: string, noteId: string) =>
+    request<{ ok: true }>('DELETE', `/qc/${encodeURIComponent(scopeId)}/notes/${encodeURIComponent(noteId)}`),
 
-  investigateQc: (scopeId: string, flagIds?: string[]) =>
-    request<{ jobId: string; investigationId: string }>('POST', `/qc/${encodeURIComponent(scopeId)}/investigate`, { flagIds }),
+  investigateQc: (scopeId: string, noteIds?: string[]) =>
+    request<{ jobId: string; investigationId: string }>('POST', `/qc/${encodeURIComponent(scopeId)}/investigate`, { noteIds }),
 
   decideQcRepair: (scopeId: string, invId: string, index: number, body: { decision: 'accept' | 'edit' | 'reject'; editedText?: string; reason: string }) =>
     request<QcInvestigation>('PUT', `/qc/${encodeURIComponent(scopeId)}/investigations/${encodeURIComponent(invId)}/repairs/${index}`, body),
+
+  decideQcCriterion: (scopeId: string, invId: string, index: number, body: { decision: 'accept' | 'reject'; reason: string }) =>
+    request<QcInvestigation>('PUT', `/qc/${encodeURIComponent(scopeId)}/investigations/${encodeURIComponent(invId)}/criteria/${index}`, body),
+
+  getQcBar: () => request<{ bar: QcBar; deck: QcDeck }>('GET', '/qc/bar'),
+
+  saveQcBar: (body: { criteria?: QcCriterion[]; escalationPlan?: QcPlanStep[] }) => request<QcBar>('PUT', '/qc/bar', body),
+
+  dryRunQcCriterion: (body: { criterionId?: string; rule?: string; title?: string; scopeId: string; lessonId: string }) =>
+    request<QcDryRunResult>('POST', '/qc/bar/dry-run', body),
+
+  testQcBar: () => request<QcDeckRunResult>('POST', '/qc/bar/test'),
+
+  addQcDeckCard: (body: { label: string; expectedCriterionIds: string[]; scopeId: string; lessonId: string }) =>
+    request<QcDeckCard>('POST', '/qc/bar/deck', body),
+
+  deleteQcDeckCard: (cardId: string) => request<{ ok: true }>('DELETE', `/qc/bar/deck/${encodeURIComponent(cardId)}`),
 
   // ---- Reference Library (framework → grade → four document slots) ----
 

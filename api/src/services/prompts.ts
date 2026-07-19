@@ -527,6 +527,20 @@ Output:
   }
 }
 
+/** QC Bar context for card generation: the writer's rubric, and the revise / fresh-start assignments of the escalation loop. */
+export interface CardsQcContext {
+  /** Enabled, shown-to-writer lesson criteria — the acceptance bar the drafter writes against. */
+  writerBar?: { title: string; rule: string }[]
+  revision?:
+    | { kind: 'revise'; lessons: Lesson[]; findings: Record<string, { criterionId: string; title: string; evidence: string; revisionInstruction?: string }[]> }
+    | { kind: 'fresh-start'; warnings: Record<string, string[]> }
+}
+
+const writerBarBlock = (writerBar?: { title: string; rule: string }[]): string =>
+  writerBar && writerBar.length > 0
+    ? `\nTHE QC BAR — the acceptance criteria every card you write is graded against by an independent judge. Write to pass them the first time (prevention beats repair):\n${writerBar.map((c) => `- ${c.title}: ${c.rule}`).join('\n')}\n`
+    : ''
+
 export function cardsPrompt(
   set: StandardSet,
   scope: Scope,
@@ -535,6 +549,7 @@ export function cardsPrompt(
   batch: PlanLessonSkeleton[],
   sourceSets: StandardSet[] = [],
   userUploadNames: string[] = [],
+  qc?: CardsQcContext,
 ): Prompt {
   const codes = batch.flatMap((l) => l.standardCodes)
   const refs = batch.flatMap((l) => l.itemRefs)
@@ -546,9 +561,20 @@ export function cardsPrompt(
     lessons: u.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type })),
   }))
 
+  const revision = qc?.revision
+  const assignment =
+    revision === undefined
+      ? `Generate complete lesson cards (all fourteen card fields plus per-field decision records) for the ${batch.length} lesson(s) of unit "${unit.id} — ${unit.title}" listed in batch_lessons, following the approved plan skeleton exactly (same lesson ids, same order, same types).`
+      : revision.kind === 'revise'
+        ? `REVISION ASSIGNMENT: the lesson card(s) in current_cards failed specific QC criteria — the judge's findings and revision instructions are in review_findings (margin comments, one list per lesson). Revise each card to fix EXACTLY the failed findings, following each revision instruction; leave what passed ALONE — carry unaffected fields over (improved wording is fine; changed meaning is not). Return the COMPLETE revised card(s) for the ${batch.length} lesson(s) in batch_lessons.`
+        : `FRESH-START ASSIGNMENT: earlier drafts of these lesson(s) repeatedly failed QC and polishing did not converge — sometimes a draft's core framing is wrong, and no amount of patching fixes a wrong frame. Draft each lesson FRESH from the plan skeleton and evidence (the old text is deliberately withheld). failure_warnings lists the FAILURE TYPES each lesson kept hitting — architect the new draft so those failure modes cannot occur. Produce complete cards for the ${batch.length} lesson(s) in batch_lessons.`
+
   return {
     system: systemCore('Stage 5: card generation for one unit'),
-    user: `Generate complete lesson cards (all fourteen card fields plus per-field decision records) for the ${batch.length} lesson(s) of unit "${unit.id} — ${unit.title}" listed in batch_lessons, following the approved plan skeleton exactly (same lesson ids, same order, same types). Output ONLY the batch_lessons lessons — the unit's remaining lessons are produced by sibling calls; the full unit_skeleton is supplied so relational fields (Prerequisites, Progression Placement, Assessment Boundary, Non-Goals) can reference them by lesson id.
+    user: `${assignment} Output ONLY the batch_lessons lessons — the unit's remaining lessons are produced by sibling calls; the full unit_skeleton is supplied so relational fields (Prerequisites, Progression Placement, Assessment Boundary, Non-Goals) can reference them by lesson id.
+${writerBarBlock(qc?.writerBar)}${
+      revision?.kind === 'revise' ? `${jsonBlock('current_cards', revision.lessons)}${jsonBlock('review_findings', revision.findings)}` : ''
+    }${revision?.kind === 'fresh-start' ? jsonBlock('failure_warnings', revision.warnings) : ''}
 
 ${CARD_RULES}
 ${doctrineBlock({ unitTitle: unit.title, strand: unit.strand, lessonTitles: batch.map((l) => l.title), standardCodes: batch.flatMap((l) => l.standardCodes) })}${frameworksBlock(scope, sourceSets)}${userUploadsBlock(userUploadNames)}
@@ -720,29 +746,26 @@ ${jsonBlock('item_bank_subset', itemsForCodes(set, [], unit.lessons.flatMap((l) 
 }
 
 // ---------------------------------------------------------------------------
-// Quality Control gates (Quality Control and Loop Engineering, 2026-07-16).
-// Gates 2/3 are INDEPENDENT AI reviewers that RE-DERIVE decisions rather than
-// reading along: they see the evidence, the engine, and the doctrine — never
-// the generator's reasoning as authority. Findings are the one-signal object:
-// machine-actionable, never prose alone. A challenge is defeated by
-// citations, never by eloquence.
+// The QC Bar (Scope Generator: Quality Control and Loop Engineering,
+// 2026-07-17). The independent judge cold-reads cards against the bar's
+// AI-judged criteria — it never sees the writer's reasoning or earlier
+// attempts, and for judgment calls it shows its work FIRST (writes out its
+// own reading of the boundary, solves the example itself) so a verdict is
+// grounded in evidence, not vibes.
 // ---------------------------------------------------------------------------
 
-const qcGateSystem = (role: string): string =>
-  `You are an INDEPENDENT QC reviewer in the ScopeGenerator's four-gate stack — ${role}. Nothing in a scope is trusted because the generator wrote it; it is trusted because it survives you. Assume the generator is wrong and demand the card prove otherwise from CITED EVIDENCE — re-derive each decision yourself from the evidence corpus under the engine and doctrine below; the generator's own rationale text is a CLAIM to verify, never an authority. A challenge stands or falls on citations, never eloquence.
+const qcJudgeSystem = (role: string): string =>
+  `You are the ScopeGenerator's INDEPENDENT QC judge — ${role}. Every check is a COLD READ: you see the card and the evidence, never the writer's reasoning or earlier attempts. Each criterion below is the complete rubric line you apply — grade against it exactly as written, never against your own preferences.
 
-Finding discipline (the one-signal model — findings are machine-actionable, never prose alone):
-- One finding per defect: checkFamily (the check that raised it), ruleTag (the P1–P12 policy, engine rule, or your gate's rule id it enforces), lessonId ('' for scope-level), field ('' for card-level), a one-sentence summary, the EVIDENCE that establishes it (cite the specific standard code, item, doctrine section, or the two conflicting texts), a severity, and a repairContract (the required change class + the verification that retires the finding).
-- Severity semantics: blocking = the scope cannot responsibly publish (fabricated evidence, a violated hard rule, an unteachable card); major = publishable only through a recorded override; advisory = recorded, does not block. Reserve blocking for defects you can PROVE.
-- Judge only what you can see. Where the lessons supplied are a SAMPLE, a defect found is representative — report it against the lesson you saw; never speculate findings for unseen lessons.
-- No finding without a trace: a finding whose evidence field could not convince a hostile reader is a defect in YOUR output. Zero findings is a legitimate result.
+Judging discipline:
+- SHOW YOUR WORK FIRST (workShown): before ruling on a judgment call, write out your own reading of the field, your own solution to the example, your own walk of the sequence — the ruling must follow from that work. A verdict without work is a defect in YOUR output.
+- Each failure carries EVIDENCE ("the boundary says X, which permits reading Y") and a CONCRETE revision instruction the writer can follow — a margin comment, not a grade.
+- Grade the rule as written: "fail if the objective contains more than one distinct skill" means exactly that. When the rule's failure condition is not met, pass — even if you would have written the card differently.
+- Echo lessonId and criterionId exactly as supplied. Every supplied (lesson, criterion) pair gets exactly one result.
 
 ${engineDocBlock()}
 
 ${doctrineDocBlock()}
-
-${STEIN_MATCH}
-QC consequence of SDM: a split whose decision record shows a direct Stein match (rule tag "SDM" — distinct formats kept distinct, or a Stein deferral direction honored as a split) is CORRECTLY grained; challenging it requires showing the match itself is wrong (no such format/chart row, or the treatment collapsed distinct formats). Conversely, an SDM-matched lesson stretched past its format's endpoint to absorb a harder released item is a finding.
 
 <math_language_style_guide>
 ${LANG_GUIDE_CORE}
@@ -750,56 +773,55 @@ ${LANG_GUIDE_CORE}
 
 ${OUTPUT_DISCIPLINE}`
 
-/** Gate 2 — Evidence Verification: is every claim actually supported by the evidence it cites? */
-export function qcGate2Prompt(evidence: Record<string, unknown>): Prompt {
+/** Judge a batch of lesson cards against the bar's AI-judged lesson criteria. */
+export function qcJudgePrompt(
+  criteria: { id: string; title: string; rule: string }[],
+  lessons: unknown[],
+  context: Record<string, unknown>,
+): Prompt {
   return {
-    system: qcGateSystem('Gate 2, Evidence Verification: the Evidence-Locked property. Uncited content is rejected; so is MIS-cited content — the defect a citation format alone cannot catch'),
-    user: `Run Gate 2 over the sampled cards below. Checks, in order:
-- CLAIM SUPPORT (checkFamily "Claim support", ruleTag G2.support): read each consequential claim a card makes (boundary lines, ceiling parameters, prerequisite assertions, emphasis/progression placements, strategy attributions) against the citation attached to it and rule supports / does not support / overreaches. A real quote attached to a conclusion it does not license is a finding. Cited standards wording is supplied in the standards digest — a claim citing a code whose wording does not license it overreaches.
-- INFERENCE HONESTY (checkFamily "Inference honesty", ruleTag G2.badges): content not traceable to explicit evidence must be badged inferred (the card's evidenceStatus and field-level inferred flags); an 'observed' badge requires in-boundary released-item evidence (itemRefs or released-item citations); 'mixed' must show both sources. A card presenting inferred content as observed is a finding.
-- PRECEDENCE AUDIT (checkFamily "Precedence audit", ruleTag G2.precedence): decision records that log conflicts must resolve them in precedence-chain order (P1 vetoes and P7 conflicts must be visible on the affected card, not silently resolved).
-Do NOT re-derive atomization or sequencing here — that is Gate 3's job. Report only evidence-support defects you can prove from the supplied texts.
+    system: qcJudgeSystem('lesson-card judging'),
+    user: `Judge EVERY lesson in cards_to_judge against EVERY criterion below. One result per (lesson, criterion) pair, workShown first, pass/fail per the rule as written, evidence + a concrete revision instruction on every failure.
 
-${Object.entries(evidence)
+${criteria.map((c) => `<criterion id="${c.id}" title="${c.title}">\n${c.rule}\n</criterion>`).join('\n')}
+
+${Object.entries(context)
+  .map(([label, data]) => jsonBlock(label, data))
+  .join('')}
+${jsonBlock('cards_to_judge', lessons)}`,
+  }
+}
+
+/** Judge the assembled course against the bar's AI-judged course criteria. */
+export function qcCourseJudgePrompt(
+  criteria: { id: string; title: string; rule: string }[],
+  context: Record<string, unknown>,
+): Prompt {
+  return {
+    system: qcJudgeSystem('course-level judging once all lessons exist'),
+    user: `Judge the assembled course below against every criterion. One result per criterion, workShown first. On a failure, name the RESPONSIBLE lessons in responsibleLessonIds — revision routes to them with your evidence as feedback; leave it [] only when no single lesson can fix the problem (a gap in the plan itself), which becomes a course-level red flag instead.
+
+${criteria.map((c) => `<criterion id="${c.id}" title="${c.title}">\n${c.rule}\n</criterion>`).join('\n')}
+
+${Object.entries(context)
   .map(([label, data]) => jsonBlock(label, data))
   .join('')}`,
   }
 }
 
-/** Gate 3 — Adversarial Review: would every decision survive a hostile expert re-deriving it? Two audit batches. */
-export function qcGate3Prompt(batch: 'structure' | 'communication', evidence: Record<string, unknown>): Prompt {
-  const audits =
-    batch === 'structure'
-      ? `- SPLIT CHALLENGE (checkFamily "Split challenge", ruleTag A2): for every atom boundary in the sampled cards, argue the OPPOSITE case under the engine's Split Decision Framework — merge for every split, split for every merge. The finding stands when the card's decision records cannot defeat your challenge on cited evidence.
-- ATOM-TRIPLE CHECK (checkFamily "Atom-triple check", ruleTag A1): verify each New Learning field encodes exactly ONE start cue, ONE decision path, ONE response form. Any element counting two is a fake atom or a hidden second lesson.
-- SEQUENCE PROBE (checkFamily "Sequence probe", ruleTag P12): walk each sampled lesson's decision path step by step against everything taught before it (the full course skeleton is supplied). A consumed skill that sits AHEAD of the lesson, or is untagged as prior-grade, is a finding.`
-      : `- FAULTLESS-COMMUNICATION PROBE (checkFamily "Faultless communication", ruleTag P4): attempt to construct TWO defensible readings of each sampled field (boundary, ceiling, objectives, newLearning). If a field could be read two ways, the field is wrong — the doctrine's own standard, applied mechanically. Quote both readings as the evidence.
-- BOUNDARY PROBE (checkFamily "Boundary probe", ruleTag P4): for sampled boundaries, construct items engineered to land JUST INSIDE and JUST OUTSIDE the Assessment Boundary, then sort them using the boundary text ALONE. If the text cannot sort them, the boundary fails faultless communication (include your probe items as the evidence).
-- BOUNDARY ALGEBRA (checkFamily "Boundary algebra", ruleTag G1.boundary): on the sampled cards, verify the Difficulty Ceiling describes a case INSIDE the Assessment Boundary's Included set (a ceiling naming excluded content is a finding), and trace each Excluded performance through the course skeleton — it must be Included exactly once elsewhere (the forward's target) or excluded at grade level with citation; an exclusion with no home anywhere is a finding.
-- SOLVABILITY AUDIT (checkFamily "Solvability audit", ruleTag P3): work each generated exemplar on the sampled cards and each item in referenced_items COLD, knowing only the course-so-far (lessons earlier in the skeleton). An item unsolvable within the boundary, exceeding the ceiling, requiring an untaught skill, or yielding to a shortcut that bypasses the named strategy is a finding; verify the answers/keys you are shown by working the item.
-- DOCTRINE RUBRIC (checkFamily "Doctrine rubric", ruleTag by policy): check P1–P12 item by item on the sampled cards, plus the DI commitments — sacrificial first instance, confusables separated then bridged, algorithm before representations. Any rule violated without a logged, cited resolution is a finding.`
-  return {
-    system: qcGateSystem(`Gate 3, Adversarial Review (${batch} audits): Gate 3 assumes the generator is wrong and demands the card prove otherwise`),
-    user: `Run the Gate 3 ${batch} audits over the sampled cards below.
-${audits}
-
-${Object.entries(evidence)
-  .map(([label, data]) => jsonBlock(label, data))
-  .join('')}`,
-  }
-}
-
-/** Investigation run — the adversarial gate posture, aimed by the user's flags. Six steps; repairs are DIFFS, never applied. */
+/** Investigation run — open notes re-examined from the source evidence; confirmed problems routed to their real cause. */
 export function qcInvestigationPrompt(evidence: Record<string, unknown>): Prompt {
   return {
-    system: qcGateSystem('Investigation run: the scope-repair loop, aimed by human flags. A flag is a QUESTION, not an order — the tool argues back when the original decision is right'),
-    user: `Investigate the flags below against the scope. Six steps, in order:
-1. RE-DERIVATION: re-derive each flagged decision from the evidence under the engine and doctrine — the same discipline as Gate 3, pointed at a known suspect.
-2. VERDICT (one per flag, echoing its flagId): 'confirmed' with a severity and the establishing evidence, or 'not-confirmed' with the CITATIONS that defend the original decision. Never confirm out of deference to the flag.
-3. ROOT CAUSE (confirmed flags): why the scope is wrong — stale calibration, evidence missed at generation time, a misapplied criterion, or a corpus gap the coverage warnings already acknowledged.
-4. PATTERN SWEEP: search the ENTIRE course skeleton for unflagged instances of each confirmed defect class — cards never flagged join the investigation when they carry the same defect.
-5. GATE-GAP ANALYSIS: for each confirmed defect, name which gate (1–4) should have caught it and why it was missed — this becomes a regression case for the QC stack.
-6. PROPOSED REPAIRS: one diff per repair — lessonId, field, the current text excerpt (verbatim), the proposed replacement, and a decision record citing this investigation. Repairs are PROPOSALS ONLY; they are never applied automatically, so make each diff precise enough to apply by hand.
+    system: qcJudgeSystem('investigation of human notes: the same show-your-work discipline as regular QC, aimed at a known suspect. A note is a QUESTION, not an order — the tool argues back when the original decision is right'),
+    user: `Investigate the notes below against the scope. For each note (echoing its noteId):
+1. RE-EXAMINE the questioned decision from the source evidence under the engine and doctrine — show your work.
+2. VERDICT: 'confirmed' (the note is right — give the establishing evidence) or 'defended' (the original decision stands — give the citations that justify it; defenses are often the most instructive output).
+3. ROOT CAUSE for every confirmed problem — this is the key move; "what should change?" has three different answers:
+   - 'card': generation got it wrong and the evidence supports something better → produce a proposedRepair diff (lessonId, field, currentExcerpt, proposedText, decision record citing this investigation). currentExcerpt must be copied CHARACTER-FOR-CHARACTER from the field's current content (the application does an exact string replace — a paraphrased excerpt makes the repair unappliable), and proposedText is the full replacement for exactly that excerpt, nothing more.
+   - 'bar': the mistake is one the rubric should have caught but doesn't → draft a proposedCriterion (title + a failure-condition rule written for a strict grader, one idea per criterion, level, severity) and name the offendingLessonId whose defect taught the bar.
+   - 'specifications': the card faithfully reflects a genuine contradiction or ambiguity in the source documents → produce a contradictionReport quoting BOTH passages with citations, the reading the card took, and every other lesson affected. The human makes the ruling; propose no repair.
+4. PATTERN SWEEP: search the ENTIRE course skeleton for unnoted cards carrying each confirmed defect class and propose repairs for them too — one note can fix many cards.
+Never confirm out of deference to a note, and never draft a criterion for a one-off defect a repair already fixes.
 
 ${Object.entries(evidence)
   .map(([label, data]) => jsonBlock(label, data))

@@ -11,8 +11,8 @@ import { huntPacketStep } from '../pipeline/packets'
 import { applyProposalRunStep, iterateRunStep, proposalRunStep } from '../pipeline/proposals'
 import { rerunRunStep } from '../pipeline/rerun'
 import { vsgRunStep } from '../pipeline/vsg'
-import { qcInvestigateStep, qcRunStep } from '../pipeline/qc-gates'
-import { mutateFlagLedger, mutateInvestigationLog, mutateQcRun } from '../data/qc'
+import { qcInvestigateStep, qcSweepStep } from '../pipeline/qc-bar'
+import { mutateInvestigationLog, mutateNoteLedger, mutateQcReport } from '../data/qc'
 import { mutateVsgRun } from '../data/vsg'
 import { nowIso, today } from '../shared/util'
 
@@ -194,10 +194,19 @@ async function dispatch(msg: JobMessage, context: InvocationContext): Promise<vo
       return lsgRunStep(msg, context)
     case 'vsg/run':
       return vsgRunStep(msg, context)
-    case 'qc/run':
-      return qcRunStep(msg, context)
+    case 'qc/sweep':
+      return qcSweepStep(msg, context)
     case 'qc/investigate':
       return qcInvestigateStep(msg, context)
+    case 'qc/run':
+      // The four-gate on-demand run was replaced by in-generation QC + sweeps
+      // (the QC Bar); settle legacy queued messages cleanly.
+      await mutateJob(msg.jobId, (r) => {
+        r.status = 'cancelled'
+        r.stage = 'Superseded'
+        pushLog(r, 'The four-gate QC run was replaced by the QC Bar — generation checks automatically; use Run QC sweep for existing scopes')
+      })
+      return
     case 'eval/run':
       // The rubric evaluation system was replaced by the four-gate QC stack
       // (Quality Control & Loop Engineering); settle legacy queued messages
@@ -294,7 +303,7 @@ async function markQcFailed(msg: JobMessage, error: string, context: InvocationC
   if (msg.step === 'investigate') {
     const investigationId = msg.payload ? String(msg.payload.investigationId ?? '') : ''
     if (!investigationId) return
-    let flagIds: string[] = []
+    let noteIds: string[] = []
     try {
       await mutateInvestigationLog(msg.scopeId, (l) => {
         const inv = l.investigations.find((i) => i.id === investigationId)
@@ -302,12 +311,12 @@ async function markQcFailed(msg: JobMessage, error: string, context: InvocationC
           inv.status = 'failed'
           inv.error = error
           inv.updated = nowIso()
-          flagIds = inv.flagIds
+          noteIds = inv.noteIds
         }
       })
-      if (flagIds.length > 0) {
-        await mutateFlagLedger(msg.scopeId, (l) => {
-          for (const f of l.flags) if (flagIds.includes(f.id) && f.status === 'investigating') f.status = 'open'
+      if (noteIds.length > 0) {
+        await mutateNoteLedger(msg.scopeId, (l) => {
+          for (const n of l.notes) if (noteIds.includes(n.id) && n.status === 'investigating') n.status = 'open'
         })
       }
     } catch (e) {
@@ -315,18 +324,19 @@ async function markQcFailed(msg: JobMessage, error: string, context: InvocationC
     }
     return
   }
+  // A dead sweep leaves the SCOPE untouched (no version was written — the
+  // sweep writes at the very end); only a running report record settles.
   try {
-    await mutateQcRun(msg.scopeId, (run) => {
-      if (run.status === 'running') {
-        run.status = 'failed'
-        run.error = error
-        run.updated = nowIso()
+    await mutateQcReport(msg.scopeId, (report) => {
+      if (report.status === 'running') {
+        report.status = 'failed'
+        report.error = error
       }
     })
   } catch (e) {
-    // 404 = the run doc was deleted (or never shelled) — nothing to settle.
+    // 404 = no report record — nothing to settle.
     if ((e as { status?: number }).status !== 404) {
-      context.error(`genjobs-worker: could not settle failed QC run for scope ${msg.scopeId}`, e)
+      context.error(`genjobs-worker: could not settle failed QC report for scope ${msg.scopeId}`, e)
     }
   }
 }

@@ -2,22 +2,26 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { UnauthorizedError, api, clearAccessCode } from '../api'
 import { useStore } from '../store'
 import type {
-  QcFinding,
-  QcFlag,
-  QcFlagType,
+  QcBar,
+  QcCriterion,
+  QcDeck,
+  QcDeckRunResult,
+  QcDryRunResult,
   QcInvestigation,
-  QcRun,
-  QcRunSummary,
-  QcSeverity,
+  QcLessonResult,
+  QcNote,
+  QcNoteType,
+  QcPlanStep,
+  QcReport,
+  QcReportSummary,
 } from '../types'
 import { Btn, Modal, Pill, SectionLabel } from '../ui'
 
-// Quality Control & Loop Engineering — the four-gate QC stack (replacing the
-// rubric evaluations). Nothing in a scope is trusted because the generator
-// wrote it; it is trusted because it survived the gates that check it, the
-// flags that question it, and the trends that watch it. Everything here is
-// READ-ONLY against the scope: investigations propose repair diffs and record
-// accept/edit/reject as telemetry — application to the scope is a manual act.
+// Quality Control — the QC Bar. Generation drafts every card against the
+// bar's blocking criteria, an independent judge grades each card, failing
+// cards run the bounded revise → fresh-start loop, and the report lands here
+// automatically. The Bar tab is the user-editable rubric: criteria, the
+// escalation plan, dry-run, and the broken-card test deck.
 
 const errText = (e: unknown, fallback: string): string => {
   if (e instanceof UnauthorizedError) {
@@ -31,11 +35,9 @@ const errText = (e: unknown, fallback: string): string => {
 const when = (iso: string): string =>
   new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
 
-/** Stop watching a dispatched run after this long — its job page has the error. */
-const DISPATCH_WATCH_MS = 20 * 60 * 1000
 const POLL_MS = 5000
 
-const FLAG_TYPES: QcFlagType[] = ['rigor', 'granularity', 'sequencing', 'wording', 'evidence', 'other']
+const NOTE_TYPES: QcNoteType[] = ['rigor', 'granularity', 'sequencing', 'wording', 'evidence', 'contradiction', 'other']
 const CARD_FIELDS = [
   'standards',
   'cluster',
@@ -53,42 +55,65 @@ const CARD_FIELDS = [
   'releasedItems',
 ]
 
-const verdictPill = (verdict: QcRun['verdict'] | 'running' | 'failed') =>
-  verdict === 'clean' ? (
-    <Pill tone="green">CLEAN</Pill>
-  ) : verdict === 'advisories' ? (
-    <Pill tone="amber">ADVISORIES</Pill>
-  ) : verdict === 'quarantined' ? (
-    <Pill tone="red">QUARANTINED</Pill>
-  ) : verdict === 'running' ? (
+const statusPill = (r: QcReportSummary | QcReport) =>
+  r.status === 'running' ? (
     <Pill tone="accent">RUNNING</Pill>
-  ) : (
+  ) : r.status === 'failed' ? (
     <Pill tone="red">FAILED</Pill>
+  ) : r.redFlagCount > 0 ? (
+    <Pill tone="red">
+      {r.redFlagCount} RED FLAG{r.redFlagCount === 1 ? '' : 'S'}
+    </Pill>
+  ) : r.advisoryCount > 0 ? (
+    <Pill tone="amber">{r.advisoryCount} ADVISORIES</Pill>
+  ) : (
+    <Pill tone="green">PASSED</Pill>
   )
 
-const severityPill = (s: QcSeverity) =>
-  s === 'blocking' ? <Pill tone="red">blocking</Pill> : s === 'major' ? <Pill tone="amber">major</Pill> : <Pill tone="neutral">advisory</Pill>
-
-const locText = (f: { location: QcFinding['location'] }): string =>
-  [f.location.lessonId ?? f.location.unitId ?? 'scope', f.location.field].filter(Boolean).join(' · ')
-
-interface DispatchWatch {
-  prevUpdated: string
-  startedAt: number
+export default function QualityControl() {
+  const [tab, setTab] = useState<'reports' | 'bar'>('reports')
+  return (
+    <div className="mx-auto max-w-[1200px] px-6 py-8 lg:px-10">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="font-display text-[26px] font-semibold text-ink">Quality Control</h1>
+          <p className="mt-1 max-w-[760px] text-[13px] leading-relaxed text-ink-2">
+            Every card is written against the QC Bar, graded by an independent judge, and revised until it passes — or
+            arrives with a red flag explaining exactly what it couldn&apos;t fix. Reports appear here automatically for
+            every generated scope.
+          </p>
+        </div>
+        <div className="flex gap-1 rounded-xl border border-hairline bg-panel p-1">
+          {(['reports', 'bar'] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`cursor-pointer rounded-lg px-4 py-1.5 text-[13px] font-medium transition-colors ${
+                tab === t ? 'bg-accent text-white' : 'text-ink-2 hover:text-ink'
+              }`}
+            >
+              {t === 'reports' ? 'Reports' : 'The QC Bar'}
+            </button>
+          ))}
+        </div>
+      </div>
+      {tab === 'reports' ? <ReportsTab /> : <BarTab />}
+    </div>
+  )
 }
 
-export default function QualityControl() {
+// ---------------------------------------------------------------------------
+// Reports tab — the automatic output of every generation + sweeps.
+// ---------------------------------------------------------------------------
+
+function ReportsTab() {
   const { scopes } = useStore()
-  const [runs, setRuns] = useState<QcRunSummary[] | null>(null)
+  const [reports, setReports] = useState<QcReportSummary[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState<Set<string>>(new Set())
-  const [dispatched, setDispatched] = useState<Record<string, DispatchWatch>>({})
   const [openId, setOpenId] = useState<string | null>(null)
-  const [detail, setDetail] = useState<{ run: QcRun; flags: QcFlag[]; investigations: QcInvestigation[] } | null>(null)
-  const [confirmDelete, setConfirmDelete] = useState<QcRunSummary | null>(null)
-  const [pickScope, setPickScope] = useState('')
-  // Mirrors openId for async guards: a slow detail response for a previously
-  // opened run must never replace the currently open one.
+  const [detail, setDetail] = useState<{ report: QcReport; notes: QcNote[]; investigations: QcInvestigation[] } | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<QcReportSummary | null>(null)
   const openIdRef = useRef<string | null>(null)
   const setOpen = (id: string | null) => {
     openIdRef.current = id
@@ -99,12 +124,12 @@ export default function QualityControl() {
   const load = useCallback(
     () =>
       api
-        .listQcRuns()
+        .listQcReports()
         .then((d) => {
-          setRuns(d.runs)
+          setReports(d.reports)
           setError(null)
         })
-        .catch((e: unknown) => setError(errText(e, 'Could not load the QC runs.'))),
+        .catch((e: unknown) => setError(errText(e, 'Could not load the QC reports.'))),
     [],
   )
   useEffect(() => {
@@ -123,38 +148,20 @@ export default function QualityControl() {
     if (openId) loadDetail(openId)
   }, [openId, loadDetail])
 
-  // Poll while any run is dispatched/running, or while the open report has a
-  // live investigation (investigations are separate jobs that never touch
-  // the run record's status). A dispatched watch retires only when the run
-  // has BOTH left 'running' AND moved past its pre-dispatch `updated` stamp —
-  // before the worker writes the running shell the row still shows the OLD
-  // completed run, which must not retire the watch on the first tick.
-  const investigationLive =
+  // Poll while anything is live: a running report (generation/sweep in
+  // flight) or a running investigation on the open report.
+  const live =
+    (reports ?? []).some((r) => r.status === 'running') ||
     (detail?.investigations ?? []).some((i) => i.status === 'running') ||
-    (detail?.flags ?? []).some((f) => f.status === 'investigating')
+    (detail?.notes ?? []).some((n) => n.status === 'investigating')
   useEffect(() => {
-    const watching = Object.keys(dispatched).length > 0 || (runs ?? []).some((r) => r.status === 'running') || investigationLive
-    if (!watching) return
+    if (!live) return
     const t = window.setInterval(() => {
-      void api
-        .listQcRuns()
-        .then((d) => {
-          setRuns(d.runs)
-          setDispatched((cur) => {
-            const next = { ...cur }
-            for (const [scopeId, watch] of Object.entries(cur)) {
-              const row = d.runs.find((r) => r.scopeId === scopeId)
-              const done = row && row.updated !== watch.prevUpdated && row.status !== 'running'
-              if (done || Date.now() - watch.startedAt > DISPATCH_WATCH_MS) delete next[scopeId]
-            }
-            return next
-          })
-          if (openIdRef.current) loadDetail(openIdRef.current)
-        })
-        .catch(() => undefined)
+      void load()
+      if (openIdRef.current) loadDetail(openIdRef.current)
     }, POLL_MS)
     return () => window.clearInterval(t)
-  }, [dispatched, runs, investigationLive, loadDetail])
+  }, [live, load, loadDetail])
 
   const withBusy = async (key: string, fn: () => Promise<void>) => {
     setBusy((b) => new Set(b).add(key))
@@ -171,91 +178,19 @@ export default function QualityControl() {
     }
   }
 
-  const dispatchRun = (scopeId: string) =>
-    withBusy(`run:${scopeId}`, async () => {
-      const prev = runs?.find((r) => r.scopeId === scopeId)?.updated ?? ''
-      await api.runQcGates(scopeId)
-      setDispatched((d) => ({ ...d, [scopeId]: { prevUpdated: prev, startedAt: Date.now() } }))
-      await load()
-    })
-
-  const runnableScopes = scopes.filter((s) => s.status === 'complete' && !(runs ?? []).some((r) => r.scopeId === s.id))
-
-  // Trends strip — the aggregate view every signal lands on. v1 aggregates
-  // the stored run summaries; per-rule-tag trend curves are a later surface.
-  const trend =
-    runs && runs.length > 0
-      ? {
-          total: runs.length,
-          clean: runs.filter((r) => r.verdict === 'clean' && r.status === 'complete').length,
-          advisories: runs.filter((r) => r.verdict === 'advisories').length,
-          quarantined: runs.filter((r) => r.verdict === 'quarantined').length,
-          findings: runs.reduce((n, r) => n + r.findingCount, 0),
-          blocking: runs.reduce((n, r) => n + r.blockingCount, 0),
-          openFlags: runs.reduce((n, r) => n + r.openFlagCount, 0),
-        }
-      : null
+  const sweepables = scopes.filter((s) => s.status === 'complete' && !(reports ?? []).some((r) => r.scopeId === s.id))
 
   return (
-    <div className="mx-auto max-w-[1200px] px-6 py-8 lg:px-10">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-display text-[26px] font-semibold text-ink">Quality Control</h1>
-          <p className="mt-1 max-w-[720px] text-[13px] leading-relaxed text-ink-2">
-            Generation proposes; QC disposes. Every scope passes four ordered gates — structural validation, evidence
-            verification, adversarial review, stability &amp; confidence — and every quality event lands as a finding.
-            Raise flags on anything that looks wrong; an investigation re-derives the decision and either confirms it
-            into a finding or argues back with citations. Nothing here ever edits a generated scope.
-          </p>
-        </div>
-        {runnableScopes.length > 0 && (
-          <div className="flex items-center gap-2">
-            <select
-              value={pickScope}
-              onChange={(e) => setPickScope(e.target.value)}
-              className="rounded-lg border border-hairline bg-panel px-3 py-1.5 text-[13px] text-ink outline-none focus:border-accent/40"
-            >
-              <option value="">Run the gates on…</option>
-              {runnableScopes.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.title}
-                </option>
-              ))}
-            </select>
-            <Btn kind="primary" disabled={!pickScope || busy.has(`run:${pickScope}`)} onClick={() => void dispatchRun(pickScope).then(() => setPickScope(''))}>
-              Run QC
-            </Btn>
-          </div>
-        )}
-      </div>
+    <>
+      {error && <div className="mt-4 rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] text-rust">{error}</div>}
 
-      {error && (
-        <div className="mt-4 rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] text-rust">{error}</div>
-      )}
-
-      {trend && (
-        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border border-hairline bg-panel px-5 py-3">
-          <SectionLabel>Trends</SectionLabel>
-          <span className="text-[12.5px] text-ink-2">
-            {trend.total} scope{trend.total === 1 ? '' : 's'} under QC
-          </span>
-          <Pill tone="green">{trend.clean} clean</Pill>
-          <Pill tone="amber">{trend.advisories} with advisories</Pill>
-          <Pill tone="red">{trend.quarantined} quarantined</Pill>
-          <span className="text-[12.5px] text-ink-2">
-            {trend.findings} finding{trend.findings === 1 ? '' : 's'} ({trend.blocking} blocking) · {trend.openFlags} open flag
-            {trend.openFlags === 1 ? '' : 's'}
-          </span>
-          <span className="ml-auto text-[11.5px] text-ink-3">Autonomy level: L0 — instrumented review (every action recorded)</span>
-        </div>
-      )}
-
-      {runs === null ? (
+      {reports === null ? (
         <p className="mt-8 text-[13px] text-ink-2">Loading…</p>
-      ) : runs.length === 0 ? (
+      ) : reports.length === 0 ? (
         <div className="mt-8 rounded-2xl border border-hairline bg-panel p-8 text-center">
-          <p className="text-[13.5px] text-ink-2">
-            No QC runs yet. New generations pass the gates automatically; run them on an existing scope with the picker above.
+          <p className="text-[13.5px] leading-relaxed text-ink-2">
+            No reports yet — every new generation produces one automatically.
+            {sweepables.length > 0 && ' For scopes generated before the bar existed, run a QC sweep below.'}
           </p>
         </div>
       ) : (
@@ -264,31 +199,40 @@ export default function QualityControl() {
             <thead>
               <tr className="border-b border-hairline text-[11px] font-semibold tracking-[0.08em] text-ink-3 uppercase">
                 <th className="px-4 py-2.5">Scope</th>
-                <th className="px-3 py-2.5">Verdict</th>
-                <th className="px-3 py-2.5">Findings</th>
-                <th className="px-3 py-2.5">Quarantined</th>
-                <th className="px-3 py-2.5">Open flags</th>
-                <th className="px-3 py-2.5">Last run</th>
+                <th className="px-3 py-2.5">Status</th>
+                <th className="px-3 py-2.5">Passed first try</th>
+                <th className="px-3 py-2.5">Open notes</th>
+                <th className="px-3 py-2.5">Origin</th>
+                <th className="px-3 py-2.5">Bar</th>
+                <th className="px-3 py-2.5">Updated</th>
                 <th className="px-3 py-2.5" />
               </tr>
             </thead>
             <tbody>
-              {runs.map((r) => (
+              {reports.map((r) => (
                 <tr key={r.scopeId} className="border-b border-hairline/60 last:border-0">
                   <td className="px-4 py-2.5 font-medium text-ink">{r.scopeTitle}</td>
-                  <td className="px-3 py-2.5">{verdictPill(r.status === 'complete' ? r.verdict : r.status)}</td>
+                  <td className="px-3 py-2.5">{statusPill(r)}</td>
                   <td className="px-3 py-2.5 text-ink-2">
-                    {r.findingCount}
-                    {r.blockingCount > 0 && <span className="text-rust"> ({r.blockingCount} blocking)</span>}
+                    {r.lessonCount > 0 ? `${r.passedFirstTry}/${r.lessonCount}` : '—'}
                   </td>
-                  <td className="px-3 py-2.5 text-ink-2">{r.quarantinedCount || '—'}</td>
-                  <td className="px-3 py-2.5 text-ink-2">{r.openFlagCount || '—'}</td>
+                  <td className="px-3 py-2.5 text-ink-2">{r.openNoteCount || '—'}</td>
+                  <td className="px-3 py-2.5 text-ink-3">{r.origin}</td>
+                  <td className="px-3 py-2.5 text-ink-3">v{r.barVersion}</td>
                   <td className="px-3 py-2.5 text-ink-3">{when(r.updated)}</td>
                   <td className="px-3 py-2.5">
                     <div className="flex justify-end gap-1.5">
-                      <Btn onClick={() => setOpen(r.scopeId)}>Open report</Btn>
-                      <Btn disabled={busy.has(`run:${r.scopeId}`) || r.status === 'running'} onClick={() => void dispatchRun(r.scopeId)}>
-                        Re-run gates
+                      <Btn onClick={() => setOpen(r.scopeId)}>Open</Btn>
+                      <Btn
+                        disabled={busy.has(`sweep:${r.scopeId}`) || r.status === 'running'}
+                        onClick={() =>
+                          void withBusy(`sweep:${r.scopeId}`, async () => {
+                            await api.sweepQc(r.scopeId)
+                            await load()
+                          })
+                        }
+                      >
+                        Run QC sweep
                       </Btn>
                       <Btn kind="danger" onClick={() => setConfirmDelete(r)}>
                         Delete
@@ -302,15 +246,36 @@ export default function QualityControl() {
         </div>
       )}
 
+      {sweepables.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-hairline bg-panel px-5 py-3">
+          <SectionLabel>Pre-Bar Scopes</SectionLabel>
+          <span className="text-[12.5px] text-ink-2">Bring an existing scope up to the current bar:</span>
+          {sweepables.slice(0, 6).map((s) => (
+            <Btn
+              key={s.id}
+              disabled={busy.has(`sweep:${s.id}`)}
+              onClick={() =>
+                void withBusy(`sweep:${s.id}`, async () => {
+                  await api.sweepQc(s.id)
+                  await load()
+                })
+              }
+            >
+              Sweep “{s.title.length > 34 ? `${s.title.slice(0, 34)}…` : s.title}”
+            </Btn>
+          ))}
+        </div>
+      )}
+
       {openId && detail && (
-        <QcReport
+        <ReportDetail
           detail={detail}
           onClose={() => setOpen(null)}
           onChanged={() => {
             loadDetail(openId)
             void load()
           }}
-          onError={(e) => setError(e)}
+          onError={setError}
           busy={busy}
           withBusy={withBusy}
         />
@@ -319,8 +284,8 @@ export default function QualityControl() {
       {confirmDelete && (
         <Modal open title="Delete this QC record?" onClose={() => setConfirmDelete(null)}>
           <p className="text-[13px] leading-relaxed text-ink-2">
-            Permanently deletes the QC report, the flag ledger, and every investigation for “{confirmDelete.scopeTitle}”.
-            The scope itself is untouched. A run in flight stops at its next checkpoint.
+            Permanently deletes the report, notes, and investigations for “{confirmDelete.scopeTitle}”. The scope itself
+            (including any versions QC produced) is untouched.
           </p>
           <div className="mt-4 flex justify-end gap-2">
             <Btn onClick={() => setConfirmDelete(null)}>Cancel</Btn>
@@ -341,16 +306,16 @@ export default function QualityControl() {
           </div>
         </Modal>
       )}
-    </div>
+    </>
   )
 }
 
 // ---------------------------------------------------------------------------
-// The QC Report detail view — gates, findings ledger, confidence, flags,
-// investigations.
+// The report detail — per-lesson chips, red-flag reports, top failing
+// criteria, notes + investigations.
 // ---------------------------------------------------------------------------
 
-function QcReport({
+function ReportDetail({
   detail,
   onClose,
   onChanged,
@@ -358,172 +323,122 @@ function QcReport({
   busy,
   withBusy,
 }: {
-  detail: { run: QcRun; flags: QcFlag[]; investigations: QcInvestigation[] }
+  detail: { report: QcReport; notes: QcNote[]; investigations: QcInvestigation[] }
   onClose: () => void
   onChanged: () => void
   onError: (e: string) => void
   busy: Set<string>
   withBusy: (key: string, fn: () => Promise<void>) => Promise<void>
 }) {
-  const { run, flags, investigations } = detail
-  const [gateFilter, setGateFilter] = useState<number | 0>(0)
-  const [sevFilter, setSevFilter] = useState<QcSeverity | ''>('')
-  const [flagForm, setFlagForm] = useState<{ lessonId: string; field: string; type: QcFlagType; note: string }>({
+  const { report, notes, investigations } = detail
+  const [openFlag, setOpenFlag] = useState<QcLessonResult | null>(null)
+  const [noteForm, setNoteForm] = useState<{ lessonId: string; field: string; type: QcNoteType; note: string }>({
     lessonId: '',
     field: '',
     type: 'other',
     note: '',
   })
+  const openNotes = notes.filter((n) => n.status === 'open')
 
-  const filtered = run.findings.filter(
-    (f) => (gateFilter === 0 || f.gate === gateFilter) && (sevFilter === '' || f.severity === sevFilter),
-  )
-  const openFlags = flags.filter((f) => f.status === 'open')
-  const lessonIds = [...new Set(run.confidences.map((c) => c.lessonId))]
-  const bands = {
-    high: run.confidences.filter((c) => c.band === 'high').length,
-    medium: run.confidences.filter((c) => c.band === 'medium').length,
-    low: run.confidences.filter((c) => c.band === 'low').length,
-  }
-  const lowCards = run.confidences.filter((c) => c.band === 'low').sort((a, b) => a.score - b.score)
-
-  const raiseFlag = () =>
-    withBusy(`flag:${run.scopeId}`, async () => {
+  const raiseNote = () =>
+    withBusy(`note:${report.scopeId}`, async () => {
       try {
-        await api.raiseQcFlag(run.scopeId, {
+        await api.raiseQcNote(report.scopeId, {
           location: {
-            ...(flagForm.lessonId ? { lessonId: flagForm.lessonId } : {}),
-            ...(flagForm.field ? { field: flagForm.field } : {}),
+            ...(noteForm.lessonId ? { lessonId: noteForm.lessonId } : {}),
+            ...(noteForm.field ? { field: noteForm.field } : {}),
           },
-          type: flagForm.type,
-          note: flagForm.note.trim(),
+          type: noteForm.type,
+          note: noteForm.note.trim(),
         })
-        setFlagForm({ lessonId: '', field: '', type: 'other', note: '' })
+        setNoteForm({ lessonId: '', field: '', type: 'other', note: '' })
         onChanged()
       } catch (e) {
-        onError(errText(e, 'Could not raise the flag.'))
+        onError(errText(e, 'Could not leave the note.'))
       }
     })
 
   return (
-    <Modal open title={`QC Report — ${run.scopeTitle}`} onClose={onClose} wide>
+    <Modal open title={`QC Report — ${report.scopeTitle}`} onClose={onClose} wide>
       <div className="flex flex-wrap items-center gap-2">
-        {verdictPill(run.status === 'complete' ? run.verdict : run.status)}
-        <Pill tone="neutral">{run.findings.length} findings</Pill>
-        {run.quarantinedCards.length > 0 && <Pill tone="red">{run.quarantinedCards.length} cards quarantined</Pill>}
-        <Pill tone="neutral">scope version {when(run.scopeVersion)}</Pill>
-        <span className="text-[11.5px] text-ink-3">
-          {run.qcStackVersion} · seeded-defect catch rate: {run.seededCatchRate}
-        </span>
+        {statusPill(report)}
+        <Pill tone="neutral">
+          {report.passedFirstTry}/{report.lessons.length} passed first try
+        </Pill>
+        <Pill tone="neutral">graded against bar v{report.barVersion}</Pill>
+        <Pill tone="neutral">{report.origin === 'sweep' ? 'QC sweep' : 'generation'}</Pill>
+        {report.error && <span className="text-[12px] text-rust">{report.error}</span>}
       </div>
 
-      {run.quarantinedCards.length > 0 && (
-        <div className="mt-3 rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] leading-relaxed text-rust">
-          <span className="font-semibold">Quarantine.</span> Blocking findings stand on {run.quarantinedCards.join(', ')} — the
-          scope should not be treated as publishable until they are repaired (regenerate the owning lessons via Lesson Scope
-          Edits, then re-run the gates) or explicitly overridden with a recorded reason.
-        </div>
-      )}
-
-      <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-        {run.gates.map((g) => (
-          <div key={g.gate} className="rounded-xl border border-hairline bg-paper p-3">
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-[12px] font-semibold text-ink">
-                Gate {g.gate} — {g.name}
-              </span>
-              {g.status === 'pass' ? <Pill tone="green">pass</Pill> : g.status === 'findings' ? <Pill tone="amber">{g.findingCount}</Pill> : <Pill tone="neutral">skipped</Pill>}
-            </div>
-            <p className="mt-1.5 text-[11.5px] leading-relaxed text-ink-3">{g.detail}</p>
+      {report.topFailingCriteria.length > 0 && (
+        <div className="mt-4">
+          <SectionLabel>Top Failing Criteria</SectionLabel>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            {report.topFailingCriteria.map((t) => (
+              <Pill key={t.criterionId} tone="amber">
+                {t.title} · {t.failCount}
+              </Pill>
+            ))}
           </div>
-        ))}
-      </div>
-
-      <div className="mt-5 flex items-center gap-3">
-        <SectionLabel>Findings Ledger</SectionLabel>
-        <select
-          value={gateFilter}
-          onChange={(e) => setGateFilter(Number(e.target.value))}
-          className="rounded-lg border border-hairline bg-panel px-2 py-1 text-[12px] text-ink-2 outline-none"
-        >
-          <option value={0}>All gates</option>
-          {[1, 2, 3, 4].map((g) => (
-            <option key={g} value={g}>
-              Gate {g}
-            </option>
-          ))}
-        </select>
-        <select
-          value={sevFilter}
-          onChange={(e) => setSevFilter(e.target.value as QcSeverity | '')}
-          className="rounded-lg border border-hairline bg-panel px-2 py-1 text-[12px] text-ink-2 outline-none"
-        >
-          <option value="">All severities</option>
-          <option value="blocking">Blocking</option>
-          <option value="major">Major</option>
-          <option value="advisory">Advisory</option>
-        </select>
-        <span className="text-[12px] text-ink-3">
-          {filtered.length} of {run.findings.length}
-        </span>
-      </div>
-      {filtered.length === 0 ? (
-        <p className="mt-2 text-[13px] text-ink-2">No findings{run.findings.length > 0 ? ' under this filter' : ' — the scope passed clean'}.</p>
-      ) : (
-        <div className="mt-2 max-h-[340px] space-y-2 overflow-y-auto pr-1">
-          {filtered.map((f) => (
-            <div key={f.id} className="rounded-xl border border-hairline bg-paper p-3">
-              <div className="flex flex-wrap items-center gap-2">
-                {severityPill(f.severity)}
-                <Pill tone="cite">{f.ruleTag}</Pill>
-                <span className="text-[11.5px] text-ink-3">
-                  Gate {f.gate} · {f.checkFamily} · {locText(f)}
-                </span>
-              </div>
-              <p className="mt-1.5 text-[13px] font-medium text-ink">{f.summary}</p>
-              <p className="mt-1 text-[12px] leading-relaxed text-ink-2">{f.evidence}</p>
-              <p className="mt-1 text-[11.5px] leading-relaxed text-ink-3">
-                <span className="font-semibold uppercase">Repair contract:</span> {f.repairContract}
-              </p>
-            </div>
-          ))}
         </div>
       )}
 
-      <div className="mt-5">
-        <SectionLabel>Card Confidence (Gate 4)</SectionLabel>
-        <div className="mt-2 flex flex-wrap items-center gap-2">
-          <Pill tone="green">{bands.high} high</Pill>
-          <Pill tone="amber">{bands.medium} medium</Pill>
-          <Pill tone="red">{bands.low} low</Pill>
-          <span className="text-[11.5px] text-ink-3">The score routes review; it never edits content.</span>
+      {report.courseFindings.length > 0 && (
+        <div className="mt-4">
+          <SectionLabel>Course Check</SectionLabel>
+          <div className="mt-1.5 space-y-1.5">
+            {report.courseFindings.map((f, i) => (
+              <div key={i} className="rounded-xl border border-hairline bg-paper px-3 py-2 text-[12.5px]">
+                {f.severity === 'blocking' ? <Pill tone="red">course red flag</Pill> : <Pill tone="amber">advisory</Pill>}{' '}
+                <span className="font-medium text-ink">{f.title}:</span> <span className="text-ink-2">{f.evidence}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        {lowCards.length > 0 && (
-          <p className="mt-1.5 text-[12px] leading-relaxed text-ink-2">
-            Watch hardest:{' '}
-            {lowCards
-              .slice(0, 8)
-              .map((c) => `${c.lessonId} (${c.score})`)
-              .join(', ')}
-            {lowCards.length > 8 ? ', …' : ''}
-          </p>
-        )}
+      )}
+
+      <div className="mt-4">
+        <SectionLabel>Lessons</SectionLabel>
+        <div className="mt-1.5 flex flex-wrap gap-1.5">
+          {report.lessons.map((l) => (
+            <button
+              key={l.lessonId}
+              onClick={() => (l.redFlag ? setOpenFlag(l) : undefined)}
+              title={`${l.title} — ${l.status === 'red-flag' ? 'red flag (click for the report)' : `passed (attempt ${l.attempts})`}${l.advisories.length > 0 ? `, ${l.advisories.length} advisories` : ''}`}
+              className={`rounded-lg border px-2 py-1 font-mono text-[11px] transition-colors ${
+                l.status === 'red-flag'
+                  ? 'cursor-pointer border-rust/30 bg-rust-wash text-rust hover:border-rust/60'
+                  : l.attempts > 1
+                    ? 'border-amber-ink/25 bg-amber-wash text-amber-ink'
+                    : 'border-verdant/25 bg-verdant-wash text-verdant'
+              }`}
+            >
+              {l.lessonId}
+              {l.status === 'red-flag' ? ' ⚑' : l.attempts > 1 ? ` ·${l.attempts}` : ''}
+              {l.advisories.length > 0 ? ` a${l.advisories.length}` : ''}
+            </button>
+          ))}
+        </div>
+        <p className="mt-1.5 text-[11.5px] text-ink-3">
+          Green = passed first try · amber = passed after revision (·n attempts) · red ⚑ = red-flagged (best version kept;
+          click for the Red Flag Report) · aN = advisories.
+        </p>
       </div>
 
       <div className="mt-5">
         <div className="flex flex-wrap items-center gap-3">
-          <SectionLabel>Flag Ledger</SectionLabel>
+          <SectionLabel>Notes</SectionLabel>
           <span className="text-[12px] text-ink-3">
-            Flags cost nothing to raise — nothing happens until you run the investigation. A flag is a question, not an order.
+            Jot what bothers you — notes cost nothing and change nothing until you run the investigation.
           </span>
-          {openFlags.length > 0 && (
+          {openNotes.length > 0 && (
             <Btn
               kind="night"
-              disabled={busy.has(`inv:${run.scopeId}`)}
+              disabled={busy.has(`inv:${report.scopeId}`)}
               onClick={() =>
-                void withBusy(`inv:${run.scopeId}`, async () => {
+                void withBusy(`inv:${report.scopeId}`, async () => {
                   try {
-                    await api.investigateQc(run.scopeId)
+                    await api.investigateQc(report.scopeId)
                     onChanged()
                   } catch (e) {
                     onError(errText(e, 'Could not start the investigation.'))
@@ -531,37 +446,37 @@ function QcReport({
                 })
               }
             >
-              Run investigation ({openFlags.length} open)
+              Run investigation ({openNotes.length} open)
             </Btn>
           )}
         </div>
-        {flags.length > 0 && (
+        {notes.length > 0 && (
           <div className="mt-2 space-y-1.5">
-            {flags.map((f) => (
-              <div key={f.id} className="flex flex-wrap items-start gap-2 rounded-xl border border-hairline bg-paper px-3 py-2 text-[12.5px]">
-                {f.status === 'open' ? (
+            {notes.map((n) => (
+              <div key={n.id} className="flex flex-wrap items-start gap-2 rounded-xl border border-hairline bg-paper px-3 py-2 text-[12.5px]">
+                {n.status === 'open' ? (
                   <Pill tone="neutral">open</Pill>
-                ) : f.status === 'investigating' ? (
+                ) : n.status === 'investigating' ? (
                   <Pill tone="accent">investigating</Pill>
-                ) : f.status === 'confirmed' ? (
-                  <Pill tone="red">confirmed{f.resolution?.severity ? ` · ${f.resolution.severity}` : ''}</Pill>
+                ) : n.status === 'confirmed' ? (
+                  <Pill tone="red">confirmed{n.resolution?.rootCause ? ` → ${n.resolution.rootCause}` : ''}</Pill>
                 ) : (
-                  <Pill tone="green">not confirmed</Pill>
+                  <Pill tone="green">defended</Pill>
                 )}
-                <Pill tone="cite">{f.type}</Pill>
-                <span className="text-ink-3">{locText(f)}</span>
-                <span className="min-w-[200px] flex-1 text-ink-2">{f.note}</span>
-                {f.resolution && <span className="w-full text-[11.5px] leading-relaxed text-ink-3">{f.resolution.rationale}</span>}
-                {f.status === 'open' && (
+                <Pill tone="cite">{n.type}</Pill>
+                <span className="text-ink-3">{[n.location.lessonId ?? 'scope', n.location.field].filter(Boolean).join(' · ')}</span>
+                <span className="min-w-[200px] flex-1 text-ink-2">{n.note}</span>
+                {n.resolution && <span className="w-full text-[11.5px] leading-relaxed text-ink-3">{n.resolution.rationale}</span>}
+                {n.status === 'open' && (
                   <button
                     className="cursor-pointer text-[11.5px] text-rust hover:underline"
                     onClick={() =>
-                      void withBusy(`wf:${f.id}`, async () => {
+                      void withBusy(`wn:${n.id}`, async () => {
                         try {
-                          await api.withdrawQcFlag(run.scopeId, f.id)
+                          await api.withdrawQcNote(report.scopeId, n.id)
                           onChanged()
                         } catch (e) {
-                          onError(errText(e, 'Could not withdraw the flag.'))
+                          onError(errText(e, 'Could not withdraw the note.'))
                         }
                       })
                     }
@@ -576,19 +491,19 @@ function QcReport({
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <input
             list="qc-lessons"
-            value={flagForm.lessonId}
-            onChange={(e) => setFlagForm((s) => ({ ...s, lessonId: e.target.value }))}
+            value={noteForm.lessonId}
+            onChange={(e) => setNoteForm((s) => ({ ...s, lessonId: e.target.value }))}
             placeholder="Lesson (blank = scope)"
-            className="w-[170px] rounded-lg border border-hairline bg-panel px-2.5 py-1.5 text-[12.5px] outline-none focus:border-accent/40"
+            className="w-[160px] rounded-lg border border-hairline bg-panel px-2.5 py-1.5 text-[12.5px] outline-none focus:border-accent/40"
           />
           <datalist id="qc-lessons">
-            {lessonIds.map((id) => (
-              <option key={id} value={id} />
+            {report.lessons.map((l) => (
+              <option key={l.lessonId} value={l.lessonId} />
             ))}
           </datalist>
           <select
-            value={flagForm.field}
-            onChange={(e) => setFlagForm((s) => ({ ...s, field: e.target.value }))}
+            value={noteForm.field}
+            onChange={(e) => setNoteForm((s) => ({ ...s, field: e.target.value }))}
             className="rounded-lg border border-hairline bg-panel px-2 py-1.5 text-[12.5px] text-ink-2 outline-none"
           >
             <option value="">Whole card</option>
@@ -599,24 +514,24 @@ function QcReport({
             ))}
           </select>
           <select
-            value={flagForm.type}
-            onChange={(e) => setFlagForm((s) => ({ ...s, type: e.target.value as QcFlagType }))}
+            value={noteForm.type}
+            onChange={(e) => setNoteForm((s) => ({ ...s, type: e.target.value as QcNoteType }))}
             className="rounded-lg border border-hairline bg-panel px-2 py-1.5 text-[12.5px] text-ink-2 outline-none"
           >
-            {FLAG_TYPES.map((t) => (
+            {NOTE_TYPES.map((t) => (
               <option key={t} value={t}>
                 {t}
               </option>
             ))}
           </select>
           <input
-            value={flagForm.note}
-            onChange={(e) => setFlagForm((s) => ({ ...s, note: e.target.value }))}
-            placeholder='Your question, e.g. "This ceiling looks low against STAAR 2024"'
-            className="min-w-[260px] flex-1 rounded-lg border border-hairline bg-panel px-2.5 py-1.5 text-[12.5px] outline-none focus:border-accent/40"
+            value={noteForm.note}
+            onChange={(e) => setNoteForm((s) => ({ ...s, note: e.target.value }))}
+            placeholder='What bothers you, e.g. "this ceiling feels low against the released items"'
+            className="min-w-[240px] flex-1 rounded-lg border border-hairline bg-panel px-2.5 py-1.5 text-[12.5px] outline-none focus:border-accent/40"
           />
-          <Btn disabled={flagForm.note.trim().length === 0 || busy.has(`flag:${run.scopeId}`)} onClick={() => void raiseFlag()}>
-            Raise flag
+          <Btn disabled={noteForm.note.trim().length === 0 || busy.has(`note:${report.scopeId}`)} onClick={() => void raiseNote()}>
+            Leave note
           </Btn>
         </div>
       </div>
@@ -625,18 +540,88 @@ function QcReport({
         <div className="mt-5">
           <SectionLabel>Investigations</SectionLabel>
           <p className="mt-1 text-[11.5px] text-ink-3">
-            Repairs are proposals with decision records — accepting one records your verdict as telemetry; nothing is ever
-            applied to the scope automatically. Apply accepted diffs by hand via Lesson Scope Edits, then re-run the gates.
+            Accepting a card repair APPLIES it — the scope gets a new numbered version (the old one is kept). Accepting a
+            drafted criterion adds it to the bar and its card to the test deck. Contradiction reports are yours to rule on.
           </p>
           <div className="mt-2 space-y-3">
             {investigations
               .slice()
               .reverse()
               .map((inv) => (
-                <Investigation key={inv.id} inv={inv} scopeId={run.scopeId} busy={busy} withBusy={withBusy} onChanged={onChanged} onError={onError} />
+                <Investigation key={inv.id} inv={inv} scopeId={report.scopeId} withBusy={withBusy} onChanged={onChanged} onError={onError} />
               ))}
           </div>
         </div>
+      )}
+
+      {openFlag && openFlag.redFlag && (
+        <Modal open title={`Red Flag — ${openFlag.lessonId} ${openFlag.title}`} onClose={() => setOpenFlag(null)}>
+          <div className="space-y-3 text-[12.5px] leading-relaxed">
+            <p>
+              <span className="font-semibold text-ink">Why the loop stopped:</span>{' '}
+              <span className="text-ink-2">
+                {openFlag.redFlag.whyStopped === 'attempts-exhausted'
+                  ? 'the escalation plan ran out of attempts.'
+                  : openFlag.redFlag.whyStopped === 'stalled'
+                    ? 'two revisions in a row made no progress.'
+                    : 'a fresh start came back no better than the best earlier attempt.'}
+              </span>
+            </p>
+            {openFlag.redFlag.neverPassed.length > 0 && (
+              <p>
+                <span className="font-semibold text-ink">Never passed:</span>{' '}
+                <span className="text-ink-2">{openFlag.redFlag.neverPassed.join(', ')} — a real problem in the card, or a criterion impossible as written.</span>
+              </p>
+            )}
+            {openFlag.redFlag.fighting && (
+              <p>
+                <span className="font-semibold text-ink">Fighting criteria:</span>{' '}
+                <span className="text-ink-2">
+                  “{openFlag.redFlag.fighting[0]}” vs “{openFlag.redFlag.fighting[1]}” — fixing one kept breaking the other.
+                </span>
+              </p>
+            )}
+            <div>
+              <span className="font-semibold text-ink">Attempt history:</span>
+              <div className="mt-1 space-y-0.5">
+                {openFlag.redFlag.attemptHistory.map((a) => (
+                  <p key={a.attempt} className="font-mono text-[11.5px] text-ink-2">
+                    #{a.attempt} {a.kind}: {a.note}
+                  </p>
+                ))}
+              </div>
+            </div>
+            <p className="rounded-xl border border-hairline bg-paper px-3 py-2 text-ink-2">
+              <span className="font-semibold text-ink">Recommendation:</span> {openFlag.redFlag.recommendation}
+            </p>
+            <div className="flex justify-end">
+              <Btn
+                disabled={busy.has(`deck:${openFlag.lessonId}`)}
+                onClick={() =>
+                  void withBusy(`deck:${openFlag.lessonId}`, async () => {
+                    try {
+                      await api.addQcDeckCard({
+                        label: `Red flag on ${openFlag.lessonId} "${openFlag.title}": ${openFlag.redFlag!.whyStopped}`,
+                        expectedCriterionIds:
+                          openFlag.redFlag!.neverPassed.length > 0
+                            ? openFlag.redFlag!.neverPassed
+                            : [...new Set(openFlag.redFlag!.attemptHistory.flatMap((a) => a.failedBlocking))],
+                        scopeId: report.scopeId,
+                        lessonId: openFlag.lessonId,
+                      })
+                      onError('') // clear
+                      setOpenFlag(null)
+                    } catch (e) {
+                      onError(errText(e, 'Could not add the card to the deck.'))
+                    }
+                  })
+                }
+              >
+                Add this card to the test deck
+              </Btn>
+            </div>
+          </div>
+        </Modal>
       )}
     </Modal>
   )
@@ -645,33 +630,36 @@ function QcReport({
 function Investigation({
   inv,
   scopeId,
-  busy,
   withBusy,
   onChanged,
   onError,
 }: {
   inv: QcInvestigation
   scopeId: string
-  busy: Set<string>
   withBusy: (key: string, fn: () => Promise<void>) => Promise<void>
   onChanged: () => void
   onError: (e: string) => void
 }) {
-  const [reasonFor, setReasonFor] = useState<{ index: number; decision: 'accept' | 'edit' | 'reject' } | null>(null)
+  const [reasonFor, setReasonFor] = useState<{ kind: 'repair' | 'criterion'; index: number; decision: 'accept' | 'edit' | 'reject' } | null>(null)
   const [reason, setReason] = useState('')
   const [editedText, setEditedText] = useState('')
 
-  const decisionOn = (index: number) => inv.repairDecisions.find((d) => d.repairIndex === index)
-
   const submit = () =>
     reasonFor &&
-    withBusy(`rep:${inv.id}:${reasonFor.index}`, async () => {
+    withBusy(`dec:${inv.id}:${reasonFor.kind}:${reasonFor.index}`, async () => {
       try {
-        await api.decideQcRepair(scopeId, inv.id, reasonFor.index, {
-          decision: reasonFor.decision,
-          reason: reason.trim(),
-          ...(reasonFor.decision === 'edit' ? { editedText: editedText.trim() } : {}),
-        })
+        if (reasonFor.kind === 'repair') {
+          await api.decideQcRepair(scopeId, inv.id, reasonFor.index, {
+            decision: reasonFor.decision,
+            reason: reason.trim(),
+            ...(reasonFor.decision === 'edit' ? { editedText: editedText.trim() } : {}),
+          })
+        } else {
+          await api.decideQcCriterion(scopeId, inv.id, reasonFor.index, {
+            decision: reasonFor.decision === 'reject' ? 'reject' : 'accept',
+            reason: reason.trim(),
+          })
+        }
         setReasonFor(null)
         setReason('')
         setEditedText('')
@@ -681,35 +669,27 @@ function Investigation({
       }
     })
 
+  const decisionOn = (index: number) => inv.repairDecisions.find((d) => d.repairIndex === index)
+
   return (
     <div className="rounded-xl border border-hairline bg-paper p-3.5">
       <div className="flex flex-wrap items-center gap-2 text-[12px] text-ink-3">
         {inv.status === 'running' ? <Pill tone="accent">running</Pill> : inv.status === 'failed' ? <Pill tone="red">failed</Pill> : <Pill tone="green">complete</Pill>}
         <span>
-          {when(inv.created)} · {inv.flagIds.length} flag{inv.flagIds.length === 1 ? '' : 's'}
+          {when(inv.created)} · {inv.noteIds.length} note{inv.noteIds.length === 1 ? '' : 's'}
         </span>
         {inv.error && <span className="text-rust">{inv.error}</span>}
       </div>
-      {inv.verdicts.length > 0 && (
-        <div className="mt-2 space-y-1">
-          {inv.verdicts.map((v) => (
-            <p key={v.flagId} className="text-[12.5px] leading-relaxed text-ink-2">
-              {v.verdict === 'confirmed' ? (
-                <span className="font-semibold text-rust">Confirmed{v.severity ? ` (${v.severity})` : ''}:</span>
-              ) : (
-                <span className="font-semibold text-verdant">Defended:</span>
-              )}{' '}
-              {v.rationale}
-              {v.rootCause && (
-                <span className="text-ink-3">
-                  {' '}
-                  — root cause: {v.rootCause}
-                </span>
-              )}
-            </p>
-          ))}
-        </div>
-      )}
+      {inv.verdicts.map((v) => (
+        <p key={v.noteId} className="mt-1.5 text-[12.5px] leading-relaxed text-ink-2">
+          {v.verdict === 'confirmed' ? (
+            <span className="font-semibold text-rust">Confirmed{v.rootCause ? ` → the ${v.rootCause}` : ''}:</span>
+          ) : (
+            <span className="font-semibold text-verdant">Defended:</span>
+          )}{' '}
+          {v.rationale}
+        </p>
+      ))}
       {inv.patternSweep.some((p) => p.additionalCards.length > 0) && (
         <div className="mt-2">
           <span className="text-[11px] font-semibold tracking-wide text-ink-3 uppercase">Pattern sweep</span>
@@ -722,19 +702,74 @@ function Investigation({
             ))}
         </div>
       )}
-      {inv.gateGaps.length > 0 && (
-        <div className="mt-2">
-          <span className="text-[11px] font-semibold tracking-wide text-ink-3 uppercase">Gate gaps (regression cases)</span>
-          {inv.gateGaps.map((g, i) => (
-            <p key={i} className="mt-0.5 text-[12px] leading-relaxed text-ink-2">
-              Gate {g.gate} missed “{g.defectClass}” — {g.whyMissed}
-            </p>
+
+      {inv.contradictionReports.length > 0 && (
+        <div className="mt-2 space-y-2">
+          <span className="text-[11px] font-semibold tracking-wide text-ink-3 uppercase">Contradiction reports (you make the ruling)</span>
+          {inv.contradictionReports.map((c, i) => (
+            <div key={i} className="rounded-lg border border-hairline bg-panel p-2.5 text-[12px] leading-relaxed">
+              <p className="border-l-2 border-hairline-2 pl-2 text-ink-2 italic">
+                “{c.passageA.quote}” <span className="text-ink-3 not-italic">— {c.passageA.citation}</span>
+              </p>
+              <p className="mt-1 border-l-2 border-hairline-2 pl-2 text-ink-2 italic">
+                “{c.passageB.quote}” <span className="text-ink-3 not-italic">— {c.passageB.citation}</span>
+              </p>
+              <p className="mt-1 text-ink-2">
+                <span className="font-semibold text-ink">Reading taken:</span> {c.readingTaken}
+              </p>
+              {c.affectedLessons.length > 0 && <p className="text-ink-3">Also affected: {c.affectedLessons.join(', ')}</p>}
+            </div>
           ))}
         </div>
       )}
+
+      {inv.proposedCriteria.length > 0 && (
+        <div className="mt-2 space-y-2">
+          <span className="text-[11px] font-semibold tracking-wide text-ink-3 uppercase">Drafted criteria (your notes teach the bar)</span>
+          {inv.proposedCriteria.map((c, i) => (
+            <div key={i} className="rounded-lg border border-hairline bg-panel p-2.5">
+              <div className="flex flex-wrap items-center gap-2 text-[12px]">
+                <span className="font-medium text-ink">{c.title}</span>
+                <Pill tone="neutral">{c.level}</Pill>
+                <Pill tone={c.severity === 'blocking' ? 'red' : 'amber'}>{c.severity}</Pill>
+                {c.decision && <Pill tone={c.decision.decision === 'accept' ? 'green' : 'red'}>{c.decision.decision}ed</Pill>}
+              </div>
+              <p className="mt-1 text-[12px] leading-relaxed text-ink-2">{c.rule}</p>
+              {c.decision ? (
+                <p className="mt-1 text-[11.5px] text-ink-3">
+                  {when(c.decision.decided)}: {c.decision.reason}
+                </p>
+              ) : reasonFor?.kind === 'criterion' && reasonFor.index === i ? (
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <input
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    placeholder="Reason (required)"
+                    className="min-w-[220px] flex-1 rounded-lg border border-hairline bg-paper px-2.5 py-1.5 text-[12.5px] outline-none focus:border-accent/40"
+                  />
+                  <Btn kind="primary" disabled={reason.trim().length === 0} onClick={() => void submit()}>
+                    Record
+                  </Btn>
+                  <Btn onClick={() => setReasonFor(null)}>Cancel</Btn>
+                </div>
+              ) : (
+                <div className="mt-2 flex gap-1.5">
+                  <Btn onClick={() => setReasonFor({ kind: 'criterion', index: i, decision: 'accept' })}>Accept onto the bar</Btn>
+                  <Btn kind="danger" onClick={() => setReasonFor({ kind: 'criterion', index: i, decision: 'reject' })}>
+                    Reject
+                  </Btn>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
       {inv.proposedRepairs.length > 0 && (
         <div className="mt-2 space-y-2">
-          <span className="text-[11px] font-semibold tracking-wide text-ink-3 uppercase">Proposed repairs (diffs — never auto-applied)</span>
+          <span className="text-[11px] font-semibold tracking-wide text-ink-3 uppercase">
+            Proposed repairs — accepting APPLIES the diff as a new scope version
+          </span>
           {inv.proposedRepairs.map((r, i) => {
             const d = decisionOn(i)
             return (
@@ -745,7 +780,7 @@ function Investigation({
                   </Pill>
                   {d && (
                     <Pill tone={d.decision === 'reject' ? 'red' : 'green'}>
-                      {d.decision === 'accept' ? 'accepted' : d.decision === 'edit' ? 'accepted with edits' : 'rejected'}
+                      {d.decision === 'reject' ? 'rejected' : `applied${d.appliedVersion ? ` → v${d.appliedVersion}` : ''}`}
                     </Pill>
                   )}
                 </div>
@@ -754,15 +789,14 @@ function Investigation({
                 <p className="mt-1 text-[11.5px] leading-relaxed text-ink-3">{r.decisionRecord}</p>
                 {d ? (
                   <p className="mt-1 text-[11.5px] text-ink-3">
-                    Decision recorded {when(d.decided)}: {d.reason}
+                    {when(d.decided)}: {d.reason}
                   </p>
-                ) : reasonFor?.index === i ? (
+                ) : reasonFor?.kind === 'repair' && reasonFor.index === i ? (
                   <div className="mt-2 space-y-1.5">
                     {reasonFor.decision === 'edit' && (
                       <textarea
                         value={editedText}
                         onChange={(e) => setEditedText(e.target.value)}
-                        placeholder="Your edited replacement text"
                         rows={3}
                         className="w-full rounded-lg border border-hairline bg-paper px-2.5 py-1.5 text-[12.5px] outline-none focus:border-accent/40"
                       />
@@ -771,24 +805,31 @@ function Investigation({
                       <input
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
-                        placeholder="Reason (required — every action is telemetry)"
-                        className="min-w-[240px] flex-1 rounded-lg border border-hairline bg-paper px-2.5 py-1.5 text-[12.5px] outline-none focus:border-accent/40"
+                        placeholder="Reason (required)"
+                        className="min-w-[220px] flex-1 rounded-lg border border-hairline bg-paper px-2.5 py-1.5 text-[12.5px] outline-none focus:border-accent/40"
                       />
                       <Btn
                         kind="primary"
-                        disabled={reason.trim().length === 0 || (reasonFor.decision === 'edit' && editedText.trim().length === 0) || busy.has(`rep:${inv.id}:${i}`)}
+                        disabled={reason.trim().length === 0 || (reasonFor.decision === 'edit' && editedText.trim().length === 0)}
                         onClick={() => void submit()}
                       >
-                        Record
+                        {reasonFor.decision === 'reject' ? 'Record rejection' : 'Apply as new version'}
                       </Btn>
                       <Btn onClick={() => setReasonFor(null)}>Cancel</Btn>
                     </div>
                   </div>
                 ) : (
                   <div className="mt-2 flex gap-1.5">
-                    <Btn onClick={() => setReasonFor({ index: i, decision: 'accept' })}>Accept</Btn>
-                    <Btn onClick={() => { setReasonFor({ index: i, decision: 'edit' }); setEditedText(r.proposedText) }}>Edit</Btn>
-                    <Btn kind="danger" onClick={() => setReasonFor({ index: i, decision: 'reject' })}>
+                    <Btn onClick={() => setReasonFor({ kind: 'repair', index: i, decision: 'accept' })}>Accept</Btn>
+                    <Btn
+                      onClick={() => {
+                        setReasonFor({ kind: 'repair', index: i, decision: 'edit' })
+                        setEditedText(r.proposedText)
+                      }}
+                    >
+                      Edit
+                    </Btn>
+                    <Btn kind="danger" onClick={() => setReasonFor({ kind: 'repair', index: i, decision: 'reject' })}>
                       Reject
                     </Btn>
                   </div>
@@ -799,5 +840,362 @@ function Investigation({
         </div>
       )}
     </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// The Bar tab — criteria, escalation plan, dry-run, test deck.
+// ---------------------------------------------------------------------------
+
+function BarTab() {
+  const { scopes } = useStore()
+  const [bar, setBar] = useState<QcBar | null>(null)
+  const [deck, setDeck] = useState<QcDeck | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [editing, setEditing] = useState<QcCriterion | null>(null)
+  const [isNew, setIsNew] = useState(false)
+  const [deckResult, setDeckResult] = useState<QcDeckRunResult | null>(null)
+  const [dryRun, setDryRun] = useState<{ criterionId: string; scopeId: string; lessonId: string } | null>(null)
+  const [dryResult, setDryResult] = useState<QcDryRunResult | null>(null)
+
+  const load = useCallback(
+    () =>
+      api
+        .getQcBar()
+        .then((d) => {
+          setBar(d.bar)
+          setDeck(d.deck)
+          setError(null)
+        })
+        .catch((e: unknown) => setError(errText(e, 'Could not load the bar.'))),
+    [],
+  )
+  useEffect(() => {
+    void load()
+  }, [load])
+
+  const save = async (criteria: QcCriterion[], escalationPlan?: QcPlanStep[]): Promise<boolean> => {
+    setBusy(true)
+    try {
+      const updated = await api.saveQcBar({ criteria, ...(escalationPlan ? { escalationPlan } : {}) })
+      setBar(updated)
+      setError(null)
+      return true
+    } catch (e) {
+      setError(errText(e, 'Could not save the bar.'))
+      return false
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (!bar) return <p className="mt-8 text-[13px] text-ink-2">{error ?? 'Loading…'}</p>
+
+  const failRate = (c: QcCriterion): string =>
+    c.stats.judgedLessons > 0 ? `${Math.round((100 * c.stats.firstDraftFails) / c.stats.judgedLessons)}%` : '—'
+
+  return (
+    <>
+      {error && <div className="mt-4 rounded-xl border border-rust/25 bg-rust-wash px-4 py-2.5 text-[12.5px] text-rust">{error}</div>}
+
+      <div className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-hairline bg-panel px-5 py-3">
+        <Pill tone="night">bar v{bar.barVersion}</Pill>
+        <span className="text-[12.5px] text-ink-2">
+          Escalation plan: {bar.escalationPlan.join(' → ')} — edits apply to everything generated after you save; existing
+          scopes are never silently rewritten (use Run QC sweep).
+        </span>
+        <div className="ml-auto flex gap-2">
+          <Btn
+            disabled={busy}
+            onClick={() => {
+              const next = window.prompt('Escalation plan (comma-separated: revise, fresh-start)', bar.escalationPlan.join(', '))
+              if (!next) return
+              const steps = next
+                .split(',')
+                .map((s) => s.trim())
+                .filter((s) => s === 'revise' || s === 'fresh-start') as QcPlanStep[]
+              if (steps.length === 0) return
+              void save(bar.criteria, steps)
+            }}
+          >
+            Edit plan
+          </Btn>
+          <Btn
+            kind="night"
+            disabled={busy}
+            onClick={() => {
+              setBusy(true)
+              api
+                .testQcBar()
+                .then((r) => {
+                  setDeckResult(r)
+                  void load()
+                })
+                .catch((e: unknown) => setError(errText(e, 'The deck test failed.')))
+                .finally(() => setBusy(false))
+            }}
+          >
+            Test the bar ({deck?.cards.length ?? 0} deck cards)
+          </Btn>
+          <Btn
+            kind="primary"
+            onClick={() => {
+              setIsNew(true)
+              setEditing({
+                id: `user-criterion-${Date.now().toString(36).slice(-5)}`,
+                title: '',
+                rule: '',
+                level: 'lesson',
+                method: 'ai-judged',
+                severity: 'advisory',
+                shownToWriter: true,
+                enabled: true,
+                stats: { firstDraftFails: 0, judgedLessons: 0, redFlagInvolvements: 0 },
+              })
+            }}
+          >
+            Add criterion
+          </Btn>
+        </div>
+      </div>
+
+      {deckResult && (
+        <div className="mt-3 rounded-2xl border border-hairline bg-panel px-5 py-3 text-[12.5px]">
+          <div className="flex items-center gap-2">
+            <SectionLabel>Deck Run</SectionLabel>
+            <Pill tone={deckResult.missed === 0 ? 'green' : 'red'}>
+              caught {deckResult.caught} · missed {deckResult.missed}
+            </Pill>
+            <button className="ml-auto cursor-pointer text-[11.5px] text-ink-3 hover:underline" onClick={() => setDeckResult(null)}>
+              dismiss
+            </button>
+          </div>
+          {deckResult.perCard.map((p) => (
+            <p key={p.deckCardId} className="mt-1 text-ink-2">
+              {p.missedIds.length === 0 ? '✓' : '✗'} {p.label}{' '}
+              {p.missedIds.length > 0 && <span className="text-rust">missed: {p.missedIds.join(', ')}</span>}
+            </p>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-4 overflow-x-auto rounded-2xl border border-hairline bg-panel">
+        <table className="w-full text-left text-[12.5px]">
+          <thead>
+            <tr className="border-b border-hairline text-[11px] font-semibold tracking-[0.08em] text-ink-3 uppercase">
+              <th className="px-4 py-2.5">Criterion</th>
+              <th className="px-3 py-2.5">Level</th>
+              <th className="px-3 py-2.5">Method</th>
+              <th className="px-3 py-2.5">Severity</th>
+              <th className="px-3 py-2.5">Writer sees it</th>
+              <th className="px-3 py-2.5" title="First-draft fail rate · red-flag involvements · last deck run">
+                Track record
+              </th>
+              <th className="px-3 py-2.5">On</th>
+              <th className="px-3 py-2.5" />
+            </tr>
+          </thead>
+          <tbody>
+            {bar.criteria.map((c) => (
+              <tr key={c.id} className={`border-b border-hairline/60 last:border-0 ${c.enabled ? '' : 'opacity-45'}`}>
+                <td className="max-w-[380px] px-4 py-2">
+                  <span className="font-medium text-ink">{c.title}</span>
+                  <p className="truncate text-[11.5px] text-ink-3" title={c.rule}>
+                    {c.rule}
+                  </p>
+                </td>
+                <td className="px-3 py-2 text-ink-2">{c.level}</td>
+                <td className="px-3 py-2 text-ink-2">{c.method === 'automatic' ? 'automatic' : 'AI-judged'}</td>
+                <td className="px-3 py-2">{c.severity === 'blocking' ? <Pill tone="red">blocking</Pill> : <Pill tone="neutral">advisory</Pill>}</td>
+                <td className="px-3 py-2 text-ink-2">{c.shownToWriter ? 'yes' : 'no'}</td>
+                <td className="px-3 py-2 text-[11.5px] text-ink-3">
+                  {failRate(c)} first-draft fails · {c.stats.redFlagInvolvements} red flags
+                  {c.stats.lastDeckRun ? ` · deck ${c.stats.lastDeckRun.caught}/${c.stats.lastDeckRun.caught + c.stats.lastDeckRun.missed}` : ''}
+                </td>
+                <td className="px-3 py-2">
+                  <button
+                    className="cursor-pointer text-[12px] text-accent hover:underline"
+                    onClick={() => void save(bar.criteria.map((x) => (x.id === c.id ? { ...x, enabled: !x.enabled } : x)))}
+                  >
+                    {c.enabled ? 'on' : 'off'}
+                  </button>
+                </td>
+                <td className="px-3 py-2">
+                  <div className="flex justify-end gap-1.5">
+                    <Btn
+                      onClick={() => {
+                        setDryResult(null)
+                        setDryRun({ criterionId: c.id, scopeId: '', lessonId: '' })
+                      }}
+                    >
+                      Dry-run
+                    </Btn>
+                    <Btn
+                      onClick={() => {
+                        setIsNew(false)
+                        setEditing({ ...c })
+                      }}
+                    >
+                      Edit
+                    </Btn>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {editing && (
+        <Modal open title={isNew ? 'Add a criterion' : `Edit — ${editing.title || editing.id}`} onClose={() => setEditing(null)}>
+          <div className="space-y-2.5 text-[12.5px]">
+            <input
+              value={editing.title}
+              onChange={(e) => setEditing((s) => s && { ...s, title: e.target.value })}
+              placeholder="Title (short)"
+              className="w-full rounded-lg border border-hairline bg-panel px-2.5 py-1.5 outline-none focus:border-accent/40"
+            />
+            <textarea
+              value={editing.rule}
+              onChange={(e) => setEditing((s) => s && { ...s, rule: e.target.value })}
+              placeholder='The failure condition, written for a strict grader: "Fail this card if…"'
+              rows={4}
+              className="w-full rounded-lg border border-hairline bg-panel px-2.5 py-1.5 outline-none focus:border-accent/40"
+            />
+            <div className="flex flex-wrap gap-2">
+              <select
+                value={editing.level}
+                disabled={editing.method === 'automatic'}
+                title={editing.method === 'automatic' ? 'Bound to a built-in check at this level' : undefined}
+                onChange={(e) => setEditing((s) => s && { ...s, level: e.target.value as 'lesson' | 'course' })}
+                className="rounded-lg border border-hairline bg-panel px-2 py-1.5 text-ink-2 outline-none disabled:opacity-50"
+              >
+                <option value="lesson">lesson</option>
+                <option value="course">course</option>
+              </select>
+              <select
+                value={editing.severity}
+                onChange={(e) => setEditing((s) => s && { ...s, severity: e.target.value as 'blocking' | 'advisory' })}
+                className="rounded-lg border border-hairline bg-panel px-2 py-1.5 text-ink-2 outline-none"
+              >
+                <option value="blocking">blocking — must be revised until it passes</option>
+                <option value="advisory">advisory — noted in the report</option>
+              </select>
+              <label className="flex items-center gap-1.5 text-ink-2">
+                <input type="checkbox" checked={editing.shownToWriter} onChange={(e) => setEditing((s) => s && { ...s, shownToWriter: e.target.checked })} />
+                shown to the writer
+              </label>
+              <label className="flex items-center gap-1.5 text-ink-2">
+                <input type="checkbox" checked={editing.enabled} onChange={(e) => setEditing((s) => s && { ...s, enabled: e.target.checked })} />
+                enabled
+              </label>
+            </div>
+            {editing.method === 'automatic' && (
+              <p className="text-[11.5px] text-ink-3">
+                This is a built-in mechanical check — the rule text describes it (and shows to the writer); the check itself
+                is code. Severity/enabled/shown are yours to change.
+              </p>
+            )}
+            <div className="flex justify-end gap-2">
+              {!isNew && !editing.autoCheckId && (
+                <Btn
+                  kind="danger"
+                  disabled={busy}
+                  onClick={() => {
+                    void save(bar.criteria.filter((x) => x.id !== editing.id)).then((okSave) => okSave && setEditing(null))
+                  }}
+                >
+                  Remove
+                </Btn>
+              )}
+              <Btn onClick={() => setEditing(null)}>Cancel</Btn>
+              <Btn
+                kind="primary"
+                disabled={busy || editing.title.trim().length === 0 || editing.rule.trim().length === 0}
+                onClick={() => {
+                  const next = isNew ? [...bar.criteria, editing] : bar.criteria.map((x) => (x.id === editing.id ? editing : x))
+                  void save(next).then((okSave) => okSave && setEditing(null))
+                }}
+              >
+                Save — applies to future generation
+              </Btn>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {dryRun && (
+        <Modal open title="Dry-run a criterion" onClose={() => setDryRun(null)}>
+          <p className="text-[12.5px] text-ink-2">
+            Point “{bar.criteria.find((c) => c.id === dryRun.criterionId)?.title}” at any existing lesson and see exactly
+            what the judge would say — before it governs generation.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <select
+              value={dryRun.scopeId}
+              onChange={(e) => setDryRun((s) => s && { ...s, scopeId: e.target.value, lessonId: '' })}
+              className="min-w-[220px] rounded-lg border border-hairline bg-panel px-2 py-1.5 text-[12.5px] text-ink-2 outline-none"
+            >
+              <option value="">Pick a scope…</option>
+              {scopes
+                .filter((s) => s.status === 'complete')
+                .map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.title}
+                  </option>
+                ))}
+            </select>
+            <select
+              value={dryRun.lessonId}
+              onChange={(e) => setDryRun((s) => s && { ...s, lessonId: e.target.value })}
+              className="min-w-[180px] rounded-lg border border-hairline bg-panel px-2 py-1.5 text-[12.5px] text-ink-2 outline-none"
+            >
+              <option value="">Pick a lesson…</option>
+              {(scopes.find((s) => s.id === dryRun.scopeId)?.units ?? []).flatMap((u) =>
+                u.lessons.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.id} — {l.title.slice(0, 44)}
+                  </option>
+                )),
+              )}
+            </select>
+            <Btn
+              kind="primary"
+              disabled={!dryRun.scopeId || !dryRun.lessonId || busy}
+              onClick={() => {
+                setBusy(true)
+                setDryResult(null)
+                api
+                  .dryRunQcCriterion({ criterionId: dryRun.criterionId, scopeId: dryRun.scopeId, lessonId: dryRun.lessonId })
+                  .then(setDryResult)
+                  .catch((e: unknown) => setError(errText(e, 'The dry-run failed.')))
+                  .finally(() => setBusy(false))
+              }}
+            >
+              {busy ? 'Judging…' : 'Run'}
+            </Btn>
+          </div>
+          {dryResult && (
+            <div className="mt-3 space-y-2 rounded-xl border border-hairline bg-paper p-3 text-[12.5px] leading-relaxed">
+              <div>{dryResult.pass ? <Pill tone="green">PASS</Pill> : <Pill tone="red">FAIL</Pill>}</div>
+              <p className="text-ink-2">
+                <span className="font-semibold text-ink">The judge&apos;s work:</span> {dryResult.workShown}
+              </p>
+              {dryResult.evidence && (
+                <p className="text-ink-2">
+                  <span className="font-semibold text-ink">Evidence:</span> {dryResult.evidence}
+                </p>
+              )}
+              {dryResult.revisionInstruction && (
+                <p className="text-ink-2">
+                  <span className="font-semibold text-ink">Revision comment:</span> {dryResult.revisionInstruction}
+                </p>
+              )}
+            </div>
+          )}
+        </Modal>
+      )}
+    </>
   )
 }

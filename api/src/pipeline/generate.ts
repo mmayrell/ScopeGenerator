@@ -1,12 +1,24 @@
 import { InvocationContext } from '@azure/functions'
-import { ItemRecord, JobMessage, Lesson, StandardNode, StandardSet, Unit } from '../domain/types'
+import { ItemRecord, JobMessage, Lesson, QcBar, QcFindingLite, QcLessonResult, StandardNode, StandardSet, Unit } from '../domain/types'
 import { getJsonOrUndefined, putJson, putJsonIfAbsent } from '../data/blobs'
 import { dataContainer } from '../data/clients'
 import { getScope, getScopeEvidenceSet, getScopeSourceSets, mutateScope, saveScope, snapshotScope } from '../data/entities'
-import { completeUnit, createJob, getJob, mutateJob, pushLog } from '../data/jobs'
+import { completeUnit, getJob, mutateJob, pushLog } from '../data/jobs'
+import { getBar, getQcReportOrUndefined, saveQcReport } from '../data/qc'
 import { enqueueJob } from '../data/queue'
 import { generateStructured } from '../services/claude'
 import { cardsPrompt, courseMapPrompt, unitPlanPrompt } from '../services/prompts'
+import {
+  accumulateStats,
+  assembleReport,
+  buildCheckContext,
+  lessonResultOf,
+  QcCourseState,
+  qcCoursePhase,
+  QcUnitState,
+  runUnitLoop,
+  writerBarOf,
+} from './qc-bar'
 import { dedupeStudentTitles } from './titles'
 import {
   COURSE_MAP_SCHEMA,
@@ -21,7 +33,7 @@ import {
   UnitPlanOutput,
   WireLessonBatch,
 } from '../services/schemas'
-import { newId, today } from '../shared/util'
+import { today } from '../shared/util'
 import { ensureSetItemsExtracted } from './items'
 import { loadScopeUploadDocs } from './scope-uploads'
 import { countLessons, deriveProtectedBoundaries, runQc } from './qc'
@@ -57,6 +69,33 @@ const unitPath = (jobId: string, i: number) => `jobs/${jobId}/unit-${i}.json`
 // Legacy fixed-size batch checkpoint (pre per-lesson checkpoints) — still READ
 // so runs that failed under the old batching resume without regenerating.
 const unitBatchPath = (jobId: string, i: number, b: number) => `jobs/${jobId}/unit-${i}-batch-${b}.json`
+/** Pre-QC draft unit (the QC Bar's loop turns it into the final unitPath checkpoint). */
+const unitDraftPath = (jobId: string, i: number) => `jobs/${jobId}/unit-${i}-draft.json`
+const unitQcStatePath = (jobId: string, i: number) => `jobs/${jobId}/unit-${i}-qcstate.json`
+const unitQcResultPath = (jobId: string, i: number) => `jobs/${jobId}/unit-${i}-qcresult.json`
+const barPinPath = (jobId: string) => `jobs/${jobId}/qc-bar.json`
+const courseQcStatePath = (jobId: string) => `jobs/${jobId}/qc-course-state.json`
+
+/**
+ * The bar snapshot the whole run is graded against — pinned on first use so a
+ * mid-run bar edit never splits the report. If-absent + re-read: the plan
+ * step fans every unit's cards message out at once, so concurrent executions
+ * race to pin — the FIRST write wins for all of them.
+ */
+async function pinnedBar(jobId: string): Promise<QcBar> {
+  const existing = await getJsonOrUndefined<QcBar>(dataContainer(), barPinPath(jobId))
+  if (existing) return existing
+  const bar = await getBar()
+  await putJsonIfAbsent(dataContainer(), barPinPath(jobId), bar)
+  return (await getJsonOrUndefined<QcBar>(dataContainer(), barPinPath(jobId))) ?? bar
+}
+
+/** Aborted QC phases re-enqueue with a bounded cut count: degraded (low effort) after the first cut, terminal after the third. */
+const MAX_QC_CUTS = 3
+const readQcCuts = (msg: JobMessage): number => {
+  const n = Math.trunc(Number(msg.payload?.qcCuts ?? 0))
+  return Number.isFinite(n) && n > 0 ? n : 0
+}
 const unitLessonPath = (jobId: string, i: number, lessonId: string) =>
   `jobs/${jobId}/unit-${i}-lesson-${lessonId}.json`
 
@@ -619,7 +658,8 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
     return
   }
 
-  // Idempotent: reuse the unit checkpoint if a prior attempt already produced it.
+  // Idempotent: reuse the FINAL (post-QC) unit checkpoint if a prior attempt
+  // already produced it.
   let unit = await getJsonOrUndefined<Unit>(dataContainer(), unitPath(msg.jobId, unitIndex))
   if (!unit) {
     const scope = await getScope(scopeId)
@@ -630,6 +670,14 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
     const started = Date.now()
     const cuts = readCuts(msg)
     let callSize = readCallSize(msg)
+    // The QC Bar rides the whole run: the writer drafts with the blocking
+    // criteria in hand, and the independent judge grades every card before
+    // the unit checkpoint exists (spec Steps 1-4).
+    const bar = await pinnedBar(msg.jobId)
+    const writerBar = writerBarOf(bar)
+
+    let draft = await getJsonOrUndefined<Unit>(dataContainer(), unitDraftPath(msg.jobId, unitIndex))
+    if (!draft) {
 
     // Checkpoints are PER LESSON (decoupled from call batching, which is
     // adaptive): a redelivered attempt resumes exactly at the first missing
@@ -649,7 +697,7 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
 
     const callCards = (slice: PlanLessonSkeleton[], effort: 'low' | 'medium', maxTokens: number, signal: AbortSignal) =>
       generateStructured<WireLessonBatch>({
-        ...cardsPrompt(set, scope, plan, skeleton, slice, sourceSets, userDocs.names),
+        ...cardsPrompt(set, scope, plan, skeleton, slice, sourceSets, userDocs.names, { writerBar }),
         schema: UNIT_CARDS_BATCH_SCHEMA,
         ...(userDocs.base64.length > 0 ? { documents: userDocs.base64 } : {}),
         // effort 'medium' + 48k max_tokens fits the 10-minute Consumption
@@ -788,9 +836,84 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
         done.set(sk.id, lesson)
       }
     }
-    // Assemble in skeleton order regardless of generation order.
-    const lessons = skeleton.lessons.map((sk) => done.get(sk.id) as Lesson)
-    unit = { id: skeleton.id, title: skeleton.title, rationale: skeleton.rationale, strand: skeleton.strand, lessons }
+      // Assemble in skeleton order regardless of generation order.
+      const lessons = skeleton.lessons.map((sk) => done.get(sk.id) as Lesson)
+      draft = { id: skeleton.id, title: skeleton.title, rationale: skeleton.rationale, strand: skeleton.strand, lessons }
+      await putJson(dataContainer(), unitDraftPath(msg.jobId, unitIndex), draft)
+      await mutateJob(msg.jobId, (r) => pushLog(r, `Unit ${skeleton.id}: ${lessons.length} card(s) drafted — the QC Bar check begins`))
+    }
+
+    // ---- QC phase (spec Steps 2-4): check every card against the bar, run
+    // the bounded revise → fresh-start escalation loop, red-flag survivors.
+    // Resumable: the loop state checkpoints and the message re-enqueues under
+    // the same per-unit time budget the drafts use.
+    const gradesInScope = new Set(
+      plan.units.flatMap((u) => u.lessons.flatMap((l) => l.standardCodes)).map((c) => c.toUpperCase().replace(/[()]/g, '').split('.')[0]),
+    )
+    const checkCtx = buildCheckContext(set, gradesInScope)
+    const qcCuts = readQcCuts(msg)
+    const unitState: QcUnitState =
+      (await getJsonOrUndefined<QcUnitState>(dataContainer(), unitQcStatePath(msg.jobId, unitIndex))) ?? { lessons: {}, done: false }
+    try {
+      await runUnitLoop({
+        unit: { id: draft.id, lessons: draft.lessons },
+        skeleton,
+        set,
+        scope,
+        plan,
+        bar,
+        checkCtx,
+        unitState,
+        signalOf: () => bounded(started),
+        budgetLeft: () => started + CARDS_TIME_BUDGET_MS - Date.now(),
+        sourceSets,
+        userDocs,
+        degraded: qcCuts > 0,
+      })
+    } catch (e) {
+      // The loop state survives an execution-deadline abort (produce mutates
+      // state only after its re-check) — checkpoint and continue in a fresh
+      // execution, degraded after the first cut, terminal after the third so
+      // a call that can never fit does not loop the job forever.
+      if (isAbort(e)) {
+        if (qcCuts + 1 >= MAX_QC_CUTS) {
+          throw new Error(
+            `The QC check for unit ${skeleton.id} could not fit the 10-minute execution window after ${MAX_QC_CUTS} attempts, even at low effort — disable the heaviest bar criteria or narrow the request and retry.`,
+          )
+        }
+        await putJson(dataContainer(), unitQcStatePath(msg.jobId, unitIndex), unitState)
+        await mutateJob(msg.jobId, (r) => pushLog(r, `Unit ${skeleton.id}: QC check cut at the execution deadline (cut ${qcCuts + 1}) — continues${qcCuts === 0 ? ' degraded' : ''} in a fresh execution`))
+        await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'cards', scopeId, unitIndex, payload: { cuts, callSize, qcCuts: qcCuts + 1 } })
+        return
+      }
+      throw e
+    }
+    await putJson(dataContainer(), unitQcStatePath(msg.jobId, unitIndex), unitState)
+    if (!unitState.done) {
+      await mutateJob(msg.jobId, (r) => pushLog(r, `Unit ${skeleton.id}: QC loop paused (time budget) — continues in a fresh execution`))
+      await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'cards', scopeId, unitIndex, payload: { cuts, callSize, qcCuts } })
+      return
+    }
+
+    const qcResults: QcLessonResult[] = skeleton.lessons.map((sk) => lessonResultOf(sk.id, unitState.lessons[sk.id]))
+    await putJson(dataContainer(), unitQcResultPath(msg.jobId, unitIndex), qcResults)
+    // Stats accumulate EXACTLY once per unit — an if-absent marker guards
+    // against redelivered messages re-running the QC tail.
+    const statsGuard = await putJsonIfAbsent(dataContainer(), `jobs/${msg.jobId}/unit-${unitIndex}-stats-done.json`, { at: today() })
+    if (statsGuard) {
+      const states = skeleton.lessons.map((sk) => unitState.lessons[sk.id])
+      await accumulateStats(states, states.filter((s) => s.settled === 'red-flag'))
+    }
+    const passedFirst = qcResults.filter((r) => r.status === 'passed' && r.attempts === 1).length
+    const redFlags = qcResults.filter((r) => r.status === 'red-flag').length
+    await mutateJob(msg.jobId, (r) =>
+      pushLog(
+        r,
+        `Unit ${skeleton.id} QC: ${passedFirst}/${qcResults.length} passed first check, ${qcResults.filter((x) => x.attempts > 1 && x.status === 'passed').length} revised to pass${redFlags > 0 ? `, ${redFlags} red-flagged (best version kept — one hard card never holds the course hostage)` : ''}`,
+      ),
+    )
+
+    unit = { ...draft, lessons: skeleton.lessons.map((sk) => unitState.lessons[sk.id].current) }
     await putJson(dataContainer(), unitPath(msg.jobId, unitIndex), unit)
   }
 
@@ -840,6 +963,63 @@ export async function generateFinalizeStep(msg: JobMessage, ctx: InvocationConte
 
   const scope = await getScope(scopeId)
   const evidenceSet = await getScopeEvidenceSet(scope)
+
+  // ---- The course check (spec Step 5): once all lessons exist, course-level
+  // criteria run; blocking failures send the responsible lessons back through
+  // ONE revision round with the course context as feedback; problems no
+  // lesson can fix become course-level red flags. Checkpointed + resumable.
+  const started = Date.now()
+  const bar = await pinnedBar(msg.jobId)
+  const sourceSets = await getScopeSourceSets(scope)
+  const userDocs = await loadScopeUploadDocs(scope, ctx)
+  const gradesInScope = new Set(
+    plan.units.flatMap((u) => u.lessons.flatMap((l) => l.standardCodes)).map((c) => c.toUpperCase().replace(/[()]/g, '').split('.')[0]),
+  )
+  const checkCtx = buildCheckContext(evidenceSet, gradesInScope)
+  const courseState: QcCourseState =
+    (await getJsonOrUndefined<QcCourseState>(dataContainer(), courseQcStatePath(msg.jobId))) ?? { done: false }
+  const qcCuts = readQcCuts(msg)
+  let courseFindings: QcFindingLite[] = []
+  try {
+    const outcome = await qcCoursePhase({
+      set: evidenceSet,
+      scope,
+      plan,
+      units,
+      bar,
+      checkCtx,
+      state: courseState,
+      signalOf: () => bounded(started),
+      budgetLeft: () => started + CARDS_TIME_BUDGET_MS - Date.now(),
+      sourceSets,
+      userDocs,
+    })
+    courseFindings = outcome.courseFindings
+  } catch (e) {
+    if (isAbort(e)) {
+      if (qcCuts + 1 >= MAX_QC_CUTS) {
+        throw new Error(
+          `The course check could not fit the 10-minute execution window after ${MAX_QC_CUTS} attempts — disable the heaviest course criteria and retry.`,
+        )
+      }
+      await putJson(dataContainer(), courseQcStatePath(msg.jobId), courseState)
+      await mutateJob(msg.jobId, (r) => pushLog(r, `Course check cut at the execution deadline (cut ${qcCuts + 1}) — finalize continues in a fresh execution`))
+      await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'finalize', scopeId, payload: { qcCuts: qcCuts + 1 } })
+      return
+    }
+    throw e
+  }
+  await putJson(dataContainer(), courseQcStatePath(msg.jobId), courseState)
+  if (!courseState.done) {
+    await mutateJob(msg.jobId, (r) => pushLog(r, 'Course check paused (time budget) — finalize continues in a fresh execution'))
+    await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'finalize', scopeId, payload: { qcCuts } })
+    return
+  }
+  if ((courseState.revisedLessonIds ?? []).length > 0) {
+    await mutateJob(msg.jobId, (r) =>
+      pushLog(r, `Course check revised ${courseState.revisedLessonIds!.length} lesson(s) with the course context as feedback`),
+    )
+  }
   // Coherence webs (Atomization Guide Part IV): rendered from the plan's
   // dependency extraction + the finished units, sanitized into DAGs; their
   // structural findings land in the QC report.
@@ -881,41 +1061,44 @@ export async function generateFinalizeStep(msg: JobMessage, ctx: InvocationConte
   // Plain save (not mutateScope): during generation the UI offers no mutations, so no concurrent writers exist.
   await saveScope(scope)
 
+  // ---- The QC Report: assembled from the per-unit loop results + the course
+  // findings, saved automatically for the Quality Control tab. Best-effort —
+  // a report save failure must never fail a finished generation.
+  try {
+    const lessonResults: QcLessonResult[] = []
+    for (let i = 0; i < plan.units.length; i++) {
+      const unitResults = await getJsonOrUndefined<QcLessonResult[]>(dataContainer(), unitQcResultPath(msg.jobId, i))
+      if (unitResults) lessonResults.push(...unitResults)
+    }
+    const prior = await getQcReportOrUndefined(scopeId)
+    const report = assembleReport(
+      scopeId,
+      scope.title,
+      'generation',
+      bar.barVersion,
+      scope.updated,
+      lessonResults,
+      courseFindings,
+      prior?.created,
+      new Map(bar.criteria.map((c) => [c.id, c.title])),
+    )
+    await saveQcReport(report)
+    await mutateJob(msg.jobId, (r) =>
+      pushLog(
+        r,
+        `QC Report saved (bar v${bar.barVersion}): ${report.passedFirstTry}/${report.lessons.length} passed first check, ${report.redFlagCount} red flag(s), ${report.advisoryCount} advisories`,
+      ),
+    )
+  } catch (e) {
+    ctx.warn(`generate/finalize ${msg.jobId}: QC report save failed (scope unaffected): ${String(e)}`)
+  }
+
   await mutateJob(msg.jobId, (r) => {
     r.status = 'complete'
     r.stagesDone = GENERATE_TOTAL_STAGES
     r.stage = 'Complete'
     pushLog(r, `Scope complete: ${units.length} units, ${lessons} lessons, QC ${qc.filter((c) => c.status === 'pass').length}/${qc.length} pass`)
   })
-  // Every generated scope passes the four QC gates (spec: the gates run as
-  // pipeline stages after generation) — best-effort observer: a dispatch
-  // failure must never fail the generation, and the gates are read-only
-  // against the scope they check.
-  const qcJobId = newId('job')
-  let qcJobCreated = false
-  try {
-    await createJob({
-      jobId: qcJobId,
-      kind: 'qc',
-      scopeId,
-      totalStages: 5,
-      stage: 'Queued',
-      detail: `Four-gate QC dispatched for "${scope.title}"`,
-    })
-    qcJobCreated = true
-    await enqueueJob({ jobId: qcJobId, kind: 'qc', step: 'run', scopeId })
-  } catch (e) {
-    ctx.warn(`generate/finalize ${msg.jobId}: QC dispatch failed (scope unaffected): ${String(e)}`)
-    if (qcJobCreated) {
-      // The job record exists but no queue message will ever pick it up —
-      // mark it failed rather than leaving an eternal 'Queued'.
-      await mutateJob(qcJobId, (r) => {
-        r.status = 'failed'
-        r.error = 'Failed to dispatch the QC run'
-        pushLog(r, 'Dispatch failed; run the gates from the Quality Control page')
-      }).catch(() => undefined)
-    }
-  }
   ctx.log(`generate/finalize ${msg.jobId}: scope ${scopeId} complete`)
 }
 

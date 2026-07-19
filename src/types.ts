@@ -816,10 +816,9 @@ export interface VsgRunSummary {
 // api/src/domain/types.ts and api/src/data/eval-rubric.ts.
 // ---------------------------------------------------------------------------
 
-// ---- Quality Control & Loop Engineering (replaces the rubric evaluations) ----
+// ---- The QC Bar (automatic in-generation QC + reports) ----
 
-export type QcSeverity = 'blocking' | 'major' | 'advisory'
-export type QcFindingSource = 'gate' | 'flag' | 'audit' | 'kickback' | 'classroom' | 'trend' | 'investigation'
+export type QcSeverity = 'blocking' | 'advisory'
 
 export interface QcLocation {
   unitId?: string
@@ -827,67 +826,113 @@ export interface QcLocation {
   field?: string
 }
 
-/** The machine-actionable record of a defect from any source — the unit of work of every loop. */
-export interface QcFinding {
+export interface QcCriterion {
   id: string
-  source: QcFindingSource
-  gate?: 1 | 2 | 3 | 4
-  checkFamily: string
-  ruleTag: string
-  location: QcLocation
-  summary: string
-  evidence: string
+  title: string
+  rule: string
+  level: 'lesson' | 'course'
+  method: 'automatic' | 'ai-judged'
+  autoCheckId?: string
   severity: QcSeverity
-  repairContract: string
+  shownToWriter: boolean
+  enabled: boolean
+  stats: {
+    firstDraftFails: number
+    judgedLessons: number
+    redFlagInvolvements: number
+    lastDeckRun?: { caught: number; missed: number; at: string }
+  }
 }
 
-export interface QcGateResult {
-  gate: 1 | 2 | 3 | 4
-  name: string
-  status: 'pass' | 'findings' | 'skipped'
-  findingCount: number
-  detail: string
+export type QcPlanStep = 'revise' | 'fresh-start'
+
+export interface QcBar {
+  barVersion: number
+  criteria: QcCriterion[]
+  escalationPlan: QcPlanStep[]
+  updated: string
 }
 
-export interface QcCardConfidence {
+export interface QcDeckCard {
+  id: string
+  label: string
+  expectedCriterionIds: string[]
+  lesson: Lesson
+  source: 'built-in' | 'added'
+  added: string
+}
+
+export interface QcDeck {
+  cards: QcDeckCard[]
+  updated: string
+}
+
+export interface QcFindingLite {
+  criterionId: string
+  title: string
+  severity: QcSeverity
+  evidence: string
+  revisionInstruction?: string
+}
+
+export interface QcAttempt {
+  attempt: number
+  kind: 'draft' | 'revise' | 'fresh-start'
+  failedBlocking: string[]
+  note: string
+}
+
+export interface QcRedFlagReport {
+  whyStopped: 'attempts-exhausted' | 'stalled' | 'fresh-start-no-better'
+  neverPassed: string[]
+  fighting?: [string, string]
+  attemptHistory: QcAttempt[]
+  recommendation: string
+}
+
+export interface QcLessonResult {
   lessonId: string
-  score: number
-  band: 'high' | 'medium' | 'low'
-  components: { badgeMix: number; gate2: number; gate3: number; coverageExposure: number }
+  title: string
+  status: 'passed' | 'red-flag'
+  attempts: number
+  advisories: QcFindingLite[]
+  firstDraftFailedIds?: string[]
+  redFlag?: QcRedFlagReport
 }
 
-export interface QcRun {
+export interface QcReport {
   scopeId: string
   scopeTitle: string
+  origin: 'generation' | 'sweep'
   status: 'running' | 'complete' | 'failed'
   error?: string
-  gates: QcGateResult[]
-  findings: QcFinding[]
-  confidences: QcCardConfidence[]
-  verdict: 'clean' | 'advisories' | 'quarantined'
-  quarantinedCards: string[]
-  qcStackVersion: string
-  seededCatchRate: string
+  barVersion: number
   scopeVersion: string
+  lessons: QcLessonResult[]
+  courseFindings: QcFindingLite[]
+  passedFirstTry: number
+  redFlagCount: number
+  advisoryCount: number
+  topFailingCriteria: { criterionId: string; title: string; failCount: number }[]
   created: string
   updated: string
 }
 
-export type QcFlagType = 'rigor' | 'granularity' | 'sequencing' | 'wording' | 'evidence' | 'other'
+export type QcNoteType = 'rigor' | 'granularity' | 'sequencing' | 'wording' | 'evidence' | 'contradiction' | 'other'
 
-export interface QcFlag {
+export interface QcNote {
   id: string
   location: QcLocation
-  type: QcFlagType
+  type: QcNoteType
   note: string
   scopeVersion: string
-  status: 'open' | 'investigating' | 'confirmed' | 'not-confirmed'
+  status: 'open' | 'investigating' | 'confirmed' | 'defended'
   raised: string
   resolution?: {
     investigationId: string
-    verdict: 'confirmed' | 'not-confirmed'
-    severity?: QcSeverity
+    verdict: 'confirmed' | 'defended'
     rationale: string
+    rootCause?: 'card' | 'bar' | 'specifications'
   }
 }
 
@@ -897,39 +942,81 @@ export interface QcRepairDecision {
   editedText?: string
   reason: string
   decided: string
+  appliedVersion?: number
+}
+
+export interface QcProposedRepair {
+  lessonId: string
+  field: string
+  currentExcerpt: string
+  proposedText: string
+  decisionRecord: string
+}
+
+export interface QcProposedCriterion {
+  title: string
+  rule: string
+  level: 'lesson' | 'course'
+  severity: QcSeverity
+  offendingLessonId: string
+  decision?: { decision: 'accept' | 'reject'; reason: string; decided: string }
+}
+
+export interface QcContradictionReport {
+  passageA: { quote: string; citation: string }
+  passageB: { quote: string; citation: string }
+  readingTaken: string
+  affectedLessons: string[]
 }
 
 export interface QcInvestigation {
   id: string
   scopeId: string
-  flagIds: string[]
+  noteIds: string[]
   status: 'running' | 'complete' | 'failed'
   error?: string
   verdicts: {
-    flagId: string
-    verdict: 'confirmed' | 'not-confirmed'
-    severity?: QcSeverity
-    rootCause?: string
+    noteId: string
+    verdict: 'confirmed' | 'defended'
+    rootCause?: 'card' | 'bar' | 'specifications'
     rationale: string
   }[]
   patternSweep: { defectClass: string; additionalCards: { lessonId: string; field: string; evidence: string }[] }[]
-  gateGaps: { defectClass: string; gate: 1 | 2 | 3 | 4; whyMissed: string }[]
-  proposedRepairs: { lessonId: string; field: string; currentExcerpt: string; proposedText: string; decisionRecord: string }[]
+  proposedRepairs: QcProposedRepair[]
   repairDecisions: QcRepairDecision[]
+  proposedCriteria: QcProposedCriterion[]
+  contradictionReports: QcContradictionReport[]
   created: string
   updated: string
 }
 
-export interface QcRunSummary {
+export interface QcReportSummary {
   scopeId: string
   scopeTitle: string
-  status: QcRun['status']
-  verdict: QcRun['verdict']
-  findingCount: number
-  blockingCount: number
-  quarantinedCount: number
-  openFlagCount: number
+  origin: QcReport['origin']
+  status: QcReport['status']
+  barVersion: number
+  lessonCount: number
+  passedFirstTry: number
+  redFlagCount: number
+  advisoryCount: number
+  openNoteCount: number
   updated: string
+}
+
+export interface QcDryRunResult {
+  criterionId: string
+  method: 'automatic' | 'ai-judged'
+  pass: boolean
+  workShown: string
+  evidence: string
+  revisionInstruction: string
+}
+
+export interface QcDeckRunResult {
+  perCard: { deckCardId: string; label: string; expected: string[]; caughtIds: string[]; missedIds: string[]; extraIds: string[] }[]
+  caught: number
+  missed: number
 }
 
 /** GET /vsg/courses row — the LSG registry shaped for the course picker. */

@@ -683,79 +683,69 @@ doctrine versions.
   else `complete` if any script was written, else `failed`. `markVsgFailed` (worker terminal
   failure) fails only still-open lessons — finished scripts and reconciliation flags survive.
 
-## Quality Control & Loop Engineering (kind `qc`, steps `run` / `investigate`)
+## Quality Control — the QC Bar (in-generation; kind `qc` steps `sweep` / `investigate`)
 
-The four-gate QC stack (spec "Quality Control and Loop Engineering", adopted 2026-07-16 —
-completely replaces the 29-column rubric evaluations). One signal model: every quality event is a
-`QcFinding` (source, gate, checkFamily, ruleTag, location, summary, evidence, severity
-blocking|major|advisory, repairContract). **Everything is read-only against the scope** —
-findings, confidences, and repair proposals live on the QC surfaces; existing scopes keep the
-versions they were generated under.
+The QC Bar (spec "Scope Generator: Quality Control and Loop Engineering", adopted 2026-07-17 —
+supersedes the four-gate on-demand system) is the USER-EDITABLE rubric every card and course must
+satisfy. `qc/bar.json` (ETag mutate, `barVersion` bumps on every criteria/plan save; stats
+accumulate WITHOUT bumping) holds ~28 factory criteria (`data/qc-defaults.ts`) each with level
+(lesson|course), method (automatic — bound to a mechanical check in `pipeline/qc-bar.ts` by
+`autoCheckId` — or ai-judged), severity (blocking|advisory), shownToWriter, enabled, and a track
+record (first-draft fail rate, red-flag involvements, last deck run). `qc/deck.json` is the test
+deck of deliberately broken cards (6 built-ins; confirmed investigation cards join it).
 
-**`qc/run`** — after every generation (best-effort finalize dispatch; a failure never fails the
-generation) and on demand — one at a time per scope (409 while a QC job is queued/running).
-Gate 1 Structural Validation is deterministic code over the WHOLE scope (`qc-gates.ts
-gate1Findings`): schema completeness (era-aware PER LESSON — pre-contract lessons get advisories,
-not blockers), coverage census (COURSE-mode requests only — a standard/topic scope's universe is
-its request; exact-or-deeper citation covers a leaf, ancestor-only citation is advisory, no
-citation is blocking; every lesson must trace to a standard in all modes), graph integrity
-(taught-in-course prerequisite order, acyclicity), referential integrity (U#.L# forwards resolve;
-itemRefs resolve in the evidence set), boundary algebra's mechanical slice (sibling Included-line
-disjointness; ceiling-inside-boundary and excluded-included-once run adversarially at Gate 3),
-and format & phrasing (title filler, "Students are able to" + no percentages P8,
-generated-exemplar labels). Gate 2 Evidence Verification: string checks over every card
-(citation resolution against the tree, TEKS-paren/HS-hyphen tolerant; quote fidelity for
-QUOTE-WRAPPED excerpts only — commentary excerpts are not verbatim claims — against tree
-label/wording/limits and the full doctrine corpus (BrainLift + curated chapters + the
-cover-to-cover textbook); an unlocatable standards/doctrine/engine quote is BLOCKING "treated as
-fabricated", an unlocatable item quote is MAJOR (item stems are stand-ins for screenshots);
-engine quotes are version-locked — checked only when the scope generated under the current
-engine) plus one independent-AI call (claim support, inference honesty, precedence audit) over a
-stratified ~10-lesson sample with a grade-filtered standards digest (wording+limits at 400
-chars). Gate 3 Adversarial Review: two AI calls over the sample — structure audits (split
-challenge, atom-triple, sequence probe) and communication audits (faultless-communication probe,
-boundary probe, boundary algebra, solvability audit over the sampled cards' exemplars AND their
-referenced items' actual content, doctrine rubric P1–P12). Gate 2/3 reviewers re-derive from
-evidence + engine + doctrine and never see generator reasoning as authority. Gate 4 composes
-per-card Confidence Scores (badge mix, gate 2/3 exposure, acknowledged-coverage-gap exposure by
-whole-word grade.domain match; the self-consistency term is honestly unmeasured in stack v1.0).
-AI calls checkpoint to `jobs/<jobId>/qc-gate2.json` / `qc-gate3-*.json` + re-enqueue under the
-time budget; the scope version is checkpointed on the first execution and a scope change between
-executions drops the AI checkpoints (no mixed-version reports). Verdict: any blocking finding →
-`quarantined` (cards listed); else findings → `advisories`; else `clean`. The report stamps
-`QC_STACK_VERSION` and the seeded-defect catch rate (suite v0: "not yet measured"). Terminal
-worker failure settles the QC surfaces only (run → `failed`; investigation → `failed` + flags
-back to `open`) and NEVER touches the scope document (`markQcFailed` — kind `qc` early-returns
-before the scope-settlement fallthrough).
+**In-generation loop** (generate.ts): the run pins a bar snapshot (`jobs/<jobId>/qc-bar.json`) so
+a mid-run bar edit never splits the report. Step 1 — cards draft WITH the blocking shown-to-writer
+criteria in the prompt (`cardsPrompt` qc.writerBar). Step 2 — after each unit drafts
+(`unit-<i>-draft.json`), `runUnitLoop` checks every card: mechanical criteria in code + the
+independent judge (`qcJudgePrompt`, cold read, show-work-first, batches of ≤6, one result per
+lesson×criterion; an omitted blocking result fails loud). Step 3 — lessons with blocking failures
+run the escalation plan (default revise ×2 → fresh-start → revise ×2; editable): revisions go
+back through `cardsPrompt` with the judge's findings as margin comments (fix exactly what failed,
+carry the rest); fresh starts redraft from the skeleton warned of the failure TYPES with old text
+withheld. Stop rules: two no-progress checks in a row, a fresh start no better than the best
+attempt, or plan exhausted → Step 4: red flag, best version kept, generation moves on. Loop state
+checkpoints per unit (`unit-<i>-qcstate.json`) and re-enqueues under the cards time budget; the
+final post-QC unit becomes the `unit-<i>.json` checkpoint (+ `unit-<i>-qcresult.json`). Step 5 —
+finalize runs the course check (`qcCoursePhase`, checkpointed `qc-course-state.json`): mechanical
+course criteria + one course judge call; blocking failures name responsible lessons → ONE
+revision round with the course context as feedback → re-judge; problems no lesson can fix become
+course-level red flags. The QC Report (`qc/reports/<scopeId>.json`, partition `qcreport`)
+assembles automatically: per-lesson status (passed attempt N / red flag + the Red Flag Report:
+whyStopped, never-passed criteria, fighting-pair detection, attempt history, recommendation),
+course findings, passed-first-try, top failing criteria. Criterion stats accumulate best-effort.
 
-**Flags + `qc/investigate`** — the per-scope Flag Ledger persists across runs; flags
-(rigor|granularity|sequencing|wording|evidence|other + note + location + scopeVersion) cost
-nothing to raise. An investigation runs the six steps in one AI call: re-derivation, verdict per
-flag (confirmed w/ severity + root cause, or returned with a cited defense — a flag is a
-question, not an order), pattern sweep across the full skeleton, gate-gap analysis, and proposed
-repairs as DIFFS. Accept/edit/reject on a repair records telemetry with a required reason —
-**nothing is ever applied to the scope automatically** (apply by hand via Lesson Scope Edits,
-then re-run the gates). Dispatch failures roll flags back to `open`.
+**Sweeps** (`qc/sweep`): apply the CURRENT bar to an existing scope — same check-revise-flag loop
+per unit (revisions write against a synthetic skeleton derived from the live unit; identity and
+itemRefs fixed); changed lessons save via `mutateScope` as a NEW numbered version with a history
+entry (the old version is kept); report origin `sweep`. Existing scopes are never silently
+rewritten — a sweep is an explicit act.
 
-- **Storage**: `qc/runs/<scopeId>.json` (current report, re-runs overwrite) · `qc/flags/<scopeId>.json`
-  · `qc/investigations/<scopeId>.json`; index partition `qcrun`. Scope DELETE cascades all three.
-- **Routes** (`http-qc.ts`): `GET qc` (summaries + open-flag counts) · `GET/DELETE qc/{scopeId}`
-  (report+flags+investigations / permanent deletion, mid-flight runs discard at their next
-  checkpoint) · `POST qc/{scopeId}/run` (202, completed scopes only) · `POST qc/{scopeId}/flags` ·
-  `DELETE qc/{scopeId}/flags/{flagId}` (open flags only — investigated flags are the audit trail)
-  · `POST qc/{scopeId}/investigate` (`{flagIds?}`, default all open) ·
-  `PUT qc/{scopeId}/investigations/{invId}/repairs/{index}` (`{decision, editedText?, reason}`).
-- Worker: QC is an observer — a terminal `qc` job failure records only on the job row, never on
-  the scope. Legacy queued `eval/run` messages settle as cancelled ("superseded").
-- Deferred to later stack versions (report to Doreen 2026-07-16): the regeneration loop (would
-  edit scopes), the seeded-defect suite + golden scopes, Gate 4 self-consistency re-runs, the
-  Review Queue and full Trends dashboard surfaces (the page carries a trends strip; autonomy is
-  truthfully L0), classroom PerformanceReport intake into investigations, an actual PUBLISH gate
-  consuming `quarantinedCards` (quarantine is a report state + banner today — the tool has no
-  scope-publish control to disable), and the lesson-card surface extensions (findings rendered
-  beneath the fields they govern, per-field flag controls on the cards, rail dots, the Card
-  Confidence Score beside the evidence badge — flags are raised from the Quality Control page
-  for now).
+**Notes → investigations** (`qc/investigate`): notes (rigor|granularity|sequencing|wording|
+evidence|contradiction|other) live in `qc/notes/<scopeId>.json` and cost nothing. The
+investigation re-examines each note (show-your-work; a note is a question — the tool argues
+back): confirmed problems route to their real cause — **card** (repair diff; accepting APPLIES it
+via `mutateScope` as a new numbered version and stamps `appliedVersion`), **bar** (drafted
+criterion; accepting appends it to the bar AND adds the offending card to the deck), or
+**specifications** (contradiction report quoting both passages — the human rules; nothing is
+proposed). Pattern sweep finds unnoted cards with the same defect. Omitted verdicts roll notes
+back to open; dispatch failures roll back; terminal worker failure settles report/investigation
+and reopens notes (`markQcFailed`) and NEVER touches the scope.
+
+- **Routes** (`http-qc.ts`): `GET qc` (report summaries) · `GET/DELETE qc/{scopeId}` ·
+  `POST qc/{scopeId}/sweep` (409 while a qc job is in flight) · `POST/DELETE
+  qc/{scopeId}/notes(/{noteId})` (open notes only) · `POST qc/{scopeId}/investigate` ·
+  `PUT qc/{scopeId}/investigations/{invId}/repairs/{index}` (accept|edit applies; reject records)
+  · `PUT .../criteria/{index}` (accept adds to bar + deck) · `GET/PUT qc/bar` (criteria +
+  escalation plan; PUT bumps barVersion; stats survive edits) · `POST qc/bar/dry-run` (judge one
+  criterion against one real lesson, synchronous, low effort) · `POST qc/bar/test` (bar vs deck →
+  caught/missed; lastDeckRun stats) · `POST/DELETE qc/bar/deck(/{cardId})` (added cards only).
+  `qc/bar` is reserved against the `{scopeId}` route.
+- Legacy queued `qc/run` (four-gate) and `eval/run` messages settle as superseded/cancelled.
+- Deferred (2026-07-17): per-lesson QC chips on the ScopeView cards and note controls on card
+  fields (notes are raised from the report detail); rerun/LSG-edit outputs do not run the loop
+  (sweep covers them); criterion-level autonomy analytics beyond the track record.
+
 
 ## Guardrails (synchronous, data-driven)
 
