@@ -177,13 +177,16 @@ export interface CardField {
 }
 
 /**
- * The five lesson types of the Atomization Guide ("Types of Lessons"):
- * preskill (prerequisite knowledge) · new-learning (a new behavior) ·
- * representation (a new way of expressing already-learned knowledge) ·
- * bridge (choosing between previously mastered atoms) · application-tier
- * (transfer of mastered knowledge into authentic problems).
+ * The five Kinds of Lessons of the Atomization Guide (Engine v4.3) — the
+ * lesson's instructional purpose: stein-exact (the exact lesson described in
+ * Stein's book) · new-learning (one new behavior, the atom triple) ·
+ * test-rigor (inserted to explicitly provide state testing rigor) · bridge
+ * (inserted where a split pair is confusable — the discrimination itself) ·
+ * application-tier (a mastered routine in a new demand band). 'preskill' and
+ * 'representation' are LEGACY values found only on scopes generated under
+ * Engine ≤ v4.2.
  */
-export type LessonType = 'preskill' | 'new-learning' | 'representation' | 'bridge' | 'application-tier'
+export type LessonType = 'stein-exact' | 'new-learning' | 'test-rigor' | 'bridge' | 'application-tier' | 'preskill' | 'representation'
 
 export interface GeneratedExemplar {
   stem: string
@@ -262,7 +265,7 @@ export interface WebNode {
   id: string
   label: string
   kind: WebNodeKind
-  /** Lesson type (atom webs) — one of the five LessonType values. */
+  /** Lesson type (atom webs) — one of the LessonType values. */
   type?: string
   /** One-sentence objective (atom-web lesson nodes). */
   objective?: string
@@ -667,8 +670,10 @@ export interface VsgInteraction {
   options: string[]
   answer: string
   correctFeedback: string
+  /** The only authored retry (INT 18, rulebook v2.4) — a second wrong answer auto-shows the correct step. */
   try1Hint: string
-  try2ShowAndMoveOn: string
+  /** Legacy try-2 line — only on scripts generated before rulebook v2.4. */
+  try2ShowAndMoveOn?: string
   resumeState: string
   modelAccess: boolean
   modelAccessNote: string

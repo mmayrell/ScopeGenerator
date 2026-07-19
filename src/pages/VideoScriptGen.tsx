@@ -1103,9 +1103,12 @@ function InteractionBlock({ label, interaction }: { label: string; interaction: 
         <p>
           <span className="font-semibold">Try 1:</span> {interaction.try1Hint}
         </p>
-        <p>
-          <span className="font-semibold">Try 2:</span> {interaction.try2ShowAndMoveOn}
-        </p>
+        {/* Try 2 only exists on scripts generated before rulebook v2.4 (single-retry ladder). */}
+        {interaction.try2ShowAndMoveOn && (
+          <p>
+            <span className="font-semibold">Try 2:</span> {interaction.try2ShowAndMoveOn}
+          </p>
+        )}
         <p>
           <span className="font-semibold">Resume:</span> {interaction.resumeState}
         </p>

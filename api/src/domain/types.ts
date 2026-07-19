@@ -184,13 +184,19 @@ export interface CardField {
 }
 
 /**
- * The five lesson types of the Atomization Guide ("Types of Lessons"):
- * preskill (prerequisite knowledge) · new-learning (a new behavior) ·
- * representation (a new way of expressing already-learned knowledge) ·
- * bridge (choosing between previously mastered atoms) · application-tier
- * (transfer of mastered knowledge into authentic problems).
+ * The five Kinds of Lessons of the Atomization Guide (Engine v4.3) — the
+ * lesson's instructional purpose, never its importance/duration/position:
+ * stein-exact (the exact lesson described in Stein's book — a direct
+ * instructional match) · new-learning (one new behavior, defined by the atom
+ * triple) · test-rigor (inserted to explicitly provide state testing rigor) ·
+ * bridge (inserted where a split pair is confusable — the discrimination
+ * itself, mixed look-alike practice, no new rules) · application-tier (an
+ * already-mastered routine in a new demand band; boundary/ceiling inherit
+ * from the parent atom). 'preskill' and 'representation' are LEGACY values —
+ * found only on scopes generated under Engine ≤ v4.2, never emitted by new
+ * generations (those atoms now type stein-exact or new-learning).
  */
-export type LessonType = 'preskill' | 'new-learning' | 'representation' | 'bridge' | 'application-tier'
+export type LessonType = 'stein-exact' | 'new-learning' | 'test-rigor' | 'bridge' | 'application-tier' | 'preskill' | 'representation'
 
 export interface GeneratedExemplar {
   stem: string
@@ -276,7 +282,7 @@ export interface WebNode {
   id: string
   label: string
   kind: WebNodeKind
-  /** Lesson type (atom webs) — one of the five LessonType values. */
+  /** Lesson type (atom webs) — one of the LessonType values. */
   type?: string
   /** One-sentence objective (atom-web lesson nodes). */
   objective?: string
@@ -748,10 +754,10 @@ export interface VsgInteraction {
   /** Accepted answer: the correct option letter, the numeric answer, or the target/move description. */
   answer: string
   correctFeedback: string
-  /** Try-1 pinpoint hint. */
+  /** Try-1 pinpoint hint — the ONLY authored retry (INT 18, rulebook v2.4): a second wrong answer auto-shows the correct step. */
   try1Hint: string
-  /** Try-2: show the step and move on. */
-  try2ShowAndMoveOn: string
+  /** Legacy try-2 show-and-move-on line — only on scripts generated before rulebook v2.4. */
+  try2ShowAndMoveOn?: string
   /** The exact frame state on resume. */
   resumeState: string
   /** Whether "Replay last step / Show model" is offered (false only for lesson-independent checks). */
@@ -832,7 +838,12 @@ export interface VsgTransferTest {
   note: string
 }
 
-/** A flagged input contradiction (playbook §2.4) — resolved by the user, never silently. */
+/**
+ * A flagged input contradiction (playbook §13.4). Since rulebook v2.5 these
+ * auto-resolve in-run with the authority-stack default (Stein strictly
+ * supreme; resolvedBy 'default') — user reconciliation ('custom') survives
+ * only on legacy runs. Always recorded on the script header, never silent.
+ */
 export interface VsgConflict {
   id: string
   kind: 'card-internal' | 'card-vs-doctrine' | 'card-vs-playbook' | 'steering'

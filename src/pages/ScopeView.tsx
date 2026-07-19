@@ -9,11 +9,14 @@ import { breakNumberedList, Btn, capsStandardCodes, citationSourceLabel, CiteChi
 import DependencyMap from './DependencyMap'
 
 const typeTone: Record<Lesson['type'], { label: string; tone: 'accent' | 'cite' | 'night' | 'green' | 'amber' }> = {
-  preskill: { label: 'preskill', tone: 'amber' },
+  'stein-exact': { label: 'stein-exact atom', tone: 'green' },
   'new-learning': { label: 'new-learning atom', tone: 'accent' },
-  representation: { label: 'representation', tone: 'green' },
+  'test-rigor': { label: 'test-rigor atom', tone: 'amber' },
   bridge: { label: 'bridge', tone: 'night' },
   'application-tier': { label: 'application tier', tone: 'cite' },
+  // Legacy types — scopes generated under Engine ≤ v4.2 only.
+  preskill: { label: 'preskill', tone: 'amber' },
+  representation: { label: 'representation', tone: 'green' },
 }
 
 const decisionLabel: Record<DecisionEntry['type'], string> = {
@@ -647,8 +650,10 @@ export default function ScopeView() {
                     <Mono className={`shrink-0 text-[10.5px] leading-snug ${lesson.id === l.id ? 'text-accent-deep' : 'text-ink-3'}`}>L{courseLessonNumber.get(l.id)}</Mono>
                     <span className="min-w-0 flex-1 text-[12.5px] leading-snug font-medium">{l.title}</span>
                     <span className="mt-1 ml-auto flex shrink-0 items-center gap-1">
-                      {l.type === 'preskill' && <span className="h-1.5 w-1.5 rounded-full border border-amber-ink" title="preskill" />}
-                      {l.type === 'representation' && <span className="h-1.5 w-1.5 rounded-full bg-verdant" title="representation" />}
+                      {l.type === 'stein-exact' && <span className="h-1.5 w-1.5 rounded-full bg-verdant" title="stein-exact" />}
+                      {l.type === 'test-rigor' && <span className="h-1.5 w-1.5 rounded-full border border-amber-ink" title="test rigor" />}
+                      {l.type === 'preskill' && <span className="h-1.5 w-1.5 rounded-full border border-amber-ink" title="preskill (legacy type)" />}
+                      {l.type === 'representation' && <span className="h-1.5 w-1.5 rounded-full bg-verdant" title="representation (legacy type)" />}
                       {l.type === 'bridge' && <span className="h-1.5 w-1.5 rounded-full bg-night" title="bridge" />}
                       {l.type === 'application-tier' && <span className="h-1.5 w-1.5 rounded-full bg-cite" title="application tier" />}
                       {l.evidenceStatus !== 'observed' && <span className="h-1.5 w-1.5 rounded-full bg-amber-ink" title="inferred evidence" />}

@@ -1,7 +1,9 @@
 // Word export for a video script — the production contract on paper: every
 // line channel-tagged and channel-colored (playbook §3), interactions as
-// structured blocks with their full feedback ladders. Loaded lazily so the
-// docx library stays out of the main bundle.
+// structured blocks with their feedback ladders. Timestamps, durations, NOTE
+// lines (timing marks and production metadata), review flags, and coverage
+// notes are viewer-only — the downloaded doc carries none of them. Loaded
+// lazily so the docx library stays out of the main bundle.
 import { Document, HeadingLevel, Packer, Paragraph, ShadingType, TextRun } from 'docx'
 import type { VideoScript, VsgChannel, VsgInteraction } from '../types'
 
@@ -91,7 +93,6 @@ function interactionParas(interaction: VsgInteraction): Paragraph[] {
     para(`Answer: ${interaction.answer}`, { color: INK, indent: 720 }),
     para(`Correct: ${interaction.correctFeedback}`, { color: INK2, indent: 720 }),
     para(`Try 1: ${interaction.try1Hint}`, { color: INK2, indent: 720 }),
-    para(`Try 2: ${interaction.try2ShowAndMoveOn}`, { color: INK2, indent: 720 }),
     para(`Resume: ${interaction.resumeState}`, { color: INK2, indent: 720 }),
     para(`Show model: ${interaction.modelAccess ? 'available' : 'not offered'} — ${interaction.modelAccessNote}`, {
       color: INK2,
@@ -112,16 +113,15 @@ function scriptChildren(script: VideoScript, pageBreak = false): Paragraph[] {
       spacing: { after: 80 },
       children: [
         new TextRun({
-          text: xmlSafe(`Video Script — ${script.lessonTitle}${script.durationEstimate ? ` (${script.durationEstimate})` : ''}`),
+          text: xmlSafe(`Video Script — ${script.lessonTitle}`),
           bold: true,
           color: ACCENT,
         }),
       ],
     }),
-    para(
-      `${script.unitName} · ${script.standardId} · grade band ${script.gradeBand} · ${script.durationEstimate} · ${script.interactionCount} interactions`,
-      { color: INK2 },
-    ),
+    para(`${script.unitName} · ${script.standardId} · grade band ${script.gradeBand} · ${script.interactionCount} interactions`, {
+      color: INK2,
+    }),
     para(`${script.playbookVersion} · ${script.doctrineVersion}${script.langGuideVersion ? ` · ${script.langGuideVersion}` : ''} · script v${script.version} · generated ${script.created.slice(0, 10)}`, {
       color: INK2,
       size: 18,
@@ -172,6 +172,9 @@ function scriptChildren(script: VideoScript, pageBreak = false): Paragraph[] {
     // no slide numbers and render exactly as before).
     let lastSlide = ''
     for (const line of seg.lines) {
+      // NOTE lines are production metadata (timing marks, choreography beats,
+      // rule citations) — viewer-only, never in the downloaded doc.
+      if (line.channel === 'NOTE') continue
       if (line.slide && line.slide !== lastSlide) {
         const sl = slideOf.get(line.slide)
         if (sl) {
@@ -223,7 +226,7 @@ export async function buildAllScriptsDocxBlob(courseName: string, scripts: Video
     para(`${scripts.length} script${scripts.length === 1 ? '' : 's'} · exported ${new Date().toISOString().slice(0, 10)}`, {
       color: INK2,
     }),
-    ...scripts.map((s, i) => para(`${i + 1}. ${s.lessonTitle} (${s.unitName} · ${s.durationEstimate || '—'})`, { color: INK, size: 20 })),
+    ...scripts.map((s, i) => para(`${i + 1}. ${s.lessonTitle} (${s.unitName})`, { color: INK, size: 20 })),
   ]
   for (const s of scripts) children.push(...scriptChildren(s, true))
   return toDoc(children)

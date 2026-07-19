@@ -71,9 +71,12 @@ blob; rotating the storage account key revokes them all.
   2. `Proposal.status`: `'drafting' | 'draft' | 'accepted' | 'abandoned'`
   3. `Proposal` gains optional `working?: boolean` (true while Claude is drafting/iterating)
   4. `Scope` gains optional `error?: string` (populated when status === 'failed')
-- `Lesson.type` is the guide's five-value enum:
-  `'preskill' | 'new-learning' | 'representation' | 'bridge' | 'application-tier'` (Engine v4.0;
-  pre-v4.0 scopes only ever carry the last three values).
+- `Lesson.type` is the guide's Kinds of Lessons enum (Engine v4.3):
+  `'stein-exact' | 'new-learning' | 'test-rigor' | 'bridge' | 'application-tier'` — the lesson's
+  instructional purpose, never its importance/duration/position. The TS union additionally
+  carries `'preskill' | 'representation'` as **legacy values**: scopes generated under
+  Engine ≤ v4.2 still store them (the schema enum for new generations does not offer them —
+  those atoms now type `stein-exact` when Stein directly treats them, otherwise `new-learning`).
 - `Scope` carries optional `coherence?: CoherenceWeb[]` — the three-tier dependency maps
   (one `level: 'atom'` web per unit, one `'unit'` web, one `'grade'` web), built code-side at
   finalize from the plan checkpoint. Absent on scopes generated before Engine v4.0; the frontend
@@ -239,6 +242,34 @@ own lessons; overlapping standards merge into one lesson chain whose assessment 
 the UNION of the frameworks' demands (widenings logged with both standards cited); P1 runs against
 the union (in-boundary if ANY selected framework includes it); coverage requires every standard of
 every selected set to have a covering lesson. Single-set scopes are unchanged ([] source sets).
+
+**The Stein Direct-Match doctrine (SDM, house rule adopted 2026-07-18, `STEIN_MATCH` in
+`services/prompts.ts`)** binds every scope-generation stage (planning, cards, reruns) and rides
+the QC gate system prompt: when a lesson/skill has a DIRECT instructional match in Stein (a
+teaching format, an Instructional Sequence and Assessment Chart row, or a chapter treatment of
+exactly that skill), Stein controls that lesson's scope, order, grain, formats, examples, and
+progression, subject only to the standard's P1 boundary veto. Distinct formats never collapse
+(one format = one atom; SDM itself is the split authority); a Stein direction to defer/introduce
+later/return after an interval is an AUTOMATIC split signal outranking the Don't-Split rules;
+each card field aligns to the matched format's structure/conditions/language/task format cited
+to the printed page; every matched lesson carries an exemplar item instantiating Stein's task
+format so the alignment is inspectable; a released item demanding more than the matched lesson's
+Stein endpoint gets a separate subsequent/bridge lesson, never a stretched card. Where no direct
+match exists, the other evidence and atomization principles govern unchanged. Decision records
+cite rule tag "SDM".
+
+**The Kinds of Lessons taxonomy (Engine v4.3, adopted 2026-07-18)** retyped the lesson enum:
+every lesson is `stein-exact` (the exact lesson is described in Stein's book — every SDM direct
+match types this), `new-learning` (one new behavior, defined by the atom triple; absorbs the
+retired preskill/representation types — those atoms still exist via A1 discovery, typed by
+purpose), `test-rigor` (inserted to explicitly provide state testing rigor, including the
+never-stretch scaffold lessons from a Stein endpoint to a released item's demand), `bridge`
+(the discrimination itself over a confusable split pair — mixed look-alike practice, no new
+rules), or `application-tier` (a mastered routine in a new demand band; boundary/ceiling
+inherit from the parent atom). The kind records instructional purpose, never
+importance/duration/position. The Coordination Rule extends to test-rigor lessons; QC's
+single-strategy / doctrine-grounding / example-progression checks treat stein-exact as
+routine-teaching alongside new-learning.
 
 Mirrors spec §6 pragmatically, checkpointed for the 10-minute consumption timeout
 (`host.json`: `functionTimeout: "00:10:00"`):
@@ -559,12 +590,15 @@ doctrine versions.
   resumes at the still-open lessons. Same deadline machinery as the other pipelines (8.5-minute
   in-process abort, `payload.cuts`+`cutLesson` per-lesson escalation, 4.5-minute launch budget
   with same-message re-enqueue).
-- **The generator runs under RULEBOOK v2.3 (Experiment 7.14, house amendments)**
+- **The generator runs under RULEBOOK v2.4 (Experiment 7.14, house amendments)**
   (`data/video-playbook.ts` — the "NO HITL DI Video Script Generator v2 (Experiment)" BrainLift
   embedded verbatim, adopted 2026-07-14, Access section stripped; house amendments 2026-07-17:
   the wrap concludes with a concise one-line summary of the strategy/rule/key idea and never
-  bridges to the mastery quiz, and NEW LANG 14 — no em dashes in student-facing text, enforced
-  as a mechanical hard fail in pipeline QA): authority stack A1 Stein → A2 card → A3 registries → A4
+  bridges to the mastery quiz; NEW LANG 14 — no em dashes in student-facing text, enforced
+  as a mechanical hard fail in pipeline QA; and the interaction ladder is single-retry — the
+  try-1 hint is the only authored retry, a second wrong answer auto-shows the correct step
+  (INT 18), `try2ShowAndMoveOn` dropped from the wire schema and optional on stored scripts
+  for pre-v2.4 legacy): authority stack A1 Stein → A2 card → A3 registries → A4
   Mayer → A5 MathEd/Psych; numbered registries with STABLE rule IDs (SEQ/TIM/INT/LANG/VIS/GRADE/
   DEV) cited in NOTE lines, conflicts, and QA findings; the Transfer Test (SEQ 09) replaces the
   fixed 3:00 cap — length is an output (typical 2–5 min by grade band; > 6:00 = TIM 02 granularity
@@ -610,12 +644,15 @@ doctrine versions.
   (`appendixAFor`; Appendix A covers K–5 — empty for middle grades, where the §19 chapter table
   routes). When no title matches, the family's nearest formats ship flagged `nearestOnly` —
   rhythm and cadence only (SEQ 05).
-- **Conflict handling — flag → propose → reconcile (rulebook §13.4)**: the generation reply
-  carries `conflicts[]`; non-empty (after dropping any that match an already-recorded resolution)
-  → the lesson pauses `needs-reconciliation` with NO script — generation never silently resolves
-  a contradiction. Each conflict names both sides with rule IDs, a proposed default from the
-  authority stack, and a rationale; resolutions persist per (lesson, conflict), ride the
-  regeneration prompt as settled, and are recorded in the script header (`conflictsResolved`).
+- **Conflict handling — flag → propose → AUTO-RESOLVE (rulebook §13.4, v2.5)**: the generation
+  reply carries `conflicts[]` as RECORDS resolved in-reply with the authority-stack default —
+  Stein (the DI book) strictly supreme (card-vs-doctrine resolves to Stein's method), and the
+  top-priority rule that a DI-book deferral of a topic resolves as a coverage-note deferral plus
+  a granularity/split signal in `qa.flags` — alongside the FULL script; generation never pauses
+  and never asks. The pipeline accepts each fresh record as settled (`resolution` = proposal,
+  `resolvedBy` 'default'), persists it per (lesson, conflict) so regenerations pre-fill it, and
+  records it in the script header (`conflictsResolved`). `needs-reconciliation` and the
+  reconcile endpoint/UI survive for legacy runs only.
   DEV 01 (division read-aloud in symbol order, LANG 10) is settled house style, never flagged.
 - **Script QA (rulebook §17, findings cite rule IDs)**: the model self-QCs, then code re-checks —
   cadence gap > 60s hard (TIM 04), ≥ 3 interactions (TIM 05), skeleton order (opening first,
@@ -759,7 +796,8 @@ proceeds and logs (RerunEvent detail + QC flag), per spec §8.
   numbers are mandatory in every doctrine locator** (read from the nearest `[p.N]` marker —
   never invented or omitted); the Instructional Sequence and Assessment Chart rows are named
   as atomization evidence; doctrine-consistent generalizations of a book format are flagged as
-  such, never presented as verbatim prescriptions. QC flags new-learning and preskill lessons
+  such, never presented as verbatim prescriptions. QC flags routine-teaching lessons
+  (stein-exact/new-learning, plus legacy preskill)
   whose strategy selection carries no doctrine citation ("Doctrine grounding") and teaching
   lessons whose Instructional Approach lacks the required Example Progression structure
   ("Example Progression presence" — Modeled Set · Delayed Modeling Cases · Vary/Hold Constant,

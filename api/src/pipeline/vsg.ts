@@ -276,14 +276,16 @@ export async function vsgRunStep(msg: JobMessage, ctx: InvocationContext): Promi
       // Corrective pass: hard QA failures block a script (§17: "fails QA
       // automatically and gets regenerated to apply the feedback") — one
       // repair call with the failures named, rule IDs included; a second
-      // failure ships visibly in qa.
-      if (wire.conflicts.length === 0) {
+      // failure ships visibly in qa. Conflicts no longer suppress the pass
+      // (§13.4 v2.5): they ride alongside a full script, so an empty or
+      // broken script is a QA failure to repair, never a legitimate pause.
+      {
         const fails = qaOf(wire, gradeBand).hardFails
         if (fails.length > 0) {
           ctx.warn(`vsg/run ${runId}: ${lesson.lessonId} hard QA fails (${fails.join(' | ')}) — one corrective pass`)
           try {
             const repaired = await callOnce(effort, SCRIPT_MAX_TOKENS, signal, fails.join('; '))
-            if (repaired.conflicts.length > 0 || qaOf(repaired, gradeBand).hardFails.length < fails.length) wire = repaired
+            if (qaOf(repaired, gradeBand).hardFails.length < fails.length) wire = repaired
           } catch {
             /* keep the first script; its qa carries the failures */
           }
@@ -335,43 +337,20 @@ export async function vsgRunStep(msg: JobMessage, ctx: InvocationContext): Promi
     }
     calls++
 
-    if (wire.conflicts.length > 0) {
-      // Flag → propose → reconcile: the lesson pauses; resolutions persist and
-      // pre-fill regeneration. Conflicts matching an already-resolved one are
-      // dropped (the model was told not to re-flag them).
-      const resolvedKeys = new Set(resolutions.map((c) => `${c.kind}|${c.summary.slice(0, 60).toLowerCase()}`))
-      const fresh = wire.conflicts
-        .filter((c) => !resolvedKeys.has(`${c.kind}|${c.summary.slice(0, 60).toLowerCase()}`))
-        .map((c) => ({ ...c, id: newId('conflict') }))
-      await mutateVsgRun(runId, (r) => {
-        const l = r.lessons.find((x) => x.lessonId === lesson.lessonId)
-        if (l) {
-          if (fresh.length > 0) {
-            l.status = 'needs-reconciliation'
-            l.conflicts = [...l.conflicts.filter((c) => c.resolution), ...fresh]
-          } else {
-            // Everything it flagged was already resolved — nothing actionable;
-            // fail loudly rather than looping the same call forever.
-            l.status = 'failed'
-            l.error = 'Generation kept re-flagging conflicts that are already resolved — regenerate to retry'
-          }
-        }
-        r.updated = nowIso()
-      })
-      await mutateJob(msg.jobId, (r) => {
-        r.stagesDone = Math.min(r.stagesDone + 1, r.totalStages)
-        pushLog(
-          r,
-          fresh.length > 0
-            ? `${card.lessonTitle}: ${fresh.length} input conflict${fresh.length === 1 ? '' : 's'} flagged — needs reconciliation (a default resolution is proposed)`
-            : `${card.lessonTitle}: generation re-flagged already-resolved conflicts — marked failed`,
-        )
-      })
-      continue
-    }
+    // Flag → propose → AUTO-RESOLVE (§13.4 v2.5): conflicts never pause the
+    // lesson. Each record the model emitted was resolved in-reply with the
+    // authority-stack default (Stein strictly supreme; DI-book deferral →
+    // split signal); accept them as settled and record them on the script
+    // header exactly like user reconciliations. Records duplicating an
+    // already-settled resolution are dropped.
+    const resolvedKeys = new Set(resolutions.map((c) => `${c.kind}|${c.summary.slice(0, 60).toLowerCase()}`))
+    const autoResolved: VsgConflict[] = wire.conflicts
+      .filter((c) => !resolvedKeys.has(`${c.kind}|${c.summary.slice(0, 60).toLowerCase()}`))
+      .map((c) => ({ ...c, id: newId('conflict'), resolution: c.proposal, resolvedBy: 'default' as const, resolvedAt: nowIso() }))
+    const allResolutions = [...resolutions, ...autoResolved]
 
     const prior = await getVideoScriptOrUndefined(run.courseId, lesson.lessonId)
-    const script = toVideoScript(wire, run, card, gradeBand, resolutions, (prior?.version ?? 0) + 1)
+    const script = toVideoScript(wire, run, card, gradeBand, allResolutions, (prior?.version ?? 0) + 1)
     await saveVideoScript(script)
     try {
       await mutateVsgRun(runId, (r) => {
@@ -380,6 +359,9 @@ export async function vsgRunStep(msg: JobMessage, ctx: InvocationContext): Promi
           l.status = 'complete'
           l.scriptVersion = script.version
           l.durationEstimate = script.durationEstimate
+          // Settled resolutions (user + auto) persist on the lesson so
+          // regenerations pre-fill them (§13.4 Record).
+          l.conflicts = allResolutions
           delete l.error
         }
         r.updated = nowIso()
@@ -401,8 +383,10 @@ export async function vsgRunStep(msg: JobMessage, ctx: InvocationContext): Promi
       pushLog(
         r,
         `${card.lessonTitle}: script v${script.version} — ${script.durationEstimate}, ${script.interactionCount} interactions${
-          script.qa.hardFails.length > 0 ? `, ${script.qa.hardFails.length} UNRESOLVED HARD QA FAIL(S)` : ''
-        }${script.formatRefs.length > 0 ? ` (${script.formatRefs.map((f) => f.split(' — ')[0]).join(', ')})` : ''}`,
+          autoResolved.length > 0 ? `, ${autoResolved.length} conflict${autoResolved.length === 1 ? '' : 's'} auto-resolved (Stein default)` : ''
+        }${script.qa.hardFails.length > 0 ? `, ${script.qa.hardFails.length} UNRESOLVED HARD QA FAIL(S)` : ''}${
+          script.formatRefs.length > 0 ? ` (${script.formatRefs.map((f) => f.split(' — ')[0]).join(', ')})` : ''
+        }`,
       )
     })
   }
@@ -541,11 +525,10 @@ function qaOf(wire: WireVsgScript, gradeBand: string): { hardFails: string[]; fl
       const gaps = [
         i.correctFeedback.trim() === '' ? 'correct feedback' : '',
         i.try1Hint.trim() === '' ? 'try-1 hint' : '',
-        i.try2ShowAndMoveOn.trim() === '' ? 'try-2 show-and-resume' : '',
         i.resumeState.trim() === '' ? 'resume state' : '',
       ].filter(Boolean)
       if (gaps.length > 0) fails.push(`an interaction in ${s.kind} is missing ${gaps.join(', ')} (INT 16-INT 18, INT 23)`)
-      if ([i.correctFeedback, i.try1Hint, i.try2ShowAndMoveOn].some((f) => GENERIC_TRY_AGAIN.test(f))) {
+      if ([i.correctFeedback, i.try1Hint].some((f) => GENERIC_TRY_AGAIN.test(f))) {
         fails.push(`generic "Try again!" feedback in ${s.kind} — feedback is specific with a pointer (INT 16)`)
       }
     }
@@ -569,7 +552,7 @@ function qaOf(wire: WireVsgScript, gradeBand: string): { hardFails: string[]; fl
       if (l.channel === 'TEXT') studentTexts.push(stripProductionSpecs(l.content))
     }
     for (const i of s.interactions) {
-      studentTexts.push(i.prompt, i.correctFeedback, i.try1Hint, i.try2ShowAndMoveOn, ...i.options)
+      studentTexts.push(i.prompt, i.correctFeedback, i.try1Hint, ...i.options)
     }
   }
   const banned = new Set<string>()
@@ -762,7 +745,7 @@ function qaOf(wire: WireVsgScript, gradeBand: string): { hardFails: string[]; fl
   }
   const interactionLeak = wire.segments.some((s) =>
     s.interactions.some((i) =>
-      [i.prompt, i.answer, i.correctFeedback, i.try1Hint, i.try2ShowAndMoveOn, ...i.options].some((t) => t.includes('<<')),
+      [i.prompt, i.answer, i.correctFeedback, i.try1Hint, ...i.options].some((t) => t.includes('<<')),
     ),
   )
   if (interactionLeak) {

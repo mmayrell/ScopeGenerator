@@ -113,10 +113,11 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
       if (/\b(two|multiple)\s+(named\s+)?(computation\s+)?strategies\b/i.test(t) && !/\b(never|not|no)\b/i.test(t)) {
         return true
       }
-      // Routine-teaching lessons (new behaviors and explicitly taught
-      // preskills) must name their single strategy; representation, bridge,
-      // and application lessons teach no new computation path by doctrine.
-      return (l.type === 'new-learning' || l.type === 'preskill') && !/single strategy/i.test(t)
+      // Routine-teaching lessons (stein-exact matches, new behaviors, and —
+      // on legacy scopes — explicitly taught preskills) must name their
+      // single strategy; test-rigor, bridge, and application lessons teach
+      // no new computation path by doctrine.
+      return (l.type === 'stein-exact' || l.type === 'new-learning' || l.type === 'preskill') && !/single strategy/i.test(t)
     })
     .map((l) => l.id)
   checks.push({
@@ -134,7 +135,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
   // citation anywhere (field citations, approach-tagged decisions, or the
   // strategy decision) was written without naming its method authority.
   const doctrineUngrounded = lessons
-    .filter((l) => l.type === 'new-learning' || l.type === 'preskill')
+    .filter((l) => l.type === 'stein-exact' || l.type === 'new-learning' || l.type === 'preskill')
     .filter((l) => {
       const fieldCited = l.fields.approach.citations.some((c) => c.sourceType === 'doctrine')
       const decisionCited = l.decisions.some(
@@ -148,8 +149,8 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
     status: doctrineUngrounded.length > 0 ? 'flag' : 'pass',
     detail:
       doctrineUngrounded.length > 0
-        ? `The Instructional Approach on these new-learning/preskill lessons cites no Direct Instruction doctrine source (Stein et al. 2017) for its strategy selection — the method authority behind the chosen strategy is undocumented: ${doctrineUngrounded.join(', ')}.`
-        : 'Every new-learning and preskill lesson grounds its strategy selection in a cited Direct Instruction doctrine source (Stein et al. 2017).',
+        ? `The Instructional Approach on these routine-teaching lessons cites no Direct Instruction doctrine source (Stein et al. 2017) for its strategy selection — the method authority behind the chosen strategy is undocumented: ${doctrineUngrounded.join(', ')}.`
+        : 'Every routine-teaching lesson (stein-exact/new-learning) grounds its strategy selection in a cited Direct Instruction doctrine source (Stein et al. 2017).',
   })
 
   // 6. Neighbor consistency
@@ -243,7 +244,7 @@ export function runQc(units: Unit[], plan: PlanOutput, evidenceItems: ItemRecord
   // Modeled Set (ordered), Delayed Modeling Cases, and Vary / Hold Constant.
   // Its absence means within-lesson variation has nowhere to live and tends
   // to leak into fake atoms or undifferentiated practice.
-  const teachingLessons = lessons.filter((l) => l.type === 'new-learning' || l.type === 'preskill')
+  const teachingLessons = lessons.filter((l) => l.type === 'stein-exact' || l.type === 'new-learning' || l.type === 'preskill')
   const missingProgression = teachingLessons.filter((l) => {
     const approach = (l.fields.approach?.content ?? '').toLowerCase()
     return !(approach.includes('model') && approach.includes('vary') && approach.includes('hold constant'))

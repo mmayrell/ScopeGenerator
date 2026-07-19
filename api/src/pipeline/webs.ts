@@ -20,11 +20,14 @@ import { PlanOutput } from '../services/schemas'
  */
 
 const TYPE_LABEL: Record<string, string> = {
-  preskill: 'Preskill',
+  'stein-exact': 'Stein Exact',
   'new-learning': 'New Learning',
-  representation: 'Representation',
+  'test-rigor': 'Test Rigor',
   bridge: 'Bridge',
   'application-tier': 'Application',
+  // Legacy types — scopes generated under Engine ≤ v4.2 only.
+  preskill: 'Preskill',
+  representation: 'Representation',
 }
 
 /** Assessment source per the Item Alignment Map output schema (guide §19 Step G). */

@@ -82,8 +82,10 @@ const DECISION_FIELDS = [
   'assessment',
   'releasedItems',
 ]
-// The Atomization Guide's five lesson types (Types of Lessons).
-const LESSON_TYPES = ['preskill', 'new-learning', 'representation', 'bridge', 'application-tier']
+// The Atomization Guide's five Kinds of Lessons (Engine v4.3). The legacy
+// 'preskill'/'representation' types survive only on stored scopes — new
+// generations never emit them (those atoms type stein-exact or new-learning).
+const LESSON_TYPES = ['stein-exact', 'new-learning', 'test-rigor', 'bridge', 'application-tier']
 const EVIDENCE_STATUS = ['observed', 'inferred', 'mixed']
 
 // Lesson-bearing schemas share their subtrees via $defs/$ref: JS-object reuse
@@ -366,8 +368,10 @@ export interface WireLsgFieldsBatch {
 // interaction objects are matched to its INTERACTION-channel lines BY ORDER —
 // the Nth interaction belongs to the Nth INTERACTION line; index fields
 // invite off-by-one hallucinations, order is deterministic. Conflicts
-// (playbook §2.4) ride the same reply: a non-empty unresolved conflict list
-// means NO script — the lesson pauses for reconciliation.
+// (playbook §13.4, v2.5) ride the same reply as RECORDS: each was resolved
+// in-reply with the authority-stack default (Stein strictly supreme;
+// `proposal` = the applied resolution) and the full script always ships —
+// conflicts never block generation.
 // ---------------------------------------------------------------------------
 
 const VSG_INTERACTION = obj({
@@ -376,8 +380,9 @@ const VSG_INTERACTION = obj({
   options: arr(STR),
   answer: STR,
   correctFeedback: STR,
+  // The try-1 hint is the ONLY authored retry (INT 18, rulebook v2.4) — a
+  // second wrong answer auto-shows the correct step; no try-2 field exists.
   try1Hint: STR,
-  try2ShowAndMoveOn: STR,
   resumeState: STR,
   modelAccess: BOOL,
   modelAccessNote: STR,

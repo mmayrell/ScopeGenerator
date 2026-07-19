@@ -81,7 +81,7 @@ For every standard, make the following considerations in order.
 - 3 — Identify every representation. Examples: table, graph, number line, equation, tape diagram, area model. Representations become separate atoms whenever students must learn to express or interpret meaning for the first time through that representation rather than merely use it.
 - 4 — Identify vocabulary stabilization lessons. If a new academic term carries conceptual meaning before students can perform the procedure, create a vocabulary atom. Examples: proportional, constant of proportionality, equivalent.
 - 5 — Identify selection skills. Ask: "Must students choose among multiple previously learned procedures or concepts before solving?" Whenever selecting the correct approach is itself new learning, create a candidate atom.
-- 6 — Identify prerequisite gaps. Whenever a candidate atom requires a prerequisite that is part of the generated course but has not yet appeared in the instructional sequence, insert a prerequisite (preskill) lesson. Do not generate preskill lessons for prerequisite knowledge assigned to earlier grades or outside the selected standards. Prerequisite instruction is never embedded inside a later lesson.
+- 6 — Identify prerequisite gaps. Whenever a candidate atom requires a prerequisite that is part of the generated course but has not yet appeared in the instructional sequence, insert a prerequisite (preskill) lesson (typed Stein-Exact when Stein directly treats it, otherwise New Learning). Do not generate preskill lessons for prerequisite knowledge assigned to earlier grades or outside the selected standards. Prerequisite instruction is never embedded inside a later lesson.
 - 7 — Validate instructional coverage and rigor. Ask: "Does this sequence fully prepare students for the demonstrated rigor of the standard?" If released assessment items or other admissible evidence reveal a documented instructional demand that is not yet explicitly taught, insert additional atoms until every in-scope demand is covered. When problem solving, word problems, mathematical modeling, or other application tasks are within the standard's scope, they must be explicitly taught rather than assumed. Do not create new atoms solely because numbers become larger or examples become more numerous when the underlying generalization remains unchanged.
 - 8 — Identify bridge lessons. A lesson may combine multiple previously mastered skills only to teach one new instructional capability. The prerequisite skills are not new learning; they are coordinated in service of a single objective (e.g., discrimination, comparison, selection, or integration). A lesson must not introduce more than one independent new capability.
 
@@ -127,15 +127,17 @@ Remain one atom when only:
 
 High-frequency or systematic errors inform what must be taught explicitly — not automatically whether an atom splits. Errors justify splitting only when analysis reveals a new or unstable start cue/problem type, a new decision step or rule, or a missing prerequisite that must be taught and stabilized first. Otherwise, errors are addressed through improved modeling, contrast cases, scaffolding, or sequencing within the same atom.
 
-## Types of Lessons
+## Types of Lessons (the Kinds of Lessons)
 
-Each lesson type has a typical assessment source in the Item Alignment Map. "Typical" is a prior, not a rule — the Placement Rule always decides.
+Every lesson in a course belongs to exactly one of five kinds. The kind describes the lesson's INSTRUCTIONAL PURPOSE — never its importance, duration, or position in the sequence. Each kind has a typical assessment source in the Item Alignment Map. "Typical" is a prior, not a rule — the Placement Rule always decides.
 
-- Preskill — teaches prerequisite knowledge.
-- New Learning — teaches a new behavior.
-- Representation — teaches a new way of expressing already-learned knowledge.
-- Bridge — teaches choosing between previously mastered atoms.
-- Application — teaches transfer of mastered knowledge into authentic problems.
+- Stein-Exact — the exact lesson is described in Stein's book: a direct instructional match (a named teaching format, an Instructional Sequence and Assessment Chart row, or a chapter treatment of exactly this skill). Under the Stein Direct-Match doctrine the book controls the lesson's scope, order, grain, formats, examples, and progression.
+- New Learning — teaches one new behavior, defined by the atom triple (one start cue, one decision path, one response form).
+- Test Rigor — inserted to explicitly provide students state testing rigor: the lesson exists because assessment evidence demands a performance level or coordination the teaching sequence alone would not reach (including the scaffold lessons that carry students from a Stein-matched endpoint to a released item's demand).
+- Bridge — inserted where a split pair is confusable. The new learning is the discrimination itself: recognize from the first cue which routine applies, and execute it cleanly without blending. Practice is mixed look-alike practice engineered to trigger the confusion; no new rules are modeled.
+- Application Tier — executes an already-mastered routine in a new demand band (multi-step contexts, interpret-and-explain). Boundary and ceiling inherit from the parent atom.
+
+Typing note: the Discovery Process is unchanged — preskill atoms, representation atoms, vocabulary/concept atoms, and selection atoms still exist as atoms. The kind records purpose, not discovery origin: any such atom types as Stein-Exact when Stein directly treats it, otherwise as the purpose it serves (a preskill, representation, or vocabulary atom teaches one new behavior — New Learning; a discrimination atom is a Bridge; a coordination-at-assessment-demand atom is Test Rigor or Application Tier).
 
 ## Ordering
 
@@ -171,7 +173,7 @@ When multiple valid sequences exist, preference goes to the ordering that maximi
 
 ## Representation Doctrine
 
-Representations are instructional only when students must learn how to interpret them, how to construct them, or how to choose them. Otherwise they remain examples inside another lesson.
+Representations are instructional only when students must learn how to interpret them, how to construct them, or how to choose them. Otherwise they remain examples inside another lesson. A representation atom types as Stein-Exact when Stein directly treats it, otherwise New Learning (the new behavior is the mapping between mathematical meaning and the representation's form).
 
 Alignment consequence: a released item that merely displays a representation students must read or build has an embedded representation demand. The item cannot be placed before the lesson that teaches that representation.
 
@@ -183,15 +185,19 @@ Alignment consequence: academic vocabulary inside an item stem or answer choices
 
 ## Bridge Doctrine
 
-Bridge lessons never teach new mathematics. They teach discrimination, selection, switching, and coordination. Typical bridge lessons include: area vs. perimeter, ratio vs. rate, mean vs. median, equation vs. inequality, multiplication vs. division.
+Bridge lessons never teach new mathematics. A bridge is inserted where a split pair is confusable; its new learning is the discrimination itself — recognize from the first cue which routine applies, and execute it cleanly without blending. Its practice is mixed look-alike practice engineered to trigger the confusion, with no new rules modeled. Typical bridge lessons include: area vs. perimeter, ratio vs. rate, mean vs. median, equation vs. inequality, multiplication vs. division.
 
 A bridge lesson title should contain the competing atoms ("A vs. B") or the explicit selection behavior ("Choose the Appropriate Representation"), never a generic phrase like "Mixed Practice" or "Review". That keeps every bridge lesson instructionally precise and independently assessable.
 
-Alignment consequence: any released item that requires choosing between procedures may only be placed at a bridge, application, or mixed-performance lesson (the Coordination Rule). Web consequence: every bridge node receives one incoming edge from each competing atom.
+Alignment consequence: any released item that requires choosing between procedures may only be placed at a bridge, test-rigor, application, or mixed-performance lesson (the Coordination Rule). Web consequence: every bridge node receives one incoming edge from each competing atom.
 
 ## Application Doctrine
 
-Applications never introduce new computational procedures. They increase demand by requiring students to model, interpret, justify, solve contexts, and coordinate multiple atoms.
+Applications never introduce new computational procedures. An application-tier lesson executes an already-mastered routine in a new demand band — multi-step contexts, interpret-and-explain, modeling, justifying, and coordination of multiple atoms. Its boundary and ceiling inherit from the parent atom.
+
+## Test Rigor Doctrine
+
+Test-rigor lessons are inserted to explicitly provide students state testing rigor. They never introduce new computational procedures: the new learning is performing already-taught content at the assessment's demand — its item conventions, response formats, cognitive coordination, and precision. A test-rigor lesson is earned by assessment evidence (released-item demand profiles, a demand band the teaching sequence alone does not reach, or the scaffold from a Stein-matched lesson's endpoint to a released item's demand under the Stein Direct-Match doctrine); it is never inserted on speculation.
 
 Alignment consequence: released items most often appear in their original, unmodified form at application and mixed-performance lessons, because state items typically demand exactly this coordination. Web consequence: every application node receives an edge from each atom it coordinates.
 
@@ -219,7 +225,7 @@ If either condition fails, the item is not placed at Lesson L. There is no parti
 
 The Deferral Rule — when Condition A matches Lesson L but Condition B fails on a demand taught LATER in the course, the item is DEFERRED: it is placed at the earliest later review, bridge, or application lesson where Condition B passes.
 
-The Coordination Rule — a multi-atom item (one requiring students to choose between procedures or coordinate several mastered atoms) may only be placed at a bridge, application, or mixed-performance lesson.
+The Coordination Rule — a multi-atom item (one requiring students to choose between procedures or coordinate several mastered atoms) may only be placed at a bridge, test-rigor, application, or mixed-performance lesson.
 
 The No-Forcing Rule — lessons are never distorted to absorb items. An item that fits no lesson is triaged, deferred, or excluded; the sequence is repaired only when the triage proves an in-scope demand is genuinely untaught.
 
@@ -453,7 +459,7 @@ export function getFramework(): FrameworkDoc {
       kind: 'engine',
       name: 'Curriculum Atomization, Item Alignment & Coherence Guide',
       description:
-        'The academic specification for the curriculum scope generator, compiled from the Curriculum Atomization, Item Alignment & Coherence Guide — a Direct Instruction framework for decomposing standards into teachable lessons, aligning state-level assessment items, and mapping coherence across lessons, units, and grades. It defines the atom conditions, the discovery process, split and don\u2019t-split rules, the five lesson types, ordering rules, the Cumulative Mastery Ledger, the released-item Placement Rule and Exclusion Triage, the Item Generation Doctrine, and the three-tier coherence webs that govern how standards-aligned curriculum scopes are produced.',
+        'The academic specification for the curriculum scope generator, compiled from the Curriculum Atomization, Item Alignment & Coherence Guide — a Direct Instruction framework for decomposing standards into teachable lessons, aligning state-level assessment items, and mapping coherence across lessons, units, and grades. It defines the atom conditions, the discovery process, split and don\u2019t-split rules, the five kinds of lessons, ordering rules, the Cumulative Mastery Ledger, the released-item Placement Rule and Exclusion Triage, the Item Generation Doctrine, and the three-tier coherence webs that govern how standards-aligned curriculum scopes are produced.',
       // v4.1 (2026-07-16): Split Decision Rules expanded to the No-HITL
       // Curriculum Scope Generator Specification's nine named criteria
       // (adding demand-band jump and data-driven error pattern), Don't-Split
@@ -465,8 +471,18 @@ export function getFramework(): FrameworkDoc {
       // interleaving over massed-topic blocks; strands retire when their
       // instructional purpose is fulfilled; significant sequencing choices
       // are documented against the dependency-valid alternatives.
-      version: 'v4.2',
-      updated: '2026-07-16',
+      // v4.3 (2026-07-18): the Kinds of Lessons taxonomy replaces the old
+      // five lesson types — stein-exact (the exact lesson described in
+      // Stein's book) and test-rigor (inserted to explicitly provide state
+      // testing rigor) enter; preskill and representation retire as TYPES
+      // (the atoms themselves survive, typed by purpose — the Discovery
+      // Process is unchanged). Bridge and Application doctrines restated
+      // (bridge = the discrimination itself over a confusable split pair;
+      // application-tier = a mastered routine in a new demand band,
+      // boundary/ceiling inherited), a Test Rigor Doctrine added, and the
+      // Coordination Rule extended to test-rigor lessons.
+      version: 'v4.3',
+      updated: '2026-07-18',
       content: ENGINE_CONTENT,
     },
     doctrine: {
