@@ -48,7 +48,7 @@ import {
   WireQcInvestigation,
   WireQcJudge,
 } from '../services/schemas'
-import { ACTOR, nowIso, today } from '../shared/util'
+import { ACTOR, ENGINE_VERSION, nowIso, today } from '../shared/util'
 
 // The QC Bar engine (spec "Scope Generator: Quality Control and Loop
 // Engineering", 2026-07-17): mechanical checks + the independent judge + the
@@ -96,6 +96,14 @@ export interface QcCheckContext {
   doctrineCorpus: string
   /** Grade-filtered standards digest for the judge. */
   digest: string[]
+  /**
+   * Engine quotes are version-locked: a scope generated under an OLDER
+   * engine quotes THAT document, and checking it against today's rewrite
+   * would false-block honest citations. Callers sweeping old scopes set
+   * this false (generation-time QC always checks — new cards quote the
+   * current engine).
+   */
+  engineQuotesCheckable?: boolean
 }
 
 export function buildCheckContext(set: StandardSet, grades: Set<string>): QcCheckContext {
@@ -203,7 +211,11 @@ const LESSON_CHECKS: Record<string, LessonCheck> = {
           out.push(`[${field}] quoted standards text not found under ${known.join('/')}: "${c.excerpt.slice(0, 100)}"`)
         }
       }
-      if ((c.sourceType === 'doctrine' || c.sourceType === 'engine') && core.length >= 25 && !ctx.doctrineCorpus.includes(core)) {
+      if (
+        (c.sourceType === 'doctrine' || (c.sourceType === 'engine' && ctx.engineQuotesCheckable !== false)) &&
+        core.length >= 25 &&
+        !ctx.doctrineCorpus.includes(core)
+      ) {
         out.push(`[${field}] quoted ${c.sourceType} text not found in the corpus: "${c.excerpt.slice(0, 100)}"`)
       }
       if (c.sourceType === 'items' && core.length >= 25 && ctx.itemText.length > 0 && !ctx.itemText.includes(core)) {
@@ -1145,6 +1157,9 @@ export async function qcSweepStep(msg: JobMessage, ctx: InvocationContext): Prom
   const bar = await getBar()
   const grades = new Set(scope.units.flatMap((u) => u.lessons.flatMap((l) => codesIn(l.fields.standards.content))).map((c) => c.split('.')[0]))
   const checkCtx = buildCheckContext(set, grades)
+  // Old scopes quote the engine version they were generated under — never
+  // hold their quotes to today's rewritten document.
+  checkCtx.engineQuotesCheckable = scope.engineVersion === ENGINE_VERSION
   const statePath = `jobs/${msg.jobId}/qc-sweep-state.json`
   const state: SweepState = (await getJsonOrUndefined<SweepState>(dataContainer(), statePath)) ?? { unitStates: {}, unitsDone: [] }
   const sweepCuts = Number(msg.payload?.sweepCuts ?? 0)
