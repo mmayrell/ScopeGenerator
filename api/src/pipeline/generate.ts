@@ -12,6 +12,7 @@ import {
   accumulateStats,
   assembleReport,
   buildCheckContext,
+  forceSettleUnfinished,
   lessonResultOf,
   QcCourseState,
   qcCoursePhase,
@@ -877,16 +878,23 @@ export async function generateCardsStep(msg: JobMessage, ctx: InvocationContext)
       // a call that can never fit does not loop the job forever.
       if (isAbort(e)) {
         if (qcCuts + 1 >= MAX_QC_CUTS) {
-          throw new Error(
-            `The QC check for unit ${skeleton.id} could not fit the 10-minute execution window after ${MAX_QC_CUTS} attempts, even at low effort — disable the heaviest bar criteria or narrow the request and retry.`,
+          // QC trouble never kills the course: red-flag whatever could not be
+          // checked (best versions kept) and move on. A later QC sweep can
+          // finish the job once the bar is lightened.
+          const flagged = forceSettleUnfinished(unitState, `the check could not fit the 10-minute execution window after ${MAX_QC_CUTS} attempts, even at low effort`)
+          await putJson(dataContainer(), unitQcStatePath(msg.jobId, unitIndex), unitState)
+          await mutateJob(msg.jobId, (r) =>
+            pushLog(r, `Unit ${skeleton.id}: QC could not finish inside the execution window after ${MAX_QC_CUTS} cuts — ${flagged} lesson(s) red-flagged as unchecked (best versions kept); generation continues`),
           )
+        } else {
+          await putJson(dataContainer(), unitQcStatePath(msg.jobId, unitIndex), unitState)
+          await mutateJob(msg.jobId, (r) => pushLog(r, `Unit ${skeleton.id}: QC check cut at the execution deadline (cut ${qcCuts + 1}) — continues${qcCuts === 0 ? ' degraded' : ''} in a fresh execution`))
+          await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'cards', scopeId, unitIndex, payload: { cuts, callSize, qcCuts: qcCuts + 1 } })
+          return
         }
-        await putJson(dataContainer(), unitQcStatePath(msg.jobId, unitIndex), unitState)
-        await mutateJob(msg.jobId, (r) => pushLog(r, `Unit ${skeleton.id}: QC check cut at the execution deadline (cut ${qcCuts + 1}) — continues${qcCuts === 0 ? ' degraded' : ''} in a fresh execution`))
-        await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'cards', scopeId, unitIndex, payload: { cuts, callSize, qcCuts: qcCuts + 1 } })
-        return
+      } else {
+        throw e
       }
-      throw e
     }
     await putJson(dataContainer(), unitQcStatePath(msg.jobId, unitIndex), unitState)
     if (!unitState.done) {
@@ -998,16 +1006,28 @@ export async function generateFinalizeStep(msg: JobMessage, ctx: InvocationConte
   } catch (e) {
     if (isAbort(e)) {
       if (qcCuts + 1 >= MAX_QC_CUTS) {
-        throw new Error(
-          `The course check could not fit the 10-minute execution window after ${MAX_QC_CUTS} attempts — disable the heaviest course criteria and retry.`,
-        )
+        // The course check never kills a finished course — record the miss
+        // honestly and finish with whatever it managed to judge.
+        courseState.done = true
+        courseFindings = [
+          {
+            criterionId: 'course-check-incomplete',
+            title: 'Course check could not finish',
+            severity: 'advisory',
+            evidence: `The course-level check could not fit the 10-minute execution window after ${MAX_QC_CUTS} attempts — course criteria were not (fully) applied. Run a QC sweep later, ideally with the heaviest course criteria disabled.`,
+          },
+        ]
+        await putJson(dataContainer(), courseQcStatePath(msg.jobId), courseState)
+        await mutateJob(msg.jobId, (r) => pushLog(r, `Course check could not finish after ${MAX_QC_CUTS} cuts — recorded as an advisory; the scope completes`))
+      } else {
+        await putJson(dataContainer(), courseQcStatePath(msg.jobId), courseState)
+        await mutateJob(msg.jobId, (r) => pushLog(r, `Course check cut at the execution deadline (cut ${qcCuts + 1}) — finalize continues in a fresh execution`))
+        await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'finalize', scopeId, payload: { qcCuts: qcCuts + 1 } })
+        return
       }
-      await putJson(dataContainer(), courseQcStatePath(msg.jobId), courseState)
-      await mutateJob(msg.jobId, (r) => pushLog(r, `Course check cut at the execution deadline (cut ${qcCuts + 1}) — finalize continues in a fresh execution`))
-      await enqueueJob({ jobId: msg.jobId, kind: 'generate', step: 'finalize', scopeId, payload: { qcCuts: qcCuts + 1 } })
-      return
+    } else {
+      throw e
     }
-    throw e
   }
   await putJson(dataContainer(), courseQcStatePath(msg.jobId), courseState)
   if (!courseState.done) {

@@ -58,7 +58,10 @@ import { ACTOR, ENGINE_VERSION, nowIso, today } from '../shared/util'
 // investigation step re-examines human notes and routes confirmed problems
 // to card / bar / specifications.
 
-const JUDGE_SLICE = 6
+// Slice sizes are OUTPUT-budget driven: the judge emits workShown + evidence
+// per (lesson × criterion), so 6-lesson slices overflowed both the 32k output
+// cap and the 10-minute window on full-course units (live failure 2026-07-19).
+const JUDGE_SLICE = 4
 const REVISE_SLICE = 3
 const QC_MAX_TOKENS = 32000
 
@@ -594,6 +597,35 @@ export function absorbCheck(
     return false
   }
   return true
+}
+
+/**
+ * Last-resort settlement when QC itself cannot finish (cut cap reached): every
+ * unsettled lesson red-flags with its best version kept and an honest note.
+ * QC trouble NEVER kills a generation — the spec's "one hard card never holds
+ * the course hostage" extends to the checker itself.
+ */
+export function forceSettleUnfinished(unitState: QcUnitState, why: string): number {
+  let settled = 0
+  for (const [, s] of Object.entries(unitState.lessons)) {
+    if (s.settled !== undefined) continue
+    settled++
+    if (s.attempts.length === 0) {
+      // Never judged at all — the draft stands, flagged as unchecked.
+      s.attempts.push({ attempt: 1, kind: 'draft', failedBlocking: [], note: `not judged: ${why}` })
+      s.best = { lesson: s.current, blockingCount: 0, failedIds: [] }
+    }
+    s.settled = 'red-flag'
+    s.current = s.best.blockingCount === Number.MAX_SAFE_INTEGER ? s.current : s.best.lesson
+    s.redFlag = {
+      whyStopped: 'attempts-exhausted',
+      neverPassed: s.lastFails.map((f) => f.criterionId),
+      attemptHistory: s.attempts,
+      recommendation: `QC could not finish checking this card (${why}). The best available version is kept — review it by hand, or run a QC sweep later (consider disabling the heaviest AI-judged criteria first).`,
+    }
+  }
+  unitState.done = true
+  return settled
 }
 
 export const lessonResultOf = (lessonId: string, state: QcLessonState): QcLessonResult => {
@@ -1251,15 +1283,23 @@ export async function qcSweepStep(msg: JobMessage, ctx: InvocationContext): Prom
       // so a call that can never fit fails terminally instead of looping.
       if (isAbort(e)) {
         if (sweepCuts + 1 >= 3) {
-          throw new Error(`QC sweep for unit ${unit.id} could not fit the execution window after 3 attempts, even degraded — narrow the bar or disable the heaviest criteria and retry.`)
+          // The sweep never dies on the checker's own limits — red-flag what
+          // could not be checked and keep sweeping the remaining units.
+          const flagged = forceSettleUnfinished(unitState, 'the sweep check could not fit the execution window after 3 attempts, even degraded')
+          state.unitStates[unit.id] = unitState
+          await putJson(dataContainer(), statePath, state)
+          await mutateJob(msg.jobId, (r) => pushLog(r, `Unit ${unit.id}: sweep could not finish inside the window — ${flagged} lesson(s) red-flagged as unchecked; the sweep continues`))
+          outcome = { state: unitState }
+        } else {
+          state.unitStates[unit.id] = unitState
+          await putJson(dataContainer(), statePath, state)
+          await enqueueJob({ jobId: msg.jobId, kind: 'qc', step: 'sweep', scopeId, payload: { sweepCuts: sweepCuts + 1 } })
+          await mutateJob(msg.jobId, (r) => pushLog(r, `Unit ${unit.id}: sweep cut at the execution deadline (cut ${sweepCuts + 1}) — continues degraded in a fresh execution`))
+          return
         }
-        state.unitStates[unit.id] = unitState
-        await putJson(dataContainer(), statePath, state)
-        await enqueueJob({ jobId: msg.jobId, kind: 'qc', step: 'sweep', scopeId, payload: { sweepCuts: sweepCuts + 1 } })
-        await mutateJob(msg.jobId, (r) => pushLog(r, `Unit ${unit.id}: sweep cut at the execution deadline (cut ${sweepCuts + 1}) — continues degraded in a fresh execution`))
-        return
+      } else {
+        throw e
       }
-      throw e
     }
     state.unitStates[unit.id] = outcome.state
     if (!outcome.state.done) {
@@ -1413,13 +1453,19 @@ export async function runUnitLoop(args: UnitLoopArgs): Promise<{ state: QcUnitSt
 
   const pendingIds = (): string[] => Object.keys(unitState.lessons).filter((id) => unitState.lessons[id].settled === undefined)
 
-  // First check (draft attempt) for lessons never judged.
-  const unjudged = pendingIds().filter((id) => unitState.lessons[id].attempts.length === 0)
-  if (unjudged.length > 0) {
+  // First check (draft attempt) for lessons never judged — SLICE BY SLICE,
+  // each slice absorbed into state the moment it returns. A full-course
+  // unit's complete judge pass can exceed one execution window; absorbing per
+  // slice (plus the budget check between slices) guarantees every execution
+  // makes forward progress, so resumes never re-judge finished lessons.
+  for (;;) {
+    const unjudged = pendingIds().filter((id) => unitState.lessons[id].attempts.length === 0)
+    if (unjudged.length === 0) break
     if (budgetLeft() <= 0) return { state: unitState }
-    const lessons = unjudged.map((id) => unitState.lessons[id].current)
+    const sliceIds = unjudged.slice(0, JUDGE_SLICE)
+    const lessons = sliceIds.map((id) => unitState.lessons[id].current)
     const judged = await judgeLessons(lessons, bar, checkCtx, { unit_skeleton: skeleton }, signalOf, effort)
-    for (const id of unjudged) {
+    for (const id of sliceIds) {
       const s = unitState.lessons[id]
       const findings = [...mechanicalLessonFindings(s.current, bar, checkCtx), ...(judged.get(id) ?? [])]
       absorbCheck(s, findings, 'draft', bar.escalationPlan)
@@ -1521,6 +1567,9 @@ export async function runUnitLoop(args: UnitLoopArgs): Promise<{ state: QcUnitSt
       }
 
       for (let i = 0; i < ids.length; i += REVISE_SLICE) {
+        // Between slices the budget yields cleanly — absorbed slices are
+        // real progress; the outer loop re-enters here on resume.
+        if (i > 0 && budgetLeft() <= 0) return
         const sliceIds = ids.slice(i, i + REVISE_SLICE)
         const produced = await writeSlice(sliceIds)
         // Judge the produced lessons BEFORE any state mutation.
